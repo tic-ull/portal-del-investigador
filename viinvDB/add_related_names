@@ -1,0 +1,11 @@
+s/\(area_anep = models\.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True\))/\1, related_name="anep_to_anep")/ 
+s/\(area_anep2 = models\.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True\))/\1, related_name="anep_to_anep2")/   
+s/\(area_anep3 = models\.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True\))/\1, related_name="anep_to_anep3")/ 
+1,/related_name="anep_to_anep"/s/\(related_name="anep_to_anep\)"/\1_inves"/ 
+1,/related_name="anep_to_anep2"/s/\(related_name="anep_to_anep2\)"/\1_inves"/ 
+1,/related_name="anep_to_anep3"/s/\(related_name="anep_to_anep3\)"/\1_inves"/ 
+s/\(investigador = models\.ForeignKey(GrupoinvestInvestigador, null=True, blank=True\))/\1, related_name="estancia investigador")/ 
+s/\(destinatario = models\.ForeignKey(GrupoinvestInvestigador\))/\1, related_name="to")/ 
+s/\(grupo_activo = models\.ForeignKey(GrupoinvestGrupoinves, null=True, blank=True\))/\1, related_name="Perteneciente")/
+s/\(grupo_a = models\.ForeignKey(GrupoinvestGrupoinves, null=True, db_column='grupo_A_id', blank=True\))/\1, related_name="Perteneciente(A)")/
+s/\(grupo_b = models\.ForeignKey(GrupoinvestGrupoinves, null=True, db_column='grupo_B_id', blank=True\))/\1, related_name="Perteneciente(B)")/
