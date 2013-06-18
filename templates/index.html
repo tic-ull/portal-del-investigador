@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<title>Curriculum Vitae Normalizado</title>
+	</head>
+	<body>
+		<h1>Importación de Curriculum Vitae Normalizado (CVN)</h1>
+		
+		CVN es un currículum vítae único para los investigadores.
+		<ul>
+			<li>Un currículum vítae digital y <strong>normalizado</strong></li>
+			<li>Un contenido y formato <strong>estándar</strong> de los CV de los investigadores</li>
+			<li>
+				Un modelo de interpretación de la información que permite el salto a la <strong>administración electrónica</strong>
+			</li>
+			<li>Un eslabón para contar con el <strong>registro de investigadores</strong> totalmente integrado</li>
+		</ul>	
+		
+		<h2>Opciones:</h2>	
+		<ul>
+			<li><a href="/cvn/import-all-pdf/">Obtener la representación en XML de los PDF</a></li>
+			<li><a href="/cvn/import-all-xml/">Importar los ficheros XML a la BBDD de la aplicación</a></li>
+		</ul>
+		<h2>Opciones para archivos:</h2>
+		<ul>
+			<li><a href="/cvn/import-pdf/">Obtener la representación en XML de un PDF </a></li>
+			<li><a href="/cvn/import-xml/">Importar datos de un XML a la BBDD de la aplicación</a></li>
+		</ul>
+		{% if message %}
+			<font color="green">{{ message }}</font>
+		{% endif %}
+		<hr>
+		<input class="button" type="submit" value="Volver" onclick="location.href='/'" />
+	</body>
+</html>
