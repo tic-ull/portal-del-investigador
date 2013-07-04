@@ -1,0 +1,13 @@
+Django==1.5.1
+psycopg2
+django_extensions
+# DB migrations
+south
+# Images
+PIL
+# MySQL
+mysql-python
+# Web Services
+suds
+# Parsing XML
+lxml
