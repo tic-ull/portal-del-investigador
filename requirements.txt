@@ -11,3 +11,7 @@ mysql-python
 suds
 # Parsing XML
 lxml
+# Bootstrap
+django-bootstrap-toolkit==2.8.0
+# CAS
+-e git+git@git.ccti.ull.es:django_cas#egg=django_cas

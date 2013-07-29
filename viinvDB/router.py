@@ -14,8 +14,8 @@ class viinvRouter(object):
     def db_for_write(self, model, **hints):
         """
         Attempts to write auth models go to auth_db.
-        """
-        if model._meta.app_label == 'viinvDB':
+        """        
+        if model._meta.app_label == 'viinvDB':			
             return 'portalinvestigador'
         return None
 
@@ -24,8 +24,8 @@ class viinvRouter(object):
         Allow relations if a model in the auth app is involved.
         """
         if obj1._meta.app_label == 'viinvDB' or \
-           obj2._meta.app_label == 'viinvDB':
-           return True
+           obj2._meta.app_label == 'viinvDB':			   
+			   return True
         return None
 
     def allow_syncdb(self, db, model):

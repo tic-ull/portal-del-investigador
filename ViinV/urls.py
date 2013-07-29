@@ -16,6 +16,12 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    
     # Página principal
     url(r'^$', 'cvn.views.index', name='index'),
+    
+    # Login/Logout CAS
+    url(r'^accounts/login/$', 'django_cas.views.login'),
+    url(r'^accounts/logout/$', 'django_cas.views.logout'),    
+
 )

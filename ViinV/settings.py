@@ -1,7 +1,12 @@
+# -*- encoding: utf-8 -*-
 # Django settings for ViinV project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+# Path del proyecto
+PROJECT_PATH = os.path.abspath(os.path.dirname('__file__'))
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -82,6 +87,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH,'static'),   
 )
 
 # List of finder classes that know how to find static files in
@@ -110,6 +116,12 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cas.middleware.CASMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+	'django.contrib.auth.backends.ModelBackend',
+	'django_cas.backends.CASBackend',
 )
 
 ROOT_URLCONF = 'ViinV.urls'
@@ -121,6 +133,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH,'templates'),
 )
 
 INSTALLED_APPS = (
@@ -134,12 +147,16 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    # Extensiones
     'django_extensions',
+    #'south',
     # Migraciones del modelo
-    'south',
     # Aplicaciones del proyecto
     'cvn',
+    # BBDD de Viinv
     'viinvDB',
+    # Bootstrap
+    'bootstrap_toolkit',
 )
 
 
@@ -171,3 +188,22 @@ LOGGING = {
         },
     }
 }
+
+# Autentificación CAS
+CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
+# The URL prefix of the Django administration site.
+CAS_ADMIN_PREFIX = 'admin'
+# Extra URL parameters to add to the login URL when redirecting the user
+CAS_EXTRA_LOGIN_PARAMS = ''
+# If `True`, logging out of the application will always send the user to the URL specified by `CAS_REDIRECT_URL`.
+CAS_IGNORE_REFERER = False
+# If `False`, logging out of the application won't log the user out of CAS as well.
+CAS_LOGOUT_COMPLETELY = True
+# Where to send a user after logging in or out if there is no referrer and no next page set. Default is `/`.
+CAS_REDIRECT_URL = '/'
+# If `True` and an unknown or invalid ticket is received, the user is redirected back to the login page.
+CAS_RETRY_LOGIN = True
+#  The CAS protocol version to use. `'1'` and `'2'` are supported, with `'2'` being the default.
+CAS_VERSION = 'CAS_2_SAML_1_0'
+CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
+

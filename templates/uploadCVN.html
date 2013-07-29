@@ -1,25 +1,26 @@
-<html>
-	<head>
-		<title>Curriculum Vitae Normalizado</title>
-	</head>
-	<body>
-		<h1>Importar de Curriculum Vitae Normalizado (CVN)</h1>
-		
-		
-		<h2>Introduzca su CVN con formato del Fecyt:</h2>
-		<form action="" method='post' enctype="multipart/form-data">{% csrf_token %}
-			{{ form.as_p }}
-			<input type="submit" value="Enviar" />
-		</form>
-		
-		
-		{% if message %}
-			<font color="green">{{ message }}</font>
-		{% endif %}
-		{% if errors %}
-			<font color="red">{{ errors }}</font>
-		{% endif %}
-		<hr>
-		<input class="button" type="submit" value="Volver" onclick="location.href='/'" />
-	</body>
-</html>
+{% extends "ccti.html" %}
+
+{% block premain %}
+	<h2>Importar de Curriculum Vitae Normalizado (CVN)</h2>
+{% endblock %}
+
+{% block main %}
+	
+	<h3>Introduzca su CVN con formato del Fecyt:</h3>
+	
+	<form action="" method='post' enctype="multipart/form-data">{% csrf_token %}
+		{{ form.as_table }}
+		<br>
+		<input type="submit" value="Enviar" />
+	</form>
+	
+	
+	{% if message %}
+		<font color="green">{{ message }}</font>
+	{% endif %}
+	{% if errors %}
+		<font color="red">{{ errors }}</font>
+	{% endif %}
+	<hr>
+	<input class="button" type="submit" value="Volver" onclick="location.href='/'" />
+{% endblock %}

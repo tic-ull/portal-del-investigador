@@ -1564,6 +1564,10 @@ class GrupoinvestCategoriainvestigador(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=40L)
     descripcion = models.TextField()
+    
+    def __unicode__(self):
+        return u"%s" %(self.nombre)
+    
     class Meta:
         db_table = 'GrupoInvest_categoriainvestigador'
 
@@ -1615,6 +1619,10 @@ class GrupoinvestGrupoinves(models.Model):
     acronimo = models.CharField(max_length=20L, blank=True)
     activo = models.IntegerField(null=True, blank=True)
     descripcion = models.TextField(blank=True)
+    
+    def __unicode__(self):
+        return u"%s" %(self.grupo)
+    
     class Meta:
         db_table = 'GrupoInvest_grupoinves'
 
@@ -1627,10 +1635,15 @@ class GrupoinvestInstituto(models.Model):
 class GrupoinvestInvestcvn(models.Model):
     id = models.IntegerField(primary_key=True)
     investigador = models.ForeignKey('GrupoinvestInvestigador', unique=True)
-    cvnfile = models.CharField(max_length=100L, db_column='cvnFile', blank=True) # Field name made lowercase.
+    cvnfile = models.FileField(max_length=100L, db_column='cvnFile', upload_to='static/files/pdf/') # Field name made lowercase.
     fecha_up = models.DateField(null=True, blank=True)
     fecha_cvn = models.DateField(null=True, blank=True)
     xmlfile = models.CharField(max_length=100L, db_column='xmlFile', blank=True) # Field name made lowercase.
+
+    def __unicode__(self):
+        return u"'%s' CVN: '%s'" %(self.investigador, self.cvnfile)
+
+
     class Meta:
         db_table = 'GrupoInvest_investcvn'
         verbose_name_plural = 'CVN Investigadores'
@@ -1670,9 +1683,13 @@ class GrupoinvestInvestigador(models.Model):
     cod_persona = models.CharField(max_length=5L)
     cese = models.DateField(null=True, blank=True)
     
+    def __unicode__(self):
+        return u"%s %s %s %s" %(self.nombre, self.apellido1, self.apellido2, self.nif)
+
     class Meta:
         db_table = 'GrupoInvest_investigador'
         verbose_name_plural = 'Investigadores'
+
 
 class GrupoinvestOtromiembro(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2271,7 +2288,7 @@ class AuthPermission(models.Model):
 
 class AuthUser(models.Model):
     id = models.IntegerField(primary_key=True)
-    username = models.CharField(max_length=30L, unique=True)
+    username = models.CharField(max_length=30L)#, unique=True)
     first_name = models.CharField(max_length=30L)
     last_name = models.CharField(max_length=30L)
     email = models.CharField(max_length=75L)
@@ -2281,6 +2298,12 @@ class AuthUser(models.Model):
     is_superuser = models.IntegerField()
     last_login = models.DateTimeField()
     date_joined = models.DateTimeField()
+
+
+
+    def __unicode__(self):
+        return u"'%s' e-mail: '%s'" %(self.username, self.email)
+    
     class Meta:
         db_table = 'auth_user'
 

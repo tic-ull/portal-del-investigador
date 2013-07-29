@@ -17,18 +17,14 @@
 			</div>
 		</li>
 		<li class="divider"></li>
-			{% if not user.is_staff %}
-			<li><a href="#"><i class="icon-eye-open"></i> Ver CVN</a></li>
-			<li><a href="#"><i class="icon-download"></i> Descargar CVN</a></li>		
-			{% else %}
-			<li><a href="#"> Opciones Administrador</a></li>
-			<li class="divider"></li>
-			{% endif %}
 		{% else %}
 		<li class="nav-header"><i class="icon-user icon-white"></i> Menú principal</li>
 		{% endif %}
-		<li><a href="#"><i class="icon-question-sign"></i> Ayuda y soporte</a></li>
-		<li><a href="#"><i class="icon-off"></i> Salir</a></li>
+	{% if not user.is_anonymous %}
+		<li><a href="/accounts/logout/"><i class="icon-off"></i> Salir</a></li>
+	{% else %}
+		<li><a href="/accounts/login/"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>
+	{% endif %}
 	</ul>
 	{% if not user.is_anonymous %}
 	<ul class="nav nav-list">

@@ -10,6 +10,7 @@ import os
 import errno
 import binascii
 import base64 # Codificación para el web service del Fecyt
+import datetime
 
 # Modelo de la BBDD para la clase UtilidadesCVN
 from cvn.models import *
@@ -24,7 +25,7 @@ from lxml import etree
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned 
 
 # Funciones de apoyo
-from cvn.helpers import formatDocumentIdent, searchDataUser, formatCode, searchDataProduccionCientifica, formatDate, checkPage
+from cvn.helpers import formatNIF, searchDataUser, formatCode, searchDataProduccionCientifica, formatDate, checkPage
 
 # Constantes para la importación de CVN
 import cvn.settings as cvn_setts
@@ -43,12 +44,12 @@ class UtilidadesCVN:
 		""" Constructor """		
 		self.urlPDF = urlPDF
 		self.urlXML = urlXML
-		
+		self.urlOLD_CVN = cvn_setts.URL_OLD_CVN # Directorio donde se almancenan los históricos
 		# Se supone que existe el directorio donde se encuentran los PDFs
-		self.__create_directory_XML__(self.urlXML)
-		
+		self.__create_directory__(self.urlXML)
+		self.__create_directory__(self.urlOLD_CVN)		
 	
-	def __create_directory_XML__(self, path):
+	def __create_directory__(self, path):
 		"""
 			Método privado que se encarga de crear el directorio donde se van a alojar
 			los ficheros XMLs. En caso de que existan no crea dichos directorios.
@@ -74,12 +75,12 @@ class UtilidadesCVN:
 		cvnFile = codecs.open(cvn_setts.FILE_LOG_IMPORT, "w", "utf-8")
 		# Recorre la lista que contiene los CVN en PDF y obtiene su representación en XML
 		for cvn in lista_cvn:
-			print cvn
 			currentCVN = UtilidadesCVNtoXML(filePDF = cvn)
 			result     = currentCVN.getXML()
 			if not result: # En caso de que el CVN no tenga formato del Fecyt
-				cvnFile.write(pdf + '\n')				
+				cvnFile.write(cvn + '\n')				
 		cvnFile.close()
+
 
 	def parseAllXML(self):
 		"""
@@ -87,18 +88,22 @@ class UtilidadesCVN:
 			especificada e introduce los datos en la BBDD.			
 		"""					
 		data = {}
-		lista_xml = os.listdir(self.urlXML)		
-		fileError = codecs.open(cvn_setts.FILE_LOG_ERROR, "w", "utf-8")
+		lista_xml = os.listdir(self.urlXML)
+		fileBBDD  = codecs.open(cvn_setts.FILE_LOG_INSERTADOS, "w", "utf-8")
 		fileCVN   = codecs.open(cvn_setts.FILE_LOG_DUPLICADOS, "w", "utf-8")
+		inicial   = datetime.datetime.now()
+		print "Tiempo de comienzo: " + str(inicial)
 		# Recorre la lista que contiene los CVN en XML
-		for xml in lista_xml:
-			print "**************************************************************"
-			print xml
+		for xml in lista_xml:			
 			currentXML = UtilidadesXMLtoBBDD(fileXML = xml)
 			# Retorna el usuario que se ha introducido en la BBDD
-			user = currentXML.parseXML(fileError, fileCVN) 						
-			print "**************************************************************"
-		fileError.close()
+			currentXML.parseXML(fileBBDD, fileCVN) 			
+		final     = datetime.datetime.now()
+		print "Tiempo finalización: " + str(final)
+		diff_time = final - inicial
+		print "Minutos: " + str(int(diff_time.total_seconds()/60.0))
+		print "Segundos: " + str(int(diff_time.total_seconds()%60.0))
+		fileBBDD.close()
 		fileCVN.close()
 		
 	
@@ -129,22 +134,29 @@ class UtilidadesCVNtoXML:
 		self.filePDF = filePDF
 		
 
-	def getXML(self):
+	def getXML(self, memoryCVNFile = None):
 		"""
 			Método que a partir de un CVN en PDF obtiene su representación en XML.	
 			
 			Retorna el fichero si NO el PDF no tiene el formato del FECYT		
-		"""				
-		urlFile = self.urlPDF + self.filePDF								
+		"""		
+		if not memoryCVNFile:				
+			urlFile = self.urlPDF + str(self.filePDF)			
+			fileXML = self.filePDF.replace("pdf", "xml")			
+			
 		# Se almacena el PDF en un array binario codificado en base 64
 		try:
-			dataPDF = binascii.b2a_base64(open(urlFile).read())
+			if not memoryCVNFile:				
+				dataPDF = binascii.b2a_base64(open(urlFile).read())
+			else:
+				dataPDF = binascii.b2a_base64(memoryCVNFile.read())
+				fileXML = memoryCVNFile.name
+				fileXML = fileXML.replace('pdf','xml')
 		except IOError:
 			print u"No such file or directory:'" + urlFile + "'"
 			return False
 
-		# Se obtiene y almacena el fichero XML resultante
-		fileXML = self.filePDF.replace("pdf", "xml")
+		# Se almacena el fichero XML resultante		
 		urlFile = self.urlXML + fileXML
 		
 		# Llamada al Web Service para obtener la transformación a XML y la escribe a un fichero
@@ -161,13 +173,38 @@ class UtilidadesCVNtoXML:
 		if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
 			dataXML = base64.b64decode(resultXML.cvnXml)
 			fileXML = open(urlFile, "w").write(dataXML)
-		else:
-			print "File: '" + filePDF + "' no tiene el formato CVN-XML del Fecyt."
-			return False # Retorna el fichero PDF con formato antiguo
-		
+		else:			
+			#print "File: '" + self.filePDF + "' no tiene el formato CVN-XML del Fecyt."
+			return False # Retorna el fichero PDF con formato antiguo		
 		return True
 
 
+	def checkCVNOwner(self, user = None):
+		"""
+			Este método se encarga de corroborar que el propietario del CVN es el mismo que está logeado en la sesión.
+		"""		
+		data = {}
+		nif = ''
+		fileXML = self.filePDF.name.replace("pdf", "xml")
+		try:					
+			tree = etree.parse(self.urlXML + fileXML)		
+			nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
+			if nif.text is not None:
+				nif = nif.text
+			else:
+				nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
+				if nif is not None:
+					nif = nif.text
+			if nif.upper() == user.nif.upper():
+				return True
+		except IOError:
+			if fileXML:
+				print u"Fichero " + fileXML + u" no encontrado."
+			else:
+				print u"Se necesita un fichero para ejecutar este método."				
+		return False
+		
+		
 # -----------------------
 class UtilidadesXMLtoBBDD:
 	"""
@@ -182,39 +219,181 @@ class UtilidadesXMLtoBBDD:
 		self.fileXML = fileXML
 		
 	
-	def parseXML(self, fileError = "", fileCVN = ""):
+	def parseXML(self, fileBBDD = "", fileCVN = ""):
 		"""
 			Método que recorre el fichero XML y va extrayendo los datos del mismo.
 			Dichos datos se almacenarán en la BBDD en las tablas correspondientes.
 			
 			Variables:
-			- fileError: Fichero donde se almacena los errores de importación
+			- fileBBDD: Fichero donde se almacena los CVN almacenados en la importación
 			- fileCVN: Fichero donde se almacenan aquellos cvn duplicados
+		"""	
+		cvn = cvn_setts.RUTA_BBDD + self.fileXML.replace("xml", "pdf")		
+		# Comprobar si existe ya el CVN en el portal del investigador.
+		cvn_investigador = GrupoinvestInvestcvn.objects.filter(cvnfile__icontains = cvn.split('/')[-1])		
+		if len(cvn_investigador) > 0:			
+			# Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN			
+			fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
+			# Se actualiza la columna 'xmlfile'
+			cvn_investigador[0].xmlfile = cvn_setts.RUTA_BBDD + self.fileXML
+			cvn_investigador[0].fecha_cvn = fecha_cvn
+			cvn_investigador[0].save()
+			# Se actualiza el fichero con CVN insertados
+			fileBBDD.write(u'' + cvn + ',')
+			fileBBDD.write(u'' + cvn_investigador[0].investigador.nombre + ' ' +
+								 cvn_investigador[0].investigador.apellido1 + ' ' +
+								 cvn_investigador[0].investigador.apellido2 + ',')
+			fileBBDD.write(u'' + cvn_investigador[0].investigador.nif + '\n')
+		else:
+			# Se realiza una valoración del contenido del xml y se calcula la valoración	
+			(lista, probabilidad) = self.valorarXML()
+			if lista is not None and lista:			
+				for usuario in lista:
+					fileCVN.write(u'' + self.fileXML + ',')
+					fileCVN.write(u'' + usuario.cod_persona + ',')
+					fileCVN.write(u'' + usuario.nombre + ' ' + usuario.apellido1 + ' ' + usuario.apellido2 + ',')
+					fileCVN.write(u'' + usuario.nif + ',')
+					try: # Busca el CVN que tiene almacenado en Viinv del posible usuario candidato.
+						invest = GrupoinvestInvestigador.objects.get(nif = usuario.nif)
+						cvn_viinv = GrupoinvestInvestcvn.objects.get(investigador= invest)
+						fileCVN.write(u'' + str(cvn_viinv.cvnfile) + ',')
+					except ObjectDoesNotExist:
+						fileCVN.write(u'UNKNOWN, ')
+					fileCVN.write(u'' + str(probabilidad) + '\n')
+			else: # No coincide el NIF con ningun investigador alojado en la BBDD.				
+				fileCVN.write(u'' + self.fileXML + ', ')
+				fileCVN.write(u'UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, ')				
+				fileCVN.write(u'' + str(probabilidad) + '\n')
+			
+				
+	def get_key_data(self, filename):
+		""" 
+			return a tuple with key data extracted from a CVN XML:
+			date_CVN, dni, nombre_completo, birth_date, email
+		"""
+		tree = etree.parse(filename)
+		date_CVN = tree.find('Version/VersionID/Date/Item')
+		if date_CVN is not None:
+			date_CVN  = date_CVN.text
+		nombre = u''
+		nombre += tree.find('Agent/Identification/PersonalIdentification/GivenName/Item').text
+
+		first_family_name = tree.find('Agent/Identification/PersonalIdentification/FirstFamilyName/Item')
+		if first_family_name.text is not None:
+			first_family_name = u'' + first_family_name.text
+		
+		segundo_apellido = None
+		second_family_name = tree.find('Agent/Identification/PersonalIdentification/SecondFamilyName/Item')
+		if second_family_name is not None:
+			second_family_name = u'' + unicode(second_family_name.text)
+		
+		birth_date = tree.find('Agent/Identification/PersonalIdentification/BirthDate/Item')
+		if birth_date is not None:
+			birth_date = birth_date.text
+		   
+		nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
+		if nif is not None:
+			nif = nif.text
+		else:
+			nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
+			if nif is not None:
+				nif = nif.text
+		
+		email = tree.find('Agent/Contact/InternetEmailAddress/Item')
+		if email is not None:
+			email = email.text
+
+		return (date_CVN, nif, nombre, first_family_name, second_family_name, birth_date, email)	
+		
+		
+	def valorarXML(self):
+		""" 
+			Valora la probabilidad de que CVN pertenezca a un usuario registrado en el portal de ViinV 
+			
+			Return: 		
+			- lista_usuario: Lista de usuarios posibles como propietarios del CVN analizado
+			- probabilidad: Medida de 0 a 1.
+		"""
+		probabilidad = 0		
+		(date_CVN, nif, nombre, primer_apellido, segundo_apellido, birth_date, email) = self.get_key_data(self.urlXML + self.fileXML)
+		# Se eliminan los datos erróneos que pueda contener el dni (en caso de que lo tenga introducido)
+		nif = formatNIF(nif)
+		if nif is not None:
+			usuario = GrupoinvestInvestigador.objects.filter(nif = nif)
+			if usuario:
+				probabilidad = 1
+				return (usuario, probabilidad)
+			else:
+				return (None, 0)
+		# No dispone de NIF se aplican otros baremos de matching		
+		lista_usuarios = GrupoinvestInvestigador.objects.filter(apellido1__iexact = primer_apellido)
+		if lista_usuarios is not None:
+			probabilidad += 0.2
+		# Se filtra la lista inicial por el segundo apellido
+		if segundo_apellido is not None:
+			lista_aux = lista_usuarios.filter(apellido2__iexact = segundo_apellido)
+			if lista_aux:
+				probabilidad += 0.3
+				lista_usuarios = lista_aux
+		else:
+			probabilidad += 0.3
+		# Se filtra la lista inicial por el nombre
+		lista_aux = lista_usuarios.filter(nombre__icontains = nombre)
+		if lista_aux is not None:
+			probabilidad += 0.3
+			lista_usuarios = lista_aux
+		# Se filtra la lista por la fecha de nacimiento
+		if birth_date is not None:
+			birth_date = datetime.date(int(birth_date.split("-")[0]), 
+										int(birth_date.split("-")[1]), 
+										int(birth_date.split("-")[2]))
+			lista_aux = lista_usuarios.filter(fecha_nacimiento = birth_date)
+			if lista_aux is not None:
+				probabilidad += 0.075
+				lista_usuarios = lista_aux
+		# Se filtra la lista por el correo electrónico
+		lista_aux = lista_usuarios.filter(email = email)
+		if lista_aux is not None:
+			probabilidad += 0.075
+			lista_usuarios = lista_aux
+		# Se devuelve la lista de usuarios con la probabilidad de que sean propietarios del CVN analizado	
+		return (lista_usuarios, probabilidad)
+				
+		
+	def insertarXML(self, investigador = None):
+		""" 
+			Inserta los datos del CVN encontrados en el portal en la base de datos de la aplicación CVN 
+			
+			Variables:
+			- investigador -> Usuario con el que se enlaza ambas BBDD.
 		"""		
-		user = None
 		dataPersonal = {}
-		try:
+		fecha_cvn = None
+		try:			
+			
 			tree = etree.parse(self.urlXML + self.fileXML)			
+			fecha_cvn = tree.find('Version/VersionID/Date/Item').text			
 			# Datos del Investigador
 			dataInvestigador = tree.find('Agent')  #/Identification/PersonalIdentification')			
 			dataPersonal = self.__parseDataIdentificationXML__(dataInvestigador.getchildren())
-			search = searchDataUser(dataPersonal)					
-			user   = Usuario.objects.filter(**search)
-			if not user:
-				user = Usuario.objects.create(**dataPersonal)
+			search_data = searchDataUser(dataPersonal)			
+			if search_data:
+				search_user = Usuario.objects.filter(**search_data)							
+				if not search_user:
+					#dataPersonal.update({'investigador': investigador})
+					user = Usuario.objects.create(**dataPersonal)
+				else:
+					user = search_user[0]					
+				# Introduce los datos de la actividad científica
+				self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
 			else:
-				user = user[0] # Puede que encuentre varios usuarios debido a que algunos no introdujeron el NIF				
-			#print user
-			# Introduce los datos de la actividad científica
-			self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
-			# Actualiza los datos en la BBDD del portal, tabla "GrupoinvestInvestCVN"
-			self.updateInvestCVN(user, fileError, fileCVN)					
+				print "CVN sin datos personales:  " + str(self.fileXML) 
 		except IOError:
 			if self.fileXML:
 				print u"Fichero " + self.fileXML + u" no encontrado."
 			else:
 				print u"Se necesita un fichero para ejecutar este método."		
-		return user
+		return fecha_cvn
 
 	
 	def __parseDataIdentificationXML__(self, tree = None):
@@ -229,7 +408,7 @@ class UtilidadesXMLtoBBDD:
 		"""
 		dic = {}
 		for element in tree:
-			if element.tag == u'Identification':				
+			if element.tag == u'Identification' and element.getchildren():
 				dic.update(self.__dataPersonalIdent__(element.getchildren()[0].getchildren()))
 			if element.tag == u'Address':
 				dic.update(self.__dataAddress__(element.getchildren()))				
@@ -249,7 +428,7 @@ class UtilidadesXMLtoBBDD:
 		for element in tree:
 			if element.tag == u'OfficialId':
 				dic['tipo_documento'] = element.getchildren()[0].tag
-				dic['documento']      = u'' + formatDocumentIdent(element.getchildren()[0].getchildren()[0].text)
+				dic['documento']      = u'' + formatNIF(element.getchildren()[0].getchildren()[0].text)
 			elif element.tag == u'BirthRegion':
 				dic[cvn_setts.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[1].getchildren()[0].text
 			else:				
@@ -357,29 +536,20 @@ class UtilidadesXMLtoBBDD:
 			- data: Datos a almacenar en la tabla correspondiente.			
 			- table: Tabla donde se va a almacenar o actualizar los datos
 		"""
-		# Diccionario de búsqueda para comprobar si existe ya el dato en la tabla
-		print data
-		search_data = searchDataProduccionCientifica(data)			
-		print search_data
+		# Diccionario de búsqueda para comprobar si existe ya el dato en la tabla		
+		search_data = searchDataProduccionCientifica(data)					
 		if not search_data: # Si devuelve un diccionario vacío, la búsqueda devuelve todos los registros de la tabla
 			search_data = {'pk': cvn_setts.INVALID_SEARCH}
 		try:				
 			reg = table.objects.get(**search_data)
-			print u"----------------------------------------------------> ENCONTRADO"
+			# Actualiza el registro con los nuevos datos
+			table.objects.filter(pk = reg.id).update(**data)				
 		except ObjectDoesNotExist: 
 			# Se crea el nuevo registro en la tabla correspondiente
-			#print data
 			reg = table.objects.create(**data)
 		# Añade el usuario a la tabla
 		reg.usuario.add(user)
-		
-		#~ else:
-			#~ #print "Tesis"
-			#~ #print user
-			#~ data.update({u'usuario': user})
-			#~ #print data
-			#~ table.objects.create(**data)
-		
+			
 
 	def __getDataPublicacion__(sefl, tree = [], tipo = ""):
 		"""
@@ -434,9 +604,9 @@ class UtilidadesXMLtoBBDD:
 				data[u'fecha'] = u'' + formatDate(tree.find('Date/OnlyDate/Year/Item').text)
 			if tipo != u'Libro' and tree.find('ExternalPK') is not None:
 				data[u'issn']  = u'' + tree.find('ExternalPK/Code/Item').text		
-		except KeyError:       # El nodo no contiene ni artículos, ni capítulos ni libros.			
+		except KeyError:       # El nodo no contiene ni artículos, ni capítulos ni libros.						
 			pass
-		except AttributeError: # El nodo no tiene especificado el tipo de Item.
+		except AttributeError: # El nodo no tiene especificado el tipo de Item.			
 			pass
 		return data		
 
@@ -449,7 +619,7 @@ class UtilidadesXMLtoBBDD:
 			
 			Return: Diccionario con los datos para introducir en la tabla "Congreso"
 		"""
-		print "\n--- Trabajos presentados en congresos nacionales o internacionales ---\n"
+		#print "\n--- Trabajos presentados en congresos nacionales o internacionales ---\n"
 		data = {}
 		if tree.find('Title/Name') is not None: # Algonos trabajos no tienen puesto el nombre
 			data[u'titulo'] = u'' + tree.find('Title/Name/Item').text		 
@@ -489,7 +659,7 @@ class UtilidadesXMLtoBBDD:
 			
 			Return: Diccionario con los datos para introducir en la tabla "Publicación"		
 		"""
-		print "\n --- Convenios y Proyectos de I+D+i ---\n"
+		#print "\n --- Convenios y Proyectos de I+D+i ---\n"
 		data = {}
 		if tree.find('Title/Name') is not None: # Hay CVN que no tienen puesta la denominación del proyecto
 			data[u'denominacion_del_proyecto'] = u'' + tree.find('Title/Name/Item').text
@@ -584,44 +754,5 @@ class UtilidadesXMLtoBBDD:
 				data = self.__dataActividadCientificaCongreso__(element)			
 			# Almacena los datos
 			if data:
-				#print data
-				self.__saveData__(user, data, cvn_setts.MODEL_TABLE[cvn_key])						
-		
-
-
-	def updateInvestCVN(self, user = None, fileError = None, fileCVN = None):
-		"""
-			Actualiza el campo 'xmlfile' de la tabla 'GrupoinvestInvestcvn' de la BBDD 'portalinvestigador'.
-			Variables:			
-			- user: Usuario CVN investigador a actualizar en la BBDD 'portalinvestigador'.
-			- fileError: Fichero donde se almacenan los usuarios erróneos al actualizar.
-			- fileCVN: Fichero donde se almacenarán aquellos CVN duplicados.
-		"""		
-		
-		#data = self.urlXML + self.fileXML		
-		data = u"files/xml/" + self.fileXML		
-		nif_nie = formatDocumentIdent(user.documento)		
-		try:			
-			invest    = GrupoinvestInvestigador.objects.get(nif__icontains = nif_nie)
-			investcvn = GrupoinvestInvestcvn.objects.get(investigador = invest)
-			# Comprueba que no ha sido actualizado			
-			if investcvn.xmlfile and investcvn.xmlfile != data:					
-				fileCVN.write(u"Investigador con CVN duplicado: " + invest.nombre + " " + invest.apellido1 + "\n")
-				fileCVN.write(u"Registro en la BBDD: " + investcvn.xmlfile + "\n")
-				fileCVN.write(u"Registro duplicado: " + data + "\n")				
-				fileCVN.write(u"---------------------------\n")
-			else:				
-				investcvn.xmlfile = data			
-				investcvn.save()				
-		except ValueError:			                    # Usuario sin DNI en el CVN introducido en el Fecyt
-			fileError.write(u"El investigador '" + user.nombre + " " + user.primer_apellido 
-							+ u"' no ha introducido el DNI en el CVN.\n")
-		except GrupoinvestInvestigador.DoesNotExist:	# Investigador no existe en la BBDD del Portal Viinv.		
-			fileError.write(u"No existe el investigador con NIF/NIE: '"+ user.documento + "' (" + user.nombre + " " 
-							+ user.primer_apellido + u") en la BBDD del Portal.\n")
-		except GrupoinvestInvestcvn.DoesNotExist:       # Investigador sin registro de CVN en la BBDD del Portal Viinv
-			fileError.write(u"No existe CVN para el investigador con NIF/NIE: '"+ user.documento + "' (" + user.nombre + " " 
-							+ user.primer_apellido + u") en la BBDD del Portal.\n")		
-		except MultipleObjectsReturned:	                # Investigador duplicado
-			fileError.write(u"El investigador '" + user.nombre + " " + user.primer_apellido + "' (NIF/NIE):" + user.documento
-							+ u" está duplicado en la BBDD del portal\n")
+				self.__saveData__(user, data, cvn_setts.MODEL_TABLE[cvn_key])								
+	

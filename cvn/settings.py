@@ -13,10 +13,15 @@ URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 URL_BASE = "/../static/files/"
 URL_PDF = os.getcwd() + URL_BASE + "pdf/"
 URL_XML = os.getcwd() + URL_BASE + "xml/"
+URL_OLD_CVN = os.getcwd() + URL_BASE + "old_cvn/"  # CVN antiguos
+RUTA_BBDD = "files/cvn/"
+
+# Tipo de ficheros de subida
+PDF = "application/pdf"
 
 # Ficheros con los resultados de las diferentes operaciones
 FILE_LOG_IMPORT = "../static/files/import/errorCVN.log"       # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
-FILE_LOG_ERROR  = "../static/files/import/errorImport.log"    # Fichero con los errores al importar a la BBDD de la app CVN.
+FILE_LOG_INSERTADOS = "../static/files/import/cvnInsertados.log" # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
 FILE_LOG_DUPLICADOS = "../static/files/import/cvnDuplicados.log" # Fichero que almacena los CVN duplicados.
 
 # Almacena las equivalencias entre los tags de los nodos XML y los campos de la BBDD
@@ -92,6 +97,9 @@ u"020": u"Unión Europea",
 u"030": u"Internacional no UE",
 u"OTHERS": u"Otros",
 }
+
+# Fecha de caducidad de un CVN
+CVN_CADUCIDAD = 180
 
 # Constante para indicar que el dato de la página está introducido en un formato no reconocible
 INVALID_PAGE = -1

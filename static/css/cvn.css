@@ -2,6 +2,15 @@
 	margin-bottom: 0px; 
 	margin-top:0px;
 }
+
 input#id_cvnfile {
     width: 100%;
+}
+
+div.thumbnail div.alert {
+    margin-bottom: 0;
+}
+
+div.tab-content h5 {
+    margin-bottom: 8px;
 }
