@@ -5,7 +5,10 @@
 		<li>
 			<div class="media">
 				<a class="pull-left" href="#">
-					<img class="media-object" data-src="holder.js/48x48">
+					<img class="media-object" src="holder.js/48x48" alt="Foto Usuario">
+<!--
+					<img class="media-object" data-src="holder.js/48x48" alt="Foto Usuario">
+-->
 				</a>
 				
 				<div class="media-body">
@@ -21,6 +24,7 @@
 		<li class="nav-header"><i class="icon-user icon-white"></i> Menú principal</li>
 		{% endif %}
 	{% if not user.is_anonymous %}
+		<li><a href="/cvn/"><i class="icon-tasks"></i>Gestionar CVN</a></li>
 		<li><a href="/accounts/logout/"><i class="icon-off"></i> Salir</a></li>
 	{% else %}
 		<li><a href="/accounts/login/"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>

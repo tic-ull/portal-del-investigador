@@ -1,26 +1,23 @@
-{% extends "ccti.html" %}
+{% extends 'ccti.html' %}
 
-{% block premain %}
-	<h2>Importar de Curriculum Vitae Normalizado (CVN)</h2>
-{% endblock %}
+<!-- Bootstrap -->
+{% load bootstrap_toolkit %}
+
 
 {% block main %}
+
+			CVN es un currículum vítae único para los investigadores.
 	
-	<h3>Introduzca su CVN con formato del Fecyt:</h3>
-	
-	<form action="" method='post' enctype="multipart/form-data">{% csrf_token %}
-		{{ form.as_table }}
-		<br>
-		<input type="submit" value="Enviar" />
-	</form>
-	
-	
-	{% if message %}
-		<font color="green">{{ message }}</font>
-	{% endif %}
-	{% if errors %}
-		<font color="red">{{ errors }}</font>
-	{% endif %}
-	<hr>
-	<input class="button" type="submit" value="Volver" onclick="location.href='/'" />
-{% endblock %}
+			<ul>
+				<li>Un currículum vítae digital y <strong>normalizado</strong></li>
+				<li>Un contenido y formato <strong>estándar</strong> de los CV de los investigadores</li>
+				<li>
+					Un modelo de interpretación de la información que permite el salto a la <strong>administración electrónica</strong>
+				</li>
+				<li>Un eslabón para contar con el <strong>registro de investigadores</strong> totalmente integrado</li>
+			</ul>					
+
+	<br>
+{% endblock main %}
+
+

@@ -48,27 +48,25 @@ def searchDataUser(data = None):
 	"""
 		Función que devuelve un diccionario para buscar los datos de un usuario en la BBDD.
 		Su principal uso es para comprobar que no se va a añadir un usuario que ya existe.
+		Si el usuario dispone de NIF/NIE, es el único parámetro que se usa para la búsqueda
 		
 		Variables:
 		- data:  Diccionario con los datos personales del usuario a añadir.
 		
 		Return: Diccionario de búsqueda.
 	"""
-	# TODO: Ver si es necesario cambiar las condiciones de los campos para la búsqueda de usuarios
-	#       Si el usuario tiene NIF/NIE se utiliza como unico parámetro de búsqueda, sino usar los 	
-	#       datos personales.
 	search_dic = {}	
-	if data.has_key('segundo_apellido'):
-		search_dic['segundo_apellido'] = data['segundo_apellido']
-	if data.has_key('primer_apellido'):
-		search_dic['primer_apellido__iexact'] = data['primer_apellido']
-	if data.has_key('nombre'):
-		search_dic['nombre__iexact'] = data['nombre']
-	# NOTE Algunos usuarios no tienen documento en el pdf duplicado y falla la búsqueda
 	if data.has_key('documento'):
 		search_dic['documento__icontains'] = data['documento']
+	else:
+		if data.has_key('segundo_apellido'):
+			search_dic['segundo_apellido'] = data['segundo_apellido']
+		if data.has_key('primer_apellido'):
+			search_dic['primer_apellido__iexact'] = data['primer_apellido']
+		if data.has_key('nombre'):
+			search_dic['nombre__iexact'] = data['nombre']		
 	return search_dic
-
+	
 	
 def formatCode(data, extension):
 	"""
@@ -153,7 +151,7 @@ def setCVNFileName(user):
 	return 'CVN-' + str(user.user.username) + '-' + obfusc + u'.pdf'
 	
 	
-def handle_old_cvn(cvnName = None, cvn = None):
+def handleOldCVN(cvnName = None, cvn = None):
 	"""
 		Función que se encarga de escribir los CVNs antiguos en el directorio de histórico añadiendo
 		en el nombre del mismo la fecha de subida.	
@@ -250,3 +248,25 @@ def getDataCVN(data = ""):
 	except ObjectDoesNotExist:
 		context['CVN'] = False
 	return context
+	
+	
+def dataCVNSession(investCVN = None):
+	"""
+		Función que devuelve los datos relevante del CVN del usuario que acaba de acceder a la aplicación.
+		
+		Retorna un diccionario con los datos:
+		- Fecha de creación del CVN.
+		- Fichero que contiene el CVN.
+		- Necesidad de actualizar el CVN.
+		- Fecha hasta cuando es válido
+	"""
+	context = {}
+	context['fecha_cvn'] = investCVN.fecha_cvn
+	# Comprobar si el CVN no se ha actualizado en 6 meses
+	context['file_cvn'] = investCVN.cvnfile		
+	if (investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
+		context['updateCVN'] = True
+	else:				
+		context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)		
+	return context
+	

@@ -173,8 +173,7 @@ class UtilidadesCVNtoXML:
 		if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
 			dataXML = base64.b64decode(resultXML.cvnXml)
 			fileXML = open(urlFile, "w").write(dataXML)
-		else:			
-			#print "File: '" + self.filePDF + "' no tiene el formato CVN-XML del Fecyt."
+		else:						
 			return False # Retorna el fichero PDF con formato antiguo		
 		return True
 
@@ -189,13 +188,13 @@ class UtilidadesCVNtoXML:
 		try:					
 			tree = etree.parse(self.urlXML + fileXML)		
 			nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
-			if nif.text is not None:
+			if nif is not None  and nif.text is not None:
 				nif = nif.text
 			else:
 				nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
-				if nif is not None:
+				if nif is not None and nif.text is not None:
 					nif = nif.text
-			if nif.upper() == user.nif.upper():
+			if nif and nif.upper() == user.nif.upper():
 				return True
 		except IOError:
 			if fileXML:
@@ -378,7 +377,7 @@ class UtilidadesXMLtoBBDD:
 			dataPersonal = self.__parseDataIdentificationXML__(dataInvestigador.getchildren())
 			search_data = searchDataUser(dataPersonal)			
 			if search_data:
-				search_user = Usuario.objects.filter(**search_data)							
+				search_user = Usuario.objects.filter(**search_data)				
 				if not search_user:
 					#dataPersonal.update({'investigador': investigador})
 					user = Usuario.objects.create(**dataPersonal)
@@ -579,14 +578,15 @@ class UtilidadesXMLtoBBDD:
 			
 	def __dataActividadCientificaPublicacion__(self, tree = []):
 		"""
+			Publicaciones, documentos científicos y técnicos
+		
 			Método que obtiene los datos de las publicaciones del usuario.
 			Variable:
 			- cvnpk: Identificador de la tabla de la Actividad Científica.
 			- tree:  Elemento que contiene los datos necesarios de la publicación
 			
 			Return: Diccionario con los datos para introducir en la tabla "Publicación"
-		"""
-		#print "\n--- Publicaciones, documentos científicos y técnicos ---\n"		
+		"""		
 		# Códigos de los atributos: Artículos (35), Capítulos (148), Libros (112)
 		data = {}
 		try:
@@ -613,13 +613,14 @@ class UtilidadesXMLtoBBDD:
 
 	def __dataActividadCientificaCongreso__(self, tree = []):
 		"""
+			Trabajos presentados en congresos nacionales o internacionales
+			
 			Método que obtiene los datos de los congresos del usuario.
 			Variable:
 			- Tree: Lista de nodos con la información sobre las "Trabajos presentados en congresos nacionales o internacionales."
 			
 			Return: Diccionario con los datos para introducir en la tabla "Congreso"
-		"""
-		#print "\n--- Trabajos presentados en congresos nacionales o internacionales ---\n"
+		"""		
 		data = {}
 		if tree.find('Title/Name') is not None: # Algonos trabajos no tienen puesto el nombre
 			data[u'titulo'] = u'' + tree.find('Title/Name/Item').text		 
@@ -648,18 +649,19 @@ class UtilidadesXMLtoBBDD:
 	
 	def __dataExperienciaCientifica__(self, tree = [], tipo = ""):
 		"""
+			Convenios y Proyectos de I+D+i
+		
 			Método que obtiene los datos de tanto de la "participación en contratos, convenios 
 			o proyectos	de I+D+i no competitivos con Administraciones o entidades públicas o privadas"
 			como de "participación en proyectos de I+D+i financiados en convocatorias competitivas de
 			Administraciones o entidades públicas y privadas".	
- .
+ 
 			Variable:
 			- tree: Lista de nodos con la información sobre los convenios.
 			- tipo: Indica si se trata de un Convenio o un Proyecto
 			
 			Return: Diccionario con los datos para introducir en la tabla "Publicación"		
 		"""
-		#print "\n --- Convenios y Proyectos de I+D+i ---\n"
 		data = {}
 		if tree.find('Title/Name') is not None: # Hay CVN que no tienen puesta la denominación del proyecto
 			data[u'denominacion_del_proyecto'] = u'' + tree.find('Title/Name/Item').text
@@ -704,6 +706,8 @@ class UtilidadesXMLtoBBDD:
 
 	def __dataActividadDocente__(self, tree = []):
 		"""
+			Dirección de tesis doctorales y/o proyectos fin de carrera
+		
 			Método para obtener los datos de la Actividad docente de un usuario.
 			Sección del Editor "Dirección de tesis doctorales y/o proyectos fin de carrera".
 			
@@ -715,8 +719,7 @@ class UtilidadesXMLtoBBDD:
 		data = {}		
 		# Comprueba si la actividad docente se trata de una tesis
 		try:
-			if tree.find('Subtype/SubType1/Item').text == cvn_setts.DATA_TESIS:
-				#print "\n--- Dirección de tesis doctorales y/o proyectos fin de carrera ---\n"
+			if tree.find('Subtype/SubType1/Item').text == cvn_setts.DATA_TESIS:				
 				data[u'titulo'] = u'' + tree.find('Title/Name/Item').text
 				data[u'universidad_que_titula'] = u'' + tree.find('Entity/EntityName/Item').text			
 				data[u'autor'] = self.__getAutores__(tree.findall('Author'))
@@ -739,8 +742,7 @@ class UtilidadesXMLtoBBDD:
 		# Recorre los méritos introducidos en el CVN por el investigador 
 		for element in cvnItems:
 			data = {}
-			cvn_key = element.find('CvnItemID/CVNPK/Item').text			
-			#print "---------------- " + str(cvn_key) + " ----------------"				
+			cvn_key = element.find('CvnItemID/CVNPK/Item').text						
 			# Actividad docente (Paso 4 Editor Fecyt)
 			if cvn_key == u"030.040.000.000":				
 				data = self.__dataActividadDocente__(element)

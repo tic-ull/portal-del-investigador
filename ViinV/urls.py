@@ -18,10 +18,11 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     
     # Página principal
-    url(r'^$', 'cvn.views.index', name='index'),
+    url(r'^$', 'cvn.views.main', name='main'),
     
+    url(r'^cvn/$', 'cvn.views.index', name='index'),
     # Login/Logout CAS
-    url(r'^accounts/login/$', 'django_cas.views.login'),
-    url(r'^accounts/logout/$', 'django_cas.views.logout'),    
+    url(r'^accounts/login/$', 'django_cas.views.login', {'next_page': '/cvn'}),
+    url(r'^accounts/logout/$', 'django_cas.views.logout', {'next_page': '/'}),    
 
 )

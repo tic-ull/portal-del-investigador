@@ -119,7 +119,7 @@ MIDDLEWARE_CLASSES = (
     'django_cas.middleware.CASMiddleware',
 )
 
-AUTHENTICATION_BACKENDS = (
+AUTHENTICATION_BACKENDS = (	
 	'django.contrib.auth.backends.ModelBackend',
 	'django_cas.backends.CASBackend',
 )
