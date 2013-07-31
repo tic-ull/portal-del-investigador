@@ -490,20 +490,24 @@ class UtilidadesXMLtoBBDD:
 			Variable:
 			- tree: Lista de los nodos con la información de los autores participantes.			
 		"""
-		lista_autores = ""
+		lista_autores = ''		
 		for author in tree:
+			auxAuthor = ''
 			if author.find("GivenName/Item") is not None and author.find("GivenName/Item").text is not None:
-				lista_autores += u'' + author.find("GivenName/Item").text
+				auxAuthor = u'' + author.find("GivenName/Item").text				
 			if author.find("FirstFamilyName/Item") is not None and author.find("FirstFamilyName/Item").text is not None:
-				lista_autores += u' ' + author.find("FirstFamilyName/Item").text
+				auxAuthor += u' ' + author.find("FirstFamilyName/Item").text				
 			# Algunas veces el campo está creado pero sin ningún valor. El usuario introdujo un texto vacío.						
 			if author.find("SecondFamilyName/Item") is not None and author.find("SecondFamilyName/Item").text is not None:
-				lista_autores += u' ' + author.find("SecondFamilyName/Item").text
+				auxAuthor += u' ' + author.find("SecondFamilyName/Item").text				
 			# Este elemento se crea siempre al exportar el PDF al XML
 			if author.find("Signature/Item").text is not None:
-				lista_autores += u' (' + author.find("Signature/Item").text + '), '
+				if auxAuthor: # Si tiene datos, la firma va entre paréntesis
+					lista_autores += auxAuthor + u' (' + author.find("Signature/Item").text + '); '
+				else:         # El único dato de los autores es la firma
+					lista_autores += u'' + author.find("Signature/Item").text + '; '
 			else:
-				lista_autores += ', '
+				lista_autores += auxAuthor + '; '
 		return lista_autores[:-2]
 	
 	
