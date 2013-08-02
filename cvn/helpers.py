@@ -13,6 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 # Constantes para la importación de CVN
 import cvn.settings as cvn_setts
+
 # Expresiones regulares
 import re
 import os
@@ -181,7 +182,7 @@ def getUserViinV(documento = ""):
 	"""	
 	invest        = None
 	investCVN     = None
-	investCVNname = None
+	investCVNname = None	
 	try:
 		invest = GrupoinvestInvestigador.objects.get(nif = documento)		
 		investCVN     = GrupoinvestInvestcvn.objects.get(investigador = invest)	
@@ -270,3 +271,5 @@ def dataCVNSession(investCVN = None):
 		context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)		
 	return context
 	
+
+		

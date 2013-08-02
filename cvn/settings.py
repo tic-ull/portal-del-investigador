@@ -20,7 +20,7 @@ RUTA_BBDD = "files/cvn/"
 PDF = "application/pdf"
 
 # Ficheros con los resultados de las diferentes operaciones
-FILE_LOG_IMPORT = "../static/files/import/errorCVN.log"       # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
+FILE_LOG_IMPORT = "../static/files/import/errorCVN.log"          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
 FILE_LOG_INSERTADOS = "../static/files/import/cvnInsertados.log" # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
 FILE_LOG_DUPLICADOS = "../static/files/import/cvnDuplicados.log" # Fichero que almacena los CVN duplicados.
 

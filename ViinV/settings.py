@@ -167,27 +167,72 @@ INSTALLED_APPS = (
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format' : '[%(levelname)s] %(asctime)s <%(pathname)> --- %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S'
+        },
+        'standard': {
+            'format' : '[%(levelname)s] %(asctime)s --- %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S'
+        },
     },
+    'filters': {
+		'require_debug_false': {
+			'()': 'django.utils.log.RequireDebugFalse',
+		}		
+	},
     'handlers': {
+    	'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
+			'level': 'DEBUG',
+			'class': 'logging.NullHandler',
+		},	
+		'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr. 
+			'level': 'DEBUG',
+			'class': 'logging.StreamHandler',
+			'formatter': 'standard',
+		},
+		'default': {
+			'level'    : 'INFO',
+			'class'    : 'logging.handlers.RotatingFileHandler',
+			'filename' : 'logs/cvn.log',
+			'maxBytes' : 4096,        # 4MB para rotar de fichero			
+			'formatter': 'standard'
+		},
+		'request_handler': {
+			'level'    : 'DEBUG',
+			'class'    : 'logging.handlers.RotatingFileHandler',
+			'filename' : 'logs/cvn.log',
+			'maxBytes' : 4096,        
+			'formatter': 'standard'
+                },
         'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+            'level'       : 'ERROR',             # Errores de la serie 5XX
+            'filters': ['require_debug_false'],  # Only if DEBUG=False
+            'class'       : 'django.utils.log.AdminEmailHandler',
+            'include_html': True                 # Incluye la petición y la traza del error en el mail.
         }
     },
     'loggers': {
+        'cvn': {
+            'handlers': ['default', 'mail_admins'],   
+            'level': 'INFO',
+            'propagate': True
+        },
+        'viinvDB.admin': { # Logs de la plantilla de ADMIN. TODO: Ver si es mejor cambiar el 'handler'
+            'handlers': ['default', 'mail_admins'],   
+            'level': 'INFO',
+            'propagate': True
+        },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['request_handler'],
             'level': 'ERROR',
-            'propagate': True,
+            'propagate': False
         },
     }
 }
+
 
 # Autentificación CAS
 CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'

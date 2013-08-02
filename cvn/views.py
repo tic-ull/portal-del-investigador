@@ -31,18 +31,21 @@ import cvn.settings as cvn_setts
 # Fecha de subida del nuevo CVN
 import datetime
 
+# Logs
+import logging
+logger = logging.getLogger(__name__)
+
 
 # -- Vistas Aplicación CVN --
 def main(request):
-	""" Vista de acceso a la aplicación """	
-	context = {}
+	""" Vista de acceso a la aplicación """		
 	# En caso de que un usuario logueado acceda a la raiz, se muestra la información del mismo para advertir que sigue logueado
 	try: 
-		context['user'] = request.session['attributes']
-	except KeyError:
-		pass
-	return render_to_response("main.html", context, RequestContext(request))
-
+		user = request.session['attributes']
+	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.
+		return HttpResponseRedirect(reverse('login'))
+	return HttpResponseRedirect(reverse('index'))
+	
 
 @login_required
 def index(request):
@@ -56,14 +59,15 @@ def index(request):
 		pass 
 	context['user'] = request.session['attributes'] # Usuario CAS print context['user']['ou']	
 	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])		
-	if not invest:
+	if not invest:		
 		# Se añade el usuario a la aplicación de ViinV
-		invest = addUserViinV(context['user'])
-		context.update(dataCVNSession(investCVN))
-	if investCVN:
+		invest = addUserViinV(context['user'])		
+	if investCVN:		
+		checkUserCVN(context['user']['NumDocumento'], investCVN)
 		# Datos del CVN para mostrar e las tablas			
 		context.update(getDataCVN(invest.nif))
-		context.update(dataCVNSession(investCVN))		
+		context.update(dataCVNSession(investCVN))
+		
 	# Envío del nuevo CVN
 	if request.method == 'POST':			
 		context['form'] = UploadCvnForm(request.POST, request.FILES, instance = investCVN)				
