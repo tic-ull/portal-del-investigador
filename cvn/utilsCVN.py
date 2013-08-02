@@ -35,81 +35,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class UtilidadesCVN:
-	"""
-		Clase para el proceso en lotes de un directorio:
-		 - Extracción de todos los CVN en formato PDF a XML.
-		 - Inserción en la Base de Datos de los datos extraidos de los XML generados en el paso anterior.
-	"""
-	
-	def __init__(self, urlPDF = cvn_setts.URL_PDF, urlXML = cvn_setts.URL_XML):
-		""" Constructor """		
-		self.urlPDF = urlPDF
-		self.urlXML = urlXML
-		self.urlOLD_CVN = cvn_setts.URL_OLD_CVN # Directorio donde se almancenan los históricos
-		# Se supone que existe el directorio donde se encuentran los PDFs
-		self.__create_directory__(self.urlXML)
-		self.__create_directory__(self.urlOLD_CVN)		
-
-	
-	def __create_directory__(self, path):
-		"""
-			Método privado que se encarga de crear el directorio donde se van a alojar
-			los ficheros XMLs. En caso de que existan no crea dichos directorios.
-			
-			Parámetro:
-			- path: Ruta donde se va a almacencar los ficheros 
-		"""
-		try:
-			os.makedirs(path)			
-		except OSError as exception:
-			if exception.errno != errno.EEXIST:
-				raise	
-				
-	
-	def getAllXML(self):
-		"""
-			Método que obtiene la estructura XML de todos los ficheros PDFs creados
-			mediante el editor del Fecyt. 
-			Utiliza el método 'getXML' para obtener	la representación XML de cada fichero.			
-		"""
-		lista_cvn = os.listdir(self.urlPDF)
-		#~ cvnFile = codecs.open(cvn_setts.FILE_LOG_IMPORT, "w", "utf-8")
-		# Recorre la lista que contiene los CVN en PDF y obtiene su representación en XML
-		for cvn in lista_cvn:
-			currentCVN = UtilidadesCVNtoXML(filePDF = cvn)
-			result     = currentCVN.getXML()
-			if not result: # En caso de que el CVN no tenga formato del Fecyt
-				logger.error(u'El CVN "' + cvn.cvnfile.name.split('/')[-1] + '" no tiene formato FECYT\n')				
-				#~ cvnFile.write(cvn + '\n')				
-		#~ cvnFile.close()
-
-
-	def parseAllXML(self):
-		"""
-			Método que analiza todos los ficheros XML que se encuentran bajo la ruta
-			especificada e introduce los datos en la BBDD.			
-		"""					
-		data = {}
-		lista_xml = os.listdir(self.urlXML)
-		#~ fileBBDD  = codecs.open(cvn_setts.FILE_LOG_INSERTADOS, "w", "utf-8")
-		#~ fileCVN   = codecs.open(cvn_setts.FILE_LOG_DUPLICADOS, "w", "utf-8")
-		inicial   = datetime.datetime.now()
-		print "Tiempo de comienzo: " + str(inicial)
-		# Recorre la lista que contiene los CVN en XML
-		for xml in lista_xml:			
-			currentXML = UtilidadesXMLtoBBDD(fileXML = xml)
-			# Retorna el usuario que se ha introducido en la BBDD
-			currentXML.parseXML()   #fileBBDD, fileCVN) 			
-		final     = datetime.datetime.now()
-		print "Tiempo finalización: " + str(final)
-		diff_time = final - inicial
-		print "Minutos: " + str(int(diff_time.total_seconds()/60.0))
-		print "Segundos: " + str(int(diff_time.total_seconds()%60.0))
-		#~ fileBBDD.close()
-		#~ fileCVN.close()
-		
-	
 # -----------------------		
 class UtilidadesCVNtoXML:
 	"""
@@ -777,9 +702,8 @@ def checkUserCVN(data = "", cvn = None):
 		- data = NIF/NIE del usuario
 		- cvn  = Registro de la tabla GrupoinvestInvestcvn de la aplicación ViinV
 	"""		
-	#print "CHECK DATA USER"	
-	if not Usuario.objects.filter(documento__icontains = data):
-		#print "NOT USER: " + data
+	
+	if not Usuario.objects.filter(documento__icontains = data):		
 		handlerCVN = UtilidadesCVNtoXML(filePDF = cvn.cvnfile.name.split('/')[-1])
 		xmlFecyt = handlerCVN.getXML() 				
 		if xmlFecyt:
@@ -787,3 +711,4 @@ def checkUserCVN(data = "", cvn = None):
 		xmlCVN = UtilidadesXMLtoBBDD(fileXML = cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml'))
 		xmlCVN.insertarXML(cvn.investigador)
 		cvn.save()
+	
