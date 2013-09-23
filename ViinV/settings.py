@@ -6,12 +6,14 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # Path del proyecto
-PROJECT_PATH = os.path.abspath(os.path.dirname('__file__'))
+import os
+
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+#PROJECT_ROOT = os.path.abspath(os.path.dirname('__file__'))
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
-
 MANAGERS = ADMINS
 
 DATABASES = {
@@ -36,6 +38,9 @@ DATABASES = {
 
 DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']
 
+# Configuracion del logging
+LOG_FILENAME = os.path.join(PROJECT_ROOT, 'cvn.log')
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -44,7 +49,7 @@ ALLOWED_HOSTS = []
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'Europe/London'
+TIME_ZONE = 'Atlantic/Canary'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -76,19 +81,14 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'collected_static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_PATH,'static'),   
-)
+STATICFILES_DIRS = (os.path.join(PROJECT_ROOT,'static'),)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -133,7 +133,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_PATH,'templates'),
+    os.path.join(PROJECT_ROOT,'templates'),
 )
 
 INSTALLED_APPS = (
@@ -196,17 +196,28 @@ LOGGING = {
 		'default': {
 			'level'    : 'INFO',
 			'class'    : 'logging.handlers.RotatingFileHandler',
+<<<<<<< HEAD
 			'filename' : 'logs/cvn.log',
 			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
 			'backupCount': 5,
+=======
+			'filename' : LOG_FILENAME,
+			'maxBytes' : 4096,        # 4MB para rotar de fichero			
+>>>>>>> 54bb3693f10f7a261d98d627a5850399102217e9
 			'formatter': 'standard'
 		},
 		'request_handler': {
 			'level'    : 'DEBUG',
+<<<<<<< HEAD
 			'class'    : 'logging.handlers.RotatingFileHandler',			
 			'filename' : 'logs/cvn.log',
 			'maxBytes' : 4096*1024*1024,        
 			'backupCount': 5,
+=======
+			'class'    : 'logging.handlers.RotatingFileHandler',
+			'filename' : LOG_FILENAME,
+			'maxBytes' : 4096,        
+>>>>>>> 54bb3693f10f7a261d98d627a5850399102217e9
 			'formatter': 'standard'
                 },
         'mail_admins': {
@@ -253,4 +264,9 @@ CAS_RETRY_LOGIN = True
 #  The CAS protocol version to use. `'1'` and `'2'` are supported, with `'2'` being the default.
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
+
+try:
+    execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))
+except IOError:
+    pass
 

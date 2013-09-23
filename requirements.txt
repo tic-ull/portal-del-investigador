@@ -1,17 +1,10 @@
 Django==1.5.1
 psycopg2
 django_extensions
-# DB migrations
-south
-# Images
-PIL
-# MySQL
-mysql-python
-# Web Services
-suds
-# Parsing XML
-lxml
-# Bootstrap
-django-bootstrap-toolkit==2.8.0
-# CAS
--e git+git@git.ccti.ull.es:django_cas#egg=django_cas
+south   # DB migrations
+PIL     # Images
+mysql-python    # MySQL
+suds    # Web Services
+lxml    # Parsing XML
+django-bootstrap-toolkit==2.8.0 # Bootstrap
+-e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
