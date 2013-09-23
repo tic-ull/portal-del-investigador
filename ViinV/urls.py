@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     
     url(r'^cvn/$', 'cvn.views.index', name='index'),
     # Login/Logout CAS
-    url(r'^accounts/login/$', 'django_cas.views.login', name='login'), #{'next_page': ''}),
-    url(r'^accounts/logout/$', 'django_cas.views.logout', name='logout'),# {'next_page': '/'}),    
+    url(r'^accounts/login/$', 'django_cas.views.login', name='login'), 
+    url(r'^accounts/logout/$', 'django_cas.views.logout', name='logout'),
 
 )

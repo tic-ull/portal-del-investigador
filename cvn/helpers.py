@@ -107,11 +107,6 @@ def searchDataProduccionCientifica(data = None):
 	# Título: Publicacion, Congreso y TesisDoctoral
 	elif data.has_key('titulo'):
 		search_dic['titulo__iexact'] = data['titulo']
-	#~ elif data.has_key('nombre_publicacion'):
-		#~ search_dic['nombre_publicacion__iexact'] = data[u'nombre_publicacion']
-	# Pueden presentarte datos del mismo congreso pero distintos títulos
-	#~ elif data.has_key('nombre_del_congreso'):
-		#~ search_dic['nombre_del_congreso'] = data[u'nombre_del_congreso']
 	return search_dic
 	
 	
@@ -206,7 +201,7 @@ def addUserViinV(data = {}):
 		'ou': ['PDI', 'srv_wifi', 'Alumnos', 'srv_soft', 'rol_becario', 'srv_webpages', 'srv_ddv', 
 		       'srv_vpn', 'CCTI', 'srv_siga_ull.es', 'NACFicheros', 'Act', 'srv_google', 'srv_siga'],
 	    'email': 'lcerrudo@ull.edu.es'}
-	"""
+	"""	
 	if data:
 		user = User.objects.db_manager('portalinvestigador').create_user(username=data['username'], password='', email=data['email'])		
 		data_invest = {}
@@ -264,6 +259,7 @@ def __pathCVN__(data = ""):
 		data = 'static/' + data
 	return data
 	
+	
 def dataCVNSession(investCVN = None):
 	"""
 		Función que devuelve los datos relevante del CVN del usuario que acaba de acceder a la aplicación.
@@ -285,6 +281,4 @@ def dataCVNSession(investCVN = None):
 	else:				
 		context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)				
 	return context
-	
-
 		

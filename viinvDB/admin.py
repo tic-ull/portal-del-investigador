@@ -32,7 +32,7 @@ class GrupoinvestInvestcvnAdmin(admin.ModelAdmin):
 			cvnFile = cvn.cvnfile.name.split('/')[-1]			
 			currentCVN = UtilidadesCVNtoXML(filePDF = cvnFile)
 			result = currentCVN.getXML()			
-			print result
+			#~ print result
 			if not result: # En caso de que el CVN no tenga formato del Fecyt				
 				logger.error(u'El CVN "' + cvn.cvnfile.name.split('/')[-1] + '" no tiene formato FECYT\n')	
 				

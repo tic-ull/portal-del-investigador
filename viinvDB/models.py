@@ -6,6 +6,7 @@
 #
 # Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
 # into your database.
+
 from __future__ import unicode_literals
 
 from django.db import models
@@ -1544,6 +1545,7 @@ class FaqSubcategoria(models.Model):
 class GrupoinvestAreaconocimiento(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
+    codigo = models.CharField(max_length=72) 
     class Meta:
         db_table = 'GrupoInvest_areaconocimiento'
 
@@ -1682,7 +1684,10 @@ class GrupoinvestInvestigador(models.Model):
     cas_username = models.CharField(max_length=100L, blank=True)
     cod_persona = models.CharField(max_length=5L)
     cese = models.DateField(null=True, blank=True)
-    
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_last_update = models.DateTimeField(null=True, blank=True)
+    rrhh_id = models.IntegerField(unique=True, null=True, blank=True)
+ 
     def __unicode__(self):
         return u"%s %s %s %s" %(self.nombre, self.apellido1, self.apellido2, self.nif)
 

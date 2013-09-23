@@ -4,6 +4,9 @@ from cvn.models import *
 
 import os
 
+# Usuario Administrador de la plantilla de administración de Django
+ADMIN_USERNAME = "admin"
+
 # Datos para la comunicación con el Web Service del Fecyt
 USER_WS = "cvnPdfULL01"
 PASSWD_WS = "MXz8T9Py7Xhr"

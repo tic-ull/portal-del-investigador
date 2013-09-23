@@ -23,7 +23,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
 # Decorador
-from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.decorators import login_required
+from django_cas.decorators import login_required
 
 # Constantes para la importación de CVN
 import cvn.settings as cvn_setts
@@ -40,9 +41,12 @@ logger = logging.getLogger(__name__)
 def main(request):
 	""" Vista de acceso a la aplicación """		
 	# En caso de que un usuario logueado acceda a la raiz, se muestra la información del mismo para advertir que sigue logueado
-	try: 
-		user = request.session['attributes']
-	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.
+	print "MAIN"
+	try:		
+		if request.user.username == cvn_setts.ADMIN_USERNAME: # Usuario de la plantilla administrador
+			return HttpResponseRedirect(reverse('logout'))			
+		user = request.session['attributes']		
+	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.					
 		return HttpResponseRedirect(reverse('login'))
 	return HttpResponseRedirect(reverse('index'))
 	
@@ -57,8 +61,8 @@ def index(request):
 		del request.session['message']
 	except: # Puede que no exista el mensaje en la sesión
 		pass 
-	context['user'] = request.session['attributes'] # Usuario CAS print context['user']['ou']	
-	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])		
+	context['user'] = request.session['attributes'] # Usuario CAS print context['user']['ou']		
+	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])			
 	if not invest:		
 		# Se añade el usuario a la aplicación de ViinV
 		invest = addUserViinV(context['user'])		
@@ -67,7 +71,7 @@ def index(request):
 		# Datos del CVN para mostrar e las tablas			
 		context.update(getDataCVN(invest.nif))
 		context.update(dataCVNSession(investCVN))
-		
+	logger.info("Acceso del investigador: " + invest.nombre + ' ' + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
 	# Envío del nuevo CVN
 	if request.method == 'POST':			
 		context['form'] = UploadCvnForm(request.POST, request.FILES, instance = investCVN)				

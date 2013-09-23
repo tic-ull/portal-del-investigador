@@ -197,14 +197,16 @@ LOGGING = {
 			'level'    : 'INFO',
 			'class'    : 'logging.handlers.RotatingFileHandler',
 			'filename' : 'logs/cvn.log',
-			'maxBytes' : 4096,        # 4MB para rotar de fichero			
+			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
+			'backupCount': 5,
 			'formatter': 'standard'
 		},
 		'request_handler': {
 			'level'    : 'DEBUG',
-			'class'    : 'logging.handlers.RotatingFileHandler',
+			'class'    : 'logging.handlers.RotatingFileHandler',			
 			'filename' : 'logs/cvn.log',
-			'maxBytes' : 4096,        
+			'maxBytes' : 4096*1024*1024,        
+			'backupCount': 5,
 			'formatter': 'standard'
                 },
         'mail_admins': {

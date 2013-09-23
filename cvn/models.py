@@ -9,20 +9,6 @@ import shutil
 import os
 
 
-# -------------------------------------------
-URL_BASE = "/../static/files/"
-URL_OLD_CVN = os.getcwd() + URL_BASE + "old_cvn/" 
-
-
-# Señal pre_save
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-# -------------------------------------------
-
-
-
-
-
 # Modelo para almacenar los datos del investigador del Fecyt
 class Usuario(models.Model):
 	"""
@@ -307,7 +293,7 @@ class Congreso(models.Model):
 	deposito_legal            = models.CharField(u'Depósito legal', max_length = 150, blank = True, null = True)
 	publicacion_acta_congreso =	models.CharField(u'Publicación en acta congreso', max_length = 100, blank = True, null = True)
 
-	url = models.URLField(u'', max_length = 500, blank = True, null = True)
+	url = models.URLField(u'Url', max_length = 500, blank = True, null = True)
 
 	pais = models.CharField(u'País', max_length = 500, blank = True, null = True)
 	comunidad_or_region = models.CharField(u'Comunidad Autónoma/Región', max_length = 500, blank = True, null = True)
@@ -457,7 +443,7 @@ class Convenio(models.Model):
 	tipo_proyecto = models.CharField(u'Tipo de proyecto', max_length=100, blank=True, null=True)
 	nombre_del_programa = models.CharField(u'Nombre del programa', max_length=400, blank=True, null=True)
 
-	cod_segun_financiadora = models.CharField(u'Código según financiadora', max_length=32, blank=True, null=True)
+	cod_segun_financiadora = models.CharField(u'Código según financiadora', max_length=100, blank=True, null=True)
 	cuantia_subproyecto = models.DecimalField(u'Cuantía subproyecto', max_digits=19, decimal_places=2, blank=True, null=True)
 	porcentaje_en_subvencion = models.DecimalField(u'Porcentaje en subvención', max_digits=19, decimal_places=2, blank=True, null=True)
 	porcentaje_en_credito = models.DecimalField(u'Porcentaje en crédito', max_digits=19, decimal_places=2, blank=True, null=True)

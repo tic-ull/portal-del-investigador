@@ -81,7 +81,7 @@ class UtilidadesCVNtoXML:
 				fileXML = memoryCVNFile.name
 				fileXML = fileXML.replace('pdf','xml')
 		except IOError:
-			print u"No such file or directory:'" + urlFile + "'"
+			logger.error(u"No such file or directory:'" + urlFile + "'")			
 			return False
 
 		# Se almacena el fichero XML resultante		
@@ -95,7 +95,7 @@ class UtilidadesCVNtoXML:
 				resultXML = self.clientWS.service.cvnPdf2Xml(self.userWS, self.passWS, dataPDF)
 				webServiceResponse = True				
 			except:
-				print "No hay Respuesta para el fichero: "  + self.filePDF + ". Espera de 5 segundos para reintentar."
+				logger.warning("No hay Respuesta para el fichero: "  + self.filePDF + ". Espera de 5 segundos para reintentar.")				
 				time.sleep(5) 		
 		
 		if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
@@ -126,9 +126,9 @@ class UtilidadesCVNtoXML:
 				return True
 		except IOError:
 			if fileXML:
-				print u"Fichero " + fileXML + u" no encontrado."
+				logger.error("Fichero " + fileXML + u" no encontrado.")				
 			else:
-				print u"Se necesita un fichero para ejecutar este método."				
+				logger.warning(u"Se necesita un fichero para ejecutar este método.")				
 		return False
 		
 		
@@ -298,6 +298,9 @@ class UtilidadesXMLtoBBDD:
 		"""		
 		dataPersonal = {}
 		fecha_cvn = None
+		print '*****'
+		print self.fileXML
+		print ' - - '
 		try:			
 			tree = etree.parse(self.urlXML + self.fileXML)			
 			fecha_cvn = tree.find('Version/VersionID/Date/Item').text			
@@ -315,12 +318,12 @@ class UtilidadesXMLtoBBDD:
 				# Introduce los datos de la actividad científica
 				self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
 			else:
-				print "CVN sin datos personales:  " + str(self.fileXML) 
+				logger.warning("CVN sin datos personales:  " + str(self.fileXML))				
 		except IOError:
 			if self.fileXML:
-				print u"Fichero " + self.fileXML + u" no encontrado."
+				logger.error("Fichero " + self.fileXML + u" no encontrado.")				
 			else:
-				print u"Se necesita un fichero para ejecutar este método."		
+				logger.warning(u"Se necesita un fichero para ejecutar este método.")				
 		return fecha_cvn
 
 	
@@ -456,6 +459,30 @@ class UtilidadesXMLtoBBDD:
 				data['otro_ambito'] = u'' + tree.find('Others/Item').text 
 		return data
 		
+	
+	def __getDuration__(self, code = ""):
+		"""
+			Método que devuelve la duración de un convenio. El código tiene el siguiente formato:
+			  "P<años>Y<meses>M<dias>D"
+			  
+			Variable:
+			- code: Cadena de texto con el código de duración del convenio
+		"""
+		digit = ""
+		data = {}
+		for c in code[1:]: # El primero carácter P se salta.
+			if c.isdigit():
+				digit += c
+			else:								
+				if c == 'Y':
+					data['duracion_anyos'] = u'' + digit
+				if c == 'M':
+					data['duracion_meses'] = u'' + digit
+				if c == 'D':
+					data['duracion_dias']  = u'' + digit
+				digit = ""				
+		return data
+		
 		
 	def __saveData__(self, user = None, data = {}, table = None):
 		"""
@@ -478,6 +505,13 @@ class UtilidadesXMLtoBBDD:
 			table.objects.filter(pk = reg.id).update(**data)				
 		except ObjectDoesNotExist: 
 			# Se crea el nuevo registro en la tabla correspondiente
+			print "- - - - - - - - - - - "
+			print user
+			print "Tabla:"
+			print table
+			print "Datos a insertar:"
+			print data
+			print 
 			reg = table.objects.create(**data)
 		# Añade el usuario a la tabla
 		reg.usuario.add(user)
@@ -599,10 +633,14 @@ class UtilidadesXMLtoBBDD:
 		if tree.find('Title/Name') is not None: # Hay CVN que no tienen puesta la denominación del proyecto
 			data[u'denominacion_del_proyecto'] = u'' + tree.find('Title/Name/Item').text
 		
-		# Según se trate de un convenio o proyecto la fecha inicial cuelga de un nodo diferente
-		nodo = "StartDate"
-		if cvn_setts.MODEL_TABLE[tipo] == Convenio:
+		# Posibles nodos donde se almacena la fecha
+		if tree.find('Date/StartDate'):
+			nodo = "StartDate"
+		else:
 			nodo = "OnlyDate"
+		# Según se trate de un convenio o proyecto la fecha inicial cuelga de un nodo diferente
+		#~ if cvn_setts.MODEL_TABLE[tipo] == Convenio:
+			#~ nodo = "OnlyDate"
 		
 		# Fecha de inicio Convenios y Proyectos
 		if tree.find('Date/' + nodo + '/DayMonthYear') is not None: # Fecha: Dia/Mes/Año
@@ -619,8 +657,9 @@ class UtilidadesXMLtoBBDD:
 				
 		# La duración del proyecto viene codificada en el siguiente formato:P <num_years> Y <num_months> M <num_days> D
 		# TODO Decodificar el codigo de duración 
-		if tree.find('Date/Duration') is not None:
+		if tree.find('Date/Duration') is not None and tree.find('Date/Duration/Item').text is not None:
 			duration_code = u'' + tree.find('Date/Duration/Item').text 		
+			data.update(self.__getDuration__(duration_code))
 			# TODO Calcular fecha final a partir de la duración si se trata de un Convenio
 			
 		data[u'autores'] = self.__getAutores__(tree.findall('Author'))
