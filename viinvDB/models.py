@@ -10,6 +10,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from cvn.settings import URL_PDF
 
 class AccseConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1637,7 +1638,7 @@ class GrupoinvestInstituto(models.Model):
 class GrupoinvestInvestcvn(models.Model):
     id = models.IntegerField(primary_key=True)
     investigador = models.ForeignKey('GrupoinvestInvestigador', unique=True)
-    cvnfile = models.FileField(max_length=100L, db_column='cvnFile', upload_to='static/files/pdf/') # Field name made lowercase.
+    cvnfile = models.FileField(max_length=100L, db_column='cvnFile', upload_to=URL_PDF) # Field name made lowercase.
     fecha_up = models.DateField(null=True, blank=True)
     fecha_cvn = models.DateField(null=True, blank=True)
     xmlfile = models.CharField(max_length=100L, db_column='xmlFile', blank=True) # Field name made lowercase.

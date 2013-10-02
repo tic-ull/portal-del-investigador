@@ -3,6 +3,7 @@
 from cvn.models import *
 
 import os
+from django.conf import settings as st
 
 # Usuario Administrador de la plantilla de administración de Django
 ADMIN_USERNAME = "admin"
@@ -13,19 +14,19 @@ PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 
 # Rutas de los XML y PDF
-URL_BASE = "/../static/files/"
-URL_PDF = os.getcwd() + URL_BASE + "pdf/"
-URL_XML = os.getcwd() + URL_BASE + "xml/"
-URL_OLD_CVN = os.getcwd() + URL_BASE + "old_cvn/"  # CVN antiguos
+URL_BASE = os.path.join(st.MEDIA_ROOT, 'cvn')  # TODO: Poner la ruta de viinv donde están los pdfs y xmls
+URL_PDF = os.path.join(URL_BASE, "pdf/")
+URL_XML = os.path.join(URL_BASE, "xml/")
+URL_OLD_CVN = os.path.join(URL_BASE, "old_cvn/")  # CVN antiguos
 RUTA_BBDD = "files/cvn/"
 
 # Tipo de ficheros de subida
 PDF = "application/pdf"
 
 # Ficheros con los resultados de las diferentes operaciones
-FILE_LOG_IMPORT = "../static/files/import/errorCVN.log"          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
-FILE_LOG_INSERTADOS = "../static/files/import/cvnInsertados.log" # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
-FILE_LOG_DUPLICADOS = "../static/files/import/cvnDuplicados.log" # Fichero que almacena los CVN duplicados.
+FILE_LOG_IMPORT =  os.path.join(st.PROJECT_ROOT, 'errorCVN.log')          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
+FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log') # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
+FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log') # Fichero que almacena los CVN duplicados.
 
 # Almacena las equivalencias entre los tags de los nodos XML y los campos de la BBDD
 DIC_PERSONAL_DATA_XML = {
@@ -67,13 +68,13 @@ DATA_TESIS = u"100"
 # Devuelve las tabla correspondiente donde almacenar los datos
 MODEL_TABLE = {
 # Actividad científica y tecnológica
-u"060.010.010.000": Publicacion,
-u"060.010.020.000": Congreso,
+u"060.010.010.000": u'Publicacion',
+u"060.010.020.000": u'Congreso',
 # Experiencia científica y tecnológica
-u"050.020.010.000": Proyecto,
-u"050.020.020.000": Convenio,
+u"050.020.010.000": u'Proyecto',
+u"050.020.020.000": u'Convenio',
 # Actividad docente
-u"030.040.000.000": TesisDoctoral,
+u"030.040.000.000": u'TesisDoctoral',
 }
 
 # Diccionario para las cuantías de las financiaciones
