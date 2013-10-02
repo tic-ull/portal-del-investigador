@@ -18,7 +18,7 @@ URL_BASE = os.path.join(st.MEDIA_ROOT, 'cvn')  # TODO: Poner la ruta de viinv do
 URL_PDF = os.path.join(URL_BASE, "pdf/")
 URL_XML = os.path.join(URL_BASE, "xml/")
 URL_OLD_CVN = os.path.join(URL_BASE, "old_cvn/")  # CVN antiguos
-RUTA_BBDD = "files/cvn/"
+RUTA_BBDD = os.path.join(st.MEDIA_ROOT, 'files/cvn/')
 
 # Tipo de ficheros de subida
 PDF = "application/pdf"
