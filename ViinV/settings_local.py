@@ -8,4 +8,5 @@ DEBUG = True
 import os
 
 # Configuracion del logging
-LOG_FILENAME = '/var/log/django/cvn.log'
+#LOG_FILENAME = '/var/log/django/cvn.log'
+LOG_FILENAME = './log/cvn.log'

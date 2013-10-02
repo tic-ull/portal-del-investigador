@@ -133,12 +133,11 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-<<<<<<< HEAD
-    #os.path.join(PROJECT_ROOT,'templates'),
-    os.path.join(PROJECT_ROOT,'../templates'),
-=======
+
+    #~ os.path.join(PROJECT_ROOT,'../templates'),
+
     os.path.join(PROJECT_PATH,'templates'),
->>>>>>> 7cd79afa08f1ec3e2047055a85cd86e63eb85294
+
 )
 
 INSTALLED_APPS = (
@@ -154,7 +153,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     # Extensiones
     'django_extensions',
-    #'south',
+    'south',
     # Migraciones del modelo
     # Aplicaciones del proyecto
     'cvn',
@@ -201,17 +200,9 @@ LOGGING = {
 		'default': {
 			'level'    : 'INFO',
 			'class'    : 'logging.handlers.RotatingFileHandler',
-<<<<<<< HEAD
-			'filename' : 'logs/cvn.log',
-			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
-			'backupCount': 5,
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096,        # 4MB para rotar de fichero			
-=======
 			'filename' : LOG_FILENAME,
 			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
 			'backupCount': 5,
->>>>>>> 7cd79afa08f1ec3e2047055a85cd86e63eb85294
 			'formatter': 'standard'
 		},
 		'request_handler': {
@@ -220,12 +211,6 @@ LOGGING = {
 			'filename' : LOG_FILENAME,
 			'maxBytes' : 4096*1024*1024,        
 			'backupCount': 5,
-<<<<<<< HEAD
-			'class'    : 'logging.handlers.RotatingFileHandler',
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096,        
-=======
->>>>>>> 7cd79afa08f1ec3e2047055a85cd86e63eb85294
 			'formatter': 'standard'
                 },
         'mail_admins': {
