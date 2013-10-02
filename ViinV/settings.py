@@ -133,7 +133,8 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT,'templates'),
+    #os.path.join(PROJECT_ROOT,'templates'),
+    os.path.join(PROJECT_ROOT,'../templates'),
 )
 
 INSTALLED_APPS = (
@@ -196,28 +197,22 @@ LOGGING = {
 		'default': {
 			'level'    : 'INFO',
 			'class'    : 'logging.handlers.RotatingFileHandler',
-<<<<<<< HEAD
 			'filename' : 'logs/cvn.log',
 			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
 			'backupCount': 5,
-=======
 			'filename' : LOG_FILENAME,
 			'maxBytes' : 4096,        # 4MB para rotar de fichero			
->>>>>>> 54bb3693f10f7a261d98d627a5850399102217e9
 			'formatter': 'standard'
 		},
 		'request_handler': {
 			'level'    : 'DEBUG',
-<<<<<<< HEAD
 			'class'    : 'logging.handlers.RotatingFileHandler',			
 			'filename' : 'logs/cvn.log',
 			'maxBytes' : 4096*1024*1024,        
 			'backupCount': 5,
-=======
 			'class'    : 'logging.handlers.RotatingFileHandler',
 			'filename' : LOG_FILENAME,
 			'maxBytes' : 4096,        
->>>>>>> 54bb3693f10f7a261d98d627a5850399102217e9
 			'formatter': 'standard'
                 },
         'mail_admins': {
