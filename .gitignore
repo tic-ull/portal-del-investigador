@@ -14,3 +14,4 @@ static/files/
 media
 ViinV/settings_local.py
 virtualenv
+collected_static
