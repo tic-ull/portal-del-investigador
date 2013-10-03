@@ -81,7 +81,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'collected_static')
+STATIC_ROOT = os.path.join(PROJECT_PATH, 'collected_static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -251,7 +251,7 @@ CAS_IGNORE_REFERER = False
 # If `False`, logging out of the application won't log the user out of CAS as well.
 CAS_LOGOUT_COMPLETELY = True
 # Where to send a user after logging in or out if there is no referrer and no next page set. Default is `/`.
-CAS_REDIRECT_URL = '/'
+CAS_REDIRECT_URL = '/investigacion/'
 # If `True` and an unknown or invalid ticket is received, the user is redirected back to the login page.
 CAS_RETRY_LOGIN = True
 #  The CAS protocol version to use. `'1'` and `'2'` are supported, with `'2'` being the default.
