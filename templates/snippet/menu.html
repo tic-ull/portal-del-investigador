@@ -22,9 +22,9 @@
 		{% endif %}
 	{% if not user.is_anonymous %}
 		<li><a href="/cvn/"><i class="icon-tasks"></i>Gestionar CVN</a></li>
-		<li><a href="/accounts/logout/"><i class="icon-off"></i> Salir</a></li>
+		<li><a href="{% url 'logout' %}"><i class="icon-off"></i> Salir</a></li>
 	{% else %}
-		<li><a href="/accounts/login/"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>
+		<li><a href="{% url 'login' %}"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>
 	{% endif %}
 	</ul>
 	{% if not user.is_anonymous %}

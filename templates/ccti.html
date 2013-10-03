@@ -132,9 +132,9 @@
                                 </ul>
                             </li>
                             {%  if not user.is_anonymous %}
-                            <li><a href="/accounts/logout/" class="btn btn-small btn-danger"><i class="icon-off icon-white"></i> Cerrar sesión</a></li>
+                            <li><a href="{% url 'logout' %}" class="btn btn-small btn-danger"><i class="icon-off icon-white"></i> Cerrar sesión</a></li>
                             {%  else %}
-                            <li><a href="/accounts/login/" class="btn btn-small btn-success"><i class="icon-user icon-white"></i> Iniciar sesión</a></li>
+                            <li><a href="{% url 'login' %}" class="btn btn-small btn-success"><i class="icon-user icon-white"></i> Iniciar sesión</a></li>
                             {%  endif %}
                         </ul>
                     </div>

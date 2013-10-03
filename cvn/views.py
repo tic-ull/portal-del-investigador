@@ -41,7 +41,6 @@ logger = logging.getLogger(__name__)
 def main(request):
 	""" Vista de acceso a la aplicación """		
 	# En caso de que un usuario logueado acceda a la raiz, se muestra la información del mismo para advertir que sigue logueado
-	print "MAIN"
 	try:		
 		if request.user.username == cvn_setts.ADMIN_USERNAME: # Usuario de la plantilla administrador
 			return HttpResponseRedirect(reverse('logout'))			
