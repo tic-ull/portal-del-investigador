@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
 
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
+import cvn.settings as cvn_setts
+
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -21,8 +24,10 @@ urlpatterns = patterns('',
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
     
     url(r'^investigacion/cvn/$', 'cvn.views.index', name='index'),
+    
     # Login/Logout CAS
     url(r'^investigacion/accounts/login/$', 'django_cas.views.login', name='login'), 
     url(r'^investigacion/accounts/logout/$', 'django_cas.views.logout', name='logout'),
-
-)
+    
+    
+) + static(cvn_setts.MEDIA_PDF, document_root=cvn_setts.URL_PDF)  # Servir los pdfs

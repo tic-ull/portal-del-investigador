@@ -245,18 +245,7 @@ def getDataCVN(data = ""):
 		context['CVN'] = False
 	return context
 	
-# TODO: Eliminar esta función cuando se establezca la ruta definitivas donde se van a alojar los CVN
-def __pathCVN__(data = ""):
-	"""
-		Modifica la ruta de los CVN que vienen de Viinv para adaptarla a la nueva aplicación
-		
-		Variable:
-			- data: Ruta del CVN
-	"""
-	ruta = data.split('/')
-	data = '/'.join([ruta[0],ruta[1],'pdf',ruta[2]])	
-	return data
-	
+
 	
 def dataCVNSession(investCVN = None):
 	"""
@@ -272,8 +261,8 @@ def dataCVNSession(investCVN = None):
 	context['fecha_cvn'] = investCVN.fecha_cvn
 	# Comprobar si el CVN no se ha actualizado en 6 meses
 	context['file_cvn'] = investCVN.cvnfile
-	# TODO: Eliminar esta línea cuando se defina la ruta de los ficheros
-	context['file_cvn'].name = __pathCVN__(investCVN.cvnfile.name)	
+	# NOTE: En los ficheros subidos desde la nueva aplicación no hace falta modificar la ruta.	
+	context['file_cvn'].name = cvn_setts.MEDIA_PDF +investCVN.cvnfile.name.split('/')[-1]	
 	if (investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
 		context['updateCVN'] = True
 	else:				

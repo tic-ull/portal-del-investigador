@@ -113,8 +113,8 @@ class UtilidadesCVNtoXML:
 		data = {}
 		nif = ''
 		fileXML = self.filePDF.name.replace("pdf", "xml")
-		try:					
-			tree = etree.parse(self.urlXML + fileXML)		
+		try:			
+			tree = etree.parse(self.urlXML + fileXML)					
 			nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
 			if nif is not None  and nif.text is not None:
 				nif = nif.text
@@ -124,8 +124,8 @@ class UtilidadesCVNtoXML:
 					nif = nif.text
 			if nif and nif.upper() == user.nif.upper():
 				return True
-		except IOError:
-			if fileXML:
+		except IOError:			
+			if fileXML:				
 				logger.error("Fichero " + fileXML + u" no encontrado.")				
 			else:
 				logger.warning(u"Se necesita un fichero para ejecutar este método.")				
@@ -297,10 +297,7 @@ class UtilidadesXMLtoBBDD:
 			- investigador -> Usuario con el que se enlaza ambas BBDD.
 		"""		
 		dataPersonal = {}
-		fecha_cvn = None
-		print '*****'
-		print self.fileXML
-		print ' - - '
+		fecha_cvn = None		
 		try:			
 			tree = etree.parse(self.urlXML + self.fileXML)			
 			fecha_cvn = tree.find('Version/VersionID/Date/Item').text			
@@ -505,14 +502,7 @@ class UtilidadesXMLtoBBDD:
 			# Actualiza el registro con los nuevos datos
 			table.objects.filter(pk = reg.id).update(**data)				
 		except ObjectDoesNotExist: 
-			# Se crea el nuevo registro en la tabla correspondiente
-			print "- - - - - - - - - - - "
-			print user
-			print "Tabla:"
-			print table
-			print "Datos a insertar:"
-			print data
-			print 
+			# Se crea el nuevo registro en la tabla correspondiente			
 			reg = table.objects.create(**data)
 		# Añade el usuario a la tabla
 		reg.usuario.add(user)

@@ -23,6 +23,9 @@ RUTA_BBDD = os.path.join(st.MEDIA_ROOT, 'files/cvn/')
 # Tipo de ficheros de subida
 PDF = "application/pdf"
 
+# Ruta de los PDFs para servirlo desde la app
+MEDIA_PDF = os.path.join(st.MEDIA_URL, 'cvn/pdf/')
+
 # Ficheros con los resultados de las diferentes operaciones
 FILE_LOG_IMPORT =  os.path.join(st.PROJECT_ROOT, 'errorCVN.log')          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
 FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log') # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
