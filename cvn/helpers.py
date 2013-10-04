@@ -253,10 +253,8 @@ def __pathCVN__(data = ""):
 		Variable:
 			- data: Ruta del CVN
 	"""
-	if '/cvn/' in data:
-		data = data.replace('/cvn/', '/pdf/')
-	if not 'static/' in data:
-		data = 'static/' + data
+	ruta = data.split('/')
+	data = '/'.join([ruta[0],ruta[1],'pdf',ruta[2]])	
 	return data
 	
 	

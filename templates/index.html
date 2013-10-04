@@ -1,7 +1,9 @@
 {% extends 'ccti.html' %}
 
+{% load staticfiles %}
 <!-- Bootstrap -->
 {% load bootstrap_toolkit %}
+
 
 {% block breadcrumb %}	
 	{% if not user.is_anonymous and not user.is_staff %}	
@@ -81,9 +83,9 @@
 					<div class="thumbnail">
 						<div class="center">
 							<!-- Se añade '/' para servir la ruta correcta del archivo -->									
-							<a href="/{{ file_cvn }}" target="_blank">
+							<a href="{{MEDIA_URL}}/{{ file_cvn }}" target="_blank">
 								<img data-src="holder.js/200x150" alt="Descargar CVN" title="Descargar CVN"
-									src="/static/images/cvn.jpg">
+									src='{% static "images/cvn.jpg" %}'>
 							</a>
 							<div class="alert alert-info">
 								Descargue su CVN

@@ -29,8 +29,8 @@ DATABASES = {
     'portalinvestigador': {
         'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.
-        #'PASSWORD': 'root10ull',
+        #~ 'USER': 'root',                       # Not used with sqlite3.
+        'PASSWORD': 'root10ull',
         'PASSWORD': '1234',                 # Not used with sqlite3.
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB'}
     }
