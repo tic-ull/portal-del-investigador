@@ -33,7 +33,7 @@ import cvn.settings as cvn_setts
 # Logs
 import logging
 logger = logging.getLogger(__name__)
-
+from  django.db.models.loading import get_model
 
 # -----------------------		
 class UtilidadesCVNtoXML:
@@ -484,7 +484,7 @@ class UtilidadesXMLtoBBDD:
 		return data
 		
 		
-	def __saveData__(self, user = None, data = {}, table = None):
+	def __saveData__(self, user = None, data = {}, table_name = None):
 		"""
 			Método que se encarga de almacenar la actividad científica de un usuario en las tablas correspondientes.
 			En caso de que exista ya dicho elemento almacenado en la tabla, simplemente se actualiza el campo usuario,
@@ -499,6 +499,7 @@ class UtilidadesXMLtoBBDD:
 		search_data = searchDataProduccionCientifica(data)					
 		if not search_data: # Si devuelve un diccionario vacío, la búsqueda devuelve todos los registros de la tabla
 			search_data = {'pk': cvn_setts.INVALID_SEARCH}
+		table = get_model('cvn', table_name)
 		try:				
 			reg = table.objects.get(**search_data)
 			# Actualiza el registro con los nuevos datos
