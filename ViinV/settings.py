@@ -29,8 +29,7 @@ DATABASES = {
     'portalinvestigador': {
         'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.
-        #'PASSWORD': 'root10ull',
+        'USER': 'root',                       # Not used with sqlite3.        
         'PASSWORD': '1234',                 # Not used with sqlite3.
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB'}
     }
@@ -257,6 +256,9 @@ CAS_RETRY_LOGIN = True
 #  The CAS protocol version to use. `'1'` and `'2'` are supported, with `'2'` being the default.
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
+
+# Dirección de login para el decorador login_required
+LOGIN_URL='login'
 
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))

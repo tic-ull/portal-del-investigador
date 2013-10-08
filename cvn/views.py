@@ -45,7 +45,7 @@ def main(request):
 		if request.user.username == cvn_setts.ADMIN_USERNAME: # Usuario de la plantilla administrador
 			return HttpResponseRedirect(reverse('logout'))			
 		user = request.session['attributes']		
-	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.					
+	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.		
 		return HttpResponseRedirect(reverse('login'))
 	return HttpResponseRedirect(reverse('index'))
 	
@@ -53,7 +53,7 @@ def main(request):
 @login_required
 def index(request):
 	""" Vista que ve el usuario cuando accede a la aplicación """
-	context = {}
+	context = {}	
 	# El mensaje de que se ha subido el CVN de forma correcta está en una variable de la sesión.
 	try:
 		context['message'] = request.session['message']
