@@ -287,7 +287,36 @@ class UtilidadesXMLtoBBDD:
 			lista_usuarios = lista_aux
 		# Se devuelve la lista de usuarios con la probabilidad de que sean propietarios del CVN analizado	
 		return (lista_usuarios, probabilidad)
+	
+	
+	def __deleteOldData__(self, data = [], user = None):
+		"""
+			Recorre la lista de datos donde el usuario tiene una referencia o es la única referencia hacia los mismos.
+			Si es la única referencia se elimina los datos, sino sólo se elimina la referencia.
+		"""
+		for actividad in data:
+			if actividad.usuario.count() > 1:
+				actividad.usuario.remove(user)				
+			else:
+				actividad.delete()				
 				
+				
+	def __cleanDataCVN__(self, user = None): 
+		"""
+			Elimina los datos introducidos previamente por el usuario. En caso que los datos pertenezcan a
+			varios usuarios, se elimina sólo las referencias del usuario a los mismos.
+			
+			Variables:
+			- user -> Usuario que está introduciendo un nuevo CVN.			
+		"""
+		# Actividad científica
+		self.__deleteOldData__(Publicacion.objects.filter(usuario = user), user)		
+		self.__deleteOldData__(Congreso.objects.filter(usuario = user), user)
+		self.__deleteOldData__(Proyecto.objects.filter(usuario = user), user)
+		self.__deleteOldData__(Convenio.objects.filter(usuario = user), user)
+		self.__deleteOldData__(TesisDoctoral.objects.filter(usuario = user), user)
+		
+	
 		
 	def insertarXML(self, investigador = None):
 		""" 
@@ -311,7 +340,9 @@ class UtilidadesXMLtoBBDD:
 					#dataPersonal.update({'investigador': investigador})
 					user = Usuario.objects.create(**dataPersonal)
 				else:
-					user = search_user[0]					
+					user = search_user[0]
+					# Si el usuario ha introducido datos son eliminados para introducir los nuevos
+					# TODO ....
 				# Introduce los datos de la actividad científica
 				self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
 			else:
@@ -646,8 +677,7 @@ class UtilidadesXMLtoBBDD:
 			elif tree.find('Date/EndDate/Year') is not None and tree.find('Date/EndDate/Year/Item').text is not None: 
 				data[u'fecha_de_fin'] = u'' + formatDate(tree.find('Date/EndDate/Year/Item').text)
 				
-		# La duración del proyecto viene codificada en el siguiente formato:P <num_years> Y <num_months> M <num_days> D
-		# TODO Decodificar el codigo de duración 
+		# La duración del proyecto viene codificada en el siguiente formato:P <num_years> Y <num_months> M <num_days> D		
 		if tree.find('Date/Duration') is not None and tree.find('Date/Duration/Item').text is not None:
 			duration_code = u'' + tree.find('Date/Duration/Item').text 		
 			data.update(self.__getDuration__(duration_code))
