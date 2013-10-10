@@ -738,7 +738,7 @@ class UtilidadesXMLtoBBDD:
 			data = {}
 			cvn_key = element.find('CvnItemID/CVNPK/Item').text						
 			# Actividad docente (Paso 4 Editor Fecyt)
-			if cvn_key == u"030.040.000.000":				
+			if cvn_key == u"030.040.000.000":						
 				data = self.__dataActividadDocente__(element)
 			# Experiencia científica y tecnológica (Paso 5 Editor Fecyt)
 			if cvn_key == u"050.020.020.000" or cvn_key == u"050.020.010.000":
