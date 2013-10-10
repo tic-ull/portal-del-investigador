@@ -106,7 +106,7 @@ u"OTHERS": u"Otros",
 }
 
 # Fecha de caducidad de un CVN
-CVN_CADUCIDAD = 180
+CVN_CADUCIDAD = 1 # Año
 
 # Constante para indicar que el dato de la página está introducido en un formato no reconocible
 INVALID_PAGE = -1

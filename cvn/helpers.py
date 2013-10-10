@@ -20,6 +20,7 @@ import os
 #~ # Mover los ficheros duplicados a históricos
 import shutil
 # Fechas
+from dateutil.relativedelta import relativedelta
 import datetime
 # Cálculo del hash
 import hashlib
@@ -263,9 +264,11 @@ def dataCVNSession(investCVN = None):
 	context['file_cvn'] = investCVN.cvnfile
 	# NOTE: En los ficheros subidos desde la nueva aplicación no hace falta modificar la ruta.	
 	context['file_cvn'].name = cvn_setts.MEDIA_PDF +investCVN.cvnfile.name.split('/')[-1]	
-	if (investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
+	#~ if (investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
+	if (investCVN.fecha_cvn + relativedelta(years = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
 		context['updateCVN'] = True
 	else:				
-		context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)				
+		#~ context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)
+		context['fecha_valido'] = investCVN.fecha_cvn + relativedelta(years = cvn_setts.CVN_CADUCIDAD)				
 	return context
 		
