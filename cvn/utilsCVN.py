@@ -298,6 +298,7 @@ class UtilidadesXMLtoBBDD:
 			if actividad.usuario.count() > 1:
 				actividad.usuario.remove(user)				
 			else:
+				print actividad
 				actividad.delete()				
 				
 				
@@ -342,7 +343,7 @@ class UtilidadesXMLtoBBDD:
 				else:
 					user = search_user[0]
 					# Si el usuario ha introducido datos son eliminados para introducir los nuevos
-					# TODO ....
+					self.__cleanDataCVN__(user)
 				# Introduce los datos de la actividad científica
 				self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
 			else:
