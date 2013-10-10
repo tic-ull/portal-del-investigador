@@ -24,15 +24,14 @@ DATABASES = {
         'USER': 'viinv',
         'PASSWORD': '1234',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
-        'TEST_NAME': 'tests',
+        'PORT': '',                      # Set to empty string for default.        
     },
     'portalinvestigador': {
         'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
         'USER': 'root',                       # Not used with sqlite3.        
         'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'}
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
     }
 }
 
@@ -260,6 +259,10 @@ CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 
 # Dirección de login para el decorador login_required
 LOGIN_URL='login'
+
+# Lanzar tests sin usar las migraciones de South
+SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
+SKIP_SOUTH_TESTS = True     # To disable South's own unit tests
 
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))
