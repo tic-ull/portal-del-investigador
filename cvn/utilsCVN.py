@@ -155,14 +155,16 @@ class UtilidadesXMLtoBBDD:
 			- fileBBDD: Fichero donde se almacena los CVN almacenados en la importación
 			- fileCVN: Fichero donde se almacenan aquellos cvn duplicados
 		"""			
-		cvn = cvn_setts.RUTA_BBDD + self.fileXML.replace("xml", "pdf")		
+		cvn = cvn_setts.URL_PDF + self.fileXML.replace("xml", "pdf")		
+		#~ cvn = cvn_setts.RUTA_BBDD + self.fileXML.replace("xml", "pdf")		
 		# Comprobar si existe ya el CVN en el portal del investigador.
 		cvn_investigador = GrupoinvestInvestcvn.objects.filter(cvnfile__icontains = cvn.split('/')[-1])		
 		if len(cvn_investigador) > 0:			
 			# Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN			
 			fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
 			# Se actualiza la columna 'xmlfile'
-			cvn_investigador[0].xmlfile = cvn_setts.RUTA_BBDD + self.fileXML
+			#~ cvn_investigador[0].xmlfile = cvn_setts.RUTA_BBDD + self.fileXML
+			cvn_investigador[0].xmlfile = cvn_setts.URL_XML + self.fileXML
 			cvn_investigador[0].fecha_cvn = fecha_cvn
 			cvn_investigador[0].save()
 			# Se actualiza el fichero con CVN insertados
@@ -297,8 +299,7 @@ class UtilidadesXMLtoBBDD:
 		for actividad in data:
 			if actividad.usuario.count() > 1:
 				actividad.usuario.remove(user)				
-			else:
-				print actividad
+			else:				
 				actividad.delete()				
 				
 				
@@ -768,7 +769,8 @@ def checkUserCVN(data = "", cvn = None):
 		handlerCVN = UtilidadesCVNtoXML(filePDF = cvn.cvnfile.name.split('/')[-1])
 		xmlFecyt = handlerCVN.getXML() 				
 		if xmlFecyt:
-			cvn.xmlfile = cvn_setts.RUTA_BBDD + cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml')
+			#~ cvn.xmlfile = cvn_setts.RUTA_BBDD + cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml')
+			cvn.xmlfile = cvn_setts.URL_XML + cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml')
 		xmlCVN = UtilidadesXMLtoBBDD(fileXML = cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml'))
 		xmlCVN.insertarXML(cvn.investigador)
 		cvn.save()

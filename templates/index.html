@@ -81,9 +81,8 @@
 				{% if fecha_cvn %}
 				<li class="span6">
 					<div class="thumbnail">
-						<div class="center">
-							<!-- Se añade '/' para servir la ruta correcta del archivo -->									
-							<a href="{{ file_cvn }}" target="_blank">
+						<div class="center">							
+							<a href="{% url 'downloadCVN' %}" target="_blank">
 								<img data-src="holder.js/200x150" alt="Descargar CVN" title="Descargar CVN"
 									src='{% static "images/cvn.jpg" %}'>
 							</a>

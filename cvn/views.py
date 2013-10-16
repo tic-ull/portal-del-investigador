@@ -15,7 +15,7 @@ from cvn.helpers import handleOldCVN, getUserViinV, addUserViinV, getDataCVN, da
 # Redireccion hacia otras paginas
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse,Http404 
 from django.core.urlresolvers import reverse
 
 # Almacenar los ficheros subidos a la aplicación en el disco.
@@ -81,15 +81,16 @@ def index(request):
 				# Se llama al webservice del Fecyt para corroborar que se trata de un CVN con el formato válido
 				cvn = UtilidadesCVNtoXML(filePDF = filePDF)
 				xmlFecyt = cvn.getXML(filePDF)
-				userCVN  = cvn.checkCVNOwner(invest)
+				userCVN  = cvn.checkCVNOwner(invest)				
 				if xmlFecyt and userCVN: # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
 					handleOldCVN(investCVNname, investCVN)				
 					investCVN = context['form'].save(commit = False)
 					investCVN.fecha_up = datetime.date.today()				
-					investCVN.cvnfile.name = filePDF.name				
+					investCVN.cvnfile.name = filePDF.name					
 					investCVN.investigador = invest								
 					xmlCVN = UtilidadesXMLtoBBDD(fileXML = filePDF.name.replace('pdf','xml'))
 					investCVN.fecha_cvn = xmlCVN.insertarXML(invest) 				
+					investCVN.xmlfile = cvn_setts.URL_XML + filePDF.name.replace('pdf','xml')
 					investCVN.save()										
 					request.session['message'] = u'Se ha actualizado su CVN con éxito.'
 					return HttpResponseRedirect(reverse("cvn.views.index"))					
@@ -105,3 +106,22 @@ def index(request):
 	else:
 		context['form'] = UploadCvnForm(instance = investCVN)		
 	return render_to_response("index.html", context, RequestContext(request))
+
+
+@login_required
+def downloadCVN(request):
+	""" Vista que descarga el CVN correspondiente al usuario logeado en la sesión """
+	context={}
+	context['user'] = request.session['attributes'] # Usuario CAS 
+	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])
+	logger.info("Descarga CVN investigador: " + invest.nombre + ' ' + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
+	try:
+		with open(investCVNname, 'r') as pdf:
+			response = HttpResponse(pdf.read(), mimetype='application/pdf')
+			# De la ruta entera hacia el CVN se realiza un split para quedarse con el nombre del fichero.
+			response['Content-Disposition'] = 'inline;filename=%s' %(investCVNname.split('/')[-1])
+		pdf.closed		
+	except TypeError:
+		raise Http404
+	return response
+	
