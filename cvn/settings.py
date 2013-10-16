@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 # Modelos BBDD
-from cvn.models import *
+#from cvn.models import *
 
 import os
 from django.conf import settings as st
