@@ -114,14 +114,15 @@ def downloadCVN(request):
 	context={}
 	context['user'] = request.session['attributes'] # Usuario CAS 
 	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])
-	logger.info("Descarga CVN investigador: " + invest.nombre + ' ' + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
+	if invest: # El usuario para los test no se crea en la BBDD
+		logger.info("Descarga CVN investigador: " + invest.nombre + ' ' + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
 	try:
 		with open(investCVNname, 'r') as pdf:
 			response = HttpResponse(pdf.read(), mimetype='application/pdf')
 			# De la ruta entera hacia el CVN se realiza un split para quedarse con el nombre del fichero.
 			response['Content-Disposition'] = 'inline;filename=%s' %(investCVNname.split('/')[-1])
 		pdf.closed		
-	except TypeError:
+	except TypeError, IOError:
 		raise Http404
 	return response
 	
