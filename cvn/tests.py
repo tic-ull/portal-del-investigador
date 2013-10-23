@@ -201,7 +201,7 @@ class FecytWSTest(TestCase):
 			Función auxiliar que comprueba que los datos de las publicación han sido introducidos en la BBDD
 			
 			Variables:
-				* data: Registro de tipo publicación.
+				* data: Registro de tipo publicación con todos los datos que debieron ser introducidos.
 				* libro: Indica que la publicación se trata de un libro, con lo que no se mira el ISSN
 		"""				
 		if not data.titulo:
@@ -230,46 +230,83 @@ class FecytWSTest(TestCase):
 		"""
 			Función auxiliar que se encarga de comprobar que los datos de los Proyectos y Convenios 
 			son insertados correctamente.
-		"""	
-		print ">>>>>"
-		print data.fecha_de_fin	
-		if not data.denominacion_del_proyecto:
-			print "Denominacion proyecto"
+			
+			Variables:
+			* data: Registro que contiene todos los datos que debieron ser introducidos.
+			* proyecto: Indica si se trata de un proyecto (True) o convenio (False)
+		"""					
+		if not data.denominacion_del_proyecto:			
 			return False
 		if not data.fecha_de_inicio:
-			print "Fecha de inicio"
 			return False
 		if proyecto:
 			if not data.fecha_de_fin:
-				print "Fecha de fin"
 				return False
-		if not data.duracion_anyos:
-			print "Duracion Años"
+		if not data.duracion_anyos:			
 			return False
-		if not data.duracion_meses:
-			print "Duracion Meses"
+		if not data.duracion_meses:			
 			return False
-		if not data.duracion_dias:
-			print "Duracion Dias"
+		if not data.duracion_dias:			
 			return False
-		if not data.autores:
-			print "Autores"
+		if not data.autores:			
 			return False
-		if not data.cod_segun_financiadora:
-			print "Cod. financiadora"
+		if not data.cod_segun_financiadora:			
 			return False
-		if not data.ambito:
-			print "Ambito"
+		if not data.ambito:			
 			return False			
-		if not data.otro_ambito:
-			print "Otro ambito"
+		if not data.otro_ambito:		
 			return False
 		return True
+	
+	
+	def __checkDataTesis__(self, data = None):
+		"""
+			Función auxiliar que comprueba que los datos de una Tesis se han introducido correctamente en la BBDD.
 			
-			
+			Variable:
+			* data: Registro de tipo tesis que contiene todos los datos que debieron ser introducidos.
+		"""
+		if not data.titulo:
+			return False
+		if not data.universidad_que_titula:
+			return False
+		if not data.autor:
+			return False
+		if not data.codirector:
+			return False
+		if not data.fecha_de_lectura:
+			return False
+		return True
+				
+	
+	def __checkDataCongreso__(self, data = None):
+		"""
+			Función auxiliar que comprueba que los datos de un congreso se han introducido correctamente en la BBDD.
+		"""
+		if not data.titulo:
+			return False
+		if not data.nombre_del_congreso:
+			return False
+		if not data.fecha_realizacion:
+			return False
+		if not data.fecha_finalizacion:
+			return False
+		if not data.ciudad_de_realizacion:
+			return False
+		if not data.ambito:
+			return False
+		if not data.otro_ambito:
+			return False
+		if not data.autores:
+			return False
+		return True
+		
 	def __checkPublicacion__(self, user = None):
 		"""
 			Función auxiliar que se encarga de comprobar que se han añadido los artículos correctos.
+			
+			Variables:
+			* user: Usuario 'Test' propietario de la actividad científica.
 		"""
 		self.assertEqual(Publicacion.objects.filter(usuario = user, tipo_de_produccion__icontains="Capítulo").count(), 3)
 		self.assertEqual(Publicacion.objects.filter(usuario = user, tipo_de_produccion__iexact="Artículo").count(), 2)				
@@ -283,6 +320,8 @@ class FecytWSTest(TestCase):
 		self.assertTrue(self.__checkDataPublicacion__(libro, True))
 		return True
 				
+				
+	
 	
 	def	test_cvn2xml(self):
 		"""
@@ -323,11 +362,13 @@ class FecytWSTest(TestCase):
 		self.assertEqual(Convenio.objects.filter(usuario = user).count(), 3)
 		self.assertTrue(self.__checkDataExpCientifica__(Convenio.objects.get(usuario = user, denominacion_del_proyecto="Convenio 1")))
 		
+		# Número de Tesis
+		self.assertEqual(TesisDoctoral.objects.filter(usuario = user).count(), 2)
+		self.assertTrue(self.__checkDataTesis__(TesisDoctoral.objects.get(usuario = user, titulo="Tesis Doctoral 1")))
 		
-		
-		
-		
-		
+		# Número de congresos
+		self.assertEqual(Congreso.objects.filter(usuario = user).count(), 3)
+		self.assertTrue(self.__checkDataCongreso__(Congreso.objects.get(usuario = user, titulo="Congreso 1")))
 		
 		
 
