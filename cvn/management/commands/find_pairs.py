@@ -35,7 +35,7 @@ class Command(BaseCommand):
         #registros = self.TABLE.objects.all()
         # vigentes en 2012
         registros = self.TABLE.objects.filter( Q(fecha_de_inicio__lte=datetime.date(2012,12,31)) & Q(fecha_de_fin__gt=datetime.date(2012,1,1)))
-        registros = registros[:200]
+        registros = registros[:50]
         print "Total de registros en estudio = ", len(registros)
         duplicates = {}
         checked = [] # almacena los índices que no requieren comprobación porque ya han sido detectados
@@ -61,10 +61,10 @@ class Command(BaseCommand):
                         duplicates[pair] = percentage
 
         print "\nTotal duplicates: ", len(duplicates)
-        #~ pp = pprint.PrettyPrinter(indent=1,width=60)
-        #~ pprint.pprint(duplicates)
-        
+   
         # RECORRER LOS PARES DUPLICADOS QUE SOLO DIFIEREN EN LA DENOMINACION
+        
+        pairs_solved = {}
         
         for pair in sorted(duplicates, key=duplicates.get, reverse=True):
             #print pair, 'similar ', duplicates[pair]
@@ -76,29 +76,69 @@ class Command(BaseCommand):
                                                                            self.DONT_CHECK_FIELDS + [self.NAME_FIELD])
             
             if difering_length == 0:
-                
-                print "===========================================================\n"    
                 master = self.TABLE()
-                for f in self.TABLE._meta.get_all_field_names():
-                    if f in self.TIMESTAMP_FIELDS:
-                        master.f = datetime.datetime.now()
-                    else: 
-                        if f not in self.DONT_SET_FIELDS + [self.NAME_FIELD]:
-                            f1 = pry1.__getattribute__(f)
-                            f2 = pry2.__getattribute__(f)
-                            master_f = f1 if f1 else f2
-                            if f1 and f2: # si existen los dos no podemos decidir
-                                master_f = f1 if f1 == f2 else None
-                            if any([f1, f2]) and f1 != f2:
-                                 print f
-                                 print pry1.id, "  ", f1
-                                 print pry2.id, "  ", f2
-                                 print "MASTER:", master_f, "\n"
-                f == self.NAME_FIELD
-                f1 = pry1.__getattribute__(f)
-                f2 = pry2.__getattribute__(f)
-                print f
-                print pry1.id, "  ", f1
-                print pry2.id, "  ", f2
-                print "MASTER:", master_f, "\n"
+                # todo a bit of fixing this 
+                model_fields = set(self.TABLE._meta.get_all_field_names()) - set([self.NAME_FIELD])
+                model_fields = list(model_fields) + [self.NAME_FIELD]
                 
+                repeat = True
+                while repeat:
+                    print "\n==========================================================="    
+                    print " ID1 = %s comparado con ID2 = %s " % (pry1.id, pry2.id)    
+                    print "==========================================================="    
+                
+                    for idx, f in enumerate(model_fields):
+                        if f in self.TIMESTAMP_FIELDS:
+                            master.f = datetime.datetime.now()
+                        else: 
+                            if f not in self.DONT_SET_FIELDS:
+                                f1 = pry1.__getattribute__(f)
+                                f2 = pry2.__getattribute__(f)
+                                master_f = f1 if f1 else f2
+                                if f1 and f2: # si existen los dos no podemos decidir
+                                    master_f = f1 if f1 == f2 else None
+                                if any([f1, f2]) and f1 != f2:
+                                    print "\n", idx, "->", f
+                                    print pry1.id, f1
+                                    print pry2.id, f2
+                                    print "NEW", master_f, "\n"
+                                    choice = self.choice(pry1, pry2)
+                                    if choice == -1 or choice == 0:
+                                        break
+                                    
+                                    if choice == "":
+                                        master.f = master_f
+                                    else:
+                                        master.f = f1 if choice == pry1.id else f2
+                                    
+                                    print "SET", master.f
+                                    
+                    if choice == 0:
+                        break
+                    if choice != -1:
+                        repeat = False
+                
+                #~ pp = pprint.PrettyPrinter(indent=1,width=60)
+                print "RESULTING REGISTER:"            
+                pprint.pprint(master.__dict__)
+                master.save()
+                #pprint.pprint(master.__dict__)
+                #choice = raw_input("DELETING")
+                
+                pairs_solved[(pry1.id, pry2.id)] = master.id
+                
+                master.delete()
+                
+        print pairs_solved
+                
+    def choice(self, pry1, pry2):
+        print 'Return=NEW     %s=ID1      %s=ID2     0=Ignorar pareja     -1=Reniciar pareja' % (pry1.id, pry2.id),
+        choice = None
+        while choice != "" and choice != pry1.id and choice != pry2.id and choice != -1 and choice != 0:
+            choice = raw_input("? ")
+            try:
+                choice = int(choice)
+            except: 
+                pass
+        return choice
+        

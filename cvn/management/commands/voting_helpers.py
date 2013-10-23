@@ -37,10 +37,13 @@ def difering_fields(obj1, obj2, EXCLUDE_FIELDS = []):
                 difering.append(f)
     return len(fields), len(difering), difering 
 
-
 def all_None(lista):
     # return True if all the elements of the list are None
     return not any(lista)
+
+def best_name(den1, den2):
+    # TODO todo
+    return den1
     
 if __name__ == '__main__':
     print [2, 2, "", None],  most_voted_safest([2, 2, "", None])
