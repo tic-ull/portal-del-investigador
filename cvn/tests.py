@@ -228,28 +228,41 @@ class FecytWSTest(TestCase):
 			
 	def __checkDataExpCientifica__(self, data=None, proyecto = False):
 		"""
-			Función auxiliar que se encarga de comprobar que los datos de los Proyectos y Convenios son insertados correctamente.
-		"""
+			Función auxiliar que se encarga de comprobar que los datos de los Proyectos y Convenios 
+			son insertados correctamente.
+		"""	
+		print ">>>>>"
+		print data.fecha_de_fin	
 		if not data.denominacion_del_proyecto:
+			print "Denominacion proyecto"
 			return False
 		if not data.fecha_de_inicio:
+			print "Fecha de inicio"
 			return False
 		if proyecto:
 			if not data.fecha_de_fin:
+				print "Fecha de fin"
 				return False
 		if not data.duracion_anyos:
+			print "Duracion Años"
 			return False
 		if not data.duracion_meses:
+			print "Duracion Meses"
 			return False
 		if not data.duracion_dias:
+			print "Duracion Dias"
 			return False
 		if not data.autores:
+			print "Autores"
 			return False
 		if not data.cod_segun_financiadora:
+			print "Cod. financiadora"
 			return False
 		if not data.ambito:
-			return False
+			print "Ambito"
+			return False			
 		if not data.otro_ambito:
+			print "Otro ambito"
 			return False
 		return True
 			

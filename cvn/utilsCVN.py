@@ -672,10 +672,10 @@ class UtilidadesXMLtoBBDD:
 		elif tree.find('Date/' + nodo + '/Year') is not None:       # Fecha: Año
 			data[u'fecha_de_inicio'] = u'' + formatDate(tree.find('Date/' + nodo + '/Year/Item').text)
 		
-		# Fecha final Proyectos
-		if cvn_setts.MODEL_TABLE[tipo] == Proyecto: 				
-			if tree.find('Date/EndDate/DayMonthYear') is not None and tree.find('Date/EndDate/DayMonthYear/Item').text is not None: 
-				data[u'fecha_de_fin'] = u'' + tree.find('Date/EndDate/DayMonthYear/Item').text			
+		# Fecha final Proyectos		
+		if cvn_setts.MODEL_TABLE[tipo] == u'Proyecto': 				
+			if tree.find('Date/EndDate/DayMonthYear') is not None and tree.find('Date/EndDate/DayMonthYear/Item').text is not None: 				
+				data[u'fecha_de_fin'] = u'' + tree.find('Date/EndDate/DayMonthYear/Item').text							
 			elif tree.find('Date/EndDate/Year') is not None and tree.find('Date/EndDate/Year/Item').text is not None: 
 				data[u'fecha_de_fin'] = u'' + formatDate(tree.find('Date/EndDate/Year/Item').text)
 				
