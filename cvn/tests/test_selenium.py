@@ -10,18 +10,22 @@ class MySeleniumTests(LiveServerTestCase):
 	def setUpClass(cls):
 		cls.selenium = WebDriver()
 		super(MySeleniumTests, cls).setUpClass()
+		
+		
 
 	@classmethod        
 	def tearDownClass(cls):
 		cls.selenium.quit()
 		super(MySeleniumTests, cls).tearDownClass()
 
-	def test_login(self):
-		print self.live_server_url
-		self.selenium.get('%s%s' % (self.live_server_url, '/investigacion/'))
+	def test_login(self):		
+		self.selenium.get('%s%s' % ('http://10.219.4.213:8000','/investigacion/'))
+		#~ self.selenium.get('%s%s' % (self.live_server_url, '/investigacion/'))
 		username_input = self.selenium.find_element_by_name("username")        
-		username_input.send_keys('lcerrudo')
+		username_input.send_keys('invbecario')
 		password_input = self.selenium.find_element_by_name("password")
 		print dir(self.selenium)
-		password_input.send_keys('qn5LqUaj') 
-		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
+		password_input.send_keys('pruebasINV1') 
+		response = self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
+		print response
+		print dir(response)
