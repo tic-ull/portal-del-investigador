@@ -24,24 +24,32 @@ import os
 import time
 
 TEST_SERVER  = 'http://10.219.4.213:8000'
-CVN_LOCATION =  os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
-USER_LOGIN   =  "invbecario"
-USER_PASSWD  =  "pruebasINV1"
+CVN_LOCATION = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
+USER_LOGIN   = "invbecario"
+USER_PASSWD  = "pruebasINV1"
+ADMIN_LOGIN  = "admin"
+ADMIN_PASSWD = "123"
 # ################################
-class CVNTests(TestCase):
 #~ class MySeleniumTests(LiveServerTestCase):
-	fixtures = ['test-data.json']
-	
+class CVNTestCase(TestCase):
+	"""
+		Clase que contiene los test para corroborar el correcto funcionamiento de las siguientes funcionalidades (usuario):
+		- Acceso a la aplicación por medio de un usuario CAS de pruebas.
+		- Subida de un CVN a la aplicación con formato Fecyt.
+		- Descarga de un CVN a la aplicación.
+		- Acceso a la aplicación por parte de un usuario no registrado en el CAS.
+	"""
+		
 	@classmethod		
 	def setUpClass(cls):
 		cls.selenium = WebDriver()
-		super(CVNTests, cls).setUpClass()
+		super(CVNTestCase, cls).setUpClass()
 		
 		
 	@classmethod        
 	def tearDownClass(cls):
 		cls.selenium.quit()
-		super(CVNTests, cls).tearDownClass()
+		super(CVNTestCase, cls).tearDownClass()
 		
 
 	def __inic_session__(self, login = None, passwd = None):
@@ -57,12 +65,10 @@ class CVNTests(TestCase):
 		#~ self.selenium.get('%s%s' % (self.live_server_url, '/investigacion/'))
 		username_input = self.selenium.find_element_by_name("username")        
 		username_input.send_keys(login)
-		time.sleep(2)
-		#~ self.selenium.implicitly_wait(30)
+		time.sleep(2)		
 		password_input = self.selenium.find_element_by_name("password")
 		password_input.send_keys(passwd) 
-		time.sleep(2)
-		#~ self.selenium.implicitly_wait(30)
+		time.sleep(2)		
 		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
 
 
@@ -143,3 +149,40 @@ class CVNTests(TestCase):
 		msg_alert = self.selenium.find_element_by_xpath('//div[@id="status"]').text
 		self.assertIn(u'No se puede determinar que las credenciales proporcionadas', msg_alert)
 	
+
+class AdminCVNTestCase(LiveServerTestCase):
+	"""
+		Clase que contiene los test para comprobar el correcto funcionamiento de las funcionalidades 
+		de la plantilla de administración:
+		- Acceso a la plantilla administrador mediante un usuario con permisos de 'staff'.
+	"""
+	
+	fixtures = ['initial-data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
+	
+	@classmethod		
+	def setUpClass(cls):
+		cls.selenium = WebDriver()
+		super(AdminCVNTestCase, cls).setUpClass()
+		
+		
+	@classmethod        
+	def tearDownClass(cls):
+		cls.selenium.quit()
+		super(AdminCVNTestCase, cls).tearDownClass()
+	
+	
+	def test_login(self):		
+		"""
+			Comprueba se puede acceder a la plantilla de administración correctamente con un usuario STAFF		
+		"""
+		self.selenium.get("%s%s" % (self.live_server_url, '/investigacion/admin'))
+		username_input = self.selenium.find_element_by_name("username")
+		username_input.send_keys(ADMIN_LOGIN)
+		time.sleep(2)
+		password_input = self.selenium.find_element_by_name("password")
+		password_input.send_keys(ADMIN_PASSWD) 
+		time.sleep(2)
+		ini_session = self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]')
+		ini_session.click()
+		self.assertTrue(self.selenium.find_element_by_id('user-tools').text.startswith('Bienvenido'))
+		
