@@ -150,6 +150,8 @@ class CVNTestCase(TestCase):
 		self.assertIn(u'No se puede determinar que las credenciales proporcionadas', msg_alert)
 	
 
+
+
 class AdminCVNTestCase(LiveServerTestCase):
 	"""
 		Clase que contiene los test para comprobar el correcto funcionamiento de las funcionalidades 
