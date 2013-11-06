@@ -62,15 +62,20 @@ class CVNTestCase(TestCase):
 		
 	@classmethod		
 	def setUpClass(cls):
-		cls.selenium = WebDriver()
+		#~ cls.selenium = WebDriver()
+		cls.drivers = WebDriverList(
+				webdriver.Chrome(CHROME_DRIVER),
+				webdriver.Firefox(),
+		)
 		super(CVNTestCase, cls).setUpClass()
 		
 		
 	@classmethod        
 	def tearDownClass(cls):
 		""" Este método se ejecuta al final de la ejecución de todos los tests """		
+		cls.drivers.quit()
 		super(CVNTestCase, cls).tearDownClass()
-		cls.selenium.quit()
+		#~ cls.selenium.quit()
 		
 		
 
