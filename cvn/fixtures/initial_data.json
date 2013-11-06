@@ -1,3 +1,110 @@
 [
-{"pk": 1, "model": "auth.user", "fields": {"username": "admin", "first_name": "", "last_name": "", "is_active": true, "is_superuser": true, "is_staff": true, "last_login": "2013-10-25T12:41:13.939Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$uZIp4cDP3Hkx$zQSPnLT0yPjsQFsaXb8esZdmFnjv4C7ABv1ZkiAquoA=", "email": "admin@ull.edu.es", "date_joined": "2013-09-19T11:16:23.572Z"}}, {"pk": 2, "model": "auth.user", "fields": {"username": "gap", "first_name": "", "last_name": "", "is_active": true, "is_superuser": true, "is_staff": true, "last_login": "2013-10-24T15:36:24.988Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$nDs0LTqY39Px$+wOU9s3G8+ADpl/l6UjglaVBjnKcItOGVy8f1qGSJ3Y=", "email": "", "date_joined": "2013-09-20T08:14:17Z"}}, {"pk": 3, "model": "auth.user", "fields": {"username": "emarrero", "first_name": "ELENA MARIA", "last_name": "MARRERO MENDEZ", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-09-20T11:29:32.225Z", "groups": [], "user_permissions": [], "password": "!", "email": "", "date_joined": "2013-09-20T11:01:11.648Z"}}, {"pk": 4, "model": "auth.user", "fields": {"username": "lcerrudo", "first_name": "LUIS MARINO", "last_name": "CERROD CONCEPCION", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-10-24T10:48:34.399Z", "groups": [], "user_permissions": [], "password": "!", "email": "", "date_joined": "2013-09-26T10:50:43.898Z"}}, {"pk": 10, "model": "auth.user", "fields": {"username": "testCVN", "first_name": "", "last_name": "", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-10-17T08:32:22.682Z", "groups": [], "user_permissions": [], "password": "pbkdf2_sha256$10000$zCBjvKbGVfcx$KDRlI15DioDbiC/JQc38Js1CLfTGVglvD86nyTN95s8=", "email": "test@ull.edu.es", "date_joined": "2013-10-15T13:21:13.856Z"}}, {"pk": 12, "model": "auth.user", "fields": {"username": "invbecario", "first_name": "Prueba", "last_name": "Investigaci\u00f3n Becario", "is_active": true, "is_superuser": false, "is_staff": false, "last_login": "2013-10-25T11:58:21.677Z", "groups": [], "user_permissions": [], "password": "!", "email": "", "date_joined": "2013-10-23T12:09:32.995Z"}}
+{
+  "pk": 1, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "admin", 
+    "first_name": "", 
+    "last_name": "", 
+    "is_active": true, 
+    "is_superuser": true, 
+    "is_staff": true, 
+    "last_login": "2013-10-28T08:36:43.296Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$10000$uZIp4cDP3Hkx$zQSPnLT0yPjsQFsaXb8esZdmFnjv4C7ABv1ZkiAquoA=", 
+    "email": "admin@ull.edu.es", 
+    "date_joined": "2013-09-19T11:16:23.572Z"
+  }
+},
+{
+  "pk": 2, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "gap", 
+    "first_name": "", 
+    "last_name": "", 
+    "is_active": true, 
+    "is_superuser": true, 
+    "is_staff": true, 
+    "last_login": "2013-10-24T15:36:24.988Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$10000$nDs0LTqY39Px$+wOU9s3G8+ADpl/l6UjglaVBjnKcItOGVy8f1qGSJ3Y=", 
+    "email": "", 
+    "date_joined": "2013-09-20T08:14:17Z"
+  }
+},
+{
+  "pk": 3, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "emarrero", 
+    "first_name": "ELENA MARIA", 
+    "last_name": "MARRERO MENDEZ", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2013-09-20T11:29:32.225Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "!", 
+    "email": "", 
+    "date_joined": "2013-09-20T11:01:11.648Z"
+  }
+},
+{
+  "pk": 4, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "lcerrudo", 
+    "first_name": "LUIS MARINO", 
+    "last_name": "CERROD CONCEPCION", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2013-10-24T10:48:34.399Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "!", 
+    "email": "", 
+    "date_joined": "2013-09-26T10:50:43.898Z"
+  }
+},
+{
+  "pk": 10, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "testCVN", 
+    "first_name": "", 
+    "last_name": "", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2013-10-17T08:32:22.682Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$10000$zCBjvKbGVfcx$KDRlI15DioDbiC/JQc38Js1CLfTGVglvD86nyTN95s8=", 
+    "email": "test@ull.edu.es", 
+    "date_joined": "2013-10-15T13:21:13.856Z"
+  }
+},
+{
+  "pk": 12, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "invbecario", 
+    "first_name": "Prueba", 
+    "last_name": "Investigaci\u00f3n Becario", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2013-10-25T11:58:21.677Z", 
+    "groups": [], 
+    "user_permissions": [], 
+    "password": "!", 
+    "email": "invbecario@ull.edu.es", 
+    "date_joined": "2013-10-23T12:09:32.995Z"
+  }
+}
 ]

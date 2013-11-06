@@ -5,7 +5,9 @@ from django.test import LiveServerTestCase
 from django.test import TestCase
 
 # Selenium
-from selenium.webdriver.firefox.webdriver import WebDriver
+#~ from selenium.webdriver.firefox.webdriver import WebDriver
+#~ from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium import webdriver
 
 # Llamada a las vistas
 from django.core.urlresolvers import reverse
@@ -16,6 +18,14 @@ from selenium.common.exceptions import NoSuchElementException
 # Excepción para la búsqueda de objetos en la BBDD
 from django.core.exceptions import ObjectDoesNotExist
 
+# BBDD 'portalinvestigador' y 'cvn'
+from django.contrib.auth.models import User
+from cvn.models import *
+from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn, AuthUser, GrupoinvestCategoriainvestigador
+
+# Decorador para la ejecución de los test con multiples navegadores
+from drivers import *
+
 # TODO: Fichero settings para test
 # ################################
 from django.conf import settings as st
@@ -23,12 +33,22 @@ from django.conf import settings as st
 import os
 import time
 
+CHROME_DRIVER = "/home/luis/Descargas/chromedriver"
+
+ID_TEST      = 99999
 TEST_SERVER  = 'http://10.219.4.213:8000'
+
 CVN_LOCATION = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
+CVN_FILE     = os.path.join(st.MEDIA_ROOT, 'cvn/pdf/CVN-test-709bddb1.pdf')
+XML_FILE     = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-test-709bddb1.xml')
+
 USER_LOGIN   = "invbecario"
 USER_PASSWD  = "pruebasINV1"
+USER_NIF     = "123456789A"
+
 ADMIN_LOGIN  = "admin"
 ADMIN_PASSWD = "123"
+
 # ################################
 #~ class MySeleniumTests(LiveServerTestCase):
 class CVNTestCase(TestCase):
@@ -48,8 +68,10 @@ class CVNTestCase(TestCase):
 		
 	@classmethod        
 	def tearDownClass(cls):
-		cls.selenium.quit()
+		""" Este método se ejecuta al final de la ejecución de todos los tests """		
 		super(CVNTestCase, cls).tearDownClass()
+		cls.selenium.quit()
+		
 		
 
 	def __inic_session__(self, login = None, passwd = None):
@@ -71,8 +93,8 @@ class CVNTestCase(TestCase):
 		time.sleep(2)		
 		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
 
-
-	def test_login(self):
+	@test_drivers()
+	def test_01_login(self):
 		"""
 			Acceso a la aplicación mediante un usuario de pruebas CAS. Se busca el elemento de cierre de la sesión
 			para corroborar que se ha accedido correctamente.
@@ -89,7 +111,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 		
 		
-	def test_login_cookie(self):
+	def test_02_login_cookie(self):
 		"""
 			Acceso a la aplicación mediante un usuario de pruebas CAS. Se usan cookies para corroborar 
 			que el acceso se ha efectuado de manera correcta.
@@ -101,7 +123,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()		
 		
 
-	def test_upload_cvn(self):
+	def test_03_upload_cvn(self):
 		"""
 			Accede a la aplicación y sube un CVN.
 		"""
@@ -120,7 +142,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 
 
-	def test_download_cvn(self):
+	def test_04_download_cvn(self):
 		"""
 			Accede a la aplicación y descarga el CVN que previamente se ha subido en el test 'test_upload_cvn'
 		"""
@@ -141,7 +163,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 		
 	
-	def test_login_no_user_CAS(self):
+	def test_05_login_no_user_CAS(self):
 		"""
 			Realiza una comprobación de que un usuario no CAS no puede acceder a la página
 		"""
@@ -151,7 +173,6 @@ class CVNTestCase(TestCase):
 	
 
 
-
 class AdminCVNTestCase(LiveServerTestCase):
 	"""
 		Clase que contiene los test para comprobar el correcto funcionamiento de las funcionalidades 
@@ -159,21 +180,50 @@ class AdminCVNTestCase(LiveServerTestCase):
 		- Acceso a la plantilla administrador mediante un usuario con permisos de 'staff'.
 	"""
 	
-	fixtures = ['initial-data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
+	fixtures = ['initial_data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
+	selenium = None
 	
+	@classmethod
+	def setup_invest(cls):
+		"""		
+			Método privado que crea un usuario en la BBDD del portal con un CVN de pruebas.		
+		"""
+		user = User.objects.db_manager('portalinvestigador').create_user(pk=1, username=USER_LOGIN, password='', email='')				
+		data_invest = {'pk':1,'nombre': user.first_name,'nif':USER_NIF,'email':user.email, 
+					'categoria': GrupoinvestCategoriainvestigador.objects.create(pk=ID_TEST,nombre='INVES'),
+					'cod_persona':'INVES','user':AuthUser.objects.get(username = USER_LOGIN)}		
+		invest = GrupoinvestInvestigador.objects.create(**data_invest)
+		invest_cvn = GrupoinvestInvestcvn.objects.create(pk = 1, investigador = invest, cvnfile = CVN_FILE)
+
+
 	@classmethod		
-	def setUpClass(cls):
-		cls.selenium = WebDriver()
+	def setUpClass(cls):		
+		#~ cls.selenium = webdriver.Firefox()#WebDriver()				
+		#~ cls.selenium = webdriver.Chrome(CHROME_DRIVER)
+		# Lista de navegadores que van 
+		cls.drivers = WebDriverList(
+				webdriver.Chrome(CHROME_DRIVER),
+				webdriver.Firefox(),
+		)
 		super(AdminCVNTestCase, cls).setUpClass()
+		# Se crea el usuario que se va a usar para los test 02 y 03
+		cls.setup_invest()
 		
 		
 	@classmethod        
 	def tearDownClass(cls):
-		cls.selenium.quit()
+		cls.drivers.quit()				
 		super(AdminCVNTestCase, cls).tearDownClass()
+		#~ cls.selenium.quit()		
+		# Se elimina el fichero generado por la llamada al Fecyt
+		try:
+			os.remove(XML_FILE)
+		except OSError:
+			pass 
 	
 	
-	def test_login(self):		
+	@test_drivers()
+	def test_01_login(self):		
 		"""
 			Comprueba se puede acceder a la plantilla de administración correctamente con un usuario STAFF		
 		"""
@@ -186,5 +236,58 @@ class AdminCVNTestCase(LiveServerTestCase):
 		time.sleep(2)
 		ini_session = self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]')
 		ini_session.click()
-		self.assertTrue(self.selenium.find_element_by_id('user-tools').text.startswith('Bienvenido'))
+		self.assertTrue(self.selenium.find_element_by_id('user-tools').text.startswith('Bienvenido'))				
+
+		
+	def test_02_callFecyt(self):		
+		"""
+			Realiza una llamada al Fecyt para obtener el XML correspondiente al CVN
+		"""		
+		# Login del administrador
+		self.selenium.get("%s%s" % (self.live_server_url, '/investigacion/admin'))
+		self.selenium.find_element_by_name("username").send_keys(ADMIN_LOGIN)
+		self.selenium.find_element_by_name("password").send_keys(ADMIN_PASSWD) 
+		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
+		# Accede al usuario test del cual se va a obtener la representación XML
+		self.selenium.find_element_by_link_text("CVN Investigadores").click()
+		time.sleep(2)
+		self.selenium.find_element_by_xpath('//input[@value="1"]').click()
+		self.selenium.find_element_by_xpath('//select[@name="action"]').click()
+		# Seleccionar la opción que llama al Fecyt
+		option = self.selenium.find_element_by_xpath('//option[@value="getAdminXML"]')
+		option.click()
+		option.submit()
+		# Se comprueba que se ha obtenido el fichero XML y almacenado en el lugar correspondiente
+		try:
+			fileXML = open(XML_FILE, "r")
+		except IOError:
+			fileXML = None
+		self.assertIsNotNone(fileXML)		
+		fileXML.close()
+	
+	
+	def test_03_importData(self):
+		"""
+			Realiza la importación de datos a partir del fichero XML
+		"""
+		# Login 
+		self.selenium.get("%s%s" % (self.live_server_url, '/investigacion/admin'))
+		self.selenium.find_element_by_name("username").send_keys(ADMIN_LOGIN)
+		self.selenium.find_element_by_name("password").send_keys(ADMIN_PASSWD) 
+		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
+		# Accede al usuario test del cual se va a obtener la representación XML
+		self.selenium.find_element_by_link_text("CVN Investigadores").click()
+		time.sleep(2)
+		self.selenium.find_element_by_xpath('//input[@value="1"]').click()
+		self.selenium.find_element_by_xpath('//select[@name="action"]').click()
+		# Seleccionar la opción que importa el XML generado en el test 02
+		option = self.selenium.find_element_by_xpath('//option[@value="parseAdminPDF"]')
+		option.click()
+		option.submit()
+		# Comprobación de que se han introducido los datos
+		self.assertEqual(TesisDoctoral.objects.count(), 2)
+		self.assertEqual(Proyecto.objects.count(), 2)
+		self.assertEqual(Convenio.objects.count(), 3)
+		self.assertEqual(Congreso.objects.count(), 3)
+		self.assertEqual(Publicacion.objects.count(), 6)
 		
