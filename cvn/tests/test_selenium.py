@@ -17,6 +17,8 @@ from selenium.common.exceptions import NoSuchElementException
 	
 # Excepción para la búsqueda de objetos en la BBDD
 from django.core.exceptions import ObjectDoesNotExist
+# Excepción para comprobar la existencia de un CVN
+from django.http import Http404
 
 # BBDD 'portalinvestigador' y 'cvn'
 from django.contrib.auth.models import User
@@ -38,9 +40,10 @@ CHROME_DRIVER = "/home/luis/Descargas/chromedriver"
 ID_TEST      = 99999
 TEST_SERVER  = 'http://10.219.4.213:8000'
 
-CVN_LOCATION = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
-CVN_FILE     = os.path.join(st.MEDIA_ROOT, 'cvn/pdf/CVN-test-709bddb1.pdf')
-XML_FILE     = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-test-709bddb1.xml')
+CVN_LOCATION            = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
+CVN_NOT_FECYT_LOCATION  = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario-notFecyt.pdf')
+CVN_FILE     			= os.path.join(st.MEDIA_ROOT, 'cvn/pdf/CVN-test-709bddb1.pdf')
+XML_FILE     			= os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-test-709bddb1.xml')
 
 USER_LOGIN   = "invbecario"
 USER_PASSWD  = "pruebasINV1"
@@ -48,6 +51,8 @@ USER_NIF     = "123456789A"
 
 ADMIN_LOGIN  = "admin"
 ADMIN_PASSWD = "123"
+
+
 
 # ################################
 #~ class MySeleniumTests(LiveServerTestCase):
@@ -59,7 +64,7 @@ class CVNTestCase(TestCase):
 		- Descarga de un CVN a la aplicación.
 		- Acceso a la aplicación por parte de un usuario no registrado en el CAS.
 	"""
-		
+
 	@classmethod		
 	def setUpClass(cls):
 		#~ cls.selenium = WebDriver()
@@ -77,8 +82,7 @@ class CVNTestCase(TestCase):
 		super(CVNTestCase, cls).tearDownClass()
 		#~ cls.selenium.quit()
 		
-		
-
+	
 	def __inic_session__(self, login = None, passwd = None):
 		"""
 			Método privado que inicia la sesión en la aplicación con el usuario indicado como parámetro.
@@ -98,6 +102,19 @@ class CVNTestCase(TestCase):
 		time.sleep(2)		
 		self.selenium.find_element_by_xpath('//input[@value="Iniciar sesión"]').click()
 
+	####
+	def assertNotRaises(self, excClass, callableObj=None, *args, **kwargs):
+		"""
+			Fail if an exception of class excClass is thrown by
+			callableObj when invoked with arguments args and keyword
+			arguments kwargs.
+		"""
+		try:
+			callableObj(*args, **kwargs)
+		except excClass:
+			raise self.failureException("%s was raised" % excClass)
+	###
+
 	@test_drivers()
 	def test_01_login(self):
 		"""
@@ -116,6 +133,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 		
 		
+	@test_drivers()		
 	def test_02_login_cookie(self):
 		"""
 			Acceso a la aplicación mediante un usuario de pruebas CAS. Se usan cookies para corroborar 
@@ -128,6 +146,7 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()		
 		
 
+	@test_drivers()
 	def test_03_upload_cvn(self):
 		"""
 			Accede a la aplicación y sube un CVN.
@@ -147,34 +166,61 @@ class CVNTestCase(TestCase):
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 
 
-	def test_04_download_cvn(self):
+	@test_drivers()
+	def test_04_upload_cvn_not_fecyt(self):
+		"""
+			Accede a la aplicación e intenta subir un CVN que no tiene formato FECYT.
+		"""
+		self.__inic_session__(USER_LOGIN, USER_PASSWD)
+		# Una vez en la sesión procede a la subida de un CVN con formato Fecyt
+		uploadCVN = self.selenium.find_element_by_xpath('//input[@name="cvnfile"]')
+		uploadCVN.send_keys(CVN_NOT_FECYT_LOCATION)
+		self.selenium.find_element_by_xpath('//button[.="Actualizar"]').click()
+		try:
+			upload = self.selenium.find_element_by_class_name("alert-error")
+		except NoSuchElementException:
+			upload = None
+		self.assertIsNotNone(upload) # No se ha subido el CVN
+		self.assertIn(u'formato Fecyt', upload.text)
+		
+		
+	@test_drivers()
+	def test_05_download_cvn(self):
 		"""
 			Accede a la aplicación y descarga el CVN que previamente se ha subido en el test 'test_upload_cvn'
 		"""
 		self.__inic_session__(USER_LOGIN, USER_PASSWD)		
 		try:
 			cvn = self.selenium.find_element_by_xpath('//a[@href="/investigacion/cvn/download/"]')
-			cvn.click()
 			time.sleep(2)
+			cvn.click()			
 		except NoSuchElementException:
 			cvn = None
+			#~ self.selenium.get('%s%s' % (TEST_SERVER, reverse('downloadCVN')))
 		# Comprueba que el usuario ha subido un CVN
 		self.assertIsNotNone(cvn)		
 		# Comprobar que se abre el pdf. Se cambia a la ventana donde se abre el PDF		
-		self.selenium.switch_to_window(self.selenium.window_handles[1])		
+		self.selenium.switch_to_window(self.selenium.window_handles[1])				
 		time.sleep(2)
-		self.assertIn(u"CVN -", self.selenium.title)
+		#~ if self.selenium.name == u'firefox':
+			#~ self.assertIn(u'CVN -', self.selenium.title)
+		#~ elif self.selenium.name == u'chrome':
+			#~ self.assertIn(u"application/pdf", self.selenium.page_source)		
+		#~ self.assertNotRaises(Http404, lambda:self.selenium.switch_to_window(self.selenium.window_handles[1]))				
 		self.selenium.switch_to_window(self.selenium.window_handles[0])
+		time.sleep(2)
 		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 		
 	
-	def test_05_login_no_user_CAS(self):
+	@test_drivers()
+	def test_06_login_no_user_CAS(self):
 		"""
 			Realiza una comprobación de que un usuario no CAS no puede acceder a la página
 		"""
 		self.__inic_session__("NOCAS", "NOCAS")
 		msg_alert = self.selenium.find_element_by_xpath('//div[@id="status"]').text
 		self.assertIn(u'No se puede determinar que las credenciales proporcionadas', msg_alert)
+		
 	
 
 
@@ -183,8 +229,7 @@ class AdminCVNTestCase(LiveServerTestCase):
 		Clase que contiene los test para comprobar el correcto funcionamiento de las funcionalidades 
 		de la plantilla de administración:
 		- Acceso a la plantilla administrador mediante un usuario con permisos de 'staff'.
-	"""
-	
+	"""	
 	fixtures = ['initial_data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
 	selenium = None
 	
