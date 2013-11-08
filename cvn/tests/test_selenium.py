@@ -181,10 +181,11 @@ class CVNTestCase(TestCase):
 		except NoSuchElementException:
 			upload = None
 		self.assertIsNotNone(upload) # No se ha subido el CVN
-		self.assertIn(u'formato Fecyt', upload.text)
+		self.assertIn(u'formato FECYT', upload.text)
+		self.selenium.find_element_by_link_text("Cerrar sesión").click()
 		
 		
-	@test_drivers()
+	@test_drivers()		
 	def test_05_download_cvn(self):
 		"""
 			Accede a la aplicación y descarga el CVN que previamente se ha subido en el test 'test_upload_cvn'
@@ -202,6 +203,7 @@ class CVNTestCase(TestCase):
 		# Comprobar que se abre el pdf. Se cambia a la ventana donde se abre el PDF		
 		self.selenium.switch_to_window(self.selenium.window_handles[1])				
 		time.sleep(2)
+		self.assertIn('pdf', self.selenium.page_source)
 		#~ if self.selenium.name == u'firefox':
 			#~ self.assertIn(u'CVN -', self.selenium.title)
 		#~ elif self.selenium.name == u'chrome':
