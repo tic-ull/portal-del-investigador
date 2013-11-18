@@ -1,41 +1,20 @@
 # -*- encoding: utf-8 -*-
-
-# Clase para importar documentos
-from cvn.utilsCVN import *
-
-# Modelos
-from cvn.models import *
-
-# Formularios
-from cvn.forms import *
-
-# Funciones de ayudas
-from cvn.helpers import handleOldCVN, getUserViinV, addUserViinV, getDataCVN, dataCVNSession
-
-# Redireccion hacia otras paginas
+from cvn.forms import *     # Formularios
+from cvn.helpers import handleOldCVN, getUserViinV, addUserViinV, getDataCVN, dataCVNSession    # Funciones de ayudas
+from cvn.models import *    # Modelos
+from cvn.utilsCVN import *  # Clase para importar documentos
+from django.core.files.base import ContentFile  # Almacenar los ficheros subidos a la aplicación en el disco.
+from django.core.files.storage import default_storage   # Almacenar los ficheros subidos a la aplicación en el disco.
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect,HttpResponse,Http404 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.http import HttpResponseRedirect,HttpResponse,Http404 
-from django.core.urlresolvers import reverse
-
-# Almacenar los ficheros subidos a la aplicación en el disco.
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-
-# Decorador
-#from django.contrib.auth.decorators import login_required
 from django_cas.decorators import login_required
-
-# Constantes para la importación de CVN
-import cvn.settings as cvn_setts
-
-# Fecha de subida del nuevo CVN
-import datetime
-
-# Logs
+import cvn.settings as cvn_setts    # Constantes para la importación de CVN
+import datetime 
 import logging
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger(__name__)
 
 # -- Vistas Aplicación CVN --
 def main(request):
@@ -48,7 +27,6 @@ def main(request):
 	except KeyError: # Si el usuario no está logeado en el CAS se accede directamente a la pantalla de logeo.		
 		return HttpResponseRedirect(reverse('login'))
 	return HttpResponseRedirect(reverse('index'))
-	
 
 @login_required
 def index(request):
@@ -61,7 +39,7 @@ def index(request):
 	except: # Puede que no exista el mensaje en la sesión
 		pass 
 	context['user'] = request.session['attributes'] # Usuario CAS print context['user']['ou']		
-	invest, investCVN, investCVNname  = getUserViinV(context['user']['NumDocumento'])			
+	invest, investCVN, investCVNname = getUserViinV(context['user']['NumDocumento'])
 	if not invest:		
 		# Se añade el usuario a la aplicación de ViinV
 		invest = addUserViinV(context['user'])		
@@ -106,7 +84,6 @@ def index(request):
 	else:
 		context['form'] = UploadCvnForm(instance = investCVN)		
 	return render_to_response("index.html", context, RequestContext(request))
-
 
 @login_required
 def downloadCVN(request):
