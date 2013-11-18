@@ -4,10 +4,11 @@ import pprint
 import copy
 from time import strftime
 import logging
+from optparse import make_option
 
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
-from cvn.models import Proyecto, Publicacion, Congreso, Convenio
+from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
 
 from viinvDB.models import GrupoinvestInvestigador
 
@@ -26,21 +27,39 @@ def log_and_print(message):
 
 class Command(BaseCommand):
     help = u'Encuentra registros sospechosos de estar duplicados'
+    option_list = BaseCommand.option_list + (
+        make_option(
+            "-u", 
+            "--user", 
+            dest = "usuario",
+            help = "specify user for duplicate control. Use 'all'.",
+        ),
+        make_option(
+            "-t",
+            "--table",
+            dest = "table",
+            help = "specify table for duplicate control",
+        ),
+        make_option(
+            "-d",
+            "--diff",
+            dest = "differing_pairs",
+            help = "specify the number of differing pairs for duplicate control",
+        ),
+    )
     
-    ########### ZONA MANUAL ##########################
-    # cambiar a mano por ahora.
-    
-    # TABLE = Proyecto
-    # TABLE = Publicacion
-    # TABLE = Congreso
-    TABLE = Convenio
-    
-    #NAME_FIELD = "denominacion_del_proyecto"
-    #NAME_FIELD = "titulo"
-    #NAME_FIELD = "titulo"
-    NAME_FIELD = "denominacion_del_proyecto" # es así también para convenios
-    
-    ########### FIN DE ZONA MANUAL ###################
+    TABLES = {
+              'Proyecto' : Proyecto,
+              'Publicacion' : Publicacion,
+              'Congreso' : Congreso,
+              'Convenio' : Convenio
+              }
+    NAME_FIELDS = {
+              'Proyecto' : 'denominacion_del_proyecto',
+              'Publicacion' : 'titulo',
+              'Congreso' : 'titulo',
+              'Convenio' : 'denominacion_del_proyecto'
+              } 
     
     TIMESTAMP_FIELDS = ['updated_at',
                          'created_at',
@@ -55,7 +74,9 @@ class Command(BaseCommand):
     # mínima similitud para considerar dos registros como duplicados
     LIMIT = 0.75
     
-    DIFFERING_PAIRS = 5 # no contamos la denominación.
+    DIFFERING_PAIRS = 0 # Default value. No contamos la denominación.
+    
+    YEAR = 2012
                      
     # constructor
     def __init__(self):
@@ -65,55 +86,90 @@ class Command(BaseCommand):
                             level=logging.INFO,
                             format='%(asctime)s: %(message)s', 
                             datefmt='%d-%m-%Y %H:%M')
-
         
     def handle(self, *args, **options):
-        log_and_print("Buscando duplicados en el modelo {0}".format(self.TABLE.__name__))
-        
-        # all
-        #registros = self.TABLE.objects.filter(pk__lte=150)
-        #registros = self.TABLE.objects.all()
-        
-        # ----------------------------- PROYECTOS ------------------------- #
-        # PROYECTOS vigentes en 2012
-        # registros = self.TABLE.objects.filter( Q(fecha_de_inicio__lte=datetime.date(2012,12,31)) & Q(fecha_de_fin__gt=datetime.date(2012,1,1)))
-        # excluye los registros ya detectados previamente y que están huérfanos de usuario
-        # registros = registros.exclude(usuario=None)
-        # ----------------------------------------------------------------- # 
-        
 
-        # --------------------------- PUBLICACIONES ----------------------- #
-        # PUBLICACIONES en 2012
-        # registros = self.TABLE.objects.filter(fecha__year=2012)
-        # excluye los registros ya detectados previamente y que están huérfanos de usuario
-        # registros = registros.exclude(usuario=None)
-        # ----------------------------------------------------------------- # 
-        
-        # ----------------------------- CONGRESOS ------------------------- #
-        # Asistencia a congresos en 2012
-        # registros = self.TABLE.objects.filter( Q(fecha_realizacion__lte=datetime.date(2012,12,31)) & Q(fecha_finalizacion__gt=datetime.date(2012,1,1)))
-        # excluye los registros ya detectados previamente y que están huérfanos de usuario
-        # registros = registros.exclude(usuario=None)
-        # ----------------------------------------------------------------- # 
-        
-
-        # ----------------------------- CONVENIOS ------------------------- #
-        # Convenios vigentes en 2012
-        registros_raw = self.TABLE.objects.raw('SELECT * FROM cvn_convenio WHERE (YEAR(fecha_de_inicio) = 2012 OR (duracion_anyos < 100 AND YEAR(INTERVAL (duracion_anyos * 365 + duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= 2012) OR /* caso de dato erróneo */ (duracion_anyos >= 100 AND YEAR(INTERVAL (duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= 2012) OR /* caso de dato erróneo */ (duracion_anyos >= 2012))')
-        # excluye los registros ya detectados previamente y que están huérfanos de usuario
-        registros = []
-        for r in registros_raw:
-            list_usuarios = r.usuario.all()
-            if list_usuarios is not None and len(list_usuarios) > 0:
-                registros.append(r)
-        # ----------------------------------------------------------------- # 
-
-        if args:
+        if options['usuario'] == None:
+            raise CommandError("Option `--user=...` must be specified.")
+        else:
+            usuario = options['usuario']
+            
+        if options['table'] == None:
+            raise CommandError("Option `--table=...` must be specified.")
+        else:
+            if options['table'] in self.TABLES:
+                TABLE = self.TABLES[options['table']]
+                NAME_FIELD = self.NAME_FIELDS[options['table']]
+            else:
+                raise CommandError("\"{0}\" is not a table. Use Proyecto, Convenio, Publicacion or Congreso ".format(options['table']))
+                
+        if options['differing_pairs'] == None:
+            raise CommandError("Option `--diff=0, 1...` must be specified.")
+        else:
             try:
-                registros = registros[:int(args[0])]
+                self.DIFFERING_PAIRS = int(options['differing_pairs'])
             except:
-                print "se esperaba el límite de registros como entero, usando todos los registros"
-                pass
+                raise CommandError("Option `--diff needs an integer 0,1,...")
+
+        log_and_print("Buscando duplicados en el modelo {0}".format(TABLE.__name__))
+        
+        if TABLE == Proyecto:        
+            # ----------------------------- PROYECTOS ------------------------- #
+            # PROYECTOS vigentes en 2012
+            registros = TABLE.objects.filter( Q(fecha_de_inicio__lte=datetime.date(self.YEAR,12,31)) & Q(fecha_de_fin__gt=datetime.date(self.YEAR,1,1)))
+            # excluye los registros ya detectados previamente y que están huérfanos de usuario
+            registros = registros.exclude(usuario=None)
+            # ----------------------------------------------------------------- # 
+
+        elif TABLE == Publicacion:
+            # --------------------------- PUBLICACIONES ----------------------- #
+            # PUBLICACIONES en 2012
+            registros = TABLE.objects.filter(fecha__year=self.YEAR)
+            # excluye los registros ya detectados previamente y que están huérfanos de usuario
+            registros = registros.exclude(usuario=None)
+            # ----------------------------------------------------------------- # 
+        
+        elif TABLE == Congreso:
+            # ----------------------------- CONGRESOS ------------------------- #
+            # Asistencia a congresos en 2012
+            registros = TABLE.objects.filter( Q(fecha_realizacion__lte=datetime.date(self.YEAR,12,31)) & 
+                                              Q(fecha_finalizacion__gt=datetime.date(self.YEAR,1,1)))
+            # excluye los registros ya detectados previamente y que están huérfanos de usuario
+            registros = registros.exclude(usuario=None)
+            # ----------------------------------------------------------------- # 
+        
+        elif TABLE == Convenio:
+            # ----------------------------- CONVENIOS ------------------------- #
+            # Convenios vigentes en 2012
+            registros_raw = TABLE.objects.raw('SELECT * FROM cvn_convenio WHERE (YEAR(fecha_de_inicio) = ' + 'self.YEAR' + ' OR (duracion_anyos < 100 AND YEAR(INTERVAL (duracion_anyos * 365 + duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= 100 AND YEAR(INTERVAL (duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= ' + 'self.YEAR' + '))')
+            # excluye los registros ya detectados previamente y que están huérfanos de usuario
+            registros = []
+            for r in registros_raw:
+                list_usuarios = r.usuario.all()
+                if list_usuarios is not None and len(list_usuarios) > 0:
+                    registros.append(r)
+            # ----------------------------------------------------------------- # 
+        
+        
+        # PARA PROBAR usuarios con muchos proyectos:
+        # Usuario.objects.annotate(num_proyect=Count('proyecto')).filter(num_proyect__gt=32)
+        
+        if usuario != "all":
+            # obtenemos el usuario cuyo documento es usuario
+            try: 
+                usuario = Usuario.objects.get(documento=usuario)
+            except:
+                raise CommandError('El usuario con documento "{0}" no existe'.format(usuario))
+                
+            if TABLE in [Congreso, Publicacion, Proyecto]:
+                registros = registros.filter(usuario=usuario)
+            else: # TABLE is Convenio
+                new_registros = []
+                for r in registros:
+                    if usuario in r.usuario.all():
+                        new_registros.add(r)
+                registros = new_registros
+                    
         log_and_print("Total de registros en estudio = {0}".format(len(registros)))
         duplicates = {}
         
@@ -121,23 +177,23 @@ class Command(BaseCommand):
         # ENCONTRAR LOS PARES DUPLICADOS #
         ##################################
         
+        registros =  [p for p in registros]
         
         # Basic cleaning
-        registros =  [p for p in registros]
         #for idx, registro in enumerate(registros):
             #print "Cleaning register: ", idx
-            #name_field_content = registro.__getattribute__(self.NAME_FIELD)
+            #name_field_content = registro.__getattribute__(NAME_FIELD)
             #if name_field_content:
                 #name_field_content = naming_cleaning.clean_ending_period(name_field_content)
                 ## add here more "intelligent" cleaning if desired
-                #registro.__setattr__(self.NAME_FIELD, name_field_content)
+                #registro.__setattr__(NAME_FIELD, name_field_content)
                 #registro.save()
  
         for idx1, pry1  in enumerate(registros[:-1]):
             print "Finding pairs for index: ", idx1 
             for idx2, pry2 in enumerate(registros[idx1 + 1:], start=idx1 + 1):
-                pry1_name = pry1.__getattribute__(self.NAME_FIELD)
-                pry2_name = pry2.__getattribute__(self.NAME_FIELD)
+                pry1_name = pry1.__getattribute__(NAME_FIELD)
+                pry2_name = pry2.__getattribute__(NAME_FIELD)
                 if pry1_name and pry2_name:
                     # comparisons made in lower case
                     percentage, time = string_utils.stringcmp.do_stringcmp("qgram3avrg", 
@@ -163,14 +219,14 @@ class Command(BaseCommand):
             pry2 = pair[1]
             dummy, difering_length, dummy = voting_helpers.difering_fields(pry1, 
                                                                            pry2, 
-                                                                           self.DONT_CHECK_FIELDS + [self.NAME_FIELD])
-            
+                                                                           self.DONT_CHECK_FIELDS + [NAME_FIELD])
+
             save = True
             if difering_length == self.DIFFERING_PAIRS:
-                master = self.TABLE()
+                master = TABLE()
                 # todo a bit of fixing this 
-                model_fields = set(self.TABLE._meta.get_all_field_names()) - set([self.NAME_FIELD])
-                model_fields = list(model_fields) + [self.NAME_FIELD]
+                model_fields = set(TABLE._meta.get_all_field_names()) - set([NAME_FIELD])
+                model_fields = list(model_fields) + [NAME_FIELD]
                 FIELD_WIDTH = 28
                 COLWIDTH = 50
                 
@@ -255,9 +311,9 @@ class Command(BaseCommand):
         for pair, new_id in pairs_solved.iteritems():
             log_and_print(u"----------")
             log_and_print("Cambiando usuarios de {0} y {1} a {2}".format(pair[0], pair[1], new_id))
-            master_p = self.TABLE.objects.get(pk=new_id)
+            master_p = TABLE.objects.get(pk=new_id)
             for pry_id in pair:
-                p = self.TABLE.objects.get(pk=pry_id)
+                p = TABLE.objects.get(pk=pry_id)
                 for u in p.usuario.all():
                     master_p.usuario.add(u)
                     logging.info(u"Proyecto {0} [ID={1}] añadir usuario {2} [ID={3}]".format(master_p, master_p.id, u, u.id))
@@ -266,12 +322,12 @@ class Command(BaseCommand):
 
                 p.save()
             master_p.save()
-        
+
         #~ for pair, new_id in pairs_solved.iteritems():
             #~ print "Cambiando usarios de {0} a {1} y {2}".format(new_id, pair[0], pair[1])
-            #~ master_p = self.TABLE.objects.get(new_id)
+            #~ master_p = TABLE.objects.get(new_id)
             #~ for pry_id in pair:
-                #~ p = self.TABLE.objects.get(pk=pry_id)
+                #~ p = TABLE.objects.get(pk=pry_id)
                 #~ for u in p.usuario.all():
                     #~ p.usuario.add(u)
                     #~ logging.info(u"Proyecto {0} añadir usuario {1}".format(p, u))
@@ -281,8 +337,7 @@ class Command(BaseCommand):
                 #~ p.save()
             #~ master_p.save()
         #~ 
-        
-                
+
     def choice(self, pry1, pry2):
         print 'Return=NEW   %s=ID1   %s=ID2   0=Ignorar pareja  -1=Reniciar  j=join_fields  q=save_and_abort' % (pry1.id, pry2.id),
         choice = None
