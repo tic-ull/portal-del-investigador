@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
-# Modelos BBDD
-#from cvn.models import *
-
 import os
+
 from django.conf import settings as st
 
 # Usuario Administrador de la plantilla de administración de Django
@@ -14,17 +12,12 @@ PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 
 # Rutas de los XML y PDF
-URL_BASE = os.path.join(st.MEDIA_ROOT, 'cvn')  # TODO: Poner la ruta de viinv donde están los pdfs y xmls
-URL_PDF = os.path.join(URL_BASE, "pdf/")
-URL_XML = os.path.join(URL_BASE, "xml/")
-URL_OLD_CVN = os.path.join(URL_BASE, "old_cvn/")  # CVN antiguos
-RUTA_BBDD = os.path.join(st.MEDIA_ROOT, 'files/cvn/')
+URL_PDF = os.path.join(st.MEDIA_URL, "cvn/pdf/")
+URL_XML = os.path.join(st.MEDIA_URL, "cvn/xml/")
+URL_OLD_CVN = os.path.join(st.MEDIA_URL, "cvn/old_cvn/")  # CVN antiguos
 
 # Tipo de ficheros de subida
 PDF = "application/pdf"
-
-# Ruta de los PDFs para servirlo desde la app
-MEDIA_PDF = os.path.join(st.MEDIA_URL, 'cvn/pdf/')
 
 # Ficheros con los resultados de las diferentes operaciones
 FILE_LOG_IMPORT =  os.path.join(st.PROJECT_ROOT, 'errorCVN.log')          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt

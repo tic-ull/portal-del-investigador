@@ -262,8 +262,6 @@ def dataCVNSession(investCVN = None):
 	context['fecha_cvn'] = investCVN.fecha_cvn
 	# Comprobar si el CVN no se ha actualizado en 6 meses	
 	#~ context['file_cvn'] = investCVN.cvnfile	
-	# NOTE: En los ficheros subidos desde la nueva aplicación no hace falta modificar la ruta.	
-	#~ context['file_cvn'].name = cvn_setts.MEDIA_PDF +investCVN.cvnfile.name.split('/')[-1]	
 	#~ if (investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
 	if (investCVN.fecha_cvn + relativedelta(years = cvn_setts.CVN_CADUCIDAD)) < datetime.date.today():
 		context['updateCVN'] = True
