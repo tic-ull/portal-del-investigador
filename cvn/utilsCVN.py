@@ -116,55 +116,55 @@ class UtilidadesXMLtoBBDD:
         self.urlXML  = urlXML
         self.fileXML = fileXML
 
-
-    def parseXML(self):#, fileBBDD = "", fileCVN = ""):
-        """
-            Método que recorre el fichero XML y va extrayendo los datos del mismo.
-            Dichos datos se almacenarán en la BBDD en las tablas correspondientes.
-
-            Variables:
-            - fileBBDD: Fichero donde se almacena los CVN almacenados en la importación
-            - fileCVN: Fichero donde se almacenan aquellos cvn duplicados
-        """
-        cvn = cvn_setts.URL_PDF + self.fileXML.replace("xml", "pdf")
-        # Comprobar si existe ya el CVN en el portal del investigador.
-        cvn_investigador = GrupoinvestInvestcvn.objects.filter(cvnfile__icontains = cvn.split('/')[-1])
-        if len(cvn_investigador) > 0:
-            # Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN
-            fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
-            # Se actualiza la columna 'xmlfile'
-            cvn_investigador[0].xmlfile = self.fileXML
-            cvn_investigador[0].fecha_cvn = fecha_cvn
-            cvn_investigador[0].save()
-            # Se actualiza el fichero con CVN insertados
-            logger.info(u'' + cvn + ',' + cvn_investigador[0].investigador.nombre + ' ' +
-                        cvn_investigador[0].investigador.apellido1 + ' ' +
-                        cvn_investigador[0].investigador.apellido2 + ',' +
-                        cvn_investigador[0].investigador.nif + '\n')
-        else:
-            # Se realiza una valoración del contenido del xml y se calcula la valoración
-            (lista, probabilidad) = self.valorarXML()
-            if lista is not None and lista:
-                for usuario in lista:
-                    logger.warning(u'' + self.fileXML + ',' +
-                                usuario.cod_persona + ',' +
-                                usuario.nombre + ' ' + usuario.apellido1 + ' ' + usuario.apellido2 + ',' +
-                                usuario.nif + ',')
-                    try: # Busca el CVN que tiene almacenado en Viinv del posible usuario candidato.
-                        invest = GrupoinvestInvestigador.objects.get(nif = usuario.nif)
-                        cvn_viinv = GrupoinvestInvestcvn.objects.get(investigador= invest)
-                        logger.warning(u'' + str(cvn_viinv.cvnfile) + ',')
-                        #~ fileCVN.write(u'' + str(cvn_viinv.cvnfile) + ',')
-                    except ObjectDoesNotExist:
-                        logger.warning(u'UNKNOWN, ')
-                        #~ fileCVN.write(u'UNKNOWN, ')
-
-                    logger.warning(u'' + str(probabilidad) + '\n')
-            else: # No coincide el NIF con ningun investigador alojado en la BBDD.
-                logger.warning(u'' + self.fileXML + ', ' +
-                            'UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, ' +
-                            str(probabilidad) + '\n')
-
+# NO SE USA
+#    def parseXML(self):#, fileBBDD = "", fileCVN = ""):
+#        """
+#            Método que recorre el fichero XML y va extrayendo los datos del mismo.
+#            Dichos datos se almacenarán en la BBDD en las tablas correspondientes.
+#
+#            Variables:
+#            - fileBBDD: Fichero donde se almacena los CVN almacenados en la importación
+#            - fileCVN: Fichero donde se almacenan aquellos cvn duplicados
+#        """
+#        cvn = cvn_setts.URL_PDF + self.fileXML.replace("xml", "pdf")
+#        # Comprobar si existe ya el CVN en el portal del investigador.
+#        cvn_investigador = GrupoinvestInvestcvn.objects.filter(cvnfile__icontains = cvn.split('/')[-1])
+#        if len(cvn_investigador) > 0:
+#            # Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN
+#            fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
+#            # Se actualiza la columna 'xmlfile'
+#            cvn_investigador[0].xmlfile = self.fileXML
+#            cvn_investigador[0].fecha_cvn = fecha_cvn
+#            cvn_investigador[0].save()
+#            # Se actualiza el fichero con CVN insertados
+#            logger.info(u'' + cvn + ',' + cvn_investigador[0].investigador.nombre + ' ' +
+#                        cvn_investigador[0].investigador.apellido1 + ' ' +
+#                        cvn_investigador[0].investigador.apellido2 + ',' +
+#                        cvn_investigador[0].investigador.nif + '\n')
+#        else:
+#            # Se realiza una valoración del contenido del xml y se calcula la valoración
+#            (lista, probabilidad) = self.valorarXML()
+#            if lista is not None and lista:
+#                for usuario in lista:
+#                    logger.warning(u'' + self.fileXML + ',' +
+#                                usuario.cod_persona + ',' +
+#                                usuario.nombre + ' ' + usuario.apellido1 + ' ' + usuario.apellido2 + ',' +
+#                                usuario.nif + ',')
+#                    try: # Busca el CVN que tiene almacenado en Viinv del posible usuario candidato.
+#                        invest = GrupoinvestInvestigador.objects.get(nif = usuario.nif)
+#                        cvn_viinv = GrupoinvestInvestcvn.objects.get(investigador= invest)
+#                        logger.warning(u'' + str(cvn_viinv.cvnfile) + ',')
+#                        #~ fileCVN.write(u'' + str(cvn_viinv.cvnfile) + ',')
+#                    except ObjectDoesNotExist:
+#                        logger.warning(u'UNKNOWN, ')
+#                        #~ fileCVN.write(u'UNKNOWN, ')
+#
+#                    logger.warning(u'' + str(probabilidad) + '\n')
+#            else: # No coincide el NIF con ningun investigador alojado en la BBDD.
+#                logger.warning(u'' + self.fileXML + ', ' +
+#                            'UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, ' +
+#                            str(probabilidad) + '\n')
+#
 
     def get_key_data(self, filename):
         """
