@@ -9,7 +9,7 @@ TEMPLATE_DEBUG = DEBUG
 import os
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-PROJECT_PATH = os.path.abspath(os.path.dirname('__file__'))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
@@ -69,7 +69,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -80,14 +80,14 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_PATH, 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (os.path.join(PROJECT_PATH,'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -136,7 +136,7 @@ TEMPLATE_DIRS = (
 
     #~ os.path.join(PROJECT_ROOT,'../templates'),
 
-    os.path.join(PROJECT_PATH,'templates'),
+    os.path.join(BASE_DIR,'templates'),
 
 )
 
