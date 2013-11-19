@@ -9,7 +9,6 @@ from lxml import etree
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn
 import base64 # Codificación para el web service del Fecyt
 import binascii
-import codecs # Para la codicación en utf-8
 import cvn.settings as cvn_setts
 import datetime
 import errno
@@ -50,11 +49,10 @@ class UtilidadesCVNtoXML:
         """
             Método que a partir de un CVN en PDF obtiene su representación en XML.
 
-            Retorna el fichero si NO el PDF no tiene el formato del FECYT
+            Retorna el XML o False si el PDF no tiene el formato del FECYT
         """
         if not memoryCVNFile:
             urlFile = self.urlPDF + str(self.filePDF)
-            fileXML = self.filePDF.replace("pdf", "xml")
 
         # Se almacena el PDF en un array binario codificado en base 64
         try:
@@ -62,14 +60,9 @@ class UtilidadesCVNtoXML:
                 dataPDF = binascii.b2a_base64(open(urlFile).read())
             else:
                 dataPDF = binascii.b2a_base64(memoryCVNFile.read())
-                fileXML = memoryCVNFile.name
-                fileXML = fileXML.replace('pdf','xml')
         except IOError:
             logger.error(u"No such file or directory:'" + urlFile + "'")
             return False
-
-        # Se almacena el fichero XML resultante
-        urlFile = self.urlXML + fileXML
 
         # Llamada al Web Service para obtener la transformación a XML y la escribe a un fichero
         # Se añade la llamada en un bucle por si se corta la conexión con el servidor.
@@ -83,36 +76,36 @@ class UtilidadesCVNtoXML:
                 time.sleep(5)
 
         if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
-            dataXML = base64.b64decode(resultXML.cvnXml)
-            fileXML = open(urlFile, "w").write(dataXML)
+            return base64.b64decode(resultXML.cvnXml)
+            # Se almacena el fichero XML resultante
+            #urlFile = self.XML_ROOT + fileXML
+            #fileXML = open(urlFile, "w").write(dataXML)
         else:
             return False # Retorna el fichero PDF con formato antiguo
-        return True
 
 
-    def checkCVNOwner(self, user = None):
+    def checkCVNOwner(self, user = None, fileXML = None):
         """
             Este método se encarga de corroborar que el propietario del CVN es el mismo que está logeado en la sesión.
         """
-        data = {}
-        nif = ''
-        fileXML = self.filePDF.name.replace("pdf", "xml")
+        if not fileXML:
+            logger.warning(u"Se necesita un fichero para ejecutar este método.")
+            return False
         try:
-            tree = etree.parse(self.urlXML + fileXML)
-            nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
-            if nif is not None  and nif.text is not None:
-                nif = nif.text
-            else:
-                nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
-                if nif is not None and nif.text is not None:
-                    nif = nif.text
-            if nif and nif.upper() == user.nif.upper():
-                return True
+            tree = etree.XML(fileXML)
         except IOError:
-            if fileXML:
-                logger.error("Fichero " + fileXML + u" no encontrado.")
-            else:
-                logger.warning(u"Se necesita un fichero para ejecutar este método.")
+            logger.error("Fichero XML no encontrado.")
+            return False
+        
+        nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
+        if nif is not None and nif.text is not None:
+            nif = nif.text
+        else:
+            nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
+            if nif is not None and nif.text is not None:
+                nif = nif.text
+        if nif and nif.upper() == user.nif.upper():
+            return True
         return False
 
 
@@ -146,7 +139,7 @@ class UtilidadesXMLtoBBDD:
             # Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN
             fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
             # Se actualiza la columna 'xmlfile'
-            cvn_investigador[0].xmlfile = cvn_setts.URL_XML + self.fileXML
+            cvn_investigador[0].xmlfile = self.fileXML
             cvn_investigador[0].fecha_cvn = fecha_cvn
             cvn_investigador[0].save()
             # Se actualiza el fichero con CVN insertados
@@ -228,7 +221,7 @@ class UtilidadesXMLtoBBDD:
             - probabilidad: Medida de 0 a 1.
         """
         probabilidad = 0
-        (date_CVN, nif, nombre, primer_apellido, segundo_apellido, birth_date, email) = self.get_key_data(self.urlXML + self.fileXML)
+        (date_CVN, nif, nombre, primer_apellido, segundo_apellido, birth_date, email) = self.get_key_data(self.fileXML)
         # Se eliminan los datos erróneos que pueda contener el dni (en caso de que lo tenga introducido)
         nif = formatNIF(nif)
         if nif is not None:
@@ -312,7 +305,7 @@ class UtilidadesXMLtoBBDD:
         dataPersonal = {}
         fecha_cvn = None
         try:
-            tree = etree.parse(self.urlXML + self.fileXML)
+            tree = etree.parse(self.fileXML)
             fecha_cvn = tree.find('Version/VersionID/Date/Item').text
             # Datos del Investigador
             dataInvestigador = tree.find('Agent')  #/Identification/PersonalIdentification')
@@ -737,22 +730,20 @@ class UtilidadesXMLtoBBDD:
 
 
 # -----------------------
-def checkUserCVN(data = "", cvn = None):
+def insert_pdf_to_bbdd_if_not_exists(nif = "", investCVN = None):
     """
-        Comprueba si el usuario que accede a la aplicación tiene introducido los datos de su CVN.
-        Si no es así, introduce los datos generando previamente el XML
+        Inserta el CVN en la BBDD si el usuario no lo tiene insertado previamente.
 
         Variables:
-        - data = NIF/NIE del usuario
-        - cvn  = Registro de la tabla GrupoinvestInvestcvn de la aplicación ViinV
+        - nif = NIF/NIE del usuario
+        - investCVN  = Registro de la tabla GrupoinvestInvestcvn de la aplicación ViinV
     """
 
-    if not Usuario.objects.filter(documento__icontains = data):
-        handlerCVN = UtilidadesCVNtoXML(filePDF = cvn.cvnfile.name.split('/')[-1])
-        xmlFecyt = handlerCVN.getXML()
-        if xmlFecyt:
-            cvn.xmlfile = cvn_setts.URL_XML + cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml')
-        xmlCVN = UtilidadesXMLtoBBDD(fileXML = cvn.cvnfile.name.split('/')[-1].replace('pdf', 'xml'))
-        xmlCVN.insertarXML(cvn.investigador)
-        cvn.save()
-
+    if not Usuario.objects.filter(documento__icontains = nif):
+        if not investCVN.xmlfile:
+            handlerCVN = UtilidadesCVNtoXML(filePDF = investCVN.cvnfile)
+            xmlFecyt = handlerCVN.getXML()
+            if xmlFecyt and handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt): # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
+                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf','xml'), ContentFile(xmlFecyt))
+        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML = investCVN.xmlfile).insertarXML(investCVN.investigador)
+        investCVN.save()

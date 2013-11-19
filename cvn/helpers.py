@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from cvn.models import *
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.move import file_move_safe
 from lxml import etree  # Parsear XML
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn, AuthUser, GrupoinvestCategoriainvestigador
 import cvn.settings as cvn_setts    # Constantes para la importación de CVN
 import datetime
 import hashlib
 import os
-import re
-import shutil   #~ # Mover los ficheros duplicados a históricos
 
 # Fichero con funciones auxiliares para las vistas
 # ------------------------------------------------
@@ -134,26 +134,19 @@ def setCVNFileName(user):
     return 'CVN-' + str(user.user.username) + '-' + obfusc + u'.pdf'
 
 
-def handleOldCVN(cvnName = None, cvn = None):
+def handleOldCVN(investCVN):
     """
         Función que se encarga de escribir los CVNs antiguos en el directorio de histórico añadiendo
         en el nombre del mismo la fecha de subida.
 
-        Variables:
-        - cvnName: Nombre del CVN antiguo a modificar.
-        - cvn: Datos del cvn antiguo
+        Parametros:
+        - investCVN: Objecto del CVN del Investigador
     """
-
-    if cvnName is not None:
-        # Antes de mover a la carpeta históricos, se le añade la fecha de subida al CVN nuevo.
-        cvnfile = cvnName.split('/')[-1]
-        cvnfile = cvnfile.split('.')[0]
-        cvnfile += u'-' + str(cvn.fecha_up) + u'.pdf'
-        # Comprobar que la ruta del fichero no sea la de la aplicación antigua.
-        if 'cvn' in cvnName.split('/'):
-            cvnName = cvn_setts.URL_PDF + cvnName.split('/')[-1]
-        shutil.move(cvnName, cvn_setts.URL_OLD_CVN + cvnfile)
-
+    oldPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.PDF_ROOT, investCVN.cvnfile.name)
+    # Antes de mover a la carpeta históricos, se le añade la fecha de subida al CVN nuevo.
+    newName = investCVN.cvnfile.name.replace(u'.pdf', u'-' + str(investCVN.fecha_up) + u'.pdf')
+    newPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.OLD_PDF_ROOT, newName)
+    file_move_safe(oldPath, newPath)
 
 def getUserViinV(documento = ""):
     """
@@ -164,16 +157,14 @@ def getUserViinV(documento = ""):
     """
     invest        = None
     investCVN     = None
-    investCVNname = None
     try:
         invest = GrupoinvestInvestigador.objects.get(nif = documento)
-        investCVN     = GrupoinvestInvestcvn.objects.get(investigador = invest)
-        investCVNname = investCVN.cvnfile.name
+        investCVN = GrupoinvestInvestcvn.objects.get(investigador = invest)
     except GrupoinvestInvestigador.DoesNotExist:
         pass
     except GrupoinvestInvestcvn.DoesNotExist:
         pass
-    return invest, investCVN, investCVNname
+    return invest, investCVN
 
 
 def addUserViinV(data = {}):
@@ -211,18 +202,18 @@ def addUserViinV(data = {}):
         invest = GrupoinvestInvestigador.objects.create(**data_invest)
         return invest
 
-
-def getDataCVN(data = ""):
+# TODO: Añadir esta funcion al modelo del Investigador
+def getDataCVN(nif = ""):
     """
         Función que devuelve un diccionario con los datos a mostrar del CVN del usuario.
 
         Variables:
-        - data: NIF/NIE del usuario.
+        - nif: NIF/NIE del usuario.
     """
     context = {}
     context['CVN'] = True
     try:
-        user = Usuario.objects.get(documento__icontains = data)
+        user = Usuario.objects.get(documento__icontains = nif)
         context['Publicaciones'] = Publicacion.objects.filter(usuario = user).order_by('-fecha', 'titulo')
         context['Congresos'] = Congreso.objects.filter(usuario = user).order_by('-fecha_realizacion', 'titulo')
         context['Proyectos'] = Proyecto.objects.filter(usuario = user).order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
@@ -231,8 +222,6 @@ def getDataCVN(data = ""):
     except ObjectDoesNotExist:
         context['CVN'] = False
     return context
-
-
 
 def dataCVNSession(investCVN = None):
     """
