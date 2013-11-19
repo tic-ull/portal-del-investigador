@@ -287,13 +287,17 @@ class UtilidadesXMLtoBBDD:
         self.__deleteOldData__(Convenio.objects.filter(usuario = user), user)
         self.__deleteOldData__(TesisDoctoral.objects.filter(usuario = user), user)
 
-
+    def get_fecha_xml(self):
+        """
+            Obtiene la fecha del XML
+        """
+        return  etree.parse(self.fileXML).find('Version/VersionID/Date/Item').text
 
     def insertarXML(self, investigador = None):
         """
             Inserta los datos del CVN encontrados en el portal en la base de datos de la aplicación CVN
 
-            Variables:
+            Parametros:
             - investigador -> Usuario con el que se enlaza ambas BBDD.
         """
         dataPersonal = {}
