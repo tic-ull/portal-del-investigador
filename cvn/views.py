@@ -58,7 +58,7 @@ def index(request):
                 filePDF.name = setCVNFileName(invest)
                 # Se llama al webservice del Fecyt para corroborar que se trata de un CVN con el formato válido
                 cvn = UtilidadesCVNtoXML(filePDF = filePDF)
-                xmlFecyt = cvn.getXML(filePDF)
+                xmlFecyt = cvn.getXML()
                 if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt): # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
                     handleOldCVN(investCVN)
                     investCVN = context['form'].save(commit = False)

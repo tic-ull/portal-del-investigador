@@ -45,23 +45,17 @@ class UtilidadesCVNtoXML:
         self.filePDF = filePDF
 
 
-    def getXML(self, memoryCVNFile = None):
+    def getXML(self):
         """
             Método que a partir de un CVN en PDF obtiene su representación en XML.
 
             Retorna el XML o False si el PDF no tiene el formato del FECYT
         """
-        if not memoryCVNFile:
-            urlFile = self.urlPDF + str(self.filePDF)
-
         # Se almacena el PDF en un array binario codificado en base 64
         try:
-            if not memoryCVNFile:
-                dataPDF = binascii.b2a_base64(open(urlFile).read())
-            else:
-                dataPDF = binascii.b2a_base64(memoryCVNFile.read())
+            dataPDF = binascii.b2a_base64(self.filePDF.read())
         except IOError:
-            logger.error(u"No such file or directory:'" + urlFile + "'")
+            logger.error(u"No such file or directory:'" + self.filePDF.name + "'")
             return False
 
         # Llamada al Web Service para obtener la transformación a XML y la escribe a un fichero
