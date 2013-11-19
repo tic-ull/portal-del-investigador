@@ -23,7 +23,8 @@ urlpatterns = patterns('',
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
     
     url(r'^investigacion/cvn/$', 'cvn.views.index', name='index'),
-    
+    url(r'^investigacion/cvn/ull_report/$', 'cvn.views.ull_report', name='ull_report'),
+
     # Descarga de los CVN
     url(r'^investigacion/cvn/download/$', 'cvn.views.downloadCVN', name='downloadCVN'),
     
