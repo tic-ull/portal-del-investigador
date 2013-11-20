@@ -53,7 +53,7 @@ class UtilidadesCVNtoXML:
         """
         # Se almacena el PDF en un array binario codificado en base 64
         try:
-            dataPDF = binascii.b2a_base64(self.filePDF.read())
+            dataPDF = base64.encodestring(self.filePDF.read())
         except IOError:
             logger.error(u"No such file or directory:'" + self.filePDF.name + "'")
             return False
@@ -70,12 +70,8 @@ class UtilidadesCVNtoXML:
                 time.sleep(5)
 
         if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
-            return base64.b64decode(resultXML.cvnXml)
-            # Se almacena el fichero XML resultante
-            #urlFile = self.XML_ROOT + fileXML
-            #fileXML = open(urlFile, "w").write(dataXML)
-        else:
-            return False # Retorna el fichero PDF con formato antiguo
+            return base64.decodestring(resultXML.cvnXml)
+        return False # Retorna el fichero PDF con formato antiguo
 
 
     def checkCVNOwner(self, user = None, fileXML = None):
@@ -361,13 +357,14 @@ class UtilidadesXMLtoBBDD:
         dic = {}
         for element in tree:
             if element.tag == u'OfficialId':
-                dic['tipo_documento'] = element.getchildren()[0].tag
-                dic['documento']      = u'' + formatNIF(element.getchildren()[0].getchildren()[0].text)
+                dic[u'tipo_documento'] = u'' + element.getchildren()[0].tag
+                dic[u'documento'] = u'' + formatNIF(element.getchildren()[0].getchildren()[0].text)
             elif element.tag == u'BirthRegion':
                 dic[cvn_setts.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[1].getchildren()[0].text
             else:
                 # En caso de que sea un investigador extranjero no tiene segundo apellido
                 try:
+                    # TODO poner el strip
                     dic[cvn_setts.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[0].text
                 except TypeError:
                     pass
@@ -392,6 +389,7 @@ class UtilidadesXMLtoBBDD:
     def __dataContact__(self, tree = []):
         """
             Método privado para introducir en un diccionario los datos de contacto del usuario.
+            (telefonos y correo electronico)
 
             Variable:
             - tree: Lista de los nodos con la información de la contact del usuario.
@@ -412,7 +410,7 @@ class UtilidadesXMLtoBBDD:
                         telephone_key = key + "num"
                     if children.tag == u'Extension':
                         telephone_key = key + "ext"
-                    dic[telephone_key] = children.getchildren()[0].text
+                    dic[telephone_key] = u'' + children.getchildren()[0].text
             else:
                 dic[key] = u'' + element.getchildren()[0].text
         return dic
