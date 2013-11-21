@@ -26,6 +26,9 @@ class GrupoinvestInvestcvnAdmin(admin.ModelAdmin):
         for qs in queryset:
             xmlFecyt = UtilidadesCVNtoXML(filePDF = qs.cvnfile).getXML()
             if xmlFecyt: # Si el CVN tiene formato FECYT
+                # Borramos el viejo para que no se reenumere
+                if qs.xmlfile:
+                    qs.xmlfile.delete()
                 qs.xmlfile.save(qs.cvnfile.name.replace('pdf','xml'), ContentFile(xmlFecyt))
                 qs.fecha_cvn = UtilidadesXMLtoBBDD(fileXML = qs.xmlfile).get_fecha_xml()
                 qs.save()
