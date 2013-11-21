@@ -39,7 +39,7 @@ class GrupoinvestInvestcvnAdmin(admin.ModelAdmin):
                 msg = u'El CVN "' + qs.cvnfile.name + '" no tiene formato FECYT\n'
                 messages.error(request, msg)
                 logger.error(msg)
-                
+
 
     pdf_to_xml.short_description = u"PDF->XML. Obtener la representación XML de los CVN seleccionados"
 

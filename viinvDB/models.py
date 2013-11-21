@@ -1545,7 +1545,7 @@ class FaqSubcategoria(models.Model):
 class GrupoinvestAreaconocimiento(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
-    codigo = models.CharField(max_length=72) 
+    codigo = models.CharField(max_length=72)
     class Meta:
         db_table = 'GrupoInvest_areaconocimiento'
 
@@ -1566,10 +1566,10 @@ class GrupoinvestCategoriainvestigador(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=40L)
     descripcion = models.TextField()
-    
+
     def __unicode__(self):
         return u"%s" %(self.nombre)
-    
+
     class Meta:
         db_table = 'GrupoInvest_categoriainvestigador'
 
@@ -1621,10 +1621,10 @@ class GrupoinvestGrupoinves(models.Model):
     acronimo = models.CharField(max_length=20L, blank=True)
     activo = models.IntegerField(null=True, blank=True)
     descripcion = models.TextField(blank=True)
-    
+
     def __unicode__(self):
         return u"%s" %(self.grupo)
-    
+
     class Meta:
         db_table = 'GrupoInvest_grupoinves'
 
@@ -1649,7 +1649,7 @@ class GrupoinvestInvestcvn(models.Model):
     class Meta:
         db_table = 'GrupoInvest_investcvn'
         verbose_name_plural = 'CVN Investigadores'
-        
+
 
 class GrupoinvestInvestigador(models.Model):
     user = models.ForeignKey('AuthUser', unique=True)
@@ -1687,7 +1687,7 @@ class GrupoinvestInvestigador(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_last_update = models.DateTimeField(null=True, blank=True)
     rrhh_id = models.IntegerField(unique=True, null=True, blank=True)
- 
+
     def __unicode__(self):
         return u"%s %s %s %s" %(self.nombre, self.apellido1, self.apellido2, self.nif)
 
@@ -2304,11 +2304,9 @@ class AuthUser(models.Model):
     last_login = models.DateTimeField()
     date_joined = models.DateTimeField()
 
-
-
     def __unicode__(self):
         return u"'%s' e-mail: '%s'" %(self.username, self.email)
-    
+
     class Meta:
         db_table = 'auth_user'
 
