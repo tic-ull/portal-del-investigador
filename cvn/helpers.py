@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.move import file_move_safe
-from lxml import etree  # Parsear XML
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn, AuthUser, GrupoinvestCategoriainvestigador
 import cvn.settings as cvn_setts    # Constantes para la importación de CVN
 import datetime
