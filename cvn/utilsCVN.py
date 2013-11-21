@@ -86,7 +86,7 @@ class UtilidadesCVNtoXML:
         except IOError:
             logger.error("Fichero XML no encontrado.")
             return False
-        
+
         nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
         if nif is not None and nif.text is not None:
             nif = nif.text

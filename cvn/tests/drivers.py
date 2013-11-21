@@ -1,6 +1,5 @@
 import functools
 
-
 def test_drivers(pool_name='drivers', target_attr='selenium'):
     """
     Run tests with `target_attr` set to each instance in the `WebDriverPool`
