@@ -17,17 +17,17 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^investigacion/admin/', include(admin.site.urls), name='admin'),
-    
+
     # Página principal
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
-    
+
     url(r'^investigacion/cvn/$', 'cvn.views.index', name='index'),
-    
+
     # Descarga de los CVN
     url(r'^investigacion/cvn/download/$', 'cvn.views.downloadCVN', name='downloadCVN'),
-    
+
     # Login/Logout CAS
-    url(r'^investigacion/accounts/login/$', 'django_cas.views.login', name='login'), 
+    url(r'^investigacion/accounts/login/$', 'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$', 'django_cas.views.logout', name='logout'),
-        
+
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Servir los pdfs

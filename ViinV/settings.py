@@ -24,14 +24,14 @@ DATABASES = {
         'USER': 'viinv',
         'PASSWORD': '1234',
         'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.        
+        'PORT': '',                      # Set to empty string for default.
     },
     'portalinvestigador': {
         'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.        
+        'USER': 'root',                       # Not used with sqlite3.
         'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
     }
 }
 
@@ -119,9 +119,9 @@ MIDDLEWARE_CLASSES = (
     #~ 'django_cas.middleware.CASMiddleware',
 )
 
-AUTHENTICATION_BACKENDS = (	
-	'django.contrib.auth.backends.ModelBackend',
-	'django_cas.backends.CASBackend',
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas.backends.CASBackend',
 )
 
 ROOT_URLCONF = 'ViinV.urls'
@@ -183,35 +183,35 @@ LOGGING = {
         },
     },
     'filters': {
-		'require_debug_false': {
-			'()': 'django.utils.log.RequireDebugFalse',
-		}		
-	},
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
-    	'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
-			'level': 'DEBUG',
-			'class': 'logging.NullHandler',
-		},	
-		'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr. 
-			'level': 'DEBUG',
-			'class': 'logging.StreamHandler',
-			'formatter': 'standard',
-		},
-		'default': {
-			'level'    : 'INFO',
-			'class'    : 'logging.handlers.RotatingFileHandler',
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
-			'backupCount': 5,
-			'formatter': 'standard'
-		},
-		'request_handler': {
-			'level'    : 'DEBUG',
-			'class'    : 'logging.handlers.RotatingFileHandler',			
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096*1024*1024,        
-			'backupCount': 5,
-			'formatter': 'standard'
+        'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr.
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+        'default': {
+            'level'    : 'INFO',
+            'class'    : 'logging.handlers.RotatingFileHandler',
+            'filename' : LOG_FILENAME,
+            'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'request_handler': {
+            'level'    : 'DEBUG',
+            'class'    : 'logging.handlers.RotatingFileHandler',
+            'filename' : LOG_FILENAME,
+            'maxBytes' : 4096*1024*1024,
+            'backupCount': 5,
+            'formatter': 'standard'
                 },
         'mail_admins': {
             'level'       : 'ERROR',             # Errores de la serie 5XX
@@ -222,12 +222,12 @@ LOGGING = {
     },
     'loggers': {
         'cvn': {
-            'handlers': ['default', 'mail_admins'],   
+            'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True
         },
         'viinvDB.admin': { # Logs de la plantilla de ADMIN. TODO: Ver si es mejor cambiar el 'handler'
-            'handlers': ['default', 'mail_admins'],   
+            'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True
         },
