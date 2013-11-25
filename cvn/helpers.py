@@ -239,15 +239,10 @@ def getDataCVN(data = ""):
         user = Usuario.objects.get(documento__icontains = data) 
         print user
         context['Publicaciones'] = Publicacion.objects.filter(usuario = user).order_by('-fecha', 'titulo')
-        context['Num_Publicaciones'] = len(context['Publicaciones'])
         context['Congresos'] = Congreso.objects.filter(usuario = user).order_by('-fecha_realizacion', 'titulo')
-        context['Num_Congresos'] = len(context['Congresos'])
         context['Proyectos'] = Proyecto.objects.filter(usuario = user).order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['Num_Proyectos'] = len(context['Proyectos'])
         context['Convenios'] = Convenio.objects.filter(usuario = user).order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['Num_Convenios'] = len(context['Convenios'])
         context['TesisDoctorales'] = TesisDoctoral.objects.filter(usuario = user).order_by('-fecha_de_lectura', 'titulo')
-        context['Num_TesisDoctorales'] = len(context['TesisDoctorales'])
     except ObjectDoesNotExist:
         context['CVN'] = False
     return context
