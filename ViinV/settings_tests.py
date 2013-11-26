@@ -23,6 +23,4 @@ ADMIN_LOGIN  = "admin"
 ADMIN_PASSWD = "123"
 
 
-FIXTURE_DIRS = (
-    os.path.join(st.PROJECT_ROOT, 'cvn/tests/fixtures/'), 
-)
+
