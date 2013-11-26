@@ -1,8 +1,6 @@
 # -*- encoding: utf-8 -*-
-# Modelos BBDD
-#from cvn.models import *
-
 import os
+
 from django.conf import settings as st
 
 # Usuario Administrador de la plantilla de administración de Django
@@ -14,17 +12,16 @@ PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 
 # Rutas de los XML y PDF
-URL_BASE = os.path.join(st.MEDIA_ROOT, 'cvn')  # TODO: Poner la ruta de viinv donde están los pdfs y xmls
-URL_PDF = os.path.join(URL_BASE, "pdf/")
-URL_XML = os.path.join(URL_BASE, "xml/")
-URL_OLD_CVN = os.path.join(URL_BASE, "old_cvn/")  # CVN antiguos
-RUTA_BBDD = os.path.join(st.MEDIA_ROOT, 'files/cvn/')
+PDF_ROOT = "cvn/pdf"
+XML_ROOT = "cvn/xml"
+OLD_PDF_ROOT = "cvn/old_cvn/"  # CVN antiguos
+
+URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
+URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)
+URL_OLD_CVN = os.path.join(st.MEDIA_URL, OLD_PDF_ROOT)  # CVN antiguos
 
 # Tipo de ficheros de subida
 PDF = "application/pdf"
-
-# Ruta de los PDFs para servirlo desde la app
-MEDIA_PDF = os.path.join(st.MEDIA_URL, 'cvn/pdf/')
 
 # Ficheros con los resultados de las diferentes operaciones
 FILE_LOG_IMPORT =  os.path.join(st.PROJECT_ROOT, 'errorCVN.log')          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
@@ -33,27 +30,27 @@ FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log') # Fiche
 
 # Almacena las equivalencias entre los tags de los nodos XML y los campos de la BBDD
 DIC_PERSONAL_DATA_XML = {
-	u'GivenName': u'nombre',
-	u'FirstFamilyName': u'primer_apellido',
-	u'SecondFamilyName': u'segundo_apellido',
-	u'Nacionality': u'nacionalidad',
-	u'BirthDate': u'fecha_nacimiento',
-	u'BirthCountry': u'pais_de_nacimiento',
-	u'BirthRegion': u'comunidad_nacimiento',
-	u'BirthCity': u'ciudad_de_nacimiento',
-	u'Gender': u'sexo',
-	u'City': u'ciudad_de_contacto',
-	u'Streets': u'direccion',
-	u'OtherInformation': u'resto_direccion',
-	u'PostalCode': u'codigo_postal',
-	u'Region':  u'comunidad',
-	u'CountryCode': u'pais_de_contacto',
-	u'Province': u'provincia',
-	u'Telephone': u'telefono_',
-	u'Fax': u'telefono_fax_',
-	u'PersonalWeb': u'pagina_web_personal',
-	u'InternetEmailAddress': u'correo_electronico',
-	u'Photo': u'imagen',
+    u'GivenName': u'nombre',
+    u'FirstFamilyName': u'primer_apellido',
+    u'SecondFamilyName': u'segundo_apellido',
+    u'Nacionality': u'nacionalidad',
+    u'BirthDate': u'fecha_nacimiento',
+    u'BirthCountry': u'pais_de_nacimiento',
+    u'BirthRegion': u'comunidad_nacimiento',
+    u'BirthCity': u'ciudad_de_nacimiento',
+    u'Gender': u'sexo',
+    u'City': u'ciudad_de_contacto',
+    u'Streets': u'direccion',
+    u'OtherInformation': u'resto_direccion',
+    u'PostalCode': u'codigo_postal',
+    u'Region':  u'comunidad',
+    u'CountryCode': u'pais_de_contacto',
+    u'Province': u'provincia',
+    u'Telephone': u'telefono_',
+    u'Fax': u'telefono_fax_',
+    u'PersonalWeb': u'pagina_web_personal',
+    u'InternetEmailAddress': u'correo_electronico',
+    u'Photo': u'imagen',
 }
 
 # Editor Fecyt (Paso 6): Actividad Científica y tecnológica
