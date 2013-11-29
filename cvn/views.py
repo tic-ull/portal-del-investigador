@@ -43,7 +43,7 @@ def index(request):
     if not invest:
         # Se añade el usuario a la aplicación de ViinV
         invest = addUserViinV(context['user'])
-    if investCVN:
+    if investCVN:        	
         insert_pdf_to_bbdd_if_not_exists(context['user']['NumDocumento'], investCVN)
         # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(invest.nif))
@@ -59,17 +59,19 @@ def index(request):
                 # Se llama al webservice del Fecyt para corroborar que se trata de un CVN con el formato válido
                 cvn = UtilidadesCVNtoXML(filePDF = filePDF)
                 xmlFecyt = cvn.getXML()
-                if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt): # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
-                    handleOldCVN(investCVN)
+                if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt): # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza                    
+                    # Si el usuario ha subido un CVN anteriormente, se almacena el mismo en otro directorio
+                    if investCVN:						
+                        handleOldCVN(investCVN)                    
                     investCVN = context['form'].save(commit = False)
                     investCVN.fecha_up = datetime.date.today()
                     investCVN.cvnfile = filePDF
                     investCVN.investigador = invest
                     # Borramos el viejo para que no se reenumere
                     if investCVN.xmlfile:
-                        investCVN.xmlfile.delete()
-                    investCVN.xmlfile.save(filePDF.name.replace('pdf','xml'), ContentFile(xmlFecyt))
-                    investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML = investCVN.xmlfile).insertarXML(investCVN.investigador)
+                        investCVN.xmlfile.delete()      
+                    investCVN.xmlfile.save(filePDF.name.replace('pdf','xml'), ContentFile(xmlFecyt), save = False)
+                    investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML = investCVN.xmlfile).insertarXML(investCVN.investigador)                    
                     investCVN.save()
                     request.session['message'] = u'Se ha actualizado su CVN con éxito.'
                     return HttpResponseRedirect(reverse("cvn.views.index"))
