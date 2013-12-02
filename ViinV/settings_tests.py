@@ -10,8 +10,8 @@ CHROME_DRIVER = "/home/luis/Descargas/chromedriver"
 ID_TEST      = 99999
 TEST_SERVER  = 'http://10.219.4.213:8000'
 
-CVN_LOCATION            = os.path.join(st.PROJECT_ROOT, 'cvn/tests/CVN-invbecario.pdf')
-CVN_NOT_FECYT_LOCATION  = os.path.join(st.PROJECT_ROOT, 'cvn/tests/CVN-invbecario-notFecyt.pdf')
+CVN_LOCATION            = os.path.join(st.BASE_DIR, 'cvn/tests/CVN-invbecario.pdf')
+CVN_NOT_FECYT_LOCATION  = os.path.join(st.BASE_DIR, 'cvn/tests/CVN-invbecario-notFecyt.pdf')
 CVN_FILE     			= os.path.join(st.MEDIA_ROOT, 'cvn/pdf/CVN-test-709bddb1.pdf')
 XML_FILE     			= os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-test-709bddb1.xml')
 
