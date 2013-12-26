@@ -1,27 +1,29 @@
 # -*- encoding: utf-8 -*-
 
-# TODO Crear métodos para aquellos nodos como Telephone o Fax se repiten en todas las tablas y tiene un subárbol.
+# TODO Crear métodos para aquellos nodos como Telephone o Fax
+# se repiten en todas las tablas y tiene un subárbol.
 from django.db.models.loading import get_model
-from cvn.helpers import formatNIF, searchDataUser, formatCode, searchDataProduccionCientifica, formatDate, checkPage
+from cvn.helpers import (formatNIF, searchDataUser,
+                         searchDataProduccionCientifica, formatDate)
 from cvn.models import *
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
-from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn
-import base64 # Codificación para el web service del Fecyt
-import binascii
+from viinvDB.models import GrupoinvestInvestigador
+import base64  # Codificación para el web service del Fecyt
 import cvn.settings as cvn_setts
 import datetime
-import errno
 import logging
-import os
 import suds   # Web Service
 import time   # Sleep en caso de que haya un error de conexión
 
 logger = logging.getLogger(__name__)
+
+
 # -----------------------
 class UtilidadesCVNtoXML:
     """
-        Clase que se encarga de acceder al Web Service de la Fecyt y obtener la respresentación en XML del CVN en PDF.
+        Clase que se encarga de acceder al Web Service de la Fecyt y
+        obtener la representación en XML del CVN en PDF.
         Parámetros:
         - url_ws: Dirección hacia el Web Service del Fecyt.
         - urlPDF: Ruta hacia donde están almacenados los PDF.
@@ -29,25 +31,25 @@ class UtilidadesCVNtoXML:
     """
 
     def __init__(self,
-                urlWS = cvn_setts.URL_WS,
-                urlPDF = cvn_setts.URL_PDF,
-                urlXML = cvn_setts.URL_XML,
-                userWS = cvn_setts.USER_WS,
-                passWS = cvn_setts.PASSWD_WS,
-                filePDF = None):
+                 urlWS=cvn_setts.URL_WS,
+                 urlPDF=cvn_setts.URL_PDF,
+                 urlXML=cvn_setts.URL_XML,
+                 userWS=cvn_setts.USER_WS,
+                 passWS=cvn_setts.PASSWD_WS,
+                 filePDF=None):
         """ Constructor """
-        self.urlWS   = urlWS
-        self.urlPDF  = urlPDF
-        self.urlXML  = urlXML
-        self.userWS  = userWS
-        self.passWS  = passWS
+        self.urlWS = urlWS
+        self.urlPDF = urlPDF
+        self.urlXML = urlXML
+        self.userWS = userWS
+        self.passWS = passWS
         self.clientWS = suds.client.Client(self.urlWS)
         self.filePDF = filePDF
 
-
     def getXML(self):
         """
-            Método que a partir de un CVN en PDF obtiene su representación en XML.
+            Método que a partir de un CVN en PDF obtiene su
+            representación en XML.
 
             Retorna el XML o False si el PDF no tiene el formato del FECYT
         """
@@ -55,31 +57,38 @@ class UtilidadesCVNtoXML:
         try:
             dataPDF = base64.encodestring(self.filePDF.read())
         except IOError:
-            logger.error(u"No such file or directory:'" + self.filePDF.name + "'")
+            logger.error(u"No such file or directory:'"
+                         + self.filePDF.name + "'")
             return False
 
-        # Llamada al Web Service para obtener la transformación a XML y la escribe a un fichero
-        # Se añade la llamada en un bucle por si se corta la conexión con el servidor.
+        # Llamada al Web Service para obtener la transformación a XML
+        # y la escribe a un fichero. Se añade la llamada en un bucle por si
+        # se corta la conexión con el servidor.
         webServiceResponse = False
         while not webServiceResponse:
             try:
-                resultXML = self.clientWS.service.cvnPdf2Xml(self.userWS, self.passWS, dataPDF)
+                resultXML = self.clientWS.service.cvnPdf2Xml(self.userWS,
+                                                             self.passWS,
+                                                             dataPDF)
                 webServiceResponse = True
             except:
-                logger.warning("No hay Respuesta para el fichero: "  + self.filePDF + ". Espera de 5 segundos para reintentar.")
+                logger.warning("No hay Respuesta para el fichero: "
+                               + self.filePDF
+                               + ". Espera de 5 segundos para reintentar.")
                 time.sleep(5)
 
-        if resultXML.errorCode == 0: # Formato CVN-XML del Fecyt
+        if resultXML.errorCode == 0:  # Formato CVN-XML del Fecyt
             return base64.decodestring(resultXML.cvnXml)
-        return False # Retorna el fichero PDF con formato antiguo
+        return False  # Retorna el fichero PDF con formato antiguo
 
-
-    def checkCVNOwner(self, user = None, fileXML = None):
+    def checkCVNOwner(self, user=None, fileXML=None):
         """
-            Este método se encarga de corroborar que el propietario del CVN es el mismo que está logeado en la sesión.
+            Este método se encarga de corroborar que el propietario del CVN
+            es el mismo que está logeado en la sesión.
         """
         if not fileXML:
-            logger.warning(u"Se necesita un fichero para ejecutar este método.")
+            logger.warning(u"Se necesita un fichero\
+                            para ejecutar este método.")
             return False
         try:
             tree = etree.XML(fileXML)
@@ -99,68 +108,18 @@ class UtilidadesCVNtoXML:
         return False
 
 
-# -----------------------
 class UtilidadesXMLtoBBDD:
     """
-        Esta clase provee los métodos necesarios para analizar los XML y almacenar los datos en la tablas de la BBDD.
+        Esta clase provee los métodos necesarios para analizar los XML y
+        almacenar los datos en la tablas de la BBDD.
     """
 
     def __init__(self,
-                urlXML  = cvn_setts.URL_XML,
-                fileXML = None):
+                 urlXML=cvn_setts.URL_XML,
+                 fileXML=None):
         """ Constructor """
-        self.urlXML  = urlXML
+        self.urlXML = urlXML
         self.fileXML = fileXML
-
-# NO SE USA
-#    def parseXML(self):#, fileBBDD = "", fileCVN = ""):
-#        """
-#            Método que recorre el fichero XML y va extrayendo los datos del mismo.
-#            Dichos datos se almacenarán en la BBDD en las tablas correspondientes.
-#
-#            Variables:
-#            - fileBBDD: Fichero donde se almacena los CVN almacenados en la importación
-#            - fileCVN: Fichero donde se almacenan aquellos cvn duplicados
-#        """
-#        cvn = cvn_setts.URL_PDF + self.fileXML.replace("xml", "pdf")
-#        # Comprobar si existe ya el CVN en el portal del investigador.
-#        cvn_investigador = GrupoinvestInvestcvn.objects.filter(cvnfile__icontains = cvn.split('/')[-1])
-#        if len(cvn_investigador) > 0:
-#            # Se inserta los datos del usuario en la BBDD de la aplicación CVN y se actualiza la columna CVN
-#            fecha_cvn = self.insertarXML(cvn_investigador[0].investigador)
-#            # Se actualiza la columna 'xmlfile'
-#            cvn_investigador[0].xmlfile = self.fileXML
-#            cvn_investigador[0].fecha_cvn = fecha_cvn
-#            cvn_investigador[0].save()
-#            # Se actualiza el fichero con CVN insertados
-#            logger.info(u'' + cvn + ',' + cvn_investigador[0].investigador.nombre + ' ' +
-#                        cvn_investigador[0].investigador.apellido1 + ' ' +
-#                        cvn_investigador[0].investigador.apellido2 + ',' +
-#                        cvn_investigador[0].investigador.nif + '\n')
-#        else:
-#            # Se realiza una valoración del contenido del xml y se calcula la valoración
-#            (lista, probabilidad) = self.valorarXML()
-#            if lista is not None and lista:
-#                for usuario in lista:
-#                    logger.warning(u'' + self.fileXML + ',' +
-#                                usuario.cod_persona + ',' +
-#                                usuario.nombre + ' ' + usuario.apellido1 + ' ' + usuario.apellido2 + ',' +
-#                                usuario.nif + ',')
-#                    try: # Busca el CVN que tiene almacenado en Viinv del posible usuario candidato.
-#                        invest = GrupoinvestInvestigador.objects.get(nif = usuario.nif)
-#                        cvn_viinv = GrupoinvestInvestcvn.objects.get(investigador= invest)
-#                        logger.warning(u'' + str(cvn_viinv.cvnfile) + ',')
-#                        #~ fileCVN.write(u'' + str(cvn_viinv.cvnfile) + ',')
-#                    except ObjectDoesNotExist:
-#                        logger.warning(u'UNKNOWN, ')
-#                        #~ fileCVN.write(u'UNKNOWN, ')
-#
-#                    logger.warning(u'' + str(probabilidad) + '\n')
-#            else: # No coincide el NIF con ningun investigador alojado en la BBDD.
-#                logger.warning(u'' + self.fileXML + ', ' +
-#                            'UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, ' +
-#                            str(probabilidad) + '\n')
-#
 
     def get_key_data(self, filename):
         """
@@ -170,7 +129,7 @@ class UtilidadesXMLtoBBDD:
         tree = etree.parse(filename)
         date_CVN = tree.find('Version/VersionID/Date/Item')
         if date_CVN is not None:
-            date_CVN  = date_CVN.text.strip()
+            date_CVN = date_CVN.text.strip()
         nombre = u''
         nombre += tree.find('Agent/Identification/PersonalIdentification/GivenName/Item').text.strip()
 
@@ -199,67 +158,74 @@ class UtilidadesXMLtoBBDD:
         if email is not None:
             email = email.text.strip()
 
-        return (date_CVN, nif, nombre, first_family_name, second_family_name, birth_date, email)
-
+        return (date_CVN, nif, nombre, first_family_name,
+                second_family_name, birth_date, email)
 
     def valorarXML(self):
         """
-            Valora la probabilidad de que CVN pertenezca a un usuario registrado en el portal de ViinV
+            Valora la probabilidad de que CVN pertenezca a un usuario registrado
+            en el portal de ViinV
 
             Return:
-            - lista_usuario: Lista de usuarios posibles como propietarios del CVN analizado
+            - lista_usuario: Lista de propietarios posibles del CVN analizado
             - probabilidad: Medida de 0 a 1.
         """
         probabilidad = 0
-        (date_CVN, nif, nombre, primer_apellido, segundo_apellido, birth_date, email) = self.get_key_data(self.fileXML)
-        # Se eliminan los datos erróneos que pueda contener el dni (en caso de que lo tenga introducido)
+        (date_CVN, nif, nombre, primer_apellido,
+         segundo_apellido, birth_date, email) = self.get_key_data(self.fileXML)
+        # Se eliminan los datos erróneos que pueda contener el dni
+        # (en caso de que lo tenga introducido)
         nif = formatNIF(nif)
         if nif is not None:
-            usuario = GrupoinvestInvestigador.objects.filter(nif = nif)
+            usuario = GrupoinvestInvestigador.objects.filter(nif=nif)
             if usuario:
                 probabilidad = 1
                 return (usuario, probabilidad)
             else:
                 return (None, 0)
         # No dispone de NIF se aplican otros baremos de matching
-        lista_usuarios = GrupoinvestInvestigador.objects.filter(apellido1__iexact = primer_apellido)
+        lista_usuarios = GrupoinvestInvestigador.objects.filter(
+            apellido1__iexact=primer_apellido)
         if lista_usuarios is not None:
             probabilidad += 0.2
         # Se filtra la lista inicial por el segundo apellido
         if segundo_apellido is not None:
-            lista_aux = lista_usuarios.filter(apellido2__iexact = segundo_apellido)
+            lista_aux = lista_usuarios.filter(
+                apellido2__iexact=segundo_apellido)
             if lista_aux:
                 probabilidad += 0.3
                 lista_usuarios = lista_aux
         else:
             probabilidad += 0.3
         # Se filtra la lista inicial por el nombre
-        lista_aux = lista_usuarios.filter(nombre__icontains = nombre)
+        lista_aux = lista_usuarios.filter(nombre__icontains=nombre)
         if lista_aux is not None:
             probabilidad += 0.3
             lista_usuarios = lista_aux
         # Se filtra la lista por la fecha de nacimiento
         if birth_date is not None:
             birth_date = datetime.date(int(birth_date.split("-")[0]),
-                                        int(birth_date.split("-")[1]),
-                                        int(birth_date.split("-")[2]))
-            lista_aux = lista_usuarios.filter(fecha_nacimiento = birth_date)
+                                       int(birth_date.split("-")[1]),
+                                       int(birth_date.split("-")[2]))
+            lista_aux = lista_usuarios.filter(fecha_nacimiento=birth_date)
             if lista_aux is not None:
                 probabilidad += 0.075
                 lista_usuarios = lista_aux
         # Se filtra la lista por el correo electrónico
-        lista_aux = lista_usuarios.filter(email = email)
+        lista_aux = lista_usuarios.filter(email=email)
         if lista_aux is not None:
             probabilidad += 0.075
             lista_usuarios = lista_aux
-        # Se devuelve la lista de usuarios con la probabilidad de que sean propietarios del CVN analizado
+        # Se devuelve la lista de usuarios con la probabilidad de que sean
+        # propietarios del CVN analizado
         return (lista_usuarios, probabilidad)
 
-
-    def __deleteOldData__(self, data = [], user = None):
+    def __deleteOldData__(self, data=[], user=None):
         """
-            Recorre la lista de datos donde el usuario tiene una referencia o es la única referencia hacia los mismos.
-            Si es la única referencia se elimina los datos, sino sólo se elimina la referencia.
+            Recorre la lista de datos donde el usuario tiene una
+            referencia o es la única referencia hacia los mismos.
+            Si es la única referencia se elimina los datos,
+            sino sólo se elimina la referencia.
         """
         for actividad in data:
             if actividad.usuario.count() > 1:
@@ -267,31 +233,32 @@ class UtilidadesXMLtoBBDD:
             else:
                 actividad.delete()
 
-
-    def __cleanDataCVN__(self, user = None):
+    def __cleanDataCVN__(self, user=None):
         """
-            Elimina los datos introducidos previamente por el usuario. En caso que los datos pertenezcan a
-            varios usuarios, se elimina sólo las referencias del usuario a los mismos.
+            Elimina los datos introducidos previamente por el usuario.
+            En caso que los datos pertenezcan a varios usuarios, se elimina
+             sólo las referencias del usuario a los mismos.
 
             Variables:
             - user -> Usuario que está introduciendo un nuevo CVN.
         """
         # Actividad científica
-        self.__deleteOldData__(Publicacion.objects.filter(usuario = user), user)
-        self.__deleteOldData__(Congreso.objects.filter(usuario = user), user)
-        self.__deleteOldData__(Proyecto.objects.filter(usuario = user), user)
-        self.__deleteOldData__(Convenio.objects.filter(usuario = user), user)
-        self.__deleteOldData__(TesisDoctoral.objects.filter(usuario = user), user)
+        self.__deleteOldData__(Publicacion.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Congreso.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Proyecto.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Convenio.objects.filter(usuario=user), user)
+        self.__deleteOldData__(TesisDoctoral.objects.filter(usuario=user), user)
 
     def get_fecha_xml(self):
         """
             Obtiene la fecha del XML
         """
-        return  etree.parse(self.fileXML).find('Version/VersionID/Date/Item').text.strip()
+        return etree.parse(self.fileXML).find('Version/VersionID/Date/Item').text.strip()
 
-    def insertarXML(self, investigador = None):
+    def insertarXML(self, investigador=None):
         """
-            Inserta los datos del CVN encontrados en el portal en la base de datos de la aplicación CVN
+            Inserta los datos del CVN encontrados en el portal
+            en la aplicación CVN
 
             Parametros:
             - investigador -> Usuario con el que se enlaza ambas BBDD.
@@ -302,7 +269,8 @@ class UtilidadesXMLtoBBDD:
             tree = etree.parse(self.fileXML)
             fecha_cvn = tree.find('Version/VersionID/Date/Item').text.strip()
             # Datos del Investigador
-            dataInvestigador = tree.find('Agent')  #/Identification/PersonalIdentification')
+            dataInvestigador = tree.find('Agent')
+                # /Identification/PersonalIdentification')
             dataPersonal = self.__parseDataIdentificationXML__(dataInvestigador.getchildren())
             search_data = searchDataUser(dataPersonal)
             if search_data:
@@ -312,44 +280,45 @@ class UtilidadesXMLtoBBDD:
                     user = Usuario.objects.create(**dataPersonal)
                 else:
                     user = search_user[0]
-                    # Si el usuario ha introducido datos son eliminados para introducir los nuevos
+                    # Se eliminan los datos previos del usuario
                     self.__cleanDataCVN__(user)
                 # Introduce los datos de la actividad científica
                 self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
             else:
-                logger.warning("CVN sin datos personales:  " + str(self.fileXML))
+                logger.warning("CVN sin datos personales: "
+                               + str(self.fileXML))
         except IOError:
             if self.fileXML:
                 logger.error("Fichero " + self.fileXML + u" no encontrado.")
             else:
-                logger.warning(u"Se necesita un fichero para ejecutar este método.")
+                logger.warning(u"Se necesita un fichero para ejecutar este método")
         return fecha_cvn
 
-
-    def __parseDataIdentificationXML__(self, tree = None):
+    def __parseDataIdentificationXML__(self, tree=None):
         """
-            Método privado para obtener los datos de identificación del usuario.
+            Obtiene los datos de identificación del usuario.
             Incluye datos:
                 - Personales
                 - Dirección
                 - Contacto
             Variable:
-            - tree: Subárbol cuyo nodo cabecera es "Agent" del cual cuelgan todos los datos personales
+            - tree: Subárbol cuyo nodo cabecera es "Agent" del cual cuelgan
+                    todos los datos personales
         """
         dic = {}
         for element in tree:
             if element.tag == u'Identification' and element.getchildren():
-                dic.update(self.__dataPersonalIdent__(element.getchildren()[0].getchildren()))
+                dic.update(self.__dataPersonalIdent__(
+                    element.getchildren()[0].getchildren()))
             if element.tag == u'Address':
                 dic.update(self.__dataAddress__(element.getchildren()))
             if element.tag == u'Contact':
                 dic.update(self.__dataContact__(element.getchildren()))
         return dic
 
-
-    def __dataPersonalIdent__(self, tree = []):
+    def __dataPersonalIdent__(self, tree=[]):
         """
-            Método privado para introducir en un diccionario los datos personales del usuario.
+            Extrae un diccionario con los datos personales del usuario.
 
             Variable:
             - tree: Lista de los nodos con la información personal del usuario.
@@ -364,18 +333,17 @@ class UtilidadesXMLtoBBDD:
             else:
                 # En caso de que sea un investigador extranjero no tiene segundo apellido
                 try:
-                    # TODO poner el strip
                     dic[cvn_setts.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[0].text.strip()
                 except TypeError:
                     pass
         return dic
 
-
-    def __dataAddress__(self, tree = []):
+    def __dataAddress__(self, tree=[]):
         """
-            Método privado para introducir en un diccionario los datos de la dirección del usuario.
+            Obtiene los datos de la dirección del usuario.
             Variables:
-            - tree: Lista de los nodos con la información de la dirección del usuario.
+            - tree: Lista de los nodos con la información de la i
+                dirección del usuario.
         """
         dic = {}
         for element in tree:
@@ -385,14 +353,14 @@ class UtilidadesXMLtoBBDD:
                 dic[cvn_setts.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[0].text.strip()
         return dic
 
-
-    def __dataContact__(self, tree = []):
+    def __dataContact__(self, tree=[]):
         """
-            Método privado para introducir en un diccionario los datos de contacto del usuario.
+            Obtiene los datos de contacto del usuario.
             (telefonos y correo electronico)
 
             Variable:
-            - tree: Lista de los nodos con la información de la contact del usuario.
+            - tree: Lista de los nodos con la información de la
+                contact del usuario.
         """
         dic = {}
         for element in tree:
@@ -415,13 +383,12 @@ class UtilidadesXMLtoBBDD:
                 dic[key] = u'' + element.getchildren()[0].text.strip()
         return dic
 
-
-    def __getAutores__(self, tree = []):
+    def __getAutores__(self, tree=[]):
         """
-            Método para obtener los datos de los autores participantes en Publicaciones, Artículos, ...
+            Obtiene los autores participantes en la Actividad Científica
 
             Variable:
-            - tree: Lista de los nodos con la información de los autores participantes.
+            - tree: Lista de los nodos con la información de los autores
         """
         lista_autores = ''
         for author in tree:
@@ -435,7 +402,7 @@ class UtilidadesXMLtoBBDD:
                 auxAuthor += u' ' + author.find("SecondFamilyName/Item").text.strip()
             # Este elemento se crea siempre al exportar el PDF al XML
             if author.find("Signature/Item").text is not None:
-                if auxAuthor: # Si tiene datos, la firma va entre paréntesis
+                if auxAuthor:   # Si tiene datos, la firma va entre paréntesis
                     lista_autores += auxAuthor + u' (' + author.find("Signature/Item").text.strip() + '); '
                 else:         # El único dato de los autores es la firma
                     lista_autores += u'' + author.find("Signature/Item").text.strip() + '; '
@@ -443,10 +410,9 @@ class UtilidadesXMLtoBBDD:
                 lista_autores += auxAuthor + '; '
         return lista_autores[:-2]
 
-
-    def __getAmbito__(self, tree = []):
+    def __getAmbito__(self, tree=[]):
         """
-            Método que extrae de la representación XML el ámbito de un Congreso, Proyecto o Convenio.
+            Obtiene el ámbito de un Congreso, Proyecto o Convenio.
 
             Variable:
             - tree: Nodo que contiene los datos del ámbito.
@@ -460,18 +426,17 @@ class UtilidadesXMLtoBBDD:
                 data['otro_ambito'] = u'' + tree.find('Others/Item').text.strip()
         return data
 
-
     def __getDuration__(self, code = ""):
         """
-            Método que devuelve la duración de un convenio. El código tiene el siguiente formato:
-              "P<años>Y<meses>M<dias>D"
+            Obtiene la duración de un convenio.
+            El código tiene el siguiente formato: "P<años>Y<meses>M<dias>D"
 
             Variable:
             - code: Cadena de texto con el código de duración del convenio
         """
         digit = ""
         data = {}
-        for c in code[1:]: # El primero carácter P se salta.
+        for c in code[1:]:  # El primero carácter P se salta.
             if c.isdigit():
                 digit += c
             else:
@@ -480,15 +445,16 @@ class UtilidadesXMLtoBBDD:
                 if c == 'M':
                     data['duracion_meses'] = u'' + digit
                 if c == 'D':
-                    data['duracion_dias']  = u'' + digit
+                    data['duracion_dias'] = u'' + digit
                 digit = ""
         return data
 
-
-    def __saveData__(self, user = None, data = {}, table_name = None):
+    def __saveData__(self, user=None, data={}, table_name=None):
         """
-            Método que se encarga de almacenar la actividad científica de un usuario en las tablas correspondientes.
-            En caso de que exista ya dicho elemento almacenado en la tabla, simplemente se actualiza el campo usuario,
+            Almacen de la actividad científica de un usuario en
+            las tablas correspondientes.
+            En caso de que exista ya dicho elemento almacenado en la tabla,
+            simplemente se actualiza el campo usuario,
             añadiendo el nuevo usuario que se compartirá dicho mérito.
 
             Variables:
@@ -496,32 +462,34 @@ class UtilidadesXMLtoBBDD:
             - data: Datos a almacenar en la tabla correspondiente.
             - table: Tabla donde se va a almacenar o actualizar los datos
         """
-        # Diccionario de búsqueda para comprobar si existe ya el dato en la tabla
+        # Diccionario de búsqueda para comprobar
+        # si existe ya el dato en la tabla
         search_data = searchDataProduccionCientifica(data)
-        if not search_data: # Si devuelve un diccionario vacío, la búsqueda devuelve todos los registros de la tabla
+        if not search_data:  # Si devuelve un diccionario vacío, la búsqueda devuelve todos los registros de la tabla
             search_data = {'pk': cvn_setts.INVALID_SEARCH}
         table = get_model('cvn', table_name)
         try:
             reg = table.objects.get(**search_data)
             # Actualiza el registro con los nuevos datos
-            table.objects.filter(pk = reg.id).update(**data)
+            table.objects.filter(pk=reg.id).update(**data)
         except ObjectDoesNotExist:
             # Se crea el nuevo registro en la tabla correspondiente
             reg = table.objects.create(**data)
         # Añade el usuario a la tabla
         reg.usuario.add(user)
 
-
-    def __getDataPublicacion__(sefl, tree = [], tipo = ""):
+    def __getDataPublicacion__(sefl, tree=[], tipo=""):
         """
-            Método que obtiene los siguientes datos de la publicacion:
+            Obtiene los siguientes datos de la publicacion:
             - Página inicial y final
             - Volumen y número
             Retorna un diccionario con dichos valores.
 
             Variable:
-            - tree: Lista de los nodos con la información de los autores participantes.
-            - tipo: Indica el tipo de producción, en caso de que se trate de un Artículo,
+            - tree: Lista de los nodos con la información
+                de los autores participantes.
+            - tipo: Indica el tipo de producción,
+                   en caso de que se trate de un Artículo,
                    se almacena los datos del Volumen y el Número.
         """
         data = {}
@@ -537,24 +505,24 @@ class UtilidadesXMLtoBBDD:
                 data['pagina_final'] = tree.find("FinalPage/Item").text.strip()
         return data
 
-
-    def __dataActividadCientificaPublicacion__(self, tree = []):
+    def __dataActividadCientificaPublicacion__(self, tree=[]):
         """
             Publicaciones, documentos científicos y técnicos
 
             Método que obtiene los datos de las publicaciones del usuario.
             Variable:
             - cvnpk: Identificador de la tabla de la Actividad Científica.
-            - tree:  Elemento que contiene los datos necesarios de la publicación
+            - tree:  Elemento que contiene los datos de la publicación
 
-            Return: Diccionario con los datos para introducir en la tabla "Publicación"
+            Return: Diccionario con los datos para la tabla "Publicación"
         """
         # Códigos de los atributos: Artículos (35), Capítulos (148), Libros (112)
         data = {}
         try:
             tipo = cvn_setts.ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION[tree.find('Subtype/SubType1/Item').text.strip()]
             data[u'tipo_de_produccion'] = u'' + tipo
-            if tree.find('Title/Name') is not None: # Hay CVN que no tienen puesta el título
+            # Hay CVN que no tienen puesto el título
+            if tree.find('Title/Name') is not None:
                 data[u'titulo'] = u'' + tree.find('Title/Name/Item').text.strip()
             if tree.find('Link/Title/Name') is not None and tree.find('Link/Title/Name/Item').text is not None:
                 data[u'nombre_publicacion'] = u'' + tree.find('Link/Title/Name/Item').text.strip()
@@ -565,26 +533,27 @@ class UtilidadesXMLtoBBDD:
             elif tree.find('Date/OnlyDate/Year') is not None:       # Fecha: Año
                 data[u'fecha'] = u'' + formatDate(tree.find('Date/OnlyDate/Year/Item').text.strip())
             if tipo != u'Libro' and tree.find('ExternalPK') is not None:
-                data[u'issn']  = u'' + tree.find('ExternalPK/Code/Item').text.strip()
-        except KeyError:       # El nodo no contiene ni artículos, ni capítulos ni libros.
+                data[u'issn'] = u'' + tree.find('ExternalPK/Code/Item').text.strip()
+        except KeyError:
+            # El nodo no contiene ni artículos, ni capítulos ni libros.
             pass
-        except AttributeError: # El nodo no tiene especificado el tipo de Item.
+        except AttributeError:
+            # El nodo no tiene especificado el tipo de Item.
             pass
         return data
 
-
-    def __dataActividadCientificaCongreso__(self, tree = []):
+    def __dataActividadCientificaCongreso__(self, tree=[]):
         """
             Trabajos presentados en congresos nacionales o internacionales
-
-            Método que obtiene los datos de los congresos del usuario.
             Variable:
-            - Tree: Lista de nodos con la información sobre las "Trabajos presentados en congresos nacionales o internacionales."
+            - Tree: Lista de nodos con la información sobre los
+            "Trabajos presentados en congresos nacionales o internacionales."
 
-            Return: Diccionario con los datos para introducir en la tabla "Congreso"
+            Return: Diccionario con los datos para la tabla "Congreso"
         """
         data = {}
-        if tree.find('Title/Name') is not None: # Algonos trabajos no tienen puesto el nombre
+        # Algunos trabajos no tienen puesto el nombre
+        if tree.find('Title/Name') is not None:
             data[u'titulo'] = u'' + tree.find('Title/Name/Item').text.strip()
         for element in tree.findall('Link'):
             if element.find('CvnItemID/CodeCVNItem/Item').text.strip() == cvn_setts.DATA_CONGRESO:
@@ -608,24 +577,26 @@ class UtilidadesXMLtoBBDD:
         data[u'autores'] = self.__getAutores__(tree.findall('Author'))
         return data
 
-
-    def __dataExperienciaCientifica__(self, tree = [], tipo = ""):
+    def __dataExperienciaCientifica__(self, tree=[], tipo=""):
         """
             Convenios y Proyectos de I+D+i
 
-            Método que obtiene los datos de tanto de la "participación en contratos, convenios
-            o proyectos de I+D+i no competitivos con Administraciones o entidades públicas o privadas"
-            como de "participación en proyectos de I+D+i financiados en convocatorias competitivas de
-            Administraciones o entidades públicas y privadas".
+            Obtiene los datos de tanto de la "participación en contratos,
+            convenios o proyectos de I+D+i no competitivos con
+            Administraciones o entidades públicas o privadas"
+            como de "participación en proyectos de I+D+i financiados en
+            convocatorias competitivas de Administraciones o entidades
+            públicas y privadas".
 
             Variable:
             - tree: Lista de nodos con la información sobre los convenios.
             - tipo: Indica si se trata de un Convenio o un Proyecto
 
-            Return: Diccionario con los datos para introducir en la tabla "Publicación"
+            Return: Diccionario con los datos para la tabla "Publicación"
         """
         data = {}
-        if tree.find('Title/Name') is not None: # Hay CVN que no tienen puesta la denominación del proyecto
+        # Hay CVN que no tienen puesta la denominación del proyecto
+        if tree.find('Title/Name') is not None:
             data[u'denominacion_del_proyecto'] = u'' + tree.find('Title/Name/Item').text.strip()
 
         # Posibles nodos donde se almacena la fecha
@@ -669,18 +640,19 @@ class UtilidadesXMLtoBBDD:
         data.update(self.__getAmbito__(tree.find('Scope')))
         return data
 
-
     def __dataActividadDocente__(self, tree = []):
         """
             Dirección de tesis doctorales y/o proyectos fin de carrera
 
-            Método para obtener los datos de la Actividad docente de un usuario.
-            Sección del Editor "Dirección de tesis doctorales y/o proyectos fin de carrera".
+            Obtiene la Actividad docente de un usuario.
+            Sección del Editor "Dirección de tesis doctorales y/o
+                proyectos fin de carrera".
 
             Variable:
-            - tree: Lista de nodos con la información necesaria para obtener los datos de la tesis
+            - tree: Lista de nodos con la información necesaria para
+                obtener los datos de la tesis
 
-            Return: Diccionario con los datos a insertar en la tabla correspondiente
+            Return: Diccionario con los datos para insertar en la tabla
         """
         data = {}
         # Comprueba si la actividad docente se trata de una tesis
@@ -691,19 +663,20 @@ class UtilidadesXMLtoBBDD:
                 data[u'autor'] = self.__getAutores__(tree.findall('Author'))
                 data[u'codirector'] = self.__getAutores__(tree.findall('Link/Author'))
                 data[u'fecha_de_lectura'] = u'' + tree.find('Date/OnlyDate/DayMonthYear/Item').text.strip()
-        except AttributeError: # No tiene elemento tipo: 'Subtype/SubType1/Item'
+        except AttributeError:
+            # No tiene elemento tipo: 'Subtype/SubType1/Item'
             pass
         return data
 
-
-
-    def __parseActividadCientifica__(self, user = None, cvnItems = []):
+    def __parseActividadCientifica__(self, user=None, cvnItems=[]):
         """
-            Método para obtener los datos de la Actividad científica de un usuario.
-            Recorre el XML buscando aquellos nodos 'CVNItem' cuyo 'CvnItemID/CVNPK' se engloban dentro de '060.XXX.XXX.XXX'.
+            Obtiene los datos de la Actividad científica de un usuario.
+            Recorre el XML buscando aquellos nodos 'CVNItem' cuyo
+            'CvnItemID/CVNPK' se engloban dentro de '060.XXX.XXX.XXX'.
             Variable:
             - user: Usuario del CVN
-            - cvnItems: Lista de los nodos con la información de los méritos almacenada en el CVN.
+            - cvnItems: Lista de los nodos con la información de los
+                méritos almacenada en el CVN.
         """
         # Recorre los méritos introducidos en el CVN por el investigador
         for element in cvnItems:
@@ -716,30 +689,33 @@ class UtilidadesXMLtoBBDD:
             if cvn_key == u"050.020.020.000" or cvn_key == u"050.020.010.000":
                 data = self.__dataExperienciaCientifica__(element, cvn_key)
             # Actividad científica y tecnológica (Paso 6 Editor Fecyt)
-            if cvn_key == u"060.010.010.000": # Publicación, documentos científicos y técnicos
+            # Publicación, documentos científicos y técnicos
+            if cvn_key == u"060.010.010.000":
                 data = self.__dataActividadCientificaPublicacion__(element)
-            if cvn_key == u"060.010.020.000": # Trabajos presentados en congresos nacionales o internacionales.
+            # Trabajos presentados en congresos nacionales o internacionales.
+            if cvn_key == u"060.010.020.000":
                 data = self.__dataActividadCientificaCongreso__(element)
             # Almacena los datos
             if data:
                 self.__saveData__(user, data, cvn_setts.MODEL_TABLE[cvn_key])
 
 
-# -----------------------
-def insert_pdf_to_bbdd_if_not_exists(nif = "", investCVN = None):
+def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
     """
-        Inserta el CVN en la BBDD si el usuario no lo tiene insertado previamente.
+        Inserta el CVN en la BBDD si el usuario no lo tiene
+         insertado previamente.
 
         Variables:
         - nif = NIF/NIE del usuario
-        - investCVN  = Registro de la tabla GrupoinvestInvestcvn de la aplicación ViinV
+        - investCVN  = Registro de la tabla GrupoinvestInvestcvn de ViinV
     """
 
-    if not Usuario.objects.filter(documento__icontains = nif):
+    if not Usuario.objects.filter(documento__icontains=nif):
         if not investCVN.xmlfile:
-            handlerCVN = UtilidadesCVNtoXML(filePDF = investCVN.cvnfile)
+            handlerCVN = UtilidadesCVNtoXML(filePDF=investCVN.cvnfile)
             xmlFecyt = handlerCVN.getXML()
-            if xmlFecyt and handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt): # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
-                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf','xml'), ContentFile(xmlFecyt))
-        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML = investCVN.xmlfile).insertarXML(investCVN.investigador)
+            # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
+            if xmlFecyt and handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt):
+                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'), ContentFile(xmlFecyt))
+        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
         investCVN.save()
