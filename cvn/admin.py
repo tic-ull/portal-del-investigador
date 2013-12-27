@@ -1,6 +1,9 @@
 # -*- encoding: utf8 -*-
 from django.contrib import admin
-from cvn.models import *
+from cvn.models import (Usuario, SituacionProfesional,
+                        Publicacion, Congreso, Proyecto,
+                        Convenio, TesisDoctoral)
+
 
 class UsuarioAdmin(admin.ModelAdmin):
     search_fields = ('documento',
