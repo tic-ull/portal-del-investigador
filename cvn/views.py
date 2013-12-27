@@ -1,8 +1,9 @@
 # -*- encoding: utf-8 -*-
 from cvn.forms import UploadCvnForm
 from cvn.helpers import (handleOldCVN, getUserViinV,
-                         addUserViinV, getDataCVN, dataCVNSession)
-from cvn.utilsCVN import (insert_pdf_to_bbdd_if_not_exists, setCVNFileName,
+                         addUserViinV, getDataCVN, dataCVNSession,
+                         setCVNFileName)
+from cvn.utilsCVN import (insert_pdf_to_bbdd_if_not_exists,
                           UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
 from django.core.files.base import ContentFile
 # Almacenar los ficheros subidos a la aplicación en el disco.
