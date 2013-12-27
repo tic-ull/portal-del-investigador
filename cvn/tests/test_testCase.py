@@ -14,7 +14,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestInvestcvn, AuthUser, GrupoinvestCategoriainvestigador
-import base64 
+import base64
 import binascii
 import os
 import suds
