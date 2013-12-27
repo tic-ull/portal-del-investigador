@@ -17,7 +17,7 @@ urlpatterns = patterns('',
     #     include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^investigacion/admin/', include(admin.site.urls), name='admin'),
+    url(r'^investigacion/admin/', include(admin.site.urls)),
 
     # Página principal
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
