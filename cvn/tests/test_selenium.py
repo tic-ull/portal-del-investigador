@@ -22,8 +22,8 @@ CHROME_DRIVER = "/home/luis/Descargas/chromedriver"
 ID_TEST      = 99999
 TEST_SERVER  = 'http://10.219.4.213:8000'
 
-CVN_LOCATION            = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario.pdf')
-CVN_NOT_FECYT_LOCATION  = os.path.join(st.PROJECT_PATH, 'cvn/tests/CVN-invbecario-notFecyt.pdf')
+CVN_LOCATION            = os.path.join(st.PROJECT_ROOT, 'cvn/tests/CVN-invbecario.pdf')
+CVN_NOT_FECYT_LOCATION  = os.path.join(st.PROJECT_ROOT, 'cvn/tests/CVN-invbecario-notFecyt.pdf')
 CVN_FILE                = os.path.join(st.MEDIA_ROOT, 'cvn/pdf/CVN-test-709bddb1.pdf')
 XML_FILE                = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-test-709bddb1.xml')
 
@@ -212,7 +212,7 @@ class AdminCVNTestCase(LiveServerTestCase):
         de la plantilla de administración:
         - Acceso a la plantilla administrador mediante un usuario con permisos de 'staff'.
     """
-    fixtures = ['initial_data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
+    fixtures = ['cvn/tests/fixtures/initial_data.json'] # Si no se especifica en el settings, la ruta de búsqueda es ./<app>/fixtures/
     selenium = None
 
     @classmethod
@@ -258,7 +258,7 @@ class AdminCVNTestCase(LiveServerTestCase):
     def test_01_login(self):
         """
             Comprueba se puede acceder a la plantilla de administración correctamente con un usuario STAFF
-        """
+        """        
         self.selenium.get("%s%s" % (self.live_server_url, '/investigacion/admin'))
         username_input = self.selenium.find_element_by_name("username")
         username_input.send_keys(ADMIN_LOGIN)
