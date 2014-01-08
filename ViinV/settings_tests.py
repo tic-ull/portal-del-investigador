@@ -2,10 +2,7 @@
 from django.conf import settings as st
 import os
 
-CHROME_DRIVER = "/home/luis/Descargas/chromedriver"
-
 ID_TEST = 99999
-TEST_SERVER = 'http://10.219.4.213:8000'
 
 CVN_LOCATION = os.path.join(st.PROJECT_ROOT, 'cvn/tests/CVN-invbecario.pdf')
 CVN_NOT_FECYT_LOCATION = os.path.join(st.PROJECT_ROOT,
