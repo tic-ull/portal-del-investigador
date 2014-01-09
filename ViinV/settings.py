@@ -9,7 +9,7 @@ TEMPLATE_DEBUG = DEBUG
 import os
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
-PROJECT_PATH = os.path.abspath(os.path.dirname('__file__'))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
@@ -24,14 +24,14 @@ MANAGERS = ADMINS
         #~ 'USER': 'viinv',
         #~ 'PASSWORD': '1234',
         #~ 'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        #~ 'PORT': '',                      # Set to empty string for default.        
+        #~ 'PORT': '',                      # Set to empty string for default.
     #~ },
     #~ 'portalinvestigador': {
         #~ 'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         #~ 'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
-        #~ 'USER': 'root',                       # Not used with sqlite3.        
+        #~ 'USER': 'root',                       # Not used with sqlite3.
         #~ 'PASSWORD': '1234',                 # Not used with sqlite3.
-        #~ 'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+        #~ 'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
     #~ }
 #~ }
 
@@ -40,18 +40,20 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'edsvidi',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.        
-        'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'memviinv'           ,                      # Or path to database file if using sqlite3.
+        # The following settings are not used with sqlite3:
+        'USER': 'viinv',
+        'PASSWORD': '1234',
+        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',                      # Set to empty string for default.
     },
     'portalinvestigador': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'edsvidi',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.        
+        'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
+        'USER': 'root',                       # Not used with sqlite3.
         'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
     }
 }
 
@@ -89,7 +91,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(PROJECT_PATH, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -100,14 +102,14 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(PROJECT_PATH, 'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (os.path.join(PROJECT_PATH,'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -135,12 +137,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_cas.middleware.CASMiddleware',
+    # NOTE situado en el 'settings_local'
+    #~ 'django_cas.middleware.CASMiddleware',
 )
 
-AUTHENTICATION_BACKENDS = (	
-	'django.contrib.auth.backends.ModelBackend',
-	'django_cas.backends.CASBackend',
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_cas.backends.CASBackend',
 )
 
 ROOT_URLCONF = 'ViinV.urls'
@@ -155,7 +158,7 @@ TEMPLATE_DIRS = (
 
     #~ os.path.join(PROJECT_ROOT,'../templates'),
 
-    os.path.join(PROJECT_PATH,'templates'),
+    os.path.join(BASE_DIR,'templates'),
 
 )
 
@@ -202,35 +205,35 @@ LOGGING = {
         },
     },
     'filters': {
-		'require_debug_false': {
-			'()': 'django.utils.log.RequireDebugFalse',
-		}		
-	},
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
     'handlers': {
-    	'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
-			'level': 'DEBUG',
-			'class': 'logging.NullHandler',
-		},	
-		'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr. 
-			'level': 'DEBUG',
-			'class': 'logging.StreamHandler',
-			'formatter': 'standard',
-		},
-		'default': {
-			'level'    : 'INFO',
-			'class'    : 'logging.handlers.RotatingFileHandler',
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero			
-			'backupCount': 5,
-			'formatter': 'standard'
-		},
-		'request_handler': {
-			'level'    : 'DEBUG',
-			'class'    : 'logging.handlers.RotatingFileHandler',			
-			'filename' : LOG_FILENAME,
-			'maxBytes' : 4096*1024*1024,        
-			'backupCount': 5,
-			'formatter': 'standard'
+        'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
+            'level': 'DEBUG',
+            'class': 'logging.NullHandler',
+        },
+        'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr.
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard',
+        },
+        'default': {
+            'level'    : 'INFO',
+            'class'    : 'logging.handlers.RotatingFileHandler',
+            'filename' : LOG_FILENAME,
+            'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'request_handler': {
+            'level'    : 'DEBUG',
+            'class'    : 'logging.handlers.RotatingFileHandler',
+            'filename' : LOG_FILENAME,
+            'maxBytes' : 4096*1024*1024,
+            'backupCount': 5,
+            'formatter': 'standard'
                 },
         'mail_admins': {
             'level'       : 'ERROR',             # Errores de la serie 5XX
@@ -241,12 +244,12 @@ LOGGING = {
     },
     'loggers': {
         'cvn': {
-            'handlers': ['default', 'mail_admins'],   
+            'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True
         },
         'viinvDB.admin': { # Logs de la plantilla de ADMIN. TODO: Ver si es mejor cambiar el 'handler'
-            'handlers': ['default', 'mail_admins'],   
+            'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True
         },
@@ -283,6 +286,10 @@ LOGIN_URL='login'
 # Lanzar tests sin usar las migraciones de South
 SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
 SKIP_SOUTH_TESTS = True     # To disable South's own unit tests
+
+FIXTURE_DIRS = (
+    os.path.join(PROJECT_ROOT, 'cvn/tests/fixtures/'),
+)
 
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))

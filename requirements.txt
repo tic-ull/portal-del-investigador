@@ -10,3 +10,4 @@ dateutils # Fecha de caducidad
 django-bootstrap-toolkit==2.8.0 # Bootstrap
 -e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
 gunicorn
+selenium
