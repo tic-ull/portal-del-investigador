@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="es-ES" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<!--[if IE]>
+    <!--[if IE]>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <![endif]-->
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -19,9 +19,9 @@
 
     <link href="https://static.ull.es/css/ull.css" rel="stylesheet">
     <link href="https://static.ull.es/css/ull-responsive.css" rel="stylesheet">
-    
+
     <!-- CSS lista gris  Accordion  -->
-    <link href='{% static "css/accordion.css" %}' rel="stylesheet">    
+    <link href='{% static "css/accordion.css" %}' rel="stylesheet">
 
     <!-- CSS form-actions -->
     <link href='{% static "css/cvn.css" %}' rel="stylesheet">
@@ -77,7 +77,7 @@
 <!--
                                         <li><a target="_blank" href="http://www.tuenti.com/#m=Page&func=index&page_key=1_160_68944913"><i class="icon-tuenti"></i></a></li>
 -->
-										<li><a target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="icon-tuenti"></i></a></li>
+                                        <li><a target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="icon-tuenti"></i></a></li>
                                         <li><a target="_blank" href="http://twitter.com/CanalULL"><i class="icon-twitter"></i></a></li>
                                         <li><a target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="icon-linkedin"></i></a></li>
                                     </ul>
@@ -88,7 +88,7 @@
 
                         <li class="dropdown visible-phone">
                             <a title="Recordar contrase#241;a" href="https://usuarios.ull.es/reenvio">
-								<i class="icon-exclamation-sign icon-white"></i> Recordar contraseña</a>
+                                <i class="icon-exclamation-sign icon-white"></i> Recordar contraseña</a>
                         </li>
                         <li class="dropdown visible-phone">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-question-sign icon-white"></i> Ayuda y soporte <b class="caret"></b></a>
@@ -110,14 +110,14 @@
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="span12">
-		
+
                         <ul class="breadcrumb pull-left">
-                             <li><a href="{% url 'index' %}">Currículum Vítae Normalizado</a></li>                                
+                             <li><a href="{% url 'index' %}">Currículum Vítae Normalizado</a></li>
                             {% block breadcrumb %}
 
                             {% endblock breadcrumb %}
                         </ul>
-        
+
                         <ul class="nav pull-right menu-appbar hidden-phone">
 <!--
                             <li><a title="Recordar contrase&#241;a" href="" class="btn btn-link "><i class="icon-exclamation-sign"></i> Recordar contraseña</a></li>
@@ -142,17 +142,17 @@
             </div>
         </div>
     </div>
-    
-    <div class="container-fluid">        
-        <div class="row-fluid">            
-            <div class="span3 sidebar">                
-                <div class="sidebar-nav widget">               
-					{% block menu %}
-						{% include "snippet/menu.html" with inicio="class='selec'" %}
-					{% endblock menu %}                       
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3 sidebar">
+                <div class="sidebar-nav widget">
+                    {% block menu %}
+                        {% include "snippet/menu.html" with inicio="class='selec'" %}
+                    {% endblock menu %}
                 </div>
             </div>
-            
+
             <div class="span9 main-content">
                 <div id="child">
                     {% block pagination_top %}
@@ -229,8 +229,8 @@
             </div>
         </div>
     </div>
-    
-    
+
+
         {% comment %}
         FIXME: Analytics aqui
         {% endcomment %}
@@ -238,8 +238,8 @@
     {% block scripts %}
         <script src="https://static.ull.es/js/jquery-1.9.0.min.js"></script>
         <script src="https://static.ull.es/js/bootstrap.js"></script>
-		<!-- Thumbnails -->
-		<script src='{% static "js/holder.js" %}'></script>
+        <!-- Thumbnails -->
+        <script src='{% static "js/holder.js" %}'></script>
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <script src="https://static.ull.es/js/jquery.placeholder.js" ></script>
