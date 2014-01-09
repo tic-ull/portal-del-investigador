@@ -267,7 +267,7 @@ class UtilidadesXMLtoBBDD:
         dataPersonal = {}
         fecha_cvn = None
         try:
-            tree = etree.parse(self.fileXML)
+            tree = etree.parse(self.fileXML)            
             fecha_cvn = tree.find('Version/VersionID/Date/Item').text.strip()
             # Datos del Investigador
             dataInvestigador = tree.find('Agent')

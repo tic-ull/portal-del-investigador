@@ -76,7 +76,8 @@ def index(request):
                 # Si el CVN tiene formato FECYT y el usuario es el
                 # propietario se actualiza
                 if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt):
-                    handleOldCVN(investCVN)
+                    if investCVN:
+                        handleOldCVN(filePDF, investCVN.fecha_up)
                     investCVN = context['form'].save(commit=False)
                     investCVN.fecha_up = datetime.date.today()
                     investCVN.cvnfile = filePDF
@@ -84,7 +85,8 @@ def index(request):
                     # Borramos el viejo para que no se reenumere
                     if investCVN.xmlfile:
                         investCVN.xmlfile.delete()
-                    investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'), ContentFile(xmlFecyt))
+                    investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'),
+                                           ContentFile(xmlFecyt), save = False)
                     investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
                     investCVN.save()
                     request.session['message'] = u'Se ha actualizado su CVN con éxito.'
@@ -118,7 +120,7 @@ def downloadCVN(request):
                     + invest.apellido1 + ' ' + invest.apellido2 + ' '
                     + invest.nif)
     try:
-        with open(investCVN.cvnfile.name, 'r') as pdf:
+        with open(st.MEDIA_ROOT + '/' + investCVN.cvnfile.name, 'r') as pdf:
             response = HttpResponse(pdf.read(), mimetype='application/pdf')
             response['Content-Disposition'] = 'inline;filename=%s' \
                 % (investCVN.cvnfile.name.split('/')[-1])
@@ -126,3 +128,39 @@ def downloadCVN(request):
     except TypeError, IOError:
         raise Http404
     return response
+
+@login_required
+def ull_report(request):
+    """ Informe completo de la actividad de la ULL, extraida del usuario especial ULL """
+    context = {}
+    context.update(getDataCVN('00000000A'))
+    print context
+    return render_to_response("ull_report.html", context, RequestContext(request))
+
+@login_required
+def ull_report(request):
+    """ Informe completo de la actividad de la ULL, extraida del usuario especial ULL """
+    context = {}
+    context.update(getDataCVN('00000000A'))
+    a =  render_to_response("ull_report.html", context, RequestContext(request))
+
+    print type(a)
+    #print a.content
+    #import pdfkit
+    #options = {
+    #'page-size': 'A4',
+    #'margin-top': '0.75in',
+    #'margin-right': '0.75in',
+    #'margin-bottom': '0.75in',
+    #'margin-left': '0.75in',
+    #'encoding': "UTF-8"
+    #}
+    #from django.template.loader import render_to_string
+    #s = render_to_string("ull_report.html", context)
+    #pdfkit.from_string(s, "out.pdf", options=options)
+    from weasyprint import HTML
+    from django.template.loader import render_to_string
+    s = render_to_string("ull_report.html", context)
+    h = HTML(string=s)
+    h.write_pdf("outweasy.pdf")
+    return a

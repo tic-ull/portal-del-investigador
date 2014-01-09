@@ -12,6 +12,28 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+#~ DATABASES = {
+    #~ 'default': {
+        #~ 'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        #~ 'NAME': 'memviinv'           ,                      # Or path to database file if using sqlite3.
+        #~ # The following settings are not used with sqlite3:
+        #~ 'USER': 'viinv',
+        #~ 'PASSWORD': '1234',
+        #~ 'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        #~ 'PORT': '',                      # Set to empty string for default.
+    #~ },
+    #~ 'portalinvestigador': {
+        #~ 'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        #~ 'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
+        #~ 'USER': 'root',                       # Not used with sqlite3.
+        #~ 'PASSWORD': '1234',                 # Not used with sqlite3.
+        #~ 'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
+    #~ }
+#~ }
+
+# WARNING
+# Las bases de datos se cambiaron para apuntar a la copia "frozen" de la Memoria 2012
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -27,7 +49,16 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '1234',
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
+    },
+
+    # db alias for MEMORIA 2012
+    'mem2012_db_alias': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'memviinv12',
+        'USER': 'root',
+        'PASSWORD': '1234',
     }
+
 }
 
 DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']
