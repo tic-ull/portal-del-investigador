@@ -1,0 +1,1 @@
+Consultas SQL para realizar las estadísticas

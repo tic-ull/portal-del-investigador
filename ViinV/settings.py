@@ -53,8 +53,17 @@ DATABASES = {
         'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
         'USER': 'root',                       # Not used with sqlite3.
         'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+    },
+    
+    # db alias for MEMORIA 2012
+    'mem2012_db_alias': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'memviinv12',         
+        'USER': 'root',                           
+        'PASSWORD': '1234',               
     }
+        
 }
 
 DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']

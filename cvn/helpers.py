@@ -30,7 +30,6 @@ def formatNIF(data = None):
     # Eliminar espacios al principio o al final de la cadena
     return data.upper().replace(' ', '').replace('-', '').replace('.', '')
 
-
 def searchDataUser(data = None):
     """
         Función que devuelve un diccionario para buscar los datos de un usuario en la BBDD.
@@ -54,7 +53,6 @@ def searchDataUser(data = None):
             search_dic['nombre__iexact'] = data['nombre']
     return search_dic
 
-
 def formatCode(data, extension):
     """
         Función que transforma el código de una etiqueta para realizar las comprobaciones de datos a analizar.
@@ -72,7 +70,6 @@ def formatCode(data, extension):
     data[-1] = extension
     data = ".".join(data)
     return data
-
 
 def searchDataProduccionCientifica(data = None):
     """
@@ -123,7 +120,6 @@ def checkPage(data = ""):
     except TypeError:  # El Item viene vacío
         return cvn_setts.INVALID_PAGE
     return data
-
 
 def setCVNFileName(user):
     """
@@ -247,4 +243,3 @@ def dataCVNSession(investCVN = None):
         #~ context['fecha_valido'] = investCVN.fecha_cvn + datetime.timedelta(days = cvn_setts.CVN_CADUCIDAD)
         context['fecha_valido'] = investCVN.fecha_cvn + relativedelta(years = cvn_setts.CVN_CADUCIDAD)
     return context
-
