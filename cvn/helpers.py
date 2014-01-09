@@ -141,10 +141,12 @@ def handleOldCVN(cvn, fecha_up):
         Parametros:
         - cvn: Fichero con el CVN del Investigador
     """
-    #~ oldPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.PDF_ROOT, investCVN.cvnfile.name)
-    oldPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.PDF_ROOT, cvn.name)
+    # Si no tiene cvn subido no se hace el trasiego de documentos
+    if not investCVN:
+        return
+    oldPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.PDF_ROOT, investCVN.cvnfile.name)
     # Antes de mover a la carpeta históricos, se le añade la fecha de subida al CVN nuevo.
-    newName = cvn.name.replace(u'.pdf', u'-' + str(fecha_up) + u'.pdf')		
+    newName = cvn.name.replace(u'.pdf', u'-' + str(fecha_up) + u'.pdf')
 	#~ newName = investCVN.cvnfile.name.replace(u'.pdf', u'-' + str(investCVN.fecha_up) + u'.pdf')
     newPath = os.path.join(settings.MEDIA_ROOT, cvn_setts.OLD_PDF_ROOT, newName)
     file_move_safe(oldPath, newPath)
