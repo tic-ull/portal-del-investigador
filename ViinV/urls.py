@@ -13,10 +13,11 @@ urlpatterns = patterns('',
     # url(r'^investigacion/ViinV/', include('ViinV.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^investigacion/admin/doc/', include('django.contrib.admindocs.urls')),
+    # url(r'^investigacion/admin/doc/',
+    #     include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^investigacion/admin/', include(admin.site.urls), name='admin'),
+    url(r'^investigacion/admin/', include(admin.site.urls)),
 
     # Página principal
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
@@ -25,10 +26,17 @@ urlpatterns = patterns('',
     url(r'^investigacion/cvn/ull_report/$', 'cvn.views.ull_report', name='ull_report'),
 
     # Descarga de los CVN
-    url(r'^investigacion/cvn/download/$', 'cvn.views.downloadCVN', name='downloadCVN'),
+    url(r'^investigacion/cvn/download/$',
+        'cvn.views.downloadCVN',
+        name='downloadCVN'),
 
     # Login/Logout CAS
-    url(r'^investigacion/accounts/login/$', 'django_cas.views.login', name='login'),
-    url(r'^investigacion/accounts/logout/$', 'django_cas.views.logout', name='logout'),
+    url(r'^investigacion/accounts/login/$',
+        'django_cas.views.login',
+        name='login'),
+    url(r'^investigacion/accounts/logout/$',
+        'django_cas.views.logout',
+        name='logout'),
 
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # Servir los pdfs
+) + static(settings.MEDIA_URL,
+           document_root=settings.MEDIA_ROOT)  # Servir los pdfs

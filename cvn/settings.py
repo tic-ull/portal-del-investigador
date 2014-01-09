@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 import os
-
 from django.conf import settings as st
 
 # Usuario Administrador de la plantilla de administración de Django
@@ -24,11 +23,14 @@ URL_OLD_CVN = os.path.join(st.MEDIA_URL, OLD_PDF_ROOT)  # CVN antiguos
 PDF = "application/pdf"
 
 # Ficheros con los resultados de las diferentes operaciones
-FILE_LOG_IMPORT =  os.path.join(st.PROJECT_ROOT, 'errorCVN.log')          # Fichero con los errores al obtener el XML utilizando el WS del Fecyt
-FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log') # Fichero con los CVN cuyos datos han sido insertados en la BBDD de la aplicación
-FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log') # Fichero que almacena los CVN duplicados.
+# Fichero con los errores al obtener el XML utilizando el WS del Fecyt
+FILE_LOG_IMPORT = os.path.join(st.PROJECT_ROOT, 'errorCVN.log')
+# Fichero con los CVN con datos insertados en la BBDD de la aplicación
+FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log')
+# Fichero que almacena los CVN duplicados.
+FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log')
 
-# Almacena las equivalencias entre los tags de los nodos XML y los campos de la BBDD
+# Equivalencias entre los tags de los nodos XML y los campos de la BBDD
 DIC_PERSONAL_DATA_XML = {
     u'GivenName': u'nombre',
     u'FirstFamilyName': u'primer_apellido',
@@ -55,9 +57,9 @@ DIC_PERSONAL_DATA_XML = {
 
 # Editor Fecyt (Paso 6): Actividad Científica y tecnológica
 ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION = {
-u'035': u'Artículo',
-u'148': u'Capítulo de Libro',
-u'112': u'Libro',
+    u'035': u'Artículo',
+    u'148': u'Capítulo de Libro',
+    u'112': u'Libro',
 }
 
 # Indica que el nodo 'Link' contiene los datos del congreso
@@ -67,45 +69,45 @@ DATA_TESIS = u"100"
 
 # Devuelve las tabla correspondiente donde almacenar los datos
 MODEL_TABLE = {
-# Actividad científica y tecnológica
-u"060.010.010.000": u'Publicacion',
-u"060.010.020.000": u'Congreso',
-# Experiencia científica y tecnológica
-u"050.020.010.000": u'Proyecto',
-u"050.020.020.000": u'Convenio',
-# Actividad docente
-u"030.040.000.000": u'TesisDoctoral',
+    # Actividad científica y tecnológica
+    u"060.010.010.000": u'Publicacion',
+    u"060.010.020.000": u'Congreso',
+    # Experiencia científica y tecnológica
+    u"050.020.010.000": u'Proyecto',
+    u"050.020.020.000": u'Convenio',
+    # Actividad docente
+    u"030.040.000.000": u'TesisDoctoral',
 }
 
 # Diccionario para las cuantías de las financiaciones
 ECONOMIC_DIMENSION = {
-# Proyectos
-u"050.020.010.290": u'cuantia_total',
-u"050.020.010.300": u'cuantia_subproyecto',
-u"050.020.010.310": u'porcentaje_en_subvencion',
-u"050.020.010.320": u'porcentaje_en_credito',
-u"050.020.010.330": u'porcentaje_mixto',
-# Convenios
-u"050.020.020.200": u'cuantia_total',
-u"050.020.020.210": u'cuantia_subproyecto',
-u"050.020.020.220": u'porcentaje_en_subvencion',
-u"050.020.020.230": u'porcentaje_en_credito',
-u"050.020.020.240": u'porcentaje_mixto',
+    # Proyectos
+    u"050.020.010.290": u'cuantia_total',
+    u"050.020.010.300": u'cuantia_subproyecto',
+    u"050.020.010.310": u'porcentaje_en_subvencion',
+    u"050.020.010.320": u'porcentaje_en_credito',
+    u"050.020.010.330": u'porcentaje_mixto',
+    # Convenios
+    u"050.020.020.200": u'cuantia_total',
+    u"050.020.020.210": u'cuantia_subproyecto',
+    u"050.020.020.220": u'porcentaje_en_subvencion',
+    u"050.020.020.230": u'porcentaje_en_credito',
+    u"050.020.020.240": u'porcentaje_mixto',
 }
 
 # Ámbito de Congresos, Proyectos y Convenios
 SCOPE = {
-u"000": u"Autonómica",
-u"010": u"Nacional",
-u"020": u"Unión Europea",
-u"030": u"Internacional no UE",
-u"OTHERS": u"Otros",
+    u"000": u"Autonómica",
+    u"010": u"Nacional",
+    u"020": u"Unión Europea",
+    u"030": u"Internacional no UE",
+    u"OTHERS": u"Otros",
 }
 
 # Fecha de caducidad de un CVN
-CVN_CADUCIDAD = 1 # Año
+CVN_CADUCIDAD = 1   # Año
 
-# Constante para indicar que el dato de la página está introducido en un formato no reconocible
+# Dato de la página introducido en un formato no reconocible
 INVALID_PAGE = -1
-# Constante para indicar que no se ha podido crear un diccionario de búsqueda
+# Indica que no se ha podido crear un diccionario de búsqueda
 INVALID_SEARCH = -1

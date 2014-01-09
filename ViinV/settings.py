@@ -4,10 +4,6 @@ import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
-# Path del proyecto
-import os
-
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -40,30 +36,29 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'memviinv'           ,                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'memviinv',
         'USER': 'viinv',
         'PASSWORD': '1234',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '',
+        'PORT': '',
     },
     'portalinvestigador': {
-        'ENGINE': 'django.db.backends.mysql', # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'portalinvestigador',         # Or path to database file if using sqlite3.
-        'USER': 'root',                       # Not used with sqlite3.
-        'PASSWORD': '1234',                 # Not used with sqlite3.
-        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},        
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'portalinvestigador',
+        'USER': 'root',
+        'PASSWORD': '1234',
+        'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
     },
-    
+
     # db alias for MEMORIA 2012
     'mem2012_db_alias': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'memviinv12',         
-        'USER': 'root',                           
-        'PASSWORD': '1234',               
+        'NAME': 'memviinv12',
+        'USER': 'root',
+        'PASSWORD': '1234',
     }
-        
+
 }
 
 DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']
@@ -118,14 +113,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 STATIC_URL = '/static/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -135,7 +130,7 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -161,13 +156,14 @@ ROOT_URLCONF = 'ViinV.urls'
 WSGI_APPLICATION = 'ViinV.wsgi.application'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 
     #~ os.path.join(PROJECT_ROOT,'../templates'),
 
-    os.path.join(BASE_DIR,'templates'),
+    os.path.join(BASE_DIR, 'templates'),
 
 )
 
@@ -205,11 +201,12 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format' : '[%(levelname)s] %(asctime)s <%(pathname)> --- %(message)s',
+            'format': '[%(levelname)s] %(asctime)s \
+                       <%(pathname)> --- %(message)s',
             'datefmt': '%d-%m-%Y %H:%M:%S'
         },
         'standard': {
-            'format' : '[%(levelname)s] %(asctime)s --- %(message)s',
+            'format': '[%(levelname)s] %(asctime)s --- %(message)s',
             'datefmt': '%d-%m-%Y %H:%M:%S'
         },
     },
@@ -219,36 +216,41 @@ LOGGING = {
         }
     },
     'handlers': {
-        'null': {       # NullHandler, which will pass any DEBUG (or higher) message to /dev/null.
+        # NullHandler, which will pass any DEBUG (or higher)
+        # message to /dev/null.
+        'null': {
             'level': 'DEBUG',
             'class': 'logging.NullHandler',
         },
-        'console': {    # StreamHandler, which will print any DEBUG (or higher) message to stderr.
+        # StreamHandler, which will print any DEBUG (or higher)
+        #  message to stderr.
+        'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
         },
         'default': {
-            'level'    : 'INFO',
-            'class'    : 'logging.handlers.RotatingFileHandler',
-            'filename' : LOG_FILENAME,
-            'maxBytes' : 4096*1024*1024,        # 4MB para rotar de fichero
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILENAME,
+            'maxBytes': 4096*1024*1024,        # 4MB para rotar de fichero
             'backupCount': 5,
             'formatter': 'standard'
         },
         'request_handler': {
-            'level'    : 'DEBUG',
-            'class'    : 'logging.handlers.RotatingFileHandler',
-            'filename' : LOG_FILENAME,
-            'maxBytes' : 4096*1024*1024,
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOG_FILENAME,
+            'maxBytes': 4096*1024*1024,
             'backupCount': 5,
             'formatter': 'standard'
-                },
+        },
         'mail_admins': {
-            'level'       : 'ERROR',             # Errores de la serie 5XX
+            'level': 'ERROR',             # Errores de la serie 5XX
             'filters': ['require_debug_false'],  # Only if DEBUG=False
-            'class'       : 'django.utils.log.AdminEmailHandler',
-            'include_html': True                 # Incluye la petición y la traza del error en el mail.
+            'class': 'django.utils.log.AdminEmailHandler',
+            # Incluye la petición y la traza del error en el mail.
+            'include_html': True
         }
     },
     'loggers': {
@@ -257,7 +259,9 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True
         },
-        'viinvDB.admin': { # Logs de la plantilla de ADMIN. TODO: Ver si es mejor cambiar el 'handler'
+        # Logs de la plantilla de ADMIN
+        # TODO: Ver si es mejor cambiar el 'handler'
+        'viinvDB.admin': {
             'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True
@@ -277,23 +281,28 @@ CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
 CAS_ADMIN_PREFIX = 'admin'
 # Extra URL parameters to add to the login URL when redirecting the user
 CAS_EXTRA_LOGIN_PARAMS = ''
-# If `True`, logging out of the application will always send the user to the URL specified by `CAS_REDIRECT_URL`.
+# If `True`, logging out of the application will always send the user
+# to the URL specified by `CAS_REDIRECT_URL`.
 CAS_IGNORE_REFERER = False
-# If `False`, logging out of the application won't log the user out of CAS as well.
+# If `False`, logging out of the application won't log the user out
+# of CAS as well.
 CAS_LOGOUT_COMPLETELY = True
-# Where to send a user after logging in or out if there is no referrer and no next page set. Default is `/`.
+# Where to send a user after logging in or out if there is no referrer
+# and no next page set. Default is `/`.
 CAS_REDIRECT_URL = '/investigacion/'
-# If `True` and an unknown or invalid ticket is received, the user is redirected back to the login page.
+# If `True` and an unknown or invalid ticket is received,
+# the user is redirected back to the login page.
 CAS_RETRY_LOGIN = True
-#  The CAS protocol version to use. `'1'` and `'2'` are supported, with `'2'` being the default.
+#  The CAS protocol version to use.
+# `'1'` and `'2'` are supported, with `'2'` being the default.
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 
 # Dirección de login para el decorador login_required
-LOGIN_URL='login'
+LOGIN_URL = 'login'
 
 # Lanzar tests sin usar las migraciones de South
-SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
+SOUTH_TESTS_MIGRATE = False  # To disable migrations and use syncdb instead
 SKIP_SOUTH_TESTS = True     # To disable South's own unit tests
 
 FIXTURE_DIRS = (

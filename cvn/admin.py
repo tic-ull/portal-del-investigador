@@ -1,21 +1,38 @@
 # -*- encoding: utf8 -*-
 from django.contrib import admin
-from cvn.models import *
+from cvn.models import (Usuario, SituacionProfesional,
+                        Publicacion, Congreso, Proyecto,
+                        Convenio, TesisDoctoral)
+
 
 
 class UsuarioAdmin(admin.ModelAdmin):
-    search_fields = ('documento', 'nombre', 'primer_apellido', 'segundo_apellido', 'documento',)
-    ordering      = ('created_at',)
+    search_fields = ('documento',
+                     'nombre',
+                     'primer_apellido',
+                     'segundo_apellido',
+                     'documento',)
+    ordering = ('created_at',)
+
 
 
 class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
-    search_fields = ('titulo', 'usuario__nombre', 'usuario__primer_apellido', 'usuario__segundo_apellido', 'usuario__documento',)
-    ordering      = ('created_at',)
+    search_fields = ('titulo',
+                     'usuario__nombre',
+                     'usuario__primer_apellido',
+                     'usuario__segundo_apellido',
+                     'usuario__documento',)
+    ordering = ('created_at',)
+
 
 
 class ProyectoConvenioAdmin(admin.ModelAdmin):
-    search_fields = ('denominacion_del_proyecto', 'usuario__nombre', 'usuario__primer_apellido', 'usuario__segundo_apellido', 'usuario__documento',)
-    ordering      = ('created_at',)
+    search_fields = ('denominacion_del_proyecto',
+                     'usuario__nombre',
+                     'usuario__primer_apellido',
+                     'usuario__segundo_apellido',
+                     'usuario__documento',)
+    ordering = ('created_at',)
 
 admin.site.register(Usuario, UsuarioAdmin)
 admin.site.register(SituacionProfesional)

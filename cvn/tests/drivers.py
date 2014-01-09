@@ -1,5 +1,6 @@
 import functools
 
+
 def test_drivers(pool_name='drivers', target_attr='selenium'):
     """
     Run tests with `target_attr` set to each instance in the `WebDriverPool`
@@ -53,9 +54,11 @@ def test_drivers(pool_name='drivers', target_attr='selenium'):
         return decorated
     return wrapped
 
+
 class WebDriverList(list):
     """
-    A sequence that has a `.quit` method that will run on each item in the list.
+    A sequence tat has a `.quit` method that will run on each item
+    in the list.
     Used to easily "quit" a list of WebDrivers.
     """
 
