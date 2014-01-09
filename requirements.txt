@@ -7,6 +7,7 @@ mysql-python    # MySQL
 suds    # Web Services
 lxml    # Parsing XML
 dateutils # Fecha de caducidad
+python-slugify # para crear filename desde un string. Javier 20/12/2013
 django-bootstrap-toolkit==2.8.0 # Bootstrap
 -e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
 gunicorn
