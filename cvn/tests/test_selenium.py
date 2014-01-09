@@ -154,14 +154,18 @@ class CVNTestCase(TestCase):
         self.__inic_session__(USER_LOGIN, USER_PASSWD)
         # Una vez en la sesión procede a la subida de un CVN con formato Fecyt
         uploadCVN = self.selenium.find_element_by_xpath('//input[@name="cvnfile"]')
+        time.sleep(2)
         uploadCVN.send_keys(CVN_NOT_FECYT_LOCATION)
+        time.sleep(2)
         self.selenium.find_element_by_xpath('//button[.="Actualizar"]').click()
         try:
             upload = self.selenium.find_element_by_class_name("alert-error")
         except NoSuchElementException:
             upload = None
+        time.sleep(4)
         self.assertIsNotNone(upload) # No se ha subido el CVN
-        self.assertIn(u'formato FECYT', upload.text)
+        # TODO: Ver que ocurre, pues detecta el fichero como si no fuera un PDF        
+        self.assertIn(u'no tiene formato FECYT', upload.text)        
         self.selenium.find_element_by_link_text("Cerrar sesión").click()
 
 
