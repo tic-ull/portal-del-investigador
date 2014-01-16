@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     # Examples:
     # url(r'^investigacion/$', 'ViinV.views.home', name='home'),
     # url(r'^investigacion/ViinV/', include('ViinV.foo.urls')),
@@ -23,7 +24,8 @@ urlpatterns = patterns('',
     url(r'^investigacion/$', 'cvn.views.main', name='main'),
 
     url(r'^investigacion/cvn/$', 'cvn.views.index', name='index'),
-    url(r'^investigacion/cvn/ull_report/$', 'cvn.views.ull_report', name='ull_report'),
+    url(r'^investigacion/cvn/ull_report/$', 'cvn.views.ull_report',
+        name='ull_report'),
 
     # Descarga de los CVN
     url(r'^investigacion/cvn/download/$',
