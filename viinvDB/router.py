@@ -25,7 +25,7 @@ class viinvRouter(object):
         """
         if obj1._meta.app_label == 'viinvDB' or \
            obj2._meta.app_label == 'viinvDB':
-               return True
+            return True
         return None
 
     def allow_syncdb(self, db, model):

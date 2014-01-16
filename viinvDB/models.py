@@ -2,14 +2,11 @@
 # You'll have to do the following manually to clean this up:
 #     * Rearrange models' order
 #     * Make sure each model has one field with primary_key=True
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
-# into your database.
 
 from __future__ import unicode_literals
 from django.db import models
 from cvn.settings import XML_ROOT, PDF_ROOT
+
 
 class AccseConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -30,8 +27,10 @@ class AccseConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Accse_convocatoria'
+
 
 class AccseEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -73,8 +72,10 @@ class AccseEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AccseSolicitud')
+
     class Meta:
         db_table = 'Accse_estadosolicitud'
+
 
 class AccseFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -86,8 +87,10 @@ class AccseFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AccseSolicitud')
+
     class Meta:
         db_table = 'Accse_filejustificacion'
+
 
 class AccseFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -99,8 +102,10 @@ class AccseFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AccseSolicitud')
+
     class Meta:
         db_table = 'Accse_filereclamacion'
+
 
 class AccseFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -112,8 +117,10 @@ class AccseFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AccseSolicitud')
+
     class Meta:
         db_table = 'Accse_filesubsanacion'
+
 
 class AccseInvitado(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -125,8 +132,10 @@ class AccseInvitado(models.Model):
     pais = models.CharField(max_length=40L)
     cv_invitado = models.CharField(max_length=100L, blank=True)
     carta_aceptacion = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Accse_invitado'
+
 
 class AccseSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -146,17 +155,22 @@ class AccseSolicitud(models.Model):
     rechazar_condiciones = models.IntegerField()
     otra_solicitud = models.IntegerField()
     memoria = models.CharField(max_length=100L, blank=True)
-    proyecto_investigacion = models.ForeignKey('ProyinvestProyectoinvestigacion', null=True, blank=True)
+    proyecto_investigacion = models.ForeignKey('ProyinvestProyectoinvestigacion',
+                                               null=True, blank=True)
     cv_solicitante = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Accse_solicitud'
+
 
 class AccseSolicitudGruposInteresados(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AccseSolicitud)
     grupoinves = models.ForeignKey('GrupoinvestGrupoinves')
+
     class Meta:
         db_table = 'Accse_solicitud_grupos_interesados'
+
 
 class AepinvuConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -177,8 +191,10 @@ class AepinvuConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Aepinvu_convocatoria'
+
 
 class AepinvuEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -220,8 +236,10 @@ class AepinvuEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AepinvuSolicitud')
+
     class Meta:
         db_table = 'Aepinvu_estadosolicitud'
+
 
 class AepinvuFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -233,8 +251,10 @@ class AepinvuFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AepinvuSolicitud')
+
     class Meta:
         db_table = 'Aepinvu_filejustificacion'
+
 
 class AepinvuFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -246,8 +266,10 @@ class AepinvuFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AepinvuSolicitud')
+
     class Meta:
         db_table = 'Aepinvu_filereclamacion'
+
 
 class AepinvuFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -259,8 +281,10 @@ class AepinvuFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AepinvuSolicitud')
+
     class Meta:
         db_table = 'Aepinvu_filesubsanacion'
+
 
 class AepinvuSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -286,8 +310,10 @@ class AepinvuSolicitud(models.Model):
     rechazar_condiciones = models.IntegerField()
     cv = models.CharField(max_length=100L, blank=True)
     memoria = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Aepinvu_solicitud'
+
 
 class AmgcConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -308,8 +334,10 @@ class AmgcConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Amgc_convocatoria'
+
 
 class AmgcEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -351,8 +379,10 @@ class AmgcEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AmgcSolicitud')
+
     class Meta:
         db_table = 'Amgc_estadosolicitud'
+
 
 class AmgcFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -364,8 +394,10 @@ class AmgcFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AmgcSolicitud')
+
     class Meta:
         db_table = 'Amgc_filejustificacion'
+
 
 class AmgcFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -377,8 +409,10 @@ class AmgcFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AmgcSolicitud')
+
     class Meta:
         db_table = 'Amgc_filereclamacion'
+
 
 class AmgcFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -390,8 +424,10 @@ class AmgcFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AmgcSolicitud')
+
     class Meta:
         db_table = 'Amgc_filesubsanacion'
+
 
 class AmgcSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -403,22 +439,28 @@ class AmgcSolicitud(models.Model):
     memoria = models.CharField(max_length=100L, blank=True)
     proyectos_anteriores = models.TextField(blank=True)
     rechazar_condiciones = models.IntegerField()
+
     class Meta:
         db_table = 'Amgc_solicitud'
+
 
 class AmgcSolicitudProyectos(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AmgcSolicitud)
     proyectoinvestigacion = models.ForeignKey('ProyinvestProyectoinvestigacion')
+
     class Meta:
         db_table = 'Amgc_solicitud_proyectos'
+
 
 class AmgcSolicitudProyectosSigidi(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AmgcSolicitud)
     proyectosigidi = models.ForeignKey('ProyinvestProyectosigidi')
+
     class Meta:
         db_table = 'Amgc_solicitud_proyectos_sigidi'
+
 
 class AocrcConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -439,8 +481,10 @@ class AocrcConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Aocrc_convocatoria'
+
 
 class AocrcEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -482,8 +526,10 @@ class AocrcEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AocrcSolicitud')
+
     class Meta:
         db_table = 'Aocrc_estadosolicitud'
+
 
 class AocrcFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -495,8 +541,10 @@ class AocrcFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AocrcSolicitud')
+
     class Meta:
         db_table = 'Aocrc_filejustificacion'
+
 
 class AocrcFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -508,8 +556,10 @@ class AocrcFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AocrcSolicitud')
+
     class Meta:
         db_table = 'Aocrc_filereclamacion'
+
 
 class AocrcFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -521,14 +571,18 @@ class AocrcFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AocrcSolicitud')
+
     class Meta:
         db_table = 'Aocrc_filesubsanacion'
+
 
 class AocrcMotivoviaje(models.Model):
     id = models.IntegerField(primary_key=True)
     motivo = models.CharField(max_length=50L)
+
     class Meta:
         db_table = 'Aocrc_motivoviaje'
+
 
 class AocrcSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -547,15 +601,19 @@ class AocrcSolicitud(models.Model):
     justificacion = models.CharField(max_length=100L, blank=True)
     rechazar_condiciones = models.IntegerField()
     memoria = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Aocrc_solicitud'
+
 
 class AocrcSolicitudGrupos(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AocrcSolicitud)
     grupoinves = models.ForeignKey('GrupoinvestGrupoinves')
+
     class Meta:
         db_table = 'Aocrc_solicitud_grupos'
+
 
 class ArtddConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -576,8 +634,10 @@ class ArtddConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Artdd_convocatoria'
+
 
 class ArtddEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -619,8 +679,10 @@ class ArtddEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('ArtddSolicitud')
+
     class Meta:
         db_table = 'Artdd_estadosolicitud'
+
 
 class ArtddFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -632,8 +694,10 @@ class ArtddFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtddSolicitud')
+
     class Meta:
         db_table = 'Artdd_filejustificacion'
+
 
 class ArtddFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -645,8 +709,10 @@ class ArtddFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtddSolicitud')
+
     class Meta:
         db_table = 'Artdd_filereclamacion'
+
 
 class ArtddFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -658,8 +724,10 @@ class ArtddFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtddSolicitud')
+
     class Meta:
         db_table = 'Artdd_filesubsanacion'
+
 
 class ArtddSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -680,8 +748,10 @@ class ArtddSolicitud(models.Model):
     memoria_final = models.CharField(max_length=100L, blank=True)
     rechazar_condiciones = models.IntegerField()
     acreditacion_dea = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Artdd_solicitud'
+
 
 class ArtdmConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -702,8 +772,10 @@ class ArtdmConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'Artdm_convocatoria'
+
 
 class ArtdmEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -745,8 +817,10 @@ class ArtdmEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('ArtdmSolicitud')
+
     class Meta:
         db_table = 'Artdm_estadosolicitud'
+
 
 class ArtdmFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -758,8 +832,10 @@ class ArtdmFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtdmSolicitud')
+
     class Meta:
         db_table = 'Artdm_filejustificacion'
+
 
 class ArtdmFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -771,8 +847,10 @@ class ArtdmFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtdmSolicitud')
+
     class Meta:
         db_table = 'Artdm_filereclamacion'
+
 
 class ArtdmFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -784,8 +862,10 @@ class ArtdmFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('ArtdmSolicitud')
+
     class Meta:
         db_table = 'Artdm_filesubsanacion'
+
 
 class ArtdmSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -799,8 +879,10 @@ class ArtdmSolicitud(models.Model):
     facturas = models.CharField(max_length=100L, blank=True)
     rechazar_condiciones = models.IntegerField()
     acreditacion_dea = models.CharField(max_length=100L, blank=True)
+
     class Meta:
         db_table = 'Artdm_solicitud'
+
 
 class AyudahumanidadesConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -821,8 +903,10 @@ class AyudahumanidadesConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'AyudaHumanidades_convocatoria'
+
 
 class AyudahumanidadesEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -864,8 +948,10 @@ class AyudahumanidadesEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_estadosolicitud'
+
 
 class AyudahumanidadesFileconfirmation(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -877,8 +963,10 @@ class AyudahumanidadesFileconfirmation(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_fileconfirmation'
+
 
 class AyudahumanidadesFilecvnteam(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -890,8 +978,10 @@ class AyudahumanidadesFilecvnteam(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_filecvnteam'
+
 
 class AyudahumanidadesFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -903,8 +993,10 @@ class AyudahumanidadesFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_filejustificacion'
+
 
 class AyudahumanidadesFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -916,8 +1008,10 @@ class AyudahumanidadesFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_filereclamacion'
+
 
 class AyudahumanidadesFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -929,8 +1023,10 @@ class AyudahumanidadesFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudahumanidadesSolicitud')
+
     class Meta:
         db_table = 'AyudaHumanidades_filesubsanacion'
+
 
 class AyudahumanidadesSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -946,15 +1042,19 @@ class AyudahumanidadesSolicitud(models.Model):
     declaracion_responsable = models.IntegerField()
     no_part_proyecto = models.IntegerField()
     rechazar_condiciones = models.IntegerField()
+
     class Meta:
         db_table = 'AyudaHumanidades_solicitud'
+
 
 class AyudahumanidadesSolicitudEquipo(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AyudahumanidadesSolicitud)
     investigador = models.ForeignKey('GrupoinvestInvestigador')
+
     class Meta:
         db_table = 'AyudaHumanidades_solicitud_equipo'
+
 
 class AyudainiciacionConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -975,8 +1075,10 @@ class AyudainiciacionConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'AyudaIniciacion_convocatoria'
+
 
 class AyudainiciacionEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1018,8 +1120,10 @@ class AyudainiciacionEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_estadosolicitud'
+
 
 class AyudainiciacionFileconfirmation(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1031,8 +1135,10 @@ class AyudainiciacionFileconfirmation(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_fileconfirmation'
+
 
 class AyudainiciacionFilecvnteam(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1044,8 +1150,10 @@ class AyudainiciacionFilecvnteam(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_filecvnteam'
+
 
 class AyudainiciacionFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1057,8 +1165,10 @@ class AyudainiciacionFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_filejustificacion'
+
 
 class AyudainiciacionFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1070,8 +1180,10 @@ class AyudainiciacionFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_filereclamacion'
+
 
 class AyudainiciacionFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1083,8 +1195,10 @@ class AyudainiciacionFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudainiciacionSolicitud')
+
     class Meta:
         db_table = 'AyudaIniciacion_filesubsanacion'
+
 
 class AyudainiciacionSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1102,15 +1216,19 @@ class AyudainiciacionSolicitud(models.Model):
     declaracion_responsable = models.IntegerField()
     no_part_proyecto = models.IntegerField()
     rechazar_condiciones = models.IntegerField()
+
     class Meta:
         db_table = 'AyudaIniciacion_solicitud'
+
 
 class AyudainiciacionSolicitudEquipo(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(AyudainiciacionSolicitud)
     investigador = models.ForeignKey('GrupoinvestInvestigador')
+
     class Meta:
         db_table = 'AyudaIniciacion_solicitud_equipo'
+
 
 class AyudapuenteConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1131,8 +1249,10 @@ class AyudapuenteConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'AyudaPuente_convocatoria'
+
 
 class AyudapuenteEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1174,8 +1294,10 @@ class AyudapuenteEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('AyudapuenteSolicitud')
+
     class Meta:
         db_table = 'AyudaPuente_estadosolicitud'
+
 
 class AyudapuenteFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1187,8 +1309,10 @@ class AyudapuenteFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudapuenteSolicitud')
+
     class Meta:
         db_table = 'AyudaPuente_filejustificacion'
+
 
 class AyudapuenteFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1200,8 +1324,10 @@ class AyudapuenteFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudapuenteSolicitud')
+
     class Meta:
         db_table = 'AyudaPuente_filereclamacion'
+
 
 class AyudapuenteFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1213,8 +1339,10 @@ class AyudapuenteFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('AyudapuenteSolicitud')
+
     class Meta:
         db_table = 'AyudaPuente_filesubsanacion'
+
 
 class AyudapuenteSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1232,8 +1360,10 @@ class AyudapuenteSolicitud(models.Model):
     informe_anep = models.CharField(max_length=100L, blank=True)
     compromiso = models.IntegerField()
     rechazar_condiciones = models.IntegerField()
+
     class Meta:
         db_table = 'AyudaPuente_solicitud'
+
 
 class BolsaviajesConvocatoria(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1254,8 +1384,10 @@ class BolsaviajesConvocatoria(models.Model):
     anio = models.IntegerField(null=True, blank=True)
     plazo_justificacion = models.IntegerField(null=True, blank=True)
     tipo_convocatoria = models.CharField(max_length=30L, blank=True)
+
     class Meta:
         db_table = 'BolsaViajes_convocatoria'
+
 
 class BolsaviajesEstadosolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1297,8 +1429,10 @@ class BolsaviajesEstadosolicitud(models.Model):
     fichero_registro_entrada = models.CharField(max_length=100L, blank=True)
     fichero_carta_aceptacion = models.CharField(max_length=100L, blank=True)
     solicitud = models.ForeignKey('BolsaviajesSolicitud')
+
     class Meta:
         db_table = 'BolsaViajes_estadosolicitud'
+
 
 class BolsaviajesFilejustificacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1310,8 +1444,10 @@ class BolsaviajesFilejustificacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('BolsaviajesSolicitud')
+
     class Meta:
         db_table = 'BolsaViajes_filejustificacion'
+
 
 class BolsaviajesFilereclamacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1323,8 +1459,10 @@ class BolsaviajesFilereclamacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('BolsaviajesSolicitud')
+
     class Meta:
         db_table = 'BolsaViajes_filereclamacion'
+
 
 class BolsaviajesFilesubsanacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1336,14 +1474,18 @@ class BolsaviajesFilesubsanacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     solicitud = models.ForeignKey('BolsaviajesSolicitud')
+
     class Meta:
         db_table = 'BolsaViajes_filesubsanacion'
+
 
 class BolsaviajesMotivoviaje(models.Model):
     id = models.IntegerField(primary_key=True)
     motivo = models.CharField(max_length=50L)
+
     class Meta:
         db_table = 'BolsaViajes_motivoviaje'
+
 
 class BolsaviajesSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1369,18 +1511,24 @@ class BolsaviajesSolicitud(models.Model):
     rechazar_condiciones = models.IntegerField()
     otra_solicitud = models.IntegerField()
     memoria = models.CharField(max_length=100L, blank=True)
-    proyecto_investigacion = models.ForeignKey('ProyinvestProyectoinvestigacion', null=True, blank=True)
-    proyecto_investigacion_sigidi = models.ForeignKey('ProyinvestProyectosigidi', null=True, blank=True)
+    proyecto_investigacion = models.ForeignKey('ProyinvestProyectoinvestigacion',
+                                               null=True, blank=True)
+    proyecto_investigacion_sigidi = models.ForeignKey('ProyinvestProyectosigidi',
+                                                      null=True, blank=True)
+
     class Meta:
         db_table = 'BolsaViajes_solicitud'
+
 
 class CeibaAcreditacion(models.Model):
     id = models.IntegerField(primary_key=True)
     investigador = models.ForeignKey('GrupoinvestInvestigador', unique=True)
     nivel = models.CharField(max_length=2L)
     comentarios = models.TextField(blank=True)
+
     class Meta:
         db_table = 'Ceiba_acreditacion'
+
 
 class CeibaEstado(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1398,8 +1546,10 @@ class CeibaEstado(models.Model):
     fecha_cambio = models.DateField()
     nombre = models.CharField(max_length=15L)
     mensaje = models.CharField(max_length=30L)
+
     class Meta:
         db_table = 'Ceiba_estado'
+
 
 class CeibaFileinfoacreditacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1411,8 +1561,10 @@ class CeibaFileinfoacreditacion(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     item = models.ForeignKey(CeibaAcreditacion)
+
     class Meta:
         db_table = 'Ceiba_fileinfoacreditacion'
+
 
 class CeibaFileinfocomision(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1424,8 +1576,10 @@ class CeibaFileinfocomision(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     item = models.ForeignKey('CeibaInforme')
+
     class Meta:
         db_table = 'Ceiba_fileinfocomision'
+
 
 class CeibaFileinfoinvestigador(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1437,13 +1591,16 @@ class CeibaFileinfoinvestigador(models.Model):
     date = models.DateTimeField(null=True, blank=True)
     size = models.IntegerField(null=True, blank=True)
     item = models.ForeignKey('CeibaSolicitud')
+
     class Meta:
         db_table = 'Ceiba_fileinfoinvestigador'
+
 
 class CeibaInforme(models.Model):
     id = models.IntegerField(primary_key=True)
     estado = models.ForeignKey(CeibaEstado)
-    ponente = models.ForeignKey('GrupoinvestInvestigador', null=True, blank=True)
+    ponente = models.ForeignKey('GrupoinvestInvestigador',
+                                null=True, blank=True)
     notas_internas = models.TextField(blank=True)
     informe = models.TextField(blank=True)
     dias_disponibles = models.IntegerField(null=True, blank=True)
@@ -1453,21 +1610,27 @@ class CeibaInforme(models.Model):
     files_add = models.IntegerField()
     files_down = models.IntegerField()
     files_del = models.IntegerField()
+
     class Meta:
         db_table = 'Ceiba_informe'
+
 
 class CeibaInformeComision(models.Model):
     id = models.IntegerField(primary_key=True)
     informe = models.ForeignKey(CeibaInforme)
     investigador = models.ForeignKey('GrupoinvestInvestigador')
+
     class Meta:
         db_table = 'Ceiba_informe_comision'
+
 
 class CeibaOrganismo(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=50L)
+
     class Meta:
         db_table = 'Ceiba_organismo'
+
 
 class CeibaSolicitud(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1488,15 +1651,19 @@ class CeibaSolicitud(models.Model):
     numero_registro = models.CharField(max_length=30L, blank=True)
     fecha_creacion = models.DateField(null=True, blank=True)
     fecha_envio = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'Ceiba_solicitud'
+
 
 class CeibaSolicitudMiembrosGrupo(models.Model):
     id = models.IntegerField(primary_key=True)
     solicitud = models.ForeignKey(CeibaSolicitud)
     investigador = models.ForeignKey('GrupoinvestInvestigador')
+
     class Meta:
         db_table = 'Ceiba_solicitud_miembros_grupo'
+
 
 class CeibaVotacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1505,8 +1672,10 @@ class CeibaVotacion(models.Model):
     voto = models.CharField(max_length=1L)
     fecha_voto = models.DateField(null=True, blank=True)
     comentario = models.TextField(blank=True)
+
     class Meta:
         db_table = 'Ceiba_votacion'
+
 
 class EnlacesEnlace(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1517,14 +1686,18 @@ class EnlacesEnlace(models.Model):
     file2 = models.CharField(max_length=100L, blank=True)
     name2 = models.CharField(max_length=50L, blank=True)
     description = models.CharField(max_length=200L)
+
     class Meta:
         db_table = 'Enlaces_enlace'
+
 
 class FaqCategoria(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=3L)
+
     class Meta:
         db_table = 'Faq_categoria'
+
 
 class FaqFaq(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1532,35 +1705,45 @@ class FaqFaq(models.Model):
     respuesta = models.TextField()
     categoria = models.ForeignKey(FaqCategoria)
     subcategoria = models.ForeignKey('FaqSubcategoria')
+
     class Meta:
         db_table = 'Faq_faq'
+
 
 class FaqSubcategoria(models.Model):
     id = models.IntegerField(primary_key=True)
     padre = models.ForeignKey(FaqCategoria)
     nombre = models.CharField(max_length=40L)
+
     class Meta:
         db_table = 'Faq_subcategoria'
+
 
 class GrupoinvestAreaconocimiento(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
     codigo = models.CharField(max_length=72)
+
     class Meta:
         db_table = 'GrupoInvest_areaconocimiento'
+
 
 class GrupoinvestAreainvestigacionanep(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'GrupoInvest_areainvestigacionanep'
+
 
 class GrupoinvestAreasinvestigacion(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=60L)
     descripcion = models.TextField()
+
     class Meta:
         db_table = 'GrupoInvest_areasinvestigacion'
+
 
 class GrupoinvestCategoriainvestigador(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1568,16 +1751,19 @@ class GrupoinvestCategoriainvestigador(models.Model):
     descripcion = models.TextField()
 
     def __unicode__(self):
-        return u"%s" %(self.nombre)
+        return u"%s" % (self.nombre)
 
     class Meta:
         db_table = 'GrupoInvest_categoriainvestigador'
 
+
 class GrupoinvestCentro(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'GrupoInvest_centro'
+
 
 class GrupoinvestCodigovalidacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1589,16 +1775,20 @@ class GrupoinvestCodigovalidacion(models.Model):
     last_selection = models.CharField(max_length=16L, blank=True)
     observ_inv = models.TextField(blank=True)
     observ_gestor = models.TextField(blank=True)
+
     class Meta:
         db_table = 'GrupoInvest_codigovalidacion'
+
 
 class GrupoinvestDepartamento(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=120L)
     descripcion = models.TextField()
     codigo = models.CharField(max_length=5L)
+
     class Meta:
         db_table = 'GrupoInvest_departamento'
+
 
 class GrupoinvestGrupoinves(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1608,43 +1798,59 @@ class GrupoinvestGrupoinves(models.Model):
     fax = models.CharField(max_length=20L, blank=True)
     email = models.CharField(max_length=75L, blank=True)
     web = models.CharField(max_length=100L, blank=True)
-    departamento = models.ForeignKey(GrupoinvestDepartamento, null=True, blank=True)
-    centro = models.ForeignKey(GrupoinvestCentro, null=True, blank=True)
-    instituto = models.ForeignKey('GrupoinvestInstituto', null=True, blank=True)
-    area = models.ForeignKey(GrupoinvestAreasinvestigacion, null=True, blank=True)
-    subarea = models.ForeignKey('GrupoinvestSubareasinvestigacion', null=True, blank=True)
-    area_anep = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep_inves")
-    area_anep2 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep2_inves")
-    area_anep3 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep3_inves")
+    departamento = models.ForeignKey(GrupoinvestDepartamento,
+                                     null=True, blank=True)
+    centro = models.ForeignKey(GrupoinvestCentro, null=True,
+                               blank=True)
+    instituto = models.ForeignKey('GrupoinvestInstituto',
+                                  null=True, blank=True)
+    area = models.ForeignKey(GrupoinvestAreasinvestigacion,
+                             null=True, blank=True)
+    subarea = models.ForeignKey('GrupoinvestSubareasinvestigacion',
+                                null=True, blank=True)
+    area_anep = models.ForeignKey(GrupoinvestAreainvestigacionanep,
+                                  null=True, blank=True,
+                                  related_name="anep_to_anep_inves")
+    area_anep2 = models.ForeignKey(GrupoinvestAreainvestigacionanep,
+                                   null=True, blank=True,
+                                   related_name="anep_to_anep2_inves")
+    area_anep3 = models.ForeignKey(GrupoinvestAreainvestigacionanep,
+                                   null=True, blank=True,
+                                   related_name="anep_to_anep3_inves")
     tag = models.CharField(max_length=255L)
-    coordinador = models.ForeignKey('GrupoinvestInvestigador', null=True, blank=True)
+    coordinador = models.ForeignKey('GrupoinvestInvestigador',
+                                    null=True, blank=True)
     acronimo = models.CharField(max_length=20L, blank=True)
     activo = models.IntegerField(null=True, blank=True)
     descripcion = models.TextField(blank=True)
 
     def __unicode__(self):
-        return u"%s" %(self.grupo)
+        return u"%s" % (self.grupo)
 
     class Meta:
         db_table = 'GrupoInvest_grupoinves'
 
+
 class GrupoinvestInstituto(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'GrupoInvest_instituto'
+
 
 class GrupoinvestInvestcvn(models.Model):
     id = models.IntegerField(primary_key=True)
     investigador = models.ForeignKey('GrupoinvestInvestigador', unique=True)
-    cvnfile = models.FileField(max_length=100L, db_column='cvnFile', upload_to=PDF_ROOT) # Field name made lowercase.
+    cvnfile = models.FileField(max_length=100L, db_column='cvnFile',
+                               upload_to=PDF_ROOT)
     fecha_up = models.DateField(null=True, blank=True)
     fecha_cvn = models.DateField(null=True, blank=True)
-    xmlfile = models.FileField(max_length=100L, db_column='xmlFile', upload_to=XML_ROOT) # Field name made lowercase.
+    xmlfile = models.FileField(max_length=100L, db_column='xmlFile',
+                               upload_to=XML_ROOT)
 
     def __unicode__(self):
-        return u"'%s' CVN: '%s'" %(self.investigador, self.cvnfile)
-
+        return u"'%s' CVN: '%s'" % (self.investigador, self.cvnfile)
 
     class Meta:
         db_table = 'GrupoInvest_investcvn'
@@ -1653,9 +1859,14 @@ class GrupoinvestInvestcvn(models.Model):
 
 class GrupoinvestInvestigador(models.Model):
     user = models.ForeignKey('AuthUser', unique=True)
-    grupo_activo = models.ForeignKey(GrupoinvestGrupoinves, null=True, blank=True, related_name="Perteneciente")
-    grupo_a = models.ForeignKey(GrupoinvestGrupoinves, null=True, db_column='grupo_A_id', blank=True, related_name="Perteneciente(A)") # Field name made lowercase.
-    grupo_b = models.ForeignKey(GrupoinvestGrupoinves, null=True, db_column='grupo_B_id', blank=True, related_name="Perteneciente(B)") # Field name made lowercase.
+    grupo_activo = models.ForeignKey(GrupoinvestGrupoinves, null=True,
+                                     blank=True, related_name="Perteneciente")
+    grupo_a = models.ForeignKey(GrupoinvestGrupoinves, null=True,
+                                db_column='grupo_A_id', blank=True,
+                                related_name="Perteneciente(A)")
+    grupo_b = models.ForeignKey(GrupoinvestGrupoinves, null=True,
+                                db_column='grupo_B_id', blank=True,
+                                related_name="Perteneciente(B)")
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=60L)
     apellido1 = models.CharField(max_length=60L)
@@ -1666,21 +1877,29 @@ class GrupoinvestInvestigador(models.Model):
     email = models.CharField(max_length=60L)
     telefono = models.CharField(max_length=60L, blank=True)
     categoria = models.ForeignKey(GrupoinvestCategoriainvestigador)
-    departamento = models.ForeignKey(GrupoinvestDepartamento, null=True, blank=True)
+    departamento = models.ForeignKey(GrupoinvestDepartamento, null=True,
+                                     blank=True)
     centro = models.ForeignKey(GrupoinvestCentro, null=True, blank=True)
     instituto = models.ForeignKey(GrupoinvestInstituto, null=True, blank=True)
     dedicacion = models.CharField(max_length=8L)
     file = models.CharField(max_length=100L, blank=True)
-    areaconocimiento = models.ForeignKey(GrupoinvestAreaconocimiento, null=True, db_column='areaConocimiento_id', blank=True) # Field name made lowercase.
+    areaconocimiento = models.ForeignKey(GrupoinvestAreaconocimiento,
+                                         null=True, blank=True,
+                                         db_column='areaConocimiento_id')
     descripcion = models.TextField(blank=True)
-    confirma_grupo_a = models.IntegerField(null=True, db_column='confirma_grupo_A', blank=True) # Field name made lowercase.
-    confirma_grupo_b = models.IntegerField(null=True, db_column='confirma_grupo_B', blank=True) # Field name made lowercase.
+    confirma_grupo_a = models.IntegerField(null=True, blank=True,
+                                           db_column='confirma_grupo_A')
+    confirma_grupo_b = models.IntegerField(null=True, blank=True,
+                                           db_column='confirma_grupo_B')
     sexenios = models.IntegerField(null=True, blank=True)
     inicio_sexenio = models.DateField(null=True, blank=True)
     fin_sexenio = models.DateField(null=True, blank=True)
-    area_anep = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep")
-    area_anep2 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep2")
-    area_anep3 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True, blank=True, related_name="anep_to_anep3")
+    area_anep = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True,
+                                  blank=True, related_name="anep_to_anep")
+    area_anep2 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True,
+                                   blank=True, related_name="anep_to_anep2")
+    area_anep3 = models.ForeignKey(GrupoinvestAreainvestigacionanep, null=True,
+                                   blank=True, related_name="anep_to_anep3")
     cas_username = models.CharField(max_length=100L, blank=True)
     cod_persona = models.CharField(max_length=5L)
     cese = models.DateField(null=True, blank=True)
@@ -1689,7 +1908,8 @@ class GrupoinvestInvestigador(models.Model):
     rrhh_id = models.IntegerField(unique=True, null=True, blank=True)
 
     def __unicode__(self):
-        return u"%s %s %s %s" %(self.nombre, self.apellido1, self.apellido2, self.nif)
+        return u"%s %s %s %s" % (self.nombre, self.apellido1, self.apellido2,
+                                 self.nif)
 
     class Meta:
         db_table = 'GrupoInvest_investigador'
@@ -1705,8 +1925,10 @@ class GrupoinvestOtromiembro(models.Model):
     apellidos = models.CharField(max_length=60L)
     categoria = models.ForeignKey(GrupoinvestCategoriainvestigador)
     centro_adscricion = models.CharField(max_length=60L)
+
     class Meta:
         db_table = 'GrupoInvest_otromiembro'
+
 
 class GrupoinvestRrhh(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1771,16 +1993,21 @@ class GrupoinvestRrhh(models.Model):
     f_modif_docente = models.DateTimeField(null=True, blank=True)
     f_modif_pas = models.DateTimeField(null=True, blank=True)
     f_modif_otro_personal = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         db_table = 'GrupoInvest_rrhh'
+
 
 class GrupoinvestSubareasinvestigacion(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=60L)
     descripcion = models.TextField()
-    areaid = models.ForeignKey(GrupoinvestAreasinvestigacion, db_column='areaId_id') # Field name made lowercase.
+    areaid = models.ForeignKey(GrupoinvestAreasinvestigacion,
+                               db_column='areaId_id')
+
     class Meta:
         db_table = 'GrupoInvest_subareasinvestigacion'
+
 
 class InventinvArticulo(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1795,8 +2022,10 @@ class InventinvArticulo(models.Model):
     revista = models.CharField(max_length=150L, blank=True)
     volumen = models.IntegerField(null=True, blank=True)
     numero = models.CharField(max_length=10L, blank=True)
-    paginainic = models.IntegerField(null=True, db_column='paginaInic', blank=True) # Field name made lowercase.
-    paginafin = models.IntegerField(null=True, db_column='paginaFin', blank=True) # Field name made lowercase.
+    paginainic = models.IntegerField(null=True, db_column='paginaInic',
+                                     blank=True)
+    paginafin = models.IntegerField(null=True, db_column='paginaFin',
+                                    blank=True)
     anio = models.CharField(max_length=4L, blank=True)
     fecha = models.DateField(null=True, blank=True)
     editorial = models.CharField(max_length=150L, blank=True)
@@ -1808,15 +2037,19 @@ class InventinvArticulo(models.Model):
     area = models.CharField(max_length=150L, blank=True)
     indice_impacto = models.CharField(max_length=20L, blank=True)
     posicion_revista = models.CharField(max_length=150L, blank=True)
+
     class Meta:
         db_table = 'InventInv_articulo'
+
 
 class InventinvArticuloSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     articulo = models.ForeignKey(InventinvArticulo)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_articulo_segai'
+
 
 class InventinvCapitulo(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1836,15 +2069,19 @@ class InventinvCapitulo(models.Model):
     editorial = models.CharField(max_length=30L, blank=True)
     lugar = models.CharField(max_length=30L, blank=True)
     isbn = models.CharField(max_length=20L, blank=True)
+
     class Meta:
         db_table = 'InventInv_capitulo'
+
 
 class InventinvCapituloSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     capitulo = models.ForeignKey(InventinvCapitulo)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_capitulo_segai'
+
 
 class InventinvCongreso(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1861,15 +2098,19 @@ class InventinvCongreso(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
     ambito = models.CharField(max_length=20L, blank=True)
+
     class Meta:
         db_table = 'InventInv_congreso'
+
 
 class InventinvCongresoSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     congreso = models.ForeignKey(InventinvCongreso)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_congreso_segai'
+
 
 class InventinvConvenio(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1887,18 +2128,24 @@ class InventinvConvenio(models.Model):
     investigador_responsable = models.TextField(blank=True)
     universidad = models.CharField(max_length=150L, blank=True)
     num_investigadores = models.IntegerField(null=True, blank=True)
-    num_inv_anyo = models.DecimalField(null=True, max_digits=10, decimal_places=2, blank=True)
-    cuantia = models.DecimalField(null=True, max_digits=21, decimal_places=2, blank=True)
+    num_inv_anyo = models.DecimalField(null=True, max_digits=10,
+                                       decimal_places=2, blank=True)
+    cuantia = models.DecimalField(null=True, max_digits=21, decimal_places=2,
+                                  blank=True)
     otros_investigadores = models.TextField(blank=True)
+
     class Meta:
         db_table = 'InventInv_convenio'
+
 
 class InventinvConvenioSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     convenio = models.ForeignKey(InventinvConvenio)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_convenio_segai'
+
 
 class InventinvCreacionartistica(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1912,31 +2159,38 @@ class InventinvCreacionartistica(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
     lugar = models.CharField(max_length=60L, blank=True)
+
     class Meta:
         db_table = 'InventInv_creacionartistica'
+
 
 class InventinvCreacionartisticaSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     creacionartistica = models.ForeignKey(InventinvCreacionartistica)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_creacionartistica_segai'
+
 
 class InventinvCvNotification(models.Model):
     id = models.IntegerField(primary_key=True)
     propietario = models.ForeignKey(GrupoinvestInvestigador)
-    destinatario = models.ForeignKey(GrupoinvestInvestigador, related_name="to")
+    destinatario = models.ForeignKey(GrupoinvestInvestigador,
+                                     related_name="to")
     fecha = models.DateTimeField()
     tipo = models.CharField(max_length=4L)
     estado = models.CharField(max_length=3L)
     updated = models.DateField(null=True, blank=True)
-    item_cvndesc = models.CharField(max_length=40L, db_column='item_CVNdesc') # Field name made lowercase.
-    item_cvntipo = models.IntegerField(db_column='item_CVNtipo') # Field name made lowercase.
+    item_cvndesc = models.CharField(max_length=40L, db_column='item_CVNdesc')
+    item_cvntipo = models.IntegerField(db_column='item_CVNtipo')
     item_id = models.IntegerField()
     oper = models.IntegerField(null=True, blank=True)
     result = models.IntegerField(null=True, blank=True)
+
     class Meta:
         db_table = 'InventInv_cv_notification'
+
 
 class InventinvCvPermiso(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1949,22 +2203,28 @@ class InventinvCvPermiso(models.Model):
     fecha_del = models.DateField(null=True, blank=True)
     fecha_edit = models.DateField(null=True, blank=True)
     fecha_pdte = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'InventInv_cv_permiso'
+
 
 class InventinvCvPermisoAuthDel(models.Model):
     id = models.IntegerField(primary_key=True)
     cv_permiso = models.ForeignKey(InventinvCvPermiso)
     investigador = models.ForeignKey(GrupoinvestInvestigador)
+
     class Meta:
         db_table = 'InventInv_cv_permiso_auth_del'
+
 
 class InventinvCvPermisoAuthIns(models.Model):
     id = models.IntegerField(primary_key=True)
     cv_permiso = models.ForeignKey(InventinvCvPermiso)
     investigador = models.ForeignKey(GrupoinvestInvestigador)
+
     class Meta:
         db_table = 'InventInv_cv_permiso_auth_ins'
+
 
 class InventinvCvnInfomodel(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1974,8 +2234,10 @@ class InventinvCvnInfomodel(models.Model):
     separador = models.IntegerField()
     date_added = models.DateTimeField()
     info = models.CharField(max_length=240L, blank=True)
+
     class Meta:
         db_table = 'InventInv_cvn_infomodel'
+
 
 class InventinvEstancia(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -1983,7 +2245,9 @@ class InventinvEstancia(models.Model):
     date_added = models.DateTimeField()
     anyadido_por = models.ForeignKey(GrupoinvestInvestigador)
     is_ull = models.IntegerField()
-    investigador = models.ForeignKey(GrupoinvestInvestigador, null=True, blank=True, related_name="estancia investigador")
+    investigador = models.ForeignKey(GrupoinvestInvestigador, null=True,
+                                     blank=True,
+                                     related_name="estancia investigador")
     centro = models.CharField(max_length=150L, blank=True)
     localidad = models.CharField(max_length=150L, blank=True)
     pais = models.CharField(max_length=80L, blank=True)
@@ -1991,8 +2255,10 @@ class InventinvEstancia(models.Model):
     fecha_final = models.DateField(null=True, blank=True)
     duracion = models.IntegerField(null=True, blank=True)
     autores = models.TextField(blank=True)
+
     class Meta:
         db_table = 'InventInv_estancia'
+
 
 class InventinvEvento(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2007,21 +2273,27 @@ class InventinvEvento(models.Model):
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
     organizador = models.TextField(blank=True)
+
     class Meta:
         db_table = 'InventInv_evento'
+
 
 class InventinvJcr(models.Model):
     id = models.IntegerField(primary_key=True)
     jcr = models.CharField(max_length=3L)
     descripcion = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'InventInv_jcr'
+
 
 class InventinvJcrsocial(models.Model):
     id = models.IntegerField(primary_key=True)
     jcr = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'InventInv_jcrsocial'
+
 
 class InventinvLibro(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2037,15 +2309,19 @@ class InventinvLibro(models.Model):
     editor = models.CharField(max_length=30L, blank=True)
     lugar = models.CharField(max_length=30L, blank=True)
     isbn = models.CharField(max_length=20L, blank=True)
+
     class Meta:
         db_table = 'InventInv_libro'
+
 
 class InventinvLibroSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     libro = models.ForeignKey(InventinvLibro)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_libro_segai'
+
 
 class InventinvOfertacientifica(models.Model):
     grupo = models.ForeignKey(GrupoinvestGrupoinves, null=True, blank=True)
@@ -2056,8 +2332,10 @@ class InventinvOfertacientifica(models.Model):
     trabajo = models.TextField(blank=True)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'InventInv_ofertacientifica'
+
 
 class InventinvOfertatecnica(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2068,8 +2346,10 @@ class InventinvOfertatecnica(models.Model):
     tecnica = models.TextField(blank=True)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'InventInv_ofertatecnica'
+
 
 class InventinvOtraactividad(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2081,15 +2361,19 @@ class InventinvOtraactividad(models.Model):
     autores = models.TextField(blank=True)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'InventInv_otraactividad'
+
 
 class InventinvOtraactividadSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     otraactividad = models.ForeignKey(InventinvOtraactividad)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_otraactividad_segai'
+
 
 class InventinvPatente(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2105,15 +2389,19 @@ class InventinvPatente(models.Model):
     entidad = models.TextField(blank=True)
     paises_extendido = models.TextField(blank=True)
     empresas = models.TextField(blank=True)
+
     class Meta:
         db_table = 'InventInv_patente'
+
 
 class InventinvPatenteSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     patente = models.ForeignKey(InventinvPatente)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_patente_segai'
+
 
 class InventinvTesis(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2129,15 +2417,19 @@ class InventinvTesis(models.Model):
     fecha = models.DateField(null=True, blank=True)
     directores = models.TextField(blank=True)
     calificacion = models.CharField(max_length=25L, blank=True)
+
     class Meta:
         db_table = 'InventInv_tesis'
+
 
 class InventinvTesisSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     tesis = models.ForeignKey(InventinvTesis)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_tesis_segai'
+
 
 class InventinvTesisaprobada(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2152,23 +2444,29 @@ class InventinvTesisaprobada(models.Model):
     facultad = models.CharField(max_length=150L, blank=True)
     fecha = models.DateField(null=True, blank=True)
     directores = models.TextField(blank=True)
+
     class Meta:
         db_table = 'InventInv_tesisaprobada'
+
 
 class InventinvTesisaprobadaSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     tesisaprobada = models.ForeignKey(InventinvTesisaprobada)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'InventInv_tesisaprobada_segai'
+
 
 class OapiOficina(models.Model):
     id = models.IntegerField(primary_key=True)
     campus = models.CharField(max_length=30L)
     edificio = models.CharField(max_length=30L)
     direccion = models.TextField()
+
     class Meta:
         db_table = 'Oapi_oficina'
+
 
 class OapiPersonal(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2182,14 +2480,18 @@ class OapiPersonal(models.Model):
     telefono = models.CharField(max_length=60L, blank=True)
     movil = models.CharField(max_length=60L, blank=True)
     oficina = models.ForeignKey(OapiOficina, null=True, blank=True)
+
     class Meta:
         db_table = 'Oapi_personal'
+
 
 class ProyinvestEntidadfinanciadora(models.Model):
     id = models.IntegerField(primary_key=True)
     entidad = models.CharField(max_length=80L)
+
     class Meta:
         db_table = 'ProyInvest_entidadfinanciadora'
+
 
 class ProyinvestMensajemantenimiento(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2199,8 +2501,10 @@ class ProyinvestMensajemantenimiento(models.Model):
     actualizacion = models.IntegerField()
     aviso = models.IntegerField()
     fecha = models.DateField(null=True, blank=True)
+
     class Meta:
         db_table = 'ProyInvest_mensajemantenimiento'
+
 
 class ProyinvestProyectoinvestigacion(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2213,87 +2517,111 @@ class ProyinvestProyectoinvestigacion(models.Model):
     organismo = models.TextField(blank=True)
     fecha_inicio = models.DateField(null=True, blank=True)
     fecha_final = models.DateField(null=True, blank=True)
-    cuantia = models.DecimalField(null=True, max_digits=21, decimal_places=2, blank=True)
+    cuantia = models.DecimalField(null=True, max_digits=21, decimal_places=2,
+                                  blank=True)
     num_inv = models.IntegerField(null=True, blank=True)
-    num_inv_anyo = models.DecimalField(null=True, max_digits=10, decimal_places=2, blank=True)
+    num_inv_anyo = models.DecimalField(null=True, max_digits=10,
+                                       decimal_places=2, blank=True)
     date_added = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         db_table = 'ProyInvest_proyectoinvestigacion'
+
 
 class ProyinvestProyectoinvestigacionEntidadFinanciadora(models.Model):
     id = models.IntegerField(primary_key=True)
     proyectoinvestigacion = models.ForeignKey(ProyinvestProyectoinvestigacion)
     entidadfinanciadora = models.ForeignKey(ProyinvestEntidadfinanciadora)
+
     class Meta:
         db_table = 'ProyInvest_proyectoinvestigacion_entidad_financiadora'
+
 
 class ProyinvestProyectoinvestigacionInvestigadorPrincipal(models.Model):
     id = models.IntegerField(primary_key=True)
     proyectoinvestigacion = models.ForeignKey(ProyinvestProyectoinvestigacion)
     investigador = models.ForeignKey(GrupoinvestInvestigador)
+
     class Meta:
         db_table = 'ProyInvest_proyectoinvestigacion_investigador_principal'
+
 
 class ProyinvestProyectoinvestigacionOtrosInvestigadores(models.Model):
     id = models.IntegerField(primary_key=True)
     proyectoinvestigacion = models.ForeignKey(ProyinvestProyectoinvestigacion)
     investigador = models.ForeignKey(GrupoinvestInvestigador)
+
     class Meta:
         db_table = 'ProyInvest_proyectoinvestigacion_otros_investigadores'
+
 
 class ProyinvestProyectoinvestigacionSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     proyectoinvestigacion = models.ForeignKey(ProyinvestProyectoinvestigacion)
     segai = models.ForeignKey('SegaiSegai')
+
     class Meta:
         db_table = 'ProyInvest_proyectoinvestigacion_segai'
+
 
 class ProyinvestProyectosigidi(models.Model):
     id = models.IntegerField(primary_key=True)
     codigo = models.CharField(max_length=30L)
     titulo = models.CharField(max_length=400L)
     descripcion = models.CharField(max_length=400L)
+
     class Meta:
         db_table = 'ProyInvest_proyectosigidi'
+
 
 class SegaiSegai(models.Model):
     id = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=150L)
     borrado = models.IntegerField()
+
     class Meta:
         db_table = 'Segai_segai'
+
 
 class AuthGroup(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=80L, unique=True)
+
     class Meta:
         db_table = 'auth_group'
+
 
 class AuthGroupPermissions(models.Model):
     id = models.IntegerField(primary_key=True)
     group = models.ForeignKey(AuthGroup)
     permission = models.ForeignKey('AuthPermission')
+
     class Meta:
         db_table = 'auth_group_permissions'
+
 
 class AuthMessage(models.Model):
     id = models.IntegerField(primary_key=True)
     user = models.ForeignKey('AuthUser')
     message = models.TextField()
+
     class Meta:
         db_table = 'auth_message'
+
 
 class AuthPermission(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50L)
     content_type = models.ForeignKey('DjangoContentType')
     codename = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'auth_permission'
 
+
 class AuthUser(models.Model):
     id = models.IntegerField(primary_key=True)
-    username = models.CharField(max_length=30L)#, unique=True)
+    username = models.CharField(max_length=30L)  # , unique=True)
     first_name = models.CharField(max_length=30L)
     last_name = models.CharField(max_length=30L)
     email = models.CharField(max_length=75L)
@@ -2305,24 +2633,29 @@ class AuthUser(models.Model):
     date_joined = models.DateTimeField()
 
     def __unicode__(self):
-        return u"'%s' e-mail: '%s'" %(self.username, self.email)
+        return u"'%s' e-mail: '%s'" % (self.username, self.email)
 
     class Meta:
         db_table = 'auth_user'
+
 
 class AuthUserGroups(models.Model):
     id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(AuthUser)
     group = models.ForeignKey(AuthGroup)
+
     class Meta:
         db_table = 'auth_user_groups'
+
 
 class AuthUserUserPermissions(models.Model):
     id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(AuthUser)
     permission = models.ForeignKey(AuthPermission)
+
     class Meta:
         db_table = 'auth_user_user_permissions'
+
 
 class CaptchaCaptchastore(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -2330,54 +2663,67 @@ class CaptchaCaptchastore(models.Model):
     response = models.CharField(max_length=32L)
     hashkey = models.CharField(max_length=40L, unique=True)
     expiration = models.DateTimeField()
+
     class Meta:
         db_table = 'captcha_captchastore'
+
 
 class DjangoAdminLog(models.Model):
     id = models.IntegerField(primary_key=True)
     action_time = models.DateTimeField()
     user = models.ForeignKey(AuthUser)
-    content_type = models.ForeignKey('DjangoContentType', null=True, blank=True)
+    content_type = models.ForeignKey('DjangoContentType',
+                                     null=True, blank=True)
     object_id = models.TextField(blank=True)
     object_repr = models.CharField(max_length=200L)
     action_flag = models.IntegerField()
     change_message = models.TextField()
+
     class Meta:
         db_table = 'django_admin_log'
+
 
 class DjangoContentType(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100L)
     app_label = models.CharField(max_length=100L)
     model = models.CharField(max_length=100L)
+
     class Meta:
         db_table = 'django_content_type'
+
 
 class DjangoSession(models.Model):
     session_key = models.CharField(max_length=40L, primary_key=True)
     session_data = models.TextField()
     expire_date = models.DateTimeField()
+
     class Meta:
         db_table = 'django_session'
+
 
 class DjangoSite(models.Model):
     id = models.IntegerField(primary_key=True)
     domain = models.CharField(max_length=100L)
     name = models.CharField(max_length=50L)
+
     class Meta:
         db_table = 'django_site'
+
 
 class TaggingTag(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50L, unique=True)
+
     class Meta:
         db_table = 'tagging_tag'
+
 
 class TaggingTaggeditem(models.Model):
     id = models.IntegerField(primary_key=True)
     tag = models.ForeignKey(TaggingTag)
     content_type = models.ForeignKey(DjangoContentType)
     object_id = models.IntegerField()
+
     class Meta:
         db_table = 'tagging_taggeditem'
-
