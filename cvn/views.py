@@ -28,7 +28,7 @@ def main(request):
         # Usuario de la plantilla administrador
         if request.user.username == st.ADMIN_USERNAME:
             return HttpResponseRedirect(reverse('logout'))
-        user = request.session['attributes']
+        request.session['attributes']
     # Si el usuario no está logeado en el CAS se accede directamente
     # a la pantalla de logeo.
     except KeyError:
@@ -66,7 +66,8 @@ def index(request):
                                         request.FILES,
                                         instance=investCVN)
         try:
-            if context['form'].is_valid() and (request.FILES['cvnfile'].content_type == st.PDF):
+            if context['form'].is_valid() and \
+               (request.FILES['cvnfile'].content_type == st.PDF):
                 filePDF = request.FILES['cvnfile']
                 filePDF.name = setCVNFileName(invest)
                 # Se llama al webservice del Fecyt para corroborar que
@@ -86,10 +87,11 @@ def index(request):
                     if investCVN.xmlfile:
                         investCVN.xmlfile.delete()
                     investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'),
-                                           ContentFile(xmlFecyt), save = False)
+                                           ContentFile(xmlFecyt), save=False)
                     investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
                     investCVN.save()
-                    request.session['message'] = u'Se ha actualizado su CVN con éxito.'
+                    request.session['message'] = u'Se ha actualizado su CVN \
+                     con éxito.'
                     return HttpResponseRedirect(reverse("cvn.views.index"))
                 else:
                     # Error PDF introducido no tiene el formato de la Fecyt
@@ -112,7 +114,7 @@ def index(request):
 @login_required
 def downloadCVN(request):
     """ Descarga el CVN correspondiente al usuario logeado en la sesión """
-    context={}
+    context = {}
     context['user'] = request.session['attributes']     # Usuario CAS
     invest, investCVN = getUserViinV(context['user']['NumDocumento'])
     if invest:  # El usuario para los test no se crea en la BBDD
@@ -129,38 +131,12 @@ def downloadCVN(request):
         raise Http404
     return response
 
-@login_required
-def ull_report(request):
-    """ Informe completo de la actividad de la ULL, extraida del usuario especial ULL """
-    context = {}
-    context.update(getDataCVN('00000000A'))
-    print context
-    return render_to_response("ull_report.html", context, RequestContext(request))
 
 @login_required
 def ull_report(request):
-    """ Informe completo de la actividad de la ULL, extraida del usuario especial ULL """
+    """ Informe completo de la actividad de la ULL,
+        extraida del usuario especial ULL """
     context = {}
     context.update(getDataCVN('00000000A'))
-    a =  render_to_response("ull_report.html", context, RequestContext(request))
-
-    print type(a)
-    #print a.content
-    #import pdfkit
-    #options = {
-    #'page-size': 'A4',
-    #'margin-top': '0.75in',
-    #'margin-right': '0.75in',
-    #'margin-bottom': '0.75in',
-    #'margin-left': '0.75in',
-    #'encoding': "UTF-8"
-    #}
-    #from django.template.loader import render_to_string
-    #s = render_to_string("ull_report.html", context)
-    #pdfkit.from_string(s, "out.pdf", options=options)
-    from weasyprint import HTML
-    from django.template.loader import render_to_string
-    s = render_to_string("ull_report.html", context)
-    h = HTML(string=s)
-    h.write_pdf("outweasy.pdf")
-    return a
+    return render_to_response("ull_report.html", context,
+                              RequestContext(request))
