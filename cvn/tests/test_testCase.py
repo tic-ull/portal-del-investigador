@@ -151,7 +151,8 @@ class UserAccessTest(TestCase):
         data_invest['nombre'] = ATTR['first_name']
         data_invest['nif'] = ATTR['NumDocumento']
         data_invest['email'] = ATTR['email']
-        data_invest['categoria'] = GrupoinvestCategoriainvestigador.objects.create(pk=ID_TEST, nombre='INVES')
+        data_invest['categoria'] = GrupoinvestCategoriainvestigador\
+            .objects.create(pk=ID_TEST, nombre='INVES')
         data_invest['cod_persona'] = 'INVES'
         data_invest['user'] = AuthUser.objects.get(username=ATTR['username'])
         invest = GrupoinvestInvestigador.objects.create(**data_invest)

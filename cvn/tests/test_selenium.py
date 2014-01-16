@@ -109,7 +109,9 @@ class CVNTestCase(TestCase):
                 .find_element_by_link_text("Cerrar sesión")
         except NoSuchElementException:
             close_session = None
-        #self.assertEqual(self.selenium.find_element_by_class_name("main-title").text, u"Currículum Vítae Normalizado (CVN)")
+        # self.assertEqual(self.selenium
+        #                      .find_element_by_class_name("main-title").text,
+        #                  u"Currículum Vítae Normalizado (CVN)")
         self.assertIsNotNone(close_session)
         time.sleep(2)
         self.selenium.find_element_by_link_text("Cerrar sesión").click()
@@ -336,4 +338,3 @@ class AdminCVNTestCase(LiveServerTestCase):
         self.assertEqual(Convenio.objects.count(), 3)
         self.assertEqual(Congreso.objects.count(), 3)
         self.assertEqual(Publicacion.objects.count(), 6)
-
