@@ -5,8 +5,28 @@ from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
-import string_utils.stringcmp   # utilidades de comparación de cadenas
-import voting_helpers   # utilidades de diferencias entre registros
+from string_utils.stringcmp import do_stringcmp
+
+
+def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
+    # return:
+    #  - how many of them are different
+    # fields where one or two of the values is None,
+    # are not counted as different
+    # pass a EXCLUDE_FIELDS list with the fields you want
+    # to ignore in the comparison
+    assert (type(obj1) == type(obj2),
+            "The types of the objects are not the same, dude")
+    difering = []
+    tipo = type(obj1)
+    fields = tipo._meta.get_all_field_names()
+    for f in fields:
+        if f not in EXCLUDE_FIELDS:
+            f1 = obj1.__getattribute__(f)
+            f2 = obj2.__getattribute__(f)
+            if f1 and f2 and f1 != f2:
+                difering.append(f)
+    return len(difering)
 
 
 def log_and_print(message):
@@ -175,9 +195,9 @@ class Command(BaseCommand):
                 pry2_name = pry2.__getattribute__(NAME_FIELD)
                 if pry1_name and pry2_name:
                     # comparisons made in lower case
-                    percentage, time = string_utils.stringcmp\
-                        .do_stringcmp("qgram3avrg", pry1_name.lower(),
-                                      pry2_name.lower())
+                    percentage, time = do_stringcmp("qgram3avrg",
+                                                    pry1_name.lower(),
+                                                    pry2_name.lower())
                     if percentage > self.LIMIT:
                         pair = tuple([pry1, pry2])
                         duplicates[pair] = percentage
@@ -197,9 +217,8 @@ class Command(BaseCommand):
                 break
             pry1 = pair[0]
             pry2 = pair[1]
-            dummy, difering_length, dummy = voting_helpers\
-                .difering_fields(pry1, pry2,
-                                 self.DONT_CHECK_FIELDS + [NAME_FIELD])
+            difering_length = difering_fields(pry1, pry2,
+                                              self.DONT_CHECK_FIELDS + [NAME_FIELD])
 
             save = True
             if difering_length == self.DIFFERING_PAIRS:

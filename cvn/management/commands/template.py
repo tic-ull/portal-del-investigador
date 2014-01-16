@@ -1,6 +1,6 @@
 # -*- encoding: utf8 -*-
-from django.core.management.base import BaseCommand, CommandError
-from GrupoInvest.models import Investigador, RRHH, Departamento
+from django.core.management.base import BaseCommand
+from GrupoInvest.models import RRHH
 import csv
 import time
 from datetime import datetime
@@ -8,12 +8,12 @@ import settings
 
 
 class Command(BaseCommand):
-    help = u'Actualiza la referencia del Departamento en los registros de la tabla Investigador'
+    help = u'Actualiza la referencia del Departamento en los registros \
+            de la tabla Investigador'
 
     # Constructor no es necesario en principio
     def __init__(self):
         super(Command, self).__init__()
-
 
     def datetime_convert(self, time_string):
     #Devuelve una cadena en formato datetime inteligible por django.
@@ -23,40 +23,32 @@ class Command(BaseCommand):
                 return date_django
         return None
 
-
     def date_convert(self, time_string):
     #Devuelve una cadena en formato date inteligible por django.
         if (len(time_string) != 0):
-                date_django = datetime.strptime(time_string, '%d/%m/%Y').strftime('%Y-%m-%d')
-                return date_django
+            date_django = datetime.strptime(time_string, '%d/%m/%Y')\
+                                  .strftime('%Y-%m-%d')
+            return date_django
         return None
 
-    
     def datetime_to_date(self, date_string):
-    #Convierte una cadena datetime en una cadena date
-	if (len(date_string) != 0):
-	        date_string = date_string[:10]
-		return self.date_convert(date_string)
-	return None
-
+    # Convierte una cadena datetime en una cadena date
+        if (len(date_string) != 0):
+            date_string = date_string[:10]
+            return self.date_convert(date_string)
+        return None
 
     def string_to_int(self, int_string):
-    #Para aquellos campos del modelo que estan definidos como Integer, puede que en el CSV el valor
-    #venga vacío, en esos casos devolvemos un 0.
-	if(len(int_string) != 0):
-		return int_string
-	return '0'
-
+    # Para aquellos campos del modelo que estan definidos como Integer,
+    # puede que en el CSV el valor venga vacío, en esos casos devolvemos un 0.
+        return int_string if(len(int_string) != 0) else '0'
 
     def handle(self, *args, **options):
-
         # Full path and name to your csv file
-        csv_filepathname="/srv/www/vhosts/RRHH/NIVARIA_RRHH_INIC.TXT"
-
         dataReader = csv.reader(open(settings.CSV_RRHH_FILE), delimiter='|')
         for row in dataReader:
-            if row[0] != 'COD_PERSONA': # Ignore the header row, import everything else
-
+            # Ignore the header row, import everything else
+            if row[0] != 'COD_PERSONA':
                 rrhh = RRHH()
                 rrhh.cod_persona = row[0]
                 rrhh.pas_sn = row[1]
