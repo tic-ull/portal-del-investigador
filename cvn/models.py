@@ -148,7 +148,6 @@ class SituacionProfesional(models.Model):
                                                  max_length=64,
                                                  blank=True, null=True)
 
-
     # NOTE Si no tiene fecha de finalización es la dedicación actual
     dedicacion_profesional = models.TextField(u'Dedicación Profesional',
                                               blank=True, null=True)
@@ -701,7 +700,6 @@ class Convenio(models.Model):
                                                  blank=True, null=True)
     palabras_clave = models.CharField(u'Describir con palabras clave',
                                       max_length=500, blank=True, null=True)
-
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)

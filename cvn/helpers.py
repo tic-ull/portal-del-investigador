@@ -61,6 +61,7 @@ def searchDataUser(data=None):
             search_dic['nombre__iexact'] = data['nombre']
     return search_dic
 
+
 def formatCode(data, extension):
     """
         Función que transforma el código de una etiqueta para realizar
@@ -139,6 +140,7 @@ def checkPage(data=""):
         return cvn_setts.INVALID_PAGE
     return data
 
+
 def setCVNFileName(user):
     """
         Añade el nombre del usuario y una clave al nombre del fichero
@@ -173,7 +175,7 @@ def handleOldCVN(cvn, fecha_up):
     file_move_safe(oldPath, newPath)
 
 
-def getUserViinV(documento = ""):
+def getUserViinV(documento=""):
     """
         Función que a partir del usuario CAS devuelve los datos
         almacenados en Viinv.
@@ -193,7 +195,7 @@ def getUserViinV(documento = ""):
     return invest, investCVN
 
 
-def addUserViinV(data = {}):
+def addUserViinV(data={}):
     """
         Función que añade a ViinV al usuario logueado por CAS si no existe.
 

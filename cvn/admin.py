@@ -5,7 +5,6 @@ from cvn.models import (Usuario, SituacionProfesional,
                         Convenio, TesisDoctoral)
 
 
-
 class UsuarioAdmin(admin.ModelAdmin):
     search_fields = ('documento',
                      'nombre',
@@ -15,7 +14,6 @@ class UsuarioAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
-
 class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
     search_fields = ('titulo',
                      'usuario__nombre',
@@ -23,7 +21,6 @@ class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
                      'usuario__segundo_apellido',
                      'usuario__documento',)
     ordering = ('created_at',)
-
 
 
 class ProyectoConvenioAdmin(admin.ModelAdmin):
@@ -42,4 +39,3 @@ admin.site.register(Congreso, PublicacionCongresoTesisAdmin)
 admin.site.register(Proyecto, ProyectoConvenioAdmin)
 admin.site.register(Convenio, ProyectoConvenioAdmin)
 admin.site.register(TesisDoctoral, PublicacionCongresoTesisAdmin)
-

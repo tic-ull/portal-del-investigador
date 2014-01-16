@@ -248,7 +248,8 @@ class UtilidadesXMLtoBBDD:
         self.__deleteOldData__(Congreso.objects.filter(usuario=user), user)
         self.__deleteOldData__(Proyecto.objects.filter(usuario=user), user)
         self.__deleteOldData__(Convenio.objects.filter(usuario=user), user)
-        self.__deleteOldData__(TesisDoctoral.objects.filter(usuario=user), user)
+        self.__deleteOldData__(TesisDoctoral.objects.filter(usuario=user),
+                               user)
 
     def get_fecha_xml(self):
         """
@@ -267,7 +268,7 @@ class UtilidadesXMLtoBBDD:
         dataPersonal = {}
         fecha_cvn = None
         try:
-            tree = etree.parse(self.fileXML)            
+            tree = etree.parse(self.fileXML)
             fecha_cvn = tree.find('Version/VersionID/Date/Item').text.strip()
             # Datos del Investigador
             dataInvestigador = tree.find('Agent')
@@ -507,7 +508,8 @@ class UtilidadesXMLtoBBDD:
                 data['numero'] = tree.find("Number/Item").text.strip()
             #if tipo == u'Artículo':
             if tree.find("InitialPage/Item") is not None and tree.find("InitialPage/Item").text is not None:
-                data['pagina_inicial'] = tree.find("InitialPage/Item").text.strip() #checkPage(tree.find("InitialPage/Item").text)
+                data['pagina_inicial'] = tree.find("InitialPage/Item").text.strip()
+                # checkPage(tree.find("InitialPage/Item").text)
             if tree.find("FinalPage/Item") is not None and tree.find("FinalPage/Item").text is not None:
                 data['pagina_final'] = tree.find("FinalPage/Item").text.strip()
         return data
@@ -659,7 +661,7 @@ class UtilidadesXMLtoBBDD:
         data.update(self.__getAmbito__(tree.find('Scope')))
         return data
 
-    def __dataActividadDocente__(self, tree = []):
+    def __dataActividadDocente__(self, tree=[]):
         """
             Dirección de tesis doctorales y/o proyectos fin de carrera
 
@@ -734,7 +736,9 @@ def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
             handlerCVN = UtilidadesCVNtoXML(filePDF=investCVN.cvnfile)
             xmlFecyt = handlerCVN.getXML()
             # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
-            if xmlFecyt and handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt):
-                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'), ContentFile(xmlFecyt))
+            if xmlFecyt and \
+               handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt):
+                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'),
+                                       ContentFile(xmlFecyt))
         investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
         investCVN.save()
