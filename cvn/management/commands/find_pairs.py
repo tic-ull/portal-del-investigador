@@ -29,7 +29,7 @@ def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
     return len(difering)
 
 
-def log_and_print(message):
+def log_print(message):
     print message
     logging.info(message)
 
@@ -114,7 +114,7 @@ class Command(BaseCommand):
             except:
                 raise CommandError("Option `--diff needs an integer 0,1,...")
 
-        log_and_print("Buscando duplicados en el modelo \
+        log_print("Buscando duplicados en el modelo \
             {0}".format(TABLE.__name__))
 
         if TABLE == Proyecto:
@@ -178,8 +178,7 @@ class Command(BaseCommand):
                         new_registros.add(r)
                 registros = new_registros
 
-        log_and_print("Total de registros en estudio = {0}"
-                      .format(len(registros)))
+        log_print("Total de registros en estudio = {0}".format(len(registros)))
         duplicates = {}
 
         ##################################
@@ -202,8 +201,8 @@ class Command(BaseCommand):
                         pair = tuple([pry1, pry2])
                         duplicates[pair] = percentage
 
-        log_and_print("Total duplicates = {0} de {1} "
-                      .format(len(duplicates), len(registros)))
+        log_print("Total duplicates = {0} de {1} "
+                  .format(len(duplicates), len(registros)))
 
         # RECORRER LOS PARES DUPLICADOS
         pairs_solved = {}
@@ -213,12 +212,12 @@ class Command(BaseCommand):
         count = 0
         for pair in sorted_pairs:
             if choice == 'q':
-                log_and_print("User aborted main loop...")
+                log_print("User aborted main loop...")
                 break
             pry1 = pair[0]
             pry2 = pair[1]
-            difering_length = difering_fields(pry1, pry2,
-                                              self.DONT_CHECK_FIELDS + [NAME_FIELD])
+            difering_length = difering_fields(
+                pry1, pry2, self.DONT_CHECK_FIELDS + [NAME_FIELD])
 
             save = True
             if difering_length == self.DIFFERING_PAIRS:
@@ -232,13 +231,16 @@ class Command(BaseCommand):
 
                 repeat = True
                 while repeat:
-                    log_and_print("===========================================================")
-                    log_and_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)".format(pry1.id, pry2.id, duplicates[pair]*100))
-                    log_and_print("===========================================================")
+                    log_print("=============================================")
+                    log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)"
+                              .format(pry1.id, pry2.id, duplicates[pair]*100))
+                    log_print("=============================================")
 
                     # overview of the two registers
-                    log_and_print("Field".ljust(FIELD_WIDTH) + "ID1".ljust(COLWIDTH) + "ID2".ljust(COLWIDTH))
-                    log_and_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
+                    log_print("Field".ljust(FIELD_WIDTH)
+                              + "ID1".ljust(COLWIDTH)
+                              + "ID2".ljust(COLWIDTH))
+                    log_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
                     for f in model_fields:
                         if f not in (self.DONT_SET_FIELDS +
                                      self.TIMESTAMP_FIELDS):
@@ -247,10 +249,13 @@ class Command(BaseCommand):
                             f2 = pry2.__getattribute__(f)
                             f2 = "" if f2 is None else f2
                             if any([f1, f2]):
-                                log_and_print(unicode(f)[:FIELD_WIDTH-1].ljust(FIELD_WIDTH) +
-                                              unicode(f1)[:COLWIDTH-1].ljust(COLWIDTH) +
-                                              unicode(f2)[:COLWIDTH-1].ljust(COLWIDTH))
-                    log_and_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
+                                log_print(unicode(f)[:FIELD_WIDTH-1]
+                                          .ljust(FIELD_WIDTH)
+                                          + unicode(f1)[:COLWIDTH-1]
+                                          .ljust(COLWIDTH)
+                                          + unicode(f2)[:COLWIDTH-1]
+                                          .ljust(COLWIDTH))
+                    log_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
 
                     for f in model_fields:
                         if f not in (self.DONT_SET_FIELDS +
@@ -270,10 +275,10 @@ class Command(BaseCommand):
                                 master.__setattr__(f, attr)
                             # A OR B, A != B
                             if any([f1, f2]) and f1 != f2:
-                                log_and_print(f)
+                                log_print(f)
                                 print "--------------------------------"
-                                log_and_print(u"{0:5d}: {1}".format(pry1.id, f1))
-                                log_and_print(u"{0:5d}: {1}".format(pry2.id, f2))
+                                log_print(u"{0:5d}: {1}".format(pry1.id, f1))
+                                log_print(u"{0:5d}: {1}".format(pry2.id, f2))
                                 print "  NEW:", master_f, "\n"
                                 print "--------------------------------"
                                 choice = self.choice(pry1, pry2)
@@ -288,8 +293,8 @@ class Command(BaseCommand):
                                     else:
                                         attr = f1 if choice == pry1.id else f2
                                 master.__setattr__(f, attr)
-                                log_and_print(u"SET TO: {0}".format(attr))
-                                log_and_print(u"----------")
+                                log_print(u"SET TO: {0}".format(attr))
+                                log_print(u"----------")
 
                             # NOT A AND NOT B
 
@@ -305,29 +310,37 @@ class Command(BaseCommand):
                     pairs_solved[(pry1.id, pry2.id)] = master.id
 
         print pairs_solved
-        log_and_print("========================================")
-        log_and_print(u"Número de campos diferentes (contando la denominación): {0}".format(self.DIFFERING_PAIRS + 1))
-        log_and_print("========================================")
-        log_and_print("Parejas cambiadas = {0}".format(count))
-        log_and_print("========================================")
-        log_and_print("Cambiando los registros afectados en la BBDD")
+        log_print("========================================")
+        log_print(u"Número de campos diferentes " +
+                  u"(contando la denominación): {0}"
+                  .format(self.DIFFERING_PAIRS + 1))
+        log_print("========================================")
+        log_print("Parejas cambiadas = {0}".format(count))
+        log_print("========================================")
+        log_print("Cambiando los registros afectados en la BBDD")
         for pair, new_id in pairs_solved.iteritems():
-            log_and_print(u"----------")
-            log_and_print("Cambiando usuarios de {0} y {1} a {2}".format(pair[0], pair[1], new_id))
+            log_print(u"----------")
+            log_print("Cambiando usuarios de {0} y {1} a {2}"
+                      .format(pair[0], pair[1], new_id))
             master_p = TABLE.objects.get(pk=new_id)
             for pry_id in pair:
                 p = TABLE.objects.get(pk=pry_id)
                 for u in p.usuario.all():
                     master_p.usuario.add(u)
-                    logging.info(u"Proyecto {0} [ID={1}] añadir usuario {2} [ID={3}]".format(master_p, master_p.id, u, u.id))
+                    logging.info(u"Proyecto {0} [ID={1}] " +
+                                 u"añadir usuario {2} [ID={3}]"
+                                 .format(master_p, master_p.id, u, u.id))
                     p.usuario.remove(u)
-                    logging.info(u"Proyecto {0} [ID={1}] borrar usuario {2} [ID={3}]".format(p, p.id, u, u.id))
+                    logging.info(u"Proyecto {0} [ID={1}] " +
+                                 u"borrar usuario {2} [ID={3}]"
+                                 .format(p, p.id, u, u.id))
 
                 p.save()
             master_p.save()
 
     def choice(self, pry1, pry2):
-        print 'Return=NEW   %s=ID1   %s=ID2   0=Ignorar pareja  -1=Reniciar  j=join_fields  q=save_and_abort' % (pry1.id, pry2.id),
+        print 'Return=NEW   %s=ID1   %s=ID2   0=Ignorar pareja  -1=Reniciar'\
+            + ' j=join_fields  q=save_and_abort' % (pry1.id, pry2.id),
         choice = None
         while (choice != "" and choice != pry1.id and choice != pry2.id and
                choice != -1 and choice != 0 and choice != 'j' and

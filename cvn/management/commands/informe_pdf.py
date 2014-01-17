@@ -81,8 +81,8 @@ class Informe_pdf:
         canvas.setFont(self.DEFAULT_FONT, self.PAGE_NUMBERS_SIZE)
         canvas.drawCentredString(self.PAGE_WIDTH / 2.0,
                                  self.PAGE_NUMBERS_MARGIN,
-                                 u"pág. {0} - {1}".format(doc.page,
-                                                          self.title))
+                                 u"pág. {0} - {1}"
+                                 .format(doc.page, self.title))
         canvas.restoreState()
 
     def go(self):
@@ -124,12 +124,10 @@ class Informe_pdf:
         A este método se le pasarán los datos del departamento
         Devuelve un párrafo (Paragraph)
         """
-        texto = """<b>Dirección:</b> {0}<br/>
-<b>Teléfono:</b> {1}<br/>
-<b>Fax:</b> {2}<br/>
-<b>Correo electrónico:</b> {3}</br>""".format("C/S. Foo de Bar",
-                                              "6666666666",
-                                              "922922922", "foobar@ull.es")
+        texto = "<b>Dirección:</b> {0}<br/><b>Teléfono:</b> {1}<br/>"\
+                + "<b>Fax:</b> {2}<br/><b>Correo electrónico:</b> "\
+                + "{3}</br>".format("C/S. Foo de Bar", "6666666666",
+                                    "922922922", "foobar@ull.es")
         p = Paragraph(texto, self.SECTION_STYLE)
         return p
 
@@ -184,7 +182,7 @@ class Informe_pdf:
              pagina_final) = publicacion
 
             if fecha:
-                fecha = cambia_fecha_a_normal(fecha);
+                fecha = cambia_fecha_a_normal(fecha)
                 texto += "Fecha: {0}<br/>".format(utf8(fecha))
 
             if autores:
@@ -193,7 +191,7 @@ class Informe_pdf:
             if titulo:
                 texto += " {0}".format(utf8(titulo))
                 if titulo[-1] != ".":
-                    texto += "." # a veces el artículo lleva un punto final
+                    texto += "."  # a veces el artículo lleva un punto final
 
             if nombre_publicacion:
                 texto += " <i>{0}</i>".format(utf8(nombre_publicacion))
@@ -218,25 +216,30 @@ class Informe_pdf:
         #print num_congresos
         texto = ""
         if num_congresos > 0:
-            texto = "<b>{1}Comunicaciones a congresos </font>[{0}]</b><br/>".format(num_congresos, self.SUBTITLE_STYLE)
+            texto = "<b>{1}Comunicaciones a congresos </font>[{0}]</b><br/>"\
+                .format(num_congresos, self.SUBTITLE_STYLE)
             for congreso in congresos:
                 #print "Congreso:" , congreso
-                titulo, nombre_del_congreso, autores, ciudad_de_realizacion, fecha_realizacion = congreso
+                (titulo, nombre_del_congreso, autores,
+                 ciudad_de_realizacion, fecha_realizacion) = congreso
                 if autores:
                     texto += "{0}.".format(utf8(autores))
                 if titulo:
-                    texto += ' "{0}"'.format(utf8(titulo)) # FIXME change this to smart quotes
+                    # FIXME change this to smart quotes
+                    texto += ' "{0}"'.format(utf8(titulo))
                 if nombre_del_congreso:
-                    texto += " en: <i>{0}</i>".format(utf8(nombre_del_congreso))
+                    texto += " en: <i>{0}</i>".format(
+                        utf8(nombre_del_congreso))
                 mes = getMonthText(fecha_realizacion)
                 if ciudad_de_realizacion and mes:
-                    texto += ", ({0}, {1} de {2})".format(utf8(ciudad_de_realizacion), mes, self.year)
+                    texto += ", ({0}, {1} de {2})".format(
+                        utf8(ciudad_de_realizacion), mes, self.year)
                 elif ciudad_de_realizacion:
                     texto += ", ({0})".format(utf8(ciudad_de_realizacion))
                 elif mes:
-                    texto += ", ({0} de {1})".format(mes, self.year);
+                    texto += ", ({0} de {1})".format(mes, self.year)
 
-                texto += ".<br/><br/>" # punto final
+                texto += ".<br/><br/>"  # punto final
             # end for congresos
         p = Paragraph(texto, self.SECTION_STYLE)
         return p
@@ -247,21 +250,28 @@ class Informe_pdf:
         #print num_proyectos
         texto = ""
         if num_proyectos > 0:
-            texto = "<b>{2}Proyectos de investigación activos en {1} </font>[{0}]</b><br/>".format(num_proyectos, self.year, self.SUBTITLE_STYLE)
+            texto = "<b>{2}Proyectos de investigación activos en {1} </font>"\
+                    + "[{0}]</b><br/>".format(
+                        num_proyectos, self.year, self.SUBTITLE_STYLE)
             for proyecto in proyectos:
                 #print "Proyecto:" , proyecto
-                denominacion_del_proyecto, fecha_de_inicio, fecha_de_fin, cuantia_total, autores = proyecto
+                (denominacion_del_proyecto, fecha_de_inicio,
+                 fecha_de_fin, cuantia_total, autores) = proyecto
                 # TODO revisar este orden
                 if denominacion_del_proyecto:
-                    texto += "Denominación: {0}.<br/>".format(utf8(denominacion_del_proyecto))
+                    texto += "Denominación: {0}.<br/>".format(
+                        utf8(denominacion_del_proyecto))
                 if fecha_de_inicio:
                     fecha_de_inicio = cambia_fecha_a_normal(fecha_de_inicio)
-                    texto += "Fecha de inicio: {0}<br/>".format(utf8(fecha_de_inicio))
+                    texto += "Fecha de inicio: {0}<br/>".format(
+                        utf8(fecha_de_inicio))
                 if fecha_de_fin:
                     fecha_de_fin = cambia_fecha_a_normal(fecha_de_fin)
-                    texto += "Fecha de finalización: {0}<br/>".format(utf8(fecha_de_fin))
+                    texto += "Fecha de finalización: {0}<br/>".format(
+                        utf8(fecha_de_fin))
                 if cuantia_total:
-                    texto += "Cuantía: {0}€<br/>".format(utf8(unicode(cuantia_total)))
+                    texto += "Cuantía: {0}€<br/>".format(
+                        utf8(unicode(cuantia_total)))
                 if autores:
                     texto += "Investigadores: {0}<br/>".format(utf8(autores))
                 texto += "<br/>"
@@ -275,7 +285,9 @@ class Informe_pdf:
         #print num_convenios
         texto = ""
         if num_convenios > 0:
-            texto = "<b>{2}Convenios de investigación activos en {1} </font>[{0}]</b><br/>".format(num_convenios, self.year, self.SUBTITLE_STYLE)
+            texto = "<b>{2}Convenios de investigación activos en {1} "\
+                    + "</font>[{0}]</b><br/>".format(num_convenios, self.year,
+                                                     self.SUBTITLE_STYLE)
             for convenio in convenios:
                 (denominacion_del_convenio, fecha_de_inicio, cuantia_total,
                  autores, duracion_anyos, duracion_meses,
