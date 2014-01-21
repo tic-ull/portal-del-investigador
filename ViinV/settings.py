@@ -253,7 +253,7 @@ LOGGING = {
             'include_html': True
         },
         'find_pairs_handler': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'find_pairs.log'
         },
@@ -279,6 +279,7 @@ LOGGING = {
         'cvn.management.commands.find_pairs': {
             'level': 'DEBUG',
             'handlers': ['find_pairs_handler'],
+            'propagate': False
         },
     }
 }
