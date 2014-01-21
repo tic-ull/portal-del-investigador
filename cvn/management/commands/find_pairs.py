@@ -7,6 +7,7 @@ from django.db.models import Q
 from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
 from string_utils.stringcmp import do_stringcmp
 
+logger = logging.getLogger(__name__)
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
     # return:
@@ -31,7 +32,7 @@ def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
 
 def log_print(message):
     print message
-    logging.info(message)
+    logger.debug(message)
 
 
 class Command(BaseCommand):
@@ -39,9 +40,9 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option(
             "-u",
-            "--user",
+            "--document",
             dest="usuario",
-            help="specify user for duplicate control. Use 'all'.",
+            help="specify ID document for duplicate control. Use 'all'.",
         ),
         make_option(
             "-t",
@@ -79,20 +80,10 @@ class Command(BaseCommand):
 
     YEAR = 2012
 
-    # constructor
-    def __init__(self):
-        super(Command, self).__init__()
-        log_filename = 'logs/dup_pairs_' \
-            + datetime.datetime.now().strftime('%Y_%m_%d@%H_%M.log')
-        logging.basicConfig(filename=log_filename,
-                            level=logging.INFO,
-                            format='%(asctime)s: %(message)s',
-                            datefmt='%d-%m-%Y %H:%M')
-
     def handle(self, *args, **options):
 
         if options['usuario'] is None:
-            raise CommandError("Option `--user=...` must be specified.")
+            raise CommandError("Option `--document=...` must be specified.")
         else:
             usuario = options['usuario']
 
@@ -103,8 +94,9 @@ class Command(BaseCommand):
                 TABLE = self.TABLES[options['table']]
                 NAME_FIELD = self.NAME_FIELDS[options['table']]
             else:
-                raise CommandError("\"{0}\" is not a table. Use Proyecto, \
-                Convenio, Publicacion or Congreso ".format(options['table']))
+                raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
+                                   "Convenio, Publicacion or Congreso "
+                                   .format(options['table']))
 
         if options['differing_pairs'] is None:
             raise CommandError("Option `--diff=0, 1...` must be specified.")
@@ -114,8 +106,8 @@ class Command(BaseCommand):
             except:
                 raise CommandError("Option `--diff needs an integer 0,1,...")
 
-        log_print("Buscando duplicados en el modelo \
-            {0}".format(TABLE.__name__))
+        log_print("Buscando duplicados en el modelo " +
+                  "{0}".format(TABLE.__name__))
 
         if TABLE == Proyecto:
             # --------------------------- PROYECTOS ---------------------- #
@@ -162,7 +154,7 @@ class Command(BaseCommand):
             # ------------------------------------------------------------ #
 
         if usuario != "all":
-            # obtenemos el usuario cuyo documento es usuario
+            # obtenemos el usuario cuyo ID document es usuario
             try:
                 usuario = Usuario.objects.get(documento=usuario)
             except:
@@ -187,8 +179,8 @@ class Command(BaseCommand):
 
         registros = [p for p in registros]
 
+        print "Finding pairs for indexes ..."
         for idx1, pry1 in enumerate(registros[:-1]):
-            print "Finding pairs for index: ", idx1
             for idx2, pry2 in enumerate(registros[idx1 + 1:], start=idx1 + 1):
                 pry1_name = pry1.__getattribute__(NAME_FIELD)
                 pry2_name = pry2.__getattribute__(NAME_FIELD)
@@ -231,6 +223,7 @@ class Command(BaseCommand):
 
                 repeat = True
                 while repeat:
+                    print ("\n"*5)
                     log_print("=============================================")
                     log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)"
                               .format(pry1.id, pry2.id, duplicates[pair]*100))
@@ -282,7 +275,7 @@ class Command(BaseCommand):
                                 print "  NEW:", master_f, "\n"
                                 print "--------------------------------"
                                 choice = self.choice(pry1, pry2)
-                                if choice in [-1, 0, 'q']:
+                                if choice in ['-1', '0', 'q']:
                                     break
 
                                 if choice == "":
@@ -339,12 +332,10 @@ class Command(BaseCommand):
             master_p.save()
 
     def choice(self, pry1, pry2):
-        print 'Return=NEW   %s=ID1   %s=ID2   0=Ignorar pareja  -1=Reniciar'\
-            + ' j=join_fields  q=save_and_abort' % (pry1.id, pry2.id),
+        print (('Return=NEW\t{0}=ID1\t{1}=ID2\t0=Ignorar pareja\t-1=Reniciar' +
+               '\tj=join_fields\tq=save_and_abort').format(pry1.id, pry2.id))
         choice = None
-        while (choice != "" and choice != pry1.id and choice != pry2.id and
-               choice != -1 and choice != 0 and choice != 'j' and
-               choice != 'q'):
+        while (choice not in ["", pry1.id, pry2.id, -1, 0, 'j', 'q']):
             choice = raw_input("? ")
             try:
                 choice = int(choice)
