@@ -251,7 +251,12 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler',
             # Incluye la petición y la traza del error en el mail.
             'include_html': True
-        }
+        },
+        'find_pairs_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'find_pairs.log'
+        },
     },
     'loggers': {
         'cvn': {
@@ -270,6 +275,10 @@ LOGGING = {
             'handlers': ['request_handler'],
             'level': 'ERROR',
             'propagate': False
+        },
+        'cvn.management.commands.find_pairs': {
+            'level': 'DEBUG',
+            'handlers': ['find_pairs_handler'],
         },
     }
 }
