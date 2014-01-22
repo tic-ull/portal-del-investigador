@@ -32,7 +32,7 @@ def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
 
 def log_print(message):
     print message
-    logger.debug(message)
+    logger.info(message)
 
 
 class Command(BaseCommand):
@@ -203,6 +203,7 @@ class Command(BaseCommand):
         choice = ""
         count = 0
         for pair in sorted_pairs:
+            save = True
             if choice == 'q':
                 log_print("User aborted main loop...")
                 break
@@ -211,7 +212,6 @@ class Command(BaseCommand):
             difering_length = difering_fields(
                 pry1, pry2, self.DONT_CHECK_FIELDS + [NAME_FIELD])
 
-            save = True
             if difering_length == self.DIFFERING_PAIRS:
                 master = TABLE()
                 # todo a bit of fixing this
@@ -320,14 +320,13 @@ class Command(BaseCommand):
                 p = TABLE.objects.get(pk=pry_id)
                 for u in p.usuario.all():
                     master_p.usuario.add(u)
-                    logging.info(u"Proyecto {0} [ID={1}] " +
-                                 u"añadir usuario {2} [ID={3}]"
-                                 .format(master_p, master_p.id, u, u.id))
+                    log_print(u"Proyecto {0} [ID={1}] " +
+                              u"añadir usuario {2} [ID={3}]"
+                              .format(master_p, master_p.id, u, u.id))
                     p.usuario.remove(u)
-                    logging.info(u"Proyecto {0} [ID={1}] " +
-                                 u"borrar usuario {2} [ID={3}]"
-                                 .format(p, p.id, u, u.id))
-
+                    log_print(u"Proyecto {0} [ID={1}] " +
+                              u"borrar usuario {2} [ID={3}]"
+                              .format(p, p.id, u, u.id))
                 p.save()
             master_p.save()
 
