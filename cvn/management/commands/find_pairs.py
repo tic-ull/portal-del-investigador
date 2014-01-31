@@ -42,6 +42,7 @@ class Command(BaseCommand):
             "-u",
             "--document",
             dest="usuario",
+            default=False,
             help="specify ID document for duplicate control. Use 'all'.",
         ),
         make_option(
@@ -55,6 +56,13 @@ class Command(BaseCommand):
             "--diff",
             dest="differing_pairs",
             help="specify the number of differing pairs for duplicate control",
+        ),
+        make_option(
+            "-y",
+            "--year",
+            dest="year",
+            default=False,
+            help="specify the year for searching in format XXXX or use 'all'",
         ),
     )
 
@@ -78,14 +86,7 @@ class Command(BaseCommand):
 
     DIFFERING_PAIRS = 0  # Default value. No contamos la denominación.
 
-    YEAR = 2012
-
     def handle(self, *args, **options):
-
-        if options['usuario'] is None:
-            raise CommandError("Option `--document=...` must be specified.")
-        else:
-            usuario = options['usuario']
 
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
@@ -108,52 +109,56 @@ class Command(BaseCommand):
 
         log_print("Buscando duplicados en el modelo " +
                   "{0}".format(TABLE.__name__))
+        if not options['year']:
+            registros = TABLE.objects.exclude(usuario=None)
+        else:
+            self.YEAR = options['year']
+            if TABLE == Proyecto:
+                # --------------------------- PROYECTOS -------------------- #
+                # PROYECTOS vigentes en 2012
+                registros = TABLE.objects.filter(
+                    Q(fecha_de_inicio__lte=datetime.date(self.YEAR, 12, 31)) &
+                    Q(fecha_de_fin__gt=datetime.date(self.YEAR, 1, 1)))
+                # excluye los registros ya detectados previamente
+                # y que están huérfanos de usuario
+                registros = registros.exclude(usuario=None)
+                # ---------------------------------------------------------- #
 
-        if TABLE == Proyecto:
-            # --------------------------- PROYECTOS ---------------------- #
-            # PROYECTOS vigentes en 2012
-            registros = TABLE.objects.filter(
-                Q(fecha_de_inicio__lte=datetime.date(self.YEAR, 12, 31)) &
-                Q(fecha_de_fin__gt=datetime.date(self.YEAR, 1, 1)))
-            # excluye los registros ya detectados previamente
-            # y que están huérfanos de usuario
-            registros = registros.exclude(usuario=None)
-            # ------------------------------------------------------------ #
+            elif TABLE == Publicacion:
+                # ---------------------- PUBLICACIONES --------------------- #
+                # PUBLICACIONES en 2012
+                registros = TABLE.objects.filter(fecha__year=self.YEAR)
+                # excluye los registros ya detectados previamente
+                # y que están huérfanos de usuario
+                registros = registros.exclude(usuario=None)
+                # ---------------------------------------------------------- #
 
-        elif TABLE == Publicacion:
-            # ---------------------- PUBLICACIONES ----------------------- #
-            # PUBLICACIONES en 2012
-            registros = TABLE.objects.filter(fecha__year=self.YEAR)
-            # excluye los registros ya detectados previamente
-            # y que están huérfanos de usuario
-            registros = registros.exclude(usuario=None)
-            # ------------------------------------------------------------ #
+            elif TABLE == Congreso:
+                # --------------------------- CONGRESOS -------------------- #
+                # Asistencia a congresos en 2012
+                registros = TABLE.objects.filter(
+                    Q(fecha_realizacion__lte=datetime.date(self.YEAR, 12, 31)) &
+                    Q(fecha_finalizacion__gt=datetime.date(self.YEAR, 1, 1)))
+                # excluye los registros ya detectados previamente
+                # y que están huérfanos de usuario
+                registros = registros.exclude(usuario=None)
+                # --------------------------------------------------------- #
 
-        elif TABLE == Congreso:
-            # --------------------------- CONGRESOS ---------------------- #
-            # Asistencia a congresos en 2012
-            registros = TABLE.objects.filter(
-                Q(fecha_realizacion__lte=datetime.date(self.YEAR, 12, 31)) &
-                Q(fecha_finalizacion__gt=datetime.date(self.YEAR, 1, 1)))
-            # excluye los registros ya detectados previamente
-            # y que están huérfanos de usuario
-            registros = registros.exclude(usuario=None)
-            # ----------------------------------------------------------- #
+            elif TABLE == Convenio:
+                # ------------------------ CONVENIOS ----------------------- #
+                # Convenios vigentes en 2012
+                registros_raw = TABLE.objects.raw('SELECT * FROM cvn_convenio WHERE (YEAR(fecha_de_inicio) = ' + 'self.YEAR' + ' OR (duracion_anyos < 100 AND YEAR(INTERVAL (duracion_anyos * 365 + duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= 100 AND YEAR(INTERVAL (duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= ' + 'self.YEAR' + '))')
+                # excluye los registros ya detectados previamente
+                # y que están huérfanos de usuario
+                registros = []
+                for r in registros_raw:
+                    list_usuarios = r.usuario.all()
+                    if list_usuarios is not None and len(list_usuarios) > 0:
+                        registros.append(r)
+                # ---------------------------------------------------------- #
 
-        elif TABLE == Convenio:
-            # ------------------------ CONVENIOS ------------------------- #
-            # Convenios vigentes en 2012
-            registros_raw = TABLE.objects.raw('SELECT * FROM cvn_convenio WHERE (YEAR(fecha_de_inicio) = ' + 'self.YEAR' + ' OR (duracion_anyos < 100 AND YEAR(INTERVAL (duracion_anyos * 365 + duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= 100 AND YEAR(INTERVAL (duracion_meses * 12 + duracion_dias) DAY + fecha_de_inicio) >= ' + 'self.YEAR' + ') OR /* caso de dato erróneo */ (duracion_anyos >= ' + 'self.YEAR' + '))')
-            # excluye los registros ya detectados previamente
-            # y que están huérfanos de usuario
-            registros = []
-            for r in registros_raw:
-                list_usuarios = r.usuario.all()
-                if list_usuarios is not None and len(list_usuarios) > 0:
-                    registros.append(r)
-            # ------------------------------------------------------------ #
-
-        if usuario != "all":
+        if options['usuario']:
+            usuario = options['usuario']
             # obtenemos el usuario cuyo ID document es usuario
             try:
                 usuario = Usuario.objects.get(documento=usuario)
