@@ -325,12 +325,12 @@ class Command(BaseCommand):
                 p = TABLE.objects.get(pk=pry_id)
                 for u in p.usuario.all():
                     master_p.usuario.add(u)
-                    log_print(u"Proyecto {0} [ID={1}] " +
-                              u"añadir usuario {2} [ID={3}]"
+                    log_print((u"Proyecto {0} [ID={1}] " +
+                              u"añadir usuario {2} [ID={3}]")
                               .format(master_p, master_p.id, u, u.id))
                     p.usuario.remove(u)
-                    log_print(u"Proyecto {0} [ID={1}] " +
-                              u"borrar usuario {2} [ID={3}]"
+                    log_print((u"Proyecto {0} [ID={1}] " +
+                              u"borrar usuario {2} [ID={3}]")
                               .format(p, p.id, u, u.id))
                 p.save()
             master_p.save()
