@@ -242,6 +242,10 @@ class Publicacion(models.Model):
 
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
+    # Campo recomendado
+    titulo = models.TextField(u'Título de la publicación',
+                              blank=True, null=True)
+
     # Una publicación puede pertenecer a varios usuarios.
     usuario = models.ManyToManyField(Usuario, blank=True, null=True)
 
@@ -249,8 +253,6 @@ class Publicacion(models.Model):
     tipo_de_produccion = models.CharField(u'Tipo de producción',
                                           max_length=50, blank=True, null=True)
     fecha = models.DateField(u'Fecha', blank=True, null=True)
-    titulo = models.TextField(u'Título de la publicación',
-                              blank=True, null=True)
 
     tipo_de_soporte = models.CharField(u'Tipo de soporte',
                                        max_length=1000, blank=True, null=True)
