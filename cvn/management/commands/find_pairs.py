@@ -1,6 +1,9 @@
 # -*- encoding: utf8 -*-
 import datetime
 import logging
+import os
+import time
+import subprocess
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
@@ -8,6 +11,7 @@ from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
 from string_utils.stringcmp import do_stringcmp
 
 logger = logging.getLogger(__name__)
+
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
     # return:
@@ -34,6 +38,19 @@ def log_print(message):
     print message
     logger.info(message)
 
+def backupDatabase(username, dbname, port):
+    backupdir = os.environ['HOME'] + '/backup'
+    date = time.strftime('%Y-%m-%d.%H:%M:%S')
+    filepath = "%s/%s.%s.gz" % (backupdir, dbname, date)
+    params = "pg_dump -U%s -p%s -W %s | gzip -9 -c > %s" % (username, port, dbname, filepath)
+
+    if not os.path.exists(backupdir):
+        os.mkdir(backupdir)
+    proc = subprocess.Popen([params], stderr=subprocess.PIPE, shell=True)
+    (out, err) = proc.communicate()
+    if err:
+        os.system("rm " + filepath)
+    return err
 
 class Command(BaseCommand):
     help = u'Encuentra registros sospechosos de estar duplicados'
@@ -86,8 +103,38 @@ class Command(BaseCommand):
 
     DIFFERING_PAIRS = 0  # Default value. No contamos la denominación.
 
-    def handle(self, *args, **options):
+    FIELD_WIDTH = 28
+    COLWIDTH = 50
 
+    def print_cabecera_registro(self, pry1, pry2, duplicates, pair, model_fields):
+        os.system("clear")
+        log_print("=============================================")
+        log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)"
+            .format(pry1.id, pry2.id, duplicates[pair]*100))
+        log_print("=============================================")
+        # overview of the two registers
+        log_print("Field".ljust(self.FIELD_WIDTH)
+            + "ID1".ljust(self.COLWIDTH)
+            + "ID2".ljust(self.COLWIDTH))
+        log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
+        for f in model_fields:
+            if f not in (self.DONT_SET_FIELDS +
+                self.TIMESTAMP_FIELDS):
+                f1 = pry1.__getattribute__(f)
+                f1 = "" if f1 is None else f1
+                f2 = pry2.__getattribute__(f)
+                f2 = "" if f2 is None else f2
+                if any([f1, f2]):
+                    log_print(unicode(f)[:self.FIELD_WIDTH-1]
+                        .ljust(self.FIELD_WIDTH)
+                        + unicode(f1)[:self.COLWIDTH-1]
+                        .ljust(self.COLWIDTH)
+                        + unicode(f2)[:self.COLWIDTH-1]
+                        .ljust(self.COLWIDTH))
+        log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
+
+    def checkArgs(self, options):
+        #Esta funcion chequea los argumentos pasados por el usuario
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
@@ -98,7 +145,6 @@ class Command(BaseCommand):
                 raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
                                    "Convenio, Publicacion or Congreso "
                                    .format(options['table']))
-
         if options['differing_pairs'] is None:
             raise CommandError("Option `--diff=0, 1...` must be specified.")
         else:
@@ -106,7 +152,9 @@ class Command(BaseCommand):
                 self.DIFFERING_PAIRS = int(options['differing_pairs'])
             except:
                 raise CommandError("Option `--diff needs an integer 0,1,...")
+        return TABLE, NAME_FIELD
 
+    def runQueries(self, options, TABLE):
         log_print("Buscando duplicados en el modelo " +
                   "{0}".format(TABLE.__name__))
         if not options['year']:
@@ -176,15 +224,13 @@ class Command(BaseCommand):
                 registros = new_registros
 
         log_print("Total de registros en estudio = {0}".format(len(registros)))
+        return registros
+
+    def findDuplicates(self, registros, NAME_FIELD):
+        # ENCONTRAR LOS PARES DUPLICADOS #
         duplicates = {}
 
-        ##################################
-        # ENCONTRAR LOS PARES DUPLICADOS #
-        ##################################
-
-        registros = [p for p in registros]
-
-        print "Finding pairs for indexes ..."
+        #print "Finding pairs for indexes ..."
         for idx1, pry1 in enumerate(registros[:-1]):
             for idx2, pry2 in enumerate(registros[idx1 + 1:], start=idx1 + 1):
                 pry1_name = pry1.__getattribute__(NAME_FIELD)
@@ -200,113 +246,104 @@ class Command(BaseCommand):
 
         log_print("Total duplicates = {0} de {1} "
                   .format(len(duplicates), len(registros)))
+        return duplicates
 
+    def mergePair(self, model_fields, pair, master, duplicates):
+        #save = True
+        repeat = True
+        while repeat:
+            repeat = False
+            for f in model_fields:
+                if f not in (self.DONT_SET_FIELDS + self.TIMESTAMP_FIELDS):
+                    f1 = pair[0].__getattribute__(f)
+                    f2 = pair[1].__getattribute__(f)
+                    master_f = f1 if f1 else f2
+                    if f1 and f2:
+                        try:
+                            master_f = f1 if len(f1) >= len(f2) else f2
+                        except:
+                            master_f = f1
+                    # A AND B, A == B
+                    # si existen los dos no podemos decidir
+                    if f1 and f2 and f1 == f2:
+                        attr = f1
+                        master.__setattr__(f, attr)
+                    # A OR B, A != B
+                    if any([f1, f2]) and f1 != f2:
+                        self.print_cabecera_registro(pair[0], pair[1], duplicates, pair, model_fields)
+                        log_print(f)
+                        print "--------------------------------"
+                        log_print(u"{0:5d}: {1}".format(pair[0].id, f1))
+                        log_print(u"{0:5d}: {1}".format(pair[1].id, f2))
+                        print "  NEW:", master_f, "\n"
+                        print "--------------------------------"
+                        choice = self.choice(pair[0], pair[1])
+                        
+                        # Salir del for     =>  Deja de comparar registros de la pareja  =>  break
+                        # Salir del while   =>  Deja de comparar la pareja.              =>  repeat = True continua el while.
+                        if choice == -1:        # Reiniciar tupla saliendo del for
+                            repeat = True
+                            break
+                        if choice == 0:         # Ignora la tupla saliendo de la función mergePair.
+                            return None, False
+                        if choice == 'q':       # Ignora la tupla saliendo de mergePair retornando exit=True.
+                            return None, True
+                        if choice == "":        # Selecciona el registro recomendado.
+                            attr = master_f
+                        else:
+                            if choice == "j":   # Une ambos registros
+                                attr = f1 + "; " + f2
+                            else:
+                                attr = f1 if choice == pair[0].id else f2 # Selecciona registro especificado por usuario.
+                        master.__setattr__(f, attr)
+                        log_print(u"SET TO: {0}".format(attr))
+                        log_print(u"----------")
+        return master, False
+
+    def confirmDuplicates(self, sorted_pairs, TABLE, NAME_FIELD, duplicates):
         # RECORRER LOS PARES DUPLICADOS
+        #TODO: Refactorizar
         pairs_solved = {}
-        sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
-
-        choice = ""
         count = 0
         for pair in sorted_pairs:
-            save = True
-            if choice == 'q':
-                log_print("User aborted main loop...")
-                break
-            pry1 = pair[0]
-            pry2 = pair[1]
             difering_length = difering_fields(
-                pry1, pry2, self.DONT_CHECK_FIELDS + [NAME_FIELD])
+                pair[0], pair[1], self.DONT_CHECK_FIELDS + [NAME_FIELD])
 
             if difering_length == self.DIFFERING_PAIRS:
                 master = TABLE()
+                #print master
                 # todo a bit of fixing this
                 model_fields = (set(TABLE._meta.get_all_field_names())
                                 - set([NAME_FIELD]))
                 model_fields = list(model_fields) + [NAME_FIELD]
-                FIELD_WIDTH = 28
-                COLWIDTH = 50
-
-                repeat = True
-                while repeat:
-                    print ("\n"*5)
-                    log_print("=============================================")
-                    log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)"
-                              .format(pry1.id, pry2.id, duplicates[pair]*100))
-                    log_print("=============================================")
-
-                    # overview of the two registers
-                    log_print("Field".ljust(FIELD_WIDTH)
-                              + "ID1".ljust(COLWIDTH)
-                              + "ID2".ljust(COLWIDTH))
-                    log_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
-                    for f in model_fields:
-                        if f not in (self.DONT_SET_FIELDS +
-                                     self.TIMESTAMP_FIELDS):
-                            f1 = pry1.__getattribute__(f)
-                            f1 = "" if f1 is None else f1
-                            f2 = pry2.__getattribute__(f)
-                            f2 = "" if f2 is None else f2
-                            if any([f1, f2]):
-                                log_print(unicode(f)[:FIELD_WIDTH-1]
-                                          .ljust(FIELD_WIDTH)
-                                          + unicode(f1)[:COLWIDTH-1]
-                                          .ljust(COLWIDTH)
-                                          + unicode(f2)[:COLWIDTH-1]
-                                          .ljust(COLWIDTH))
-                    log_print("-" * (FIELD_WIDTH + 2 * COLWIDTH))
-
-                    for f in model_fields:
-                        if f not in (self.DONT_SET_FIELDS +
-                                     self.TIMESTAMP_FIELDS):
-                            f1 = pry1.__getattribute__(f)
-                            f2 = pry2.__getattribute__(f)
-                            master_f = f1 if f1 else f2
-                            if f1 and f2:
-                                try:
-                                    master_f = f1 if len(f1) >= len(f2) else f2
-                                except:
-                                    master_f = f1
-                            # A AND B, A == B
-                            # si existen los dos no podemos decidir
-                            if f1 and f2 and f1 == f2:
-                                attr = f1
-                                master.__setattr__(f, attr)
-                            # A OR B, A != B
-                            if any([f1, f2]) and f1 != f2:
-                                log_print(f)
-                                print "--------------------------------"
-                                log_print(u"{0:5d}: {1}".format(pry1.id, f1))
-                                log_print(u"{0:5d}: {1}".format(pry2.id, f2))
-                                print "  NEW:", master_f, "\n"
-                                print "--------------------------------"
-                                choice = self.choice(pry1, pry2)
-                                if choice in ['-1', '0', 'q']:
-                                    break
-
-                                if choice == "":
-                                    attr = master_f
-                                else:
-                                    if choice == "j":
-                                        attr = f1 + "; " + f2
-                                    else:
-                                        attr = f1 if choice == pry1.id else f2
-                                master.__setattr__(f, attr)
-                                log_print(u"SET TO: {0}".format(attr))
-                                log_print(u"----------")
-
-                            # NOT A AND NOT B
-
-                    if choice in [0, 'q']:
-                        save = False
-                        break
-                    if choice != -1:
-                        repeat = False
-
-                if save:
+                master, exit = self.mergePair(model_fields, pair, master, duplicates)
+                if master:
                     count += 1
                     master.save()
-                    pairs_solved[(pry1.id, pry2.id)] = master.id
+                    pairs_solved[(pair[0].id, pair[1].id)] = master.id
+                if exit:
+                    log_print("User aborted main loop...")
+                    break
+        return pairs_solved, count
 
+    def handle(self, *args, **options):
+
+        TABLE, NAME_FIELD = self.checkArgs(options)
+        log_print("Haciendo copia de seguridad de BD")
+        error = backupDatabase('viinv', 'memviinv', '5432')
+        if error:
+            log_print(error)
+        else:
+            print('Realizando consultas')
+            registros = self.runQueries(options, TABLE)
+            registros = [p for p in registros]
+            print('Buscando parejas de duplicados')
+            duplicates = self.findDuplicates(registros, NAME_FIELD)
+            sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
+            pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
+            self.commit_changes(TABLE, pairs_solved, count)
+        
+    def commit_changes(self, TABLE, pairs_solved, count):
         print pairs_solved
         log_print("========================================")
         log_print(u"Número de campos diferentes " +
