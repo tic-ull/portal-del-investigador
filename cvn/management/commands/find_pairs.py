@@ -88,7 +88,16 @@ class Command(BaseCommand):
             default=False,
             help="specify the year for searching in format XXXX or use 'all'",
         ),
+        make_option(
+            "-p",
+            "--publication",
+            dest="publication",
+            default=False,
+            help="specify the type of publication for searching",
+        ),
     )
+    
+    PUBLICATION_TYPES = {'libro' : u'Libro', 'capitulo' : u'Capítulo de Libro', 'articulo' : u'Artículo'}
 
     TABLES = {'Proyecto': Proyecto,
               'Publicacion': Publicacion,
@@ -131,7 +140,7 @@ class Command(BaseCommand):
                 f1 = "" if f1 is None else f1
                 f2 = pry2.__getattribute__(f)
                 f2 = "" if f2 is None else f2
-                if any([f1, f2]):
+                if f1 != f2:
                     log_print(unicode(f)[:self.FIELD_WIDTH-1]
                         .ljust(self.FIELD_WIDTH)
                         + unicode(f1)[:self.COLWIDTH-1]
@@ -142,6 +151,9 @@ class Command(BaseCommand):
 
     def checkArgs(self, options):
         #Esta funcion chequea los argumentos pasados por el usuario
+        if options['publication']:
+            if options['publication'] not in self.PUBLICATION_TYPES:
+                raise CommandError('Option publication: allowed values: libro, capitulo, articulo')
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
@@ -163,7 +175,7 @@ class Command(BaseCommand):
 
     def runQueries(self, options, TABLE):
         log_print("Buscando duplicados en el modelo " +
-                  "{0}".format(TABLE.__name__))
+                  "{0}".format(TABLE.__name__)) 
         if not options['year']:
             registros = TABLE.objects.exclude(usuario=None)
         else:
@@ -187,6 +199,8 @@ class Command(BaseCommand):
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
                 # ---------------------------------------------------------- #
+                if options['publication']:
+                    registros = registros.filter(tipo_de_produccion=self.PUBLICATION_TYPES[options['publication']])
 
             elif TABLE == Congreso:
                 # --------------------------- CONGRESOS -------------------- #
@@ -297,11 +311,10 @@ class Command(BaseCommand):
                             return None, True
                         if choice == "":        # Selecciona el registro recomendado.
                             attr = master_f
-                        else:
-                            if choice == "j":   # Une ambos registros
-                                attr = f1 + "; " + f2
-                            else:
-                                attr = f1 if choice == pair[0].id else f2 # Selecciona registro especificado por usuario.
+                        if choice == 1:       # Selecciona el registro de la tupla 1
+                            attr = f1
+                        if choice == 2:       # Selecciona el registro de la tupla 2
+                            attr = f2
                         master.__setattr__(f, attr)
                         log_print(u"SET TO: {0}".format(attr))
                         log_print(u"----------")
@@ -320,9 +333,11 @@ class Command(BaseCommand):
                 master = TABLE()
                 #print master
                 # todo a bit of fixing this
-                model_fields = TABLE._meta.get_all_field_names()
+                #model_fields = TABLE._meta.get_all_field_names()
                 #    - set([NAME_FIELD]))
                 #model_fields = list(model_fields) + [NAME_FIELD]
+                model_fields = TABLE._meta.get_fields_with_model()
+                model_fields = [ field[0].get_attname() for field in model_fields ]
                 master, exit = self.mergePair(model_fields, pair, master, duplicates)
                 if master:
                     count += 1
@@ -380,10 +395,10 @@ class Command(BaseCommand):
             master_p.save()
 
     def choice(self, pry1, pry2):
-        print (('Return=NEW\t{0}=ID1\t{1}=ID2\t0=Ignorar pareja\t-1=Reniciar' +
-               '\tj=join_fields\tq=save_and_abort').format(pry1.id, pry2.id))
+        print ('Return=NEW\t1=ID1\t2=ID2\t0=Ignorar pareja\t-1=Reniciar' +
+               '\tq=save_and_abort')
         choice = None
-        while (choice not in ["", pry1.id, pry2.id, -1, 0, 'j', 'q']):
+        while (choice not in ["", 1, 2, -1, 0, 'q']):
             choice = raw_input("? ")
             try:
                 choice = int(choice)
