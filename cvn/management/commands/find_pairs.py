@@ -81,7 +81,16 @@ class Command(BaseCommand):
             default=False,
             help="specify the year for searching in format XXXX or use 'all'",
         ),
+        make_option(
+            "-p",
+            "--publication",
+            dest="publication",
+            default=False,
+            help="specify the type of publication for searching",
+        ),
     )
+    
+    PUBLICATION_TYPES = {'libro' : u'Libro', 'capitulo' : u'Capítulo de Libro', 'articulo' : u'Artículo'}
 
     TABLES = {'Proyecto': Proyecto,
               'Publicacion': Publicacion,
@@ -135,6 +144,9 @@ class Command(BaseCommand):
 
     def checkArgs(self, options):
         #Esta funcion chequea los argumentos pasados por el usuario
+        if options['publication']:
+            if options['publication'] not in self.PUBLICATION_TYPES:
+                raise CommandError('Option publication: allowed values: libro, capitulo, articulo')
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
@@ -156,7 +168,7 @@ class Command(BaseCommand):
 
     def runQueries(self, options, TABLE):
         log_print("Buscando duplicados en el modelo " +
-                  "{0}".format(TABLE.__name__))
+                  "{0}".format(TABLE.__name__)) 
         if not options['year']:
             registros = TABLE.objects.exclude(usuario=None)
         else:
@@ -180,6 +192,8 @@ class Command(BaseCommand):
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
                 # ---------------------------------------------------------- #
+                if options['publication']:
+                    registros = registros.filter(tipo_de_produccion=self.PUBLICATION_TYPES[options['publication']])
 
             elif TABLE == Congreso:
                 # --------------------------- CONGRESOS -------------------- #
