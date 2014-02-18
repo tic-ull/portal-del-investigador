@@ -278,7 +278,7 @@ class Command(BaseCommand):
                         print "  NEW:", master_f, "\n"
                         print "--------------------------------"
                         choice = self.choice(pair[0], pair[1])
-                        
+
                         # Salir del for     =>  Deja de comparar registros de la pareja  =>  break
                         # Salir del while   =>  Deja de comparar la pareja.              =>  repeat = True continua el while.
                         if choice == -1:        # Reiniciar tupla saliendo del for
@@ -313,9 +313,11 @@ class Command(BaseCommand):
                 master = TABLE()
                 #print master
                 # todo a bit of fixing this
-                model_fields = TABLE._meta.get_all_field_names()
+                #model_fields = TABLE._meta.get_all_field_names()
                 #    - set([NAME_FIELD]))
                 #model_fields = list(model_fields) + [NAME_FIELD]
+                model_fields = TABLE._meta.get_fields_with_model()
+                model_fields = [ field[0].get_attname() for field in model_fields ]
                 master, exit = self.mergePair(model_fields, pair, master, duplicates)
                 if master:
                     count += 1
@@ -342,7 +344,7 @@ class Command(BaseCommand):
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved, count)
-        
+
     def commit_changes(self, TABLE, pairs_solved, count):
         print pairs_solved
         log_print("========================================")
