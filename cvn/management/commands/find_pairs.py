@@ -133,7 +133,7 @@ class Command(BaseCommand):
                 f1 = "" if f1 is None else f1
                 f2 = pry2.__getattribute__(f)
                 f2 = "" if f2 is None else f2
-                if any([f1, f2]):
+                if f1 != f2:
                     log_print(unicode(f)[:self.FIELD_WIDTH-1]
                         .ljust(self.FIELD_WIDTH)
                         + unicode(f1)[:self.COLWIDTH-1]
