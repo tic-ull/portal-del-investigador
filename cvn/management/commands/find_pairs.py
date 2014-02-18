@@ -313,9 +313,9 @@ class Command(BaseCommand):
                 master = TABLE()
                 #print master
                 # todo a bit of fixing this
-                model_fields = (set(TABLE._meta.get_all_field_names())
-                                - set([NAME_FIELD]))
-                model_fields = list(model_fields) + [NAME_FIELD]
+                #model_fields = (set(TABLE._meta.get_all_field_names())
+                #    - set([NAME_FIELD]))
+                #model_fields = list(model_fields) + [NAME_FIELD]
                 master, exit = self.mergePair(model_fields, pair, master, duplicates)
                 if master:
                     count += 1
