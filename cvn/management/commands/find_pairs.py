@@ -9,6 +9,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
 from string_utils.stringcmp import do_stringcmp
+from django.conf import settings as st
 
 logger = logging.getLogger(__name__)
 
@@ -38,19 +39,25 @@ def log_print(message):
     print message
     logger.info(message)
 
-def backupDatabase(username, dbname, port):
-    backupdir = os.environ['HOME'] + '/backup'
-    date = time.strftime('%Y-%m-%d.%H:%M:%S')
-    filepath = "%s/%s.%s.gz" % (backupdir, dbname, date)
-    params = "pg_dump -U%s -p%s -W %s | gzip -9 -c > %s" % (username, port, dbname, filepath)
 
-    if not os.path.exists(backupdir):
-        os.mkdir(backupdir)
+def backupDatabase(username, dbname, port):
+    dbName = st.DATABASES['historica']['NAME']
+    filePath = '%s/%s.%s.gz' % (st.BACKUP_DIR, dbName,
+                                time.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
+    params = 'export PGPASSWORD=%s\npg_dump -U%s -h %s %s | gzip -9 -c > %s' \
+        % (st.DATABASES['historica']['PASSWORD'],
+           st.DATABASES['historica']['USER'],
+           st.DATABASES['historica']['HOST'],
+           dbName, filePath)
+
+    if not os.path.exists(st.BACKUP_DIR):
+        os.mkdir(st.BACKUP_DIR)
     proc = subprocess.Popen([params], stderr=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     if err:
-        os.system("rm " + filepath)
+        os.remove(filePath)
     return err
+
 
 class Command(BaseCommand):
     help = u'Encuentra registros sospechosos de estar duplicados'
@@ -278,7 +285,7 @@ class Command(BaseCommand):
                         print "  NEW:", master_f, "\n"
                         print "--------------------------------"
                         choice = self.choice(pair[0], pair[1])
-                        
+
                         # Salir del for     =>  Deja de comparar registros de la pareja  =>  break
                         # Salir del while   =>  Deja de comparar la pareja.              =>  repeat = True continua el while.
                         if choice == -1:        # Reiniciar tupla saliendo del for
@@ -342,7 +349,7 @@ class Command(BaseCommand):
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved, count)
-        
+
     def commit_changes(self, TABLE, pairs_solved, count):
         print pairs_solved
         log_print("========================================")

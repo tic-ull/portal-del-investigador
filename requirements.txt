@@ -1,14 +1,14 @@
 Django==1.5.1
 psycopg2
 django_extensions
-south   # DB migrations
-PIL     # Images
-mysql-python    # MySQL
-suds    # Web Services
-lxml    # Parsing XML
-dateutils # Fecha de caducidad
-python-slugify # para crear filename desde un string. Javier 20/12/2013
-django-bootstrap-toolkit==2.8.0 # Bootstrap
+south							# DB migrations
+Pillow							# Images
+mysql-python						# MySQL
+suds							# Web Services
+lxml							# Parsing XML
+dateutils						# Fecha de caducidad
+python-slugify						# filename desde un String
+django-bootstrap-toolkit==2.8.0				# Bootstrap
 -e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
 gunicorn
 selenium

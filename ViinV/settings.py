@@ -50,15 +50,14 @@ DATABASES = {
         'PASSWORD': '1234',
         'OPTIONS': {'init_command': 'SET storage_engine=INNODB'},
     },
-
-    # db alias for MEMORIA 2012
-    'mem2012_db_alias': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'memviinv12',
-        'USER': 'root',
-        'PASSWORD': '1234',
+    # DB Cleaning
+    'historica': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'investigacion_2012',
+        'USER': 'investigacion',
+        'PASSWORD': 'netUf0Quigak0',
+        'HOST': 'django1-pre.stic.ull.es'
     }
-
 }
 
 DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']
@@ -318,6 +317,9 @@ SKIP_SOUTH_TESTS = True     # To disable South's own unit tests
 FIXTURE_DIRS = (
     os.path.join(PROJECT_ROOT, 'cvn/tests/fixtures/'),
 )
+
+# Directorio de Backups
+BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))

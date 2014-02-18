@@ -1,13 +1,6 @@
-# Compiled source #
-###################
 *.pyc
-
-# Logs #
-######################
 *.log
-
-# Directory #
-######################
+*.swp
 build/
 src/
 static/files/
@@ -15,3 +8,4 @@ media
 ViinV/settings_local.py
 virtualenv
 collected_static
+backups
