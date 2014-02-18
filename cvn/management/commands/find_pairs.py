@@ -304,11 +304,10 @@ class Command(BaseCommand):
                             return None, True
                         if choice == "":        # Selecciona el registro recomendado.
                             attr = master_f
-                        else:
-                            if choice == "j":   # Une ambos registros
-                                attr = f1 + "; " + f2
-                            else:
-                                attr = f1 if choice == pair[0].id else f2 # Selecciona registro especificado por usuario.
+                        if choice == 1:       # Selecciona el registro de la tupla 1
+                            attr = f1
+                        if choice == 2:       # Selecciona el registro de la tupla 2
+                            attr = f2
                         master.__setattr__(f, attr)
                         log_print(u"SET TO: {0}".format(attr))
                         log_print(u"----------")
@@ -387,10 +386,10 @@ class Command(BaseCommand):
             master_p.save()
 
     def choice(self, pry1, pry2):
-        print (('Return=NEW\t{0}=ID1\t{1}=ID2\t0=Ignorar pareja\t-1=Reniciar' +
-               '\tj=join_fields\tq=save_and_abort').format(pry1.id, pry2.id))
+        print ('Return=NEW\t1=ID1\t2=ID2\t0=Ignorar pareja\t-1=Reniciar' +
+               '\tq=save_and_abort')
         choice = None
-        while (choice not in ["", pry1.id, pry2.id, -1, 0, 'j', 'q']):
+        while (choice not in ["", 1, 2, -1, 0, 'j', 'q']):
             choice = raw_input("? ")
             try:
                 choice = int(choice)
