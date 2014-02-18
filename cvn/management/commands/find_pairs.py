@@ -389,7 +389,7 @@ class Command(BaseCommand):
         print ('Return=NEW\t1=ID1\t2=ID2\t0=Ignorar pareja\t-1=Reniciar' +
                '\tq=save_and_abort')
         choice = None
-        while (choice not in ["", 1, 2, -1, 0, 'j', 'q']):
+        while (choice not in ["", 1, 2, -1, 0, 'q']):
             choice = raw_input("? ")
             try:
                 choice = int(choice)
