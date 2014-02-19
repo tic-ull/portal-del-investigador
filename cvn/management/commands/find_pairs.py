@@ -10,6 +10,7 @@ from django.db.models import Q
 from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
 from string_utils.stringcmp import do_stringcmp
 from django.conf import settings as st
+from joblib import Parallel, delayed
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,21 @@ def backupDatabase(username, dbname, port):
         os.remove(filePath)
     return err
 
+def findDup(i, registros, NAME_FIELD, LIMIT):
+    duplicates = {}
+    pry1 = registros[i]
+    for pry2 in registros[i + 1:]:
+        pry1_name = pry1.__getattribute__(NAME_FIELD)
+        pry2_name = pry2.__getattribute__(NAME_FIELD)
+        if pry1_name and pry2_name:
+            # comparisons made in lower case
+            percentage, time = do_stringcmp("qgram3avrg",
+                                            pry1_name.lower(),
+                                            pry2_name.lower())
+            if percentage > LIMIT:
+                  pair = tuple([pry1, pry2])
+                  duplicates[pair] = percentage
+    return duplicates
 
 class Command(BaseCommand):
     help = u'Encuentra registros sospechosos de estar duplicados'
@@ -268,6 +284,37 @@ class Command(BaseCommand):
         log_print("Total duplicates = {0} de {1} "
                   .format(len(duplicates), len(registros)))
         return duplicates
+
+    def findDuplicatesNew(self, registros, NAME_FIELD):
+        # ENCONTRAR LOS PARES DUPLICADOS #
+        duplicates = {}
+        #print "Finding pairs for indexes ..."
+        #for idx1, pry1 in enumerate(registros[:-1]):
+        result = Parallel(n_jobs=4)(delayed(findDup)(i, registros, NAME_FIELD, self.LIMIT) for i in range(0, len(registros)))
+        import pdb; pdb.set_trace()
+        #for i in range(0, len(registros)):
+        #    newdups = self.findDup(i, registros, NAME_FIELD)
+        #    duplicates = dict(duplicates.items() + newdups.items())
+        log_print("Total duplicates = {0} de {1} "
+                  .format(len(duplicates), len(registros)))
+        return duplicates
+
+    '''def findDup(self, i, registros, NAME_FIELD):
+        duplicates = {}
+        pry1 = registros[i]
+        for pry2 in registros[i + 1:]:
+            pry1_name = pry1.__getattribute__(NAME_FIELD)
+            pry2_name = pry2.__getattribute__(NAME_FIELD)
+            if pry1_name and pry2_name:
+                # comparisons made in lower case
+                percentage, time = do_stringcmp("qgram3avrg",
+                                                pry1_name.lower(),
+                                                pry2_name.lower())
+                if percentage > self.LIMIT:
+                      pair = tuple([pry1, pry2])
+                      duplicates[pair] = percentage
+        return duplicates'''
+        
 
     def mergePair(self, model_fields, pair, master, duplicates):
         #save = True
