@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import os
+PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings.py'))
 except IOError:
