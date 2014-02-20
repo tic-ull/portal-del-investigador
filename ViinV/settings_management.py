@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import os
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings.py'))
 except IOError:
