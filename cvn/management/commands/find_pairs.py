@@ -353,7 +353,6 @@ class Command(BaseCommand):
         return pairs_solved, count
 
     def handle(self, *args, **options):
-        signal.signal(signal.SIGINT, signal_handler)
         TABLE, NAME_FIELD = self.checkArgs(options)
         log_print("Haciendo copia de seguridad de BD")
         error = backupDatabase('viinv', 'memviinv', '5432')
@@ -366,6 +365,7 @@ class Command(BaseCommand):
             print('Buscando parejas de duplicados')
             duplicates = self.findDuplicates(registros, NAME_FIELD)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
+            signal.signal(signal.SIGINT, signal_handler)
             pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved, count)
 
