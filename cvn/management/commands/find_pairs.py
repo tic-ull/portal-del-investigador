@@ -126,12 +126,12 @@ class Command(BaseCommand):
     FIELD_WIDTH = 28
     COLWIDTH = 50
 
-    def print_cabecera_registro(self, pry1, pry2, duplicates, pair, model_fields):
+    def print_cabecera_registro(self, pry1, pry2, duplicates, pair, model_fields, count):
         os.system("clear")
-        log_print("=============================================")
-        log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%)"
-            .format(pry1.id, pry2.id, duplicates[pair]*100))
-        log_print("=============================================")
+        log_print("=====================================================")
+        log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%) {3}/{4}"
+            .format(pry1.id, pry2.id, duplicates[pair]*100, count, len(duplicates)))
+        log_print("=====================================================")
         # overview of the two registers
         log_print("Field".ljust(self.FIELD_WIDTH)
             + "ID1".ljust(self.COLWIDTH)
@@ -273,7 +273,7 @@ class Command(BaseCommand):
                   .format(len(duplicates), len(registros)))
         return duplicates
 
-    def mergePair(self, model_fields, pair, master, duplicates):
+    def mergePair(self, model_fields, pair, master, duplicates, count):
         #save = True
         repeat = True
         while repeat:
@@ -295,7 +295,7 @@ class Command(BaseCommand):
                         master.__setattr__(f, attr)
                     # A OR B, A != B
                     if any([f1, f2]) and f1 != f2:
-                        self.print_cabecera_registro(pair[0], pair[1], duplicates, pair, model_fields)
+                        self.print_cabecera_registro(pair[0], pair[1], duplicates, pair, model_fields, count)
                         log_print(f)
                         print "--------------------------------"
                         log_print(u"{0:5d}: {1}".format(pair[0].id, f1))
@@ -330,6 +330,7 @@ class Command(BaseCommand):
         pairs_solved = {}
         count = 0
         for pair in sorted_pairs:
+            count += 1
             difering_length = difering_fields(
                 pair[0], pair[1], self.DONT_CHECK_FIELDS + [NAME_FIELD])
 
@@ -342,15 +343,14 @@ class Command(BaseCommand):
                 #model_fields = list(model_fields) + [NAME_FIELD]
                 model_fields = TABLE._meta.get_fields_with_model()
                 model_fields = [ field[0].get_attname() for field in model_fields ]
-                master, exit = self.mergePair(model_fields, pair, master, duplicates)
+                master, exit = self.mergePair(model_fields, pair, master, duplicates, count)
                 if master:
-                    count += 1
                     master.save()
                     pairs_solved[(pair[0].id, pair[1].id)] = master.id
                 if exit:
                     log_print("User aborted main loop...")
                     break
-        return pairs_solved, count
+        return pairs_solved
 
     def handle(self, *args, **options):
         TABLE, NAME_FIELD = self.checkArgs(options)
@@ -366,17 +366,17 @@ class Command(BaseCommand):
             duplicates = self.findDuplicates(registros, NAME_FIELD)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             signal.signal(signal.SIGINT, signal_handler)
-            pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
-            self.commit_changes(TABLE, pairs_solved, count)
+            pairs_solved = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
+            self.commit_changes(TABLE, pairs_solved)
 
-    def commit_changes(self, TABLE, pairs_solved, count):
+    def commit_changes(self, TABLE, pairs_solved):
         print pairs_solved
         log_print("========================================")
         log_print(u"Número de campos diferentes " +
                   u"(contando la denominación): {0}"
                   .format(self.DIFFERING_PAIRS + 1))
         log_print("========================================")
-        log_print("Parejas cambiadas = {0}".format(count))
+        log_print("Parejas cambiadas = {0}".format(len(pairs_solved)))
         log_print("========================================")
         log_print("Cambiando los registros afectados en la BBDD")
         for pair, new_id in pairs_solved.iteritems():
