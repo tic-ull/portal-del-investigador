@@ -4,6 +4,8 @@ import logging
 import os
 import time
 import subprocess
+import signal
+import sys
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
@@ -13,6 +15,8 @@ from django.conf import settings as st
 
 logger = logging.getLogger(__name__)
 
+def signal_handler(signal, frame):
+    return None
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
     # return:
@@ -349,7 +353,8 @@ class Command(BaseCommand):
         return pairs_solved, count
 
     def handle(self, *args, **options):
-
+        signal.signal(signal.SIGINT, signal_handler)
+        signal.pause()
         TABLE, NAME_FIELD = self.checkArgs(options)
         log_print("Haciendo copia de seguridad de BD")
         error = backupDatabase('viinv', 'memviinv', '5432')
