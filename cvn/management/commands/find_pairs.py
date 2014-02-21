@@ -354,7 +354,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         signal.signal(signal.SIGINT, signal_handler)
-        signal.pause()
         TABLE, NAME_FIELD = self.checkArgs(options)
         log_print("Haciendo copia de seguridad de BD")
         error = backupDatabase('viinv', 'memviinv', '5432')
