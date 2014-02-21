@@ -300,7 +300,7 @@ class Command(BaseCommand):
                         print "--------------------------------"
                         log_print(u"{0:5d}: {1}".format(pair[0].id, f1))
                         log_print(u"{0:5d}: {1}".format(pair[1].id, f2))
-                        print "  NEW:", master_f, "\n"
+                        print "\n  NEW:", master_f, "\n"
                         print "--------------------------------"
                         choice = self.choice(pair[0], pair[1])
 
