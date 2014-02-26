@@ -285,15 +285,14 @@ class Command(BaseCommand):
                   .format(len(duplicates), len(registros)))
         return duplicates
 
-    def findDuplicatesThreaded(self, registros, NAME_FIELD):
+    def findDuplicatesThreaded(self, registros, NAME_FIELD, threads):
         # ENCONTRAR LOS PARES DUPLICADOS #
-        duplicates = {}
         #print "Finding pairs for indexes ..."
         #for idx1, pry1 in enumerate(registros[:-1]):
-        result = Parallel(n_jobs=4)(delayed(findDup)(i, registros, NAME_FIELD, self.LIMIT) for i in range(0, len(registros)))
-        z = {}
+        result = Parallel(n_jobs=threads)(delayed(findDup)(i, registros, NAME_FIELD, self.LIMIT) for i in range(0, len(registros)))
+        duplicates = {}
         for i in result:
-            z.update(i)
+            duplicates.update(i)
         #import pdb; pdb.set_trace()
         #for i in range(0, len(registros)):
         #    newdups = self.findDup(i, registros, NAME_FIELD)
@@ -410,7 +409,9 @@ class Command(BaseCommand):
             registros = self.runQueries(options, TABLE)
             registros = [p for p in registros]
             print('Buscando parejas de duplicados')
-            duplicates = self.findDuplicatesThreaded(registros, NAME_FIELD)
+            duplicates = self.findDuplicatesThreaded(registros, NAME_FIELD, 4)
+            duplicates = self.findDuplicatesThreaded(registros, NAME_FIELD, 2)
+            duplicates = self.findDuplicates(registros, NAME_FIELD)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved, count)
