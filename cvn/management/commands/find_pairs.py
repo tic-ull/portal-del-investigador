@@ -186,12 +186,7 @@ class Command(BaseCommand):
             self.YEAR = options['year']
             if TABLE == Proyecto:
                 # --------------------------- PROYECTOS -------------------- #
-                # PROYECTOS vigentes en 2012
-                registros = TABLE.objects.filter(
-                    Q(fecha_de_inicio__lte=datetime.date(int(self.YEAR), 12, 31)) &
-                    Q(fecha_de_fin__gte=datetime.date(int(self.YEAR), 1, 1)))
-                # excluye los registros ya detectados previamente
-                # y que están huérfanos de usuario
+                registros = TABLE.objects.filter(fecha_de_inicio__year=self.YEAR)
                 registros = registros.exclude(usuario=None)
                 # ---------------------------------------------------------- #
 
@@ -209,9 +204,7 @@ class Command(BaseCommand):
             elif TABLE == Congreso:
                 # --------------------------- CONGRESOS -------------------- #
                 # Asistencia a congresos en 2012
-                registros = TABLE.objects.filter(
-                    Q(fecha_realizacion__lte=datetime.date(int(self.YEAR), 12, 31)) &
-                    Q(fecha_finalizacion__gte=datetime.date(int(self.YEAR), 1, 1)))
+                registros = TABLE.objects.filter(fecha_realizacion__year=self.YEAR)
                 # excluye los registros ya detectados previamente
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
