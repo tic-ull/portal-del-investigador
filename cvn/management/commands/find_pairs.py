@@ -263,28 +263,6 @@ class Command(BaseCommand):
         log_print("Total de registros en estudio = {0}".format(len(registros)))
         return registros
 
-    def findDuplicates(self, registros, NAME_FIELD):
-        # ENCONTRAR LOS PARES DUPLICADOS #
-        duplicates = {}
-
-        #print "Finding pairs for indexes ..."
-        for idx1, pry1 in enumerate(registros[:-1]):
-            for idx2, pry2 in enumerate(registros[idx1 + 1:], start=idx1 + 1):
-                pry1_name = pry1.__getattribute__(NAME_FIELD)
-                pry2_name = pry2.__getattribute__(NAME_FIELD)
-                if pry1_name and pry2_name:
-                    # comparisons made in lower case
-                    percentage, time = do_stringcmp("qgram3avrg",
-                                                    pry1_name.lower(),
-                                                    pry2_name.lower())
-                    if percentage > self.LIMIT:
-                        pair = tuple([pry1, pry2])
-                        duplicates[pair] = percentage
-
-        log_print("Total duplicates = {0} de {1} "
-                  .format(len(duplicates), len(registros)))
-        return duplicates
-
     def findDuplicatesThreaded(self, registros, NAME_FIELD, threads):
         # ENCONTRAR LOS PARES DUPLICADOS #
         #print "Finding pairs for indexes ..."
@@ -300,23 +278,6 @@ class Command(BaseCommand):
         log_print("Total duplicates = {0} de {1} "
                   .format(len(duplicates), len(registros)))
         return duplicates
-
-    '''def findDup(self, i, registros, NAME_FIELD):
-        duplicates = {}
-        pry1 = registros[i]
-        for pry2 in registros[i + 1:]:
-            pry1_name = pry1.__getattribute__(NAME_FIELD)
-            pry2_name = pry2.__getattribute__(NAME_FIELD)
-            if pry1_name and pry2_name:
-                # comparisons made in lower case
-                percentage, time = do_stringcmp("qgram3avrg",
-                                                pry1_name.lower(),
-                                                pry2_name.lower())
-                if percentage > self.LIMIT:
-                      pair = tuple([pry1, pry2])
-                      duplicates[pair] = percentage
-        return duplicates'''
-        
 
     def mergePair(self, model_fields, pair, master, duplicates):
         #save = True
@@ -409,9 +370,7 @@ class Command(BaseCommand):
             registros = self.runQueries(options, TABLE)
             registros = [p for p in registros]
             print('Buscando parejas de duplicados')
-            duplicates = self.findDuplicatesThreaded(registros, NAME_FIELD, 4)
-            duplicates = self.findDuplicatesThreaded(registros, NAME_FIELD, 2)
-            duplicates = self.findDuplicates(registros, NAME_FIELD)
+            duplicates = self.findDuplicates(registros, NAME_FIELD, 2)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             pairs_solved, count = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved, count)
