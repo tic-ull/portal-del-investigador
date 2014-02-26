@@ -258,7 +258,7 @@ class Command(BaseCommand):
         log_print("Total de registros en estudio = {0}".format(len(registros)))
         return registros
 
-    def findDuplicatesThreaded(self, registros, NAME_FIELD, threads):
+    def findDuplicates(self, registros, NAME_FIELD, threads):
         # ENCONTRAR LOS PARES DUPLICADOS #
         #print "Finding pairs for indexes ..."
         #for idx1, pry1 in enumerate(registros[:-1]):
