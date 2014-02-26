@@ -144,7 +144,7 @@ class Command(BaseCommand):
                 f1 = "" if f1 is None else f1
                 f2 = pry2.__getattribute__(f)
                 f2 = "" if f2 is None else f2
-                if f1 != f2:
+                if (f1 != f2):
                     log_print(unicode(f)[:self.FIELD_WIDTH-1]
                         .ljust(self.FIELD_WIDTH)
                         + unicode(f1)[:self.COLWIDTH-1]
@@ -188,8 +188,8 @@ class Command(BaseCommand):
                 # --------------------------- PROYECTOS -------------------- #
                 # PROYECTOS vigentes en 2012
                 registros = TABLE.objects.filter(
-                    Q(fecha_de_inicio__lte=datetime.date(self.YEAR, 12, 31)) &
-                    Q(fecha_de_fin__gt=datetime.date(self.YEAR, 1, 1)))
+                    Q(fecha_de_inicio__lte=datetime.date(int(self.YEAR), 12, 31)) &
+                    Q(fecha_de_fin__gte=datetime.date(int(self.YEAR), 1, 1)))
                 # excluye los registros ya detectados previamente
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
@@ -210,13 +210,12 @@ class Command(BaseCommand):
                 # --------------------------- CONGRESOS -------------------- #
                 # Asistencia a congresos en 2012
                 registros = TABLE.objects.filter(
-                    Q(fecha_realizacion__lte=datetime.date(self.YEAR, 12, 31)) &
-                    Q(fecha_finalizacion__gt=datetime.date(self.YEAR, 1, 1)))
+                    Q(fecha_realizacion__lte=datetime.date(int(self.YEAR), 12, 31)) &
+                    Q(fecha_finalizacion__gte=datetime.date(int(self.YEAR), 1, 1)))
                 # excluye los registros ya detectados previamente
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
                 # --------------------------------------------------------- #
-
             elif TABLE == Convenio:
                 # ------------------------ CONVENIOS ----------------------- #
                 # Convenios vigentes en 2012
@@ -247,7 +246,6 @@ class Command(BaseCommand):
                     if usuario in r.usuario.all():
                         new_registros.add(r)
                 registros = new_registros
-
         log_print("Total de registros en estudio = {0}".format(len(registros)))
         return registros
 
