@@ -13,3 +13,4 @@ django-bootstrap-toolkit==2.8.0				# Bootstrap
 gunicorn
 selenium
 ipython
+joblib
