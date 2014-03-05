@@ -185,7 +185,7 @@ class Command(BaseCommand):
                 NAME_FIELD = self.NAME_FIELDS[options['table']]
             else:
                 raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
-                                   "Convenio, Publicacion or Congreso "
+                                   "Convenio, Publicacion, Tesis or Congreso "
                                    .format(options['table']))
         if options['differing_pairs'] is None:
             raise CommandError("Option `--diff=0, 1...` must be specified.")
