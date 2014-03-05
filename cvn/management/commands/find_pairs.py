@@ -9,7 +9,7 @@ import sys
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
-from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio
+from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio, TesisDoctoral
 from string_utils.stringcmp import do_stringcmp
 from django.conf import settings as st
 from joblib import Parallel, delayed
@@ -122,11 +122,14 @@ class Command(BaseCommand):
     TABLES = {'Proyecto': Proyecto,
               'Publicacion': Publicacion,
               'Congreso': Congreso,
-              'Convenio': Convenio}
+              'Convenio': Convenio,
+              'Tesis': TesisDoctoral}
+
     NAME_FIELDS = {'Proyecto': 'denominacion_del_proyecto',
                    'Publicacion': 'titulo',
                    'Congreso': 'titulo',
-                   'Convenio': 'denominacion_del_proyecto'}
+                   'Convenio': 'denominacion_del_proyecto',
+                   'Tesis': 'titulo'}
 
     TIMESTAMP_FIELDS = ['updated_at', 'created_at', ]
 
@@ -225,6 +228,8 @@ class Command(BaseCommand):
                 # y que están huérfanos de usuario
                 registros = registros.exclude(usuario=None)
                 # --------------------------------------------------------- #
+            elif TABLE == TesisDoctoral:
+                registros = TABLE.objects.filter(fecha_de_lectura__year=self.YEAR).exclude(usuario=None)
             elif TABLE == Convenio:
                 # ------------------------ CONVENIOS ----------------------- #
                 # Convenios vigentes en 2012
