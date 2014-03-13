@@ -24,8 +24,7 @@ class Get_datos_departamento:
                   u'Libro': u'Libros',
                   u'Capítulo de Libro': u'Capítulos de libro'}
 
-    def __init__(self, db_connection, identificador, year,
-                 tipo="departamento"):
+    def __init__(self, identificador, year, tipo="departamento"):
         #self.db_connection = db_connection
         self.identificador = identificador
         self.year = year
@@ -69,7 +68,7 @@ class Get_datos_departamento:
     
     # Retorna los investigadores que pertenezcan al departamento/instituto
     def get_investigadores(self):
-        return self.obj_investigadores
+        return self.tabla_investigadores
     # nombre, apellido1, apellido2, nif, categoria
         '''instruccion = """SELECT DISTINCT nombre, apellido1, apellido2, nif
                          FROM {0}_GrupoInvest_investigador
@@ -95,12 +94,18 @@ class Get_datos_departamento:
             self.investigadores.append(investigador)'''
     
     def set_investigadores(self): 
+        # Lista con objetos GrupoinvestInvestigador
         investigadores = None
         if self.tipo == "departamento":
             investigadores = list(GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador))
         else:
             investigadores = list(GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador))
-        self.obj_investigadores = investigadores
+        
+        # Lista con informacion de investigadores
+        self.tabla_investigadores = []
+        for i in investigadores:
+            self.tabla_investigadores.append([i.nombre, i.apellido1, i.apellido2, i.categoria.nombre])
+
         lista_dni = [investigador.nif for investigador in investigadores]
         # Guardamos los objectos Usuario, de los investigadores GrupoinvestInvestigador
         # Se extraen de esta manera por estar en bbdd diferentes
