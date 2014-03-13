@@ -1,5 +1,7 @@
 # -*- encoding: utf8 -*-
-
+from django.db.models import Q
+from viinvDB.models import GrupoinvestInvestigador, GrupoinvestDepartamento
+from cvn.models import Usuario, Publicacion, Congreso, Proyecto, Convenio, TesisDoctoral
 
 class Get_datos_departamento:
     """
@@ -24,58 +26,52 @@ class Get_datos_departamento:
 
     def __init__(self, db_connection, identificador, year,
                  tipo="departamento"):
-        self.db_connection = db_connection
+        #self.db_connection = db_connection
         self.identificador = identificador
         self.year = year
         assert (tipo == "departamento" or tipo == "instituto")
         self.tipo = tipo
-        self.setType()
-        self.setTable()
-        self.set_inst_base()
+        #self.setType()
+        self.table = self.setTable()
+        self.set_investigadores()
 
         self.datos_basicos = {}
         self.investigadores = []
         self.produccion = {}
         self.actividad = {}
-
-    def setType(self):
-        """
-        Ajusta la variable de id para las consutas
-        """
-        self.tipo_id = self.tipo + "_id"  # necesario para las consultas
-
+    
     def setTable(self):
-        """
-        ajusta la tabla de consulta para obtener los datos
-        """
-        self.table = "mem12_GrupoInvest_" + self.tipo
+        if self.tipo == "departamento":
+            return GrupoinvestDepartamento
+        else:
+            return GrupoinvestInstituto
 
     def get_datos_basicos(self):
         """
         Consulta para obtener los datos del departamento/instituto especificado
         """
-        instruccion = """SELECT nombre
+        self.datos_basicos['nombre'] = self.table.objects.filter(id=self.identificador)[0]
+        '''instruccion = """SELECT nombre
                          FROM {0}
                          WHERE id = {1}""".format(self.table,
                                                   self.identificador)
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
         row = cursor.fetchone()
-        self.datos_basicos['nombre'] = row[0]
+        self.datos_basicos['nombre'] = row[0]'''
         # TODO
         # get more data with the web service and fill the dictionary
         return self.datos_basicos
 
-    def get_investigadores(self):
+    '''def get_investigadores(self):
         self.query_data_investigadores()
-        return tuple(self.investigadores)
-
-    def query_data_investigadores(self):
-        """
-        Datos de la Tabla de Investigadores del departamento/instituto
-        """
-        # Please Javier FIX THIS "mem12" thing
-        instruccion = """SELECT DISTINCT nombre, apellido1, apellido2, nif
+        return tuple(self.investigadores)'''
+    
+    # Retorna los investigadores que pertenezcan al departamento/instituto
+    def get_investigadores(self):
+        return self.obj_investigadores
+    # nombre, apellido1, apellido2, nif, categoria
+        '''instruccion = """SELECT DISTINCT nombre, apellido1, apellido2, nif
                          FROM {0}_GrupoInvest_investigador
                          WHERE {1} = {2}
                          ORDER BY apellido1""".format("mem12", self.tipo_id,
@@ -83,8 +79,8 @@ class Get_datos_departamento:
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
         rows = cursor.fetchall()
-        # now adding the category and creating the list
-        for investigador in rows:
+        # now adding the category and creating the list'''
+        '''for investigador in rows:
             nif = investigador[3]
             instruccion = """SELECT nombre
                              FROM {0}_GrupoInvest_categoriainvestigador
@@ -96,10 +92,20 @@ class Get_datos_departamento:
             cursor.execute(instruccion)
             row = cursor.fetchone()
             investigador = tuple(list(investigador[:-1]) + list(row))
-            self.investigadores.append(investigador)
-
-    def set_inst_base(self):
-        self.inst_base = """
+            self.investigadores.append(investigador)'''
+    
+    def set_investigadores(self): 
+        investigadores = None
+        if self.tipo == "departamento":
+            investigadores = list(GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador))
+        else:
+            investigadores = list(GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador))
+        self.obj_investigadores = investigadores
+        lista_dni = [investigador.nif for investigador in investigadores]
+        # Guardamos los objectos Usuario, de los investigadores GrupoinvestInvestigador
+        # Se extraen de esta manera por estar en bbdd diferentes
+        self.investigadores = Usuario.objects.filter(documento__in=lista_dni)
+        '''self.inst_base = """
                             SELECT DISTINCT id
                             FROM {0}_cvn_usuario
                             WHERE documento IN (
@@ -107,9 +113,9 @@ class Get_datos_departamento:
                                 FROM {0}_GrupoInvest_investigador
                                 WHERE {1} = {2})""".format("mem12",
                                                            self.tipo_id,
-                                                           self.identificador)
+                                                           self.identificador)'''
 
-    def dept_publicacion(self, tipo, instruccion_base):
+    '''def dept_publicacion(self, tipo, instruccion_base):
         instruccion = u"""
                         SELECT DISTINCT fecha, titulo, nombre_publicacion, \
                             autores, issn, volumen, numero, pagina_inicial, \
@@ -120,31 +126,31 @@ class Get_datos_departamento:
                               id IN ({3})
                         ORDER BY fecha""".format("mem12", self.year, tipo,
                                                  instruccion_base)
-        return instruccion
-
+        return instruccion'''
+    
+    # Guardamos en self.produccion[label] las producciones correspondientes (label=articulo, capitulo, libro)
+    # Estas producciones estaran filtradas por el departamento y año que el usuario ha indicado.
     def get_produccion(self):
-        """
-        Para cada tipo de produccion realiza la consulta y rellena el
-        diccionario
-        """
-        inst_publicacion = u"""
+        # Publicaciones pertenecientes a los usuarios del departamento seleccionado en el año seleccionado
+        publicaciones = Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year))
+        '''inst_publicacion = u"""
                             SELECT DISTINCT publicacion_id
                             FROM {0}_cvn_publicacion_usuario
                             WHERE usuario_id IN ({1})""".format("mem12",
                                                                 self.inst_base)
-
         inst_tipo_public = u"""
                             SELECT id
                             FROM {0}_cvn_publicacion
                             WHERE id IN ({1})""".format("mem12",
-                                                        inst_publicacion)
-
+                                                        inst_publicacion)'''
+        # tipo: capitulos, libros y articulos
         for tipo, label in self.PRODUCCION.items():
-            instruccion = self.dept_publicacion(tipo, inst_tipo_public)
-            cursor = self.db_connection.cursor()
-            cursor.execute(instruccion)
-            publicaciones = cursor.fetchall()
-            self.produccion[label] = publicaciones
+            #instruccion = self.dept_publicacion(tipo, inst_tipo_public)
+            self.produccion[label] = list(publicaciones.filter(tipo_de_produccion=tipo))
+            #cursor = self.db_connection.cursor()
+            #cursor.execute(instruccion)
+            #publicaciones = cursor.fetchall()
+            #self.produccion[label] = publicaciones
 
         return self.produccion
 
@@ -157,7 +163,8 @@ class Get_datos_departamento:
         return self.actividad
 
     def dataCongresos(self):
-        inst_congreso = """
+        self.actividad["congresos"] = list(Congreso.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_realizacion__year=self.year)))
+        '''inst_congreso = """
                             SELECT DISTINCT congreso_id
                             FROM {0}_cvn_congreso_usuario
                             WHERE usuario_id IN (
@@ -175,10 +182,11 @@ class Get_datos_departamento:
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
         congresos = cursor.fetchall()
-        self.actividad["congresos"] = congresos
+        self.actividad["congresos"] = congresos'''
 
     def dataProyectos(self):
-        inst_proyecto = """
+        self.actividad["proyectos"] = list(Proyecto.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_inicio__year=self.year)))
+        '''inst_proyecto = """
                            SELECT DISTINCT proyecto_id
                            FROM {0}_cvn_proyecto_usuario
                            WHERE usuario_id IN (
@@ -198,10 +206,11 @@ class Get_datos_departamento:
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
         proyectos = cursor.fetchall()
-        self.actividad["proyectos"] = proyectos
+        self.actividad["proyectos"] = proyectos'''
 
     def dataConvenios(self):
-        inst_convenio = """
+        self.actividad["convenios"] = Convenio.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_inicio__year=self.year))
+        '''inst_convenio = """
                         SELECT DISTINCT convenio_id
                         FROM {0}_cvn_convenio_usuario
                         WHERE usuario_id IN (
@@ -230,11 +239,12 @@ class Get_datos_departamento:
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
         convenios = cursor.fetchall()
-        self.actividad["convenios"] = convenios
+        self.actividad["convenios"] = convenios'''
 
     def dataTesis(self):
-        tesis_with_director = []
-        inst_tesis = """
+        #tesis_with_director = []
+        self.actividad["tesis"] = list(TesisDoctoral.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_lectura__year=self.year)))
+        '''inst_tesis = """
                      SELECT DISTINCT tesisdoctoral_id
                      FROM {0}_cvn_tesisdoctoral_usuario
                      WHERE usuario_id IN (
@@ -251,8 +261,8 @@ class Get_datos_departamento:
 
         cursor = self.db_connection.cursor()
         cursor.execute(instruccion)
-        all_tesis = cursor.fetchall()
-
+        all_tesis = cursor.fetchall()'''
+        '''
         # añade datos del director de la tesis
         for tesis in all_tesis:
             id = tesis[0]
@@ -273,4 +283,4 @@ class Get_datos_departamento:
             tesis_director = tesis + director
             tesis_with_director.append(tesis_director)
 
-        self.actividad["tesis"] = tesis_with_director
+        self.actividad["tesis"] = tesis_with_director'''
