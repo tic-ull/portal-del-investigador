@@ -38,7 +38,7 @@ class Get_datos_departamento:
         self.investigadores = []
         self.produccion = {}
         self.actividad = {}
-    
+
     def setTable(self):
         if self.tipo == "departamento":
             return GrupoinvestDepartamento
@@ -65,7 +65,7 @@ class Get_datos_departamento:
     '''def get_investigadores(self):
         self.query_data_investigadores()
         return tuple(self.investigadores)'''
-    
+
     # Retorna los investigadores que pertenezcan al departamento/instituto
     def get_investigadores(self):
         return self.tabla_investigadores
@@ -92,15 +92,15 @@ class Get_datos_departamento:
             row = cursor.fetchone()
             investigador = tuple(list(investigador[:-1]) + list(row))
             self.investigadores.append(investigador)'''
-    
-    def set_investigadores(self): 
+
+    def set_investigadores(self):
         # Lista con objetos GrupoinvestInvestigador
         investigadores = None
         if self.tipo == "departamento":
-            investigadores = list(GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador))
+            investigadores = list(GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador).order_by('apellido1', 'apellido2'))
         else:
-            investigadores = list(GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador))
-        
+            investigadores = list(GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador).order_by('apellido1', 'apellido2'))
+
         # Lista con informacion de investigadores
         self.tabla_investigadores = []
         for i in investigadores:
@@ -132,7 +132,7 @@ class Get_datos_departamento:
                         ORDER BY fecha""".format("mem12", self.year, tipo,
                                                  instruccion_base)
         return instruccion'''
-    
+
     # Guardamos en self.produccion[label] las producciones correspondientes (label=articulo, capitulo, libro)
     # Estas producciones estaran filtradas por el departamento y año que el usuario ha indicado.
     def get_produccion(self):

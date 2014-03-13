@@ -1,4 +1,5 @@
-# -*- encoding: utf8 -*-
+# -*- encoding: UTF-8 -*-
+
 from PIL import Image  # needed to get the logo size
 from slugify import slugify  # safe filename from string
 from reportlab.lib import colors
@@ -9,6 +10,7 @@ from reportlab.platypus import (SimpleDocTemplate, Paragraph,
                                 Spacer, Table, TableStyle)
 from date_string_helpers import (getMonthText, cambia_fecha_a_normal,
                                  calcular_duracion, utf8)
+import os
 
 
 class Informe_pdf:
@@ -23,7 +25,7 @@ class Informe_pdf:
          -> lista de tuplas
     """
     DEFAULT_FONT = "Helvetica"
-    DEPARTAMENTO_SIZE = 13
+    DEPARTAMENTO_SIZE = 12
     SUBTITLE_STYLE = "<font size=11>"
     TEXT_SIZE = 10
     PAGE_NUMBERS_SIZE = 8
@@ -32,48 +34,57 @@ class Informe_pdf:
     DEFAULT_SPACER = 0.3 * inch
     PAGE_HEIGHT = defaultPageSize[1]
     PAGE_WIDTH = defaultPageSize[0]
-    styles = getSampleStyleSheet()
-    SECTION_STYLE = styles["Normal"]
-    SECTION_STYLE.allowWidows = 0
-    SECTION_STYLE.spaceBefore = 0.5 * inch
 
     def __init__(self, year, departamento, investigadores, produccion,
                  actividad):
         self.year = year
-        self.init_logo_constants()
-        self.title = departamento["nombre"]
-        self.filename = "{0}-{1}.pdf".format(year, slugify(self.title))
+        self.dept = departamento
         self.investigadores = investigadores
         self.produccion = produccion
         self.actividad = actividad
 
-    def init_logo_constants(self):
-        LOGO = "logoMemInv{0}.jpg"
-        IMG_PATH = 'cvn/management/commands/images/'
+        self.logo()
 
+    def logo(self):
+        IMG_PATH = 'cvn/management/commands/images/'
+        if os.path.exists(IMG_PATH + 'logo' + self.year + '.png'):
+            LOGO = 'logo' + self.year + '.png'
+        else:
+            LOGO = 'logo.png'
         self.LOGO_PATH = IMG_PATH + LOGO
-        self.LOGO_PATH = self.LOGO_PATH.format(self.year)
 
         self.LOGO_WIDTH, self.LOGO_HEIGHT = Image.open(self.LOGO_PATH).size
+
         LOGO_SCALE = 0.35
         self.LOGO_WIDTH *= LOGO_SCALE
         self.LOGO_HEIGHT *= LOGO_SCALE
 
+    def styleN(self):
+        style = getSampleStyleSheet()['Normal']
+        style.leading = 24
+        style.allowWidows = 0
+        style.spaceBefore = 0.5 * inch
+        return style
+
+    def styleH3(self):
+        style = getSampleStyleSheet()['Heading3']
+        style.leading = 0
+        style.allowWidows = 0
+        style.spaceBefore = 0.5 * inch
+        return style
+
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
-
-        # nombre del departamento
+        # Nombre del Departamento
         canvas.setFont(self.DEFAULT_FONT, self.DEPARTAMENTO_SIZE)
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
-                          self.title)
-
-        # logo
+                          self.dept.nombre)
+        # Logo
         canvas.drawImage(self.LOGO_PATH,
                          self.PAGE_WIDTH - self.MARGIN - self.LOGO_WIDTH,
                          self.PAGE_HEIGHT - self.LOGO_HEIGHT - self.MARGIN,
                          self.LOGO_WIDTH,
                          self.LOGO_HEIGHT)
-
         canvas.restoreState()
 
     def myLaterPages(self, canvas, doc):
@@ -82,80 +93,67 @@ class Informe_pdf:
         canvas.drawCentredString(self.PAGE_WIDTH / 2.0,
                                  self.PAGE_NUMBERS_MARGIN,
                                  u"pág. {0} - {1}"
-                                 .format(doc.page, self.title))
+                                 .format(doc.page, self.dept.nombre))
         canvas.restoreState()
 
     def go(self):
 
-        doc = SimpleDocTemplate(self.filename)
+        doc = SimpleDocTemplate(
+            slugify(self.year + '-' + self.dept.nombre) + '.pdf'
+        )
 
         Story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
 
-        p = self.datos_departamento()
-        Story.append(p)
-
         Story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
-        t = self.tabla_investigadores()
-        Story.append(t)
+        # --------------------------------------------------------------------
+        # INVESTIGADORES
+        # --------------------------------------------------------------------
+        Story.append(Paragraph('INVESTIGADORES', self.styleH3()))
+        text = 'Número de investigadores: ' + str(len(self.investigadores))
+        Story.append(Paragraph(text, self.styleN()))
+
+        tablaInv = self.tablaInvestigadores()
+        Story.append(tablaInv)
         Story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
+        # --------------------------------------------------------------------
 
         produccion = self.lista_produccion()
         for p in produccion:
             Story.append(p)
 
-        p = self.lista_congresos()
-        Story.append(p)
+        #p = self.lista_congresos()
+        #Story.append(p)
 
-        p = self.lista_proyectos()
-        Story.append(p)
+        #p = self.lista_proyectos()
+        #Story.append(p)
 
-        p = self.lista_convenios()
-        Story.append(p)
+        #p = self.lista_convenios()
+        #Story.append(p)
 
-        p = self.lista_tesis()
-        Story.append(p)
+        #p = self.lista_tesis()
+        #Story.append(p)
 
         doc.build(Story, onFirstPage=self.myFirstPage,
                   onLaterPages=self.myLaterPages)
 
-    def datos_departamento(self):
-        """
-        A este método se le pasarán los datos del departamento
-        Devuelve un párrafo (Paragraph)
-        """
-        texto = "<b>Dirección:</b> {0}<br/><b>Teléfono:</b> {1}<br/>"\
-                + "<b>Fax:</b> {2}<br/><b>Correo electrónico:</b> "\
-                + "{3}</br>".format("C/S. Foo de Bar", "6666666666",
-                                    "922922922", "foobar@ull.es")
-        p = Paragraph(texto, self.SECTION_STYLE)
-        return p
-
-    def tabla_investigadores(self):
-        """
-        devuelve una tabla de investigadores formateada
-        """
+    def tablaInvestigadores(self):
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
-        data = [HEADERS] + list(self.investigadores)
-        t = Table(data, repeatRows=1)
-        LIST_STYLE = TableStyle([('SIZE', (0, 0), (-1, -1),
-                                  8),  # tamaño de la letra
-                                 ('INNERGRID', (0, 0), (-1, -1), 0.25,
-                                  colors.gray),  # grid
-                                 ('BOX', (0, 0), (-1, -1), 0.25,
-                                  colors.black),  # caja externa
-                                 ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
-                                 ('BACKGROUND', (0, 0), (-1, 0),
-                                  colors.black),  # fondo cabecera
-                                 ('TEXTCOLOR', (0, 0), (-1, 0),
-                                  colors.white),  # texto cabecera
-                                 ('ROWBACKGROUNDS', (0, 1), (-1, -1),
-                                  [colors.white,
-                                   colors.lightgrey]),  # fondo filas alternas
-                                 ])
-        t.setStyle(LIST_STYLE)
-        return t
+        data = [HEADERS] + self.investigadores
+        tabla = Table(data, repeatRows=1)
+        LIST_STYLE = TableStyle(
+            [('SIZE', (0, 0), (-1, -1), 8),
+             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
+             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
+             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
+                                                   colors.lightgrey]), ]
+        )
+        tabla.setStyle(LIST_STYLE)
+        return tabla
 
     def lista_produccion(self):
         paragraphs = []
@@ -207,7 +205,7 @@ class Informe_pdf:
 
             texto += ".<br/><br/>"  # punto final
 
-        p = Paragraph(texto, self.SECTION_STYLE)
+        p = Paragraph(texto, self.styleN())
         return p
 
     def lista_congresos(self):
@@ -241,7 +239,7 @@ class Informe_pdf:
 
                 texto += ".<br/><br/>"  # punto final
             # end for congresos
-        p = Paragraph(texto, self.SECTION_STYLE)
+        p = Paragraph(texto, self.styleN())
         return p
 
     def lista_proyectos(self):
@@ -276,7 +274,7 @@ class Informe_pdf:
                     texto += "Investigadores: {0}<br/>".format(utf8(autores))
                 texto += "<br/>"
             # end for proyectos
-        p = Paragraph(texto, self.SECTION_STYLE)
+        p = Paragraph(texto, self.styleN())
         return p
 
     def lista_convenios(self):
@@ -316,7 +314,7 @@ class Informe_pdf:
                     texto += "Investigadores: {0}<br/>".format(utf8(autores))
                 texto += "<br/>"
             # end for convenios
-        p = Paragraph(texto, self.SECTION_STYLE)
+        p = Paragraph(texto, self.styleN())
         return p
 
     def lista_tesis(self):
@@ -360,5 +358,5 @@ class Informe_pdf:
                         utf8(fecha_de_lectura))
                 texto += "<br/>"
             # end for tesis
-        p = Paragraph(texto, self.SECTION_STYLE)
+        p = Paragraph(texto, self.styleN())
         return p
