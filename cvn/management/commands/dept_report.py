@@ -1,9 +1,9 @@
-# -*- encoding: utf8 -*-
+# -*- encoding: UTF-8 -*-
 
-from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from get_datos_departamento import Get_datos_departamento
 from informe_pdf import Informe_pdf
+from optparse import make_option
 from viinvDB.models import GrupoinvestDepartamento
 
 
@@ -28,22 +28,26 @@ class Command(BaseCommand):
         if not options['year']:
             raise CommandError("Option `--year=YYYY` must be specified.")
         else:
-            self.YEAR = options['year']
+            self.year = options['year']
 
         if not options['id']:
             raise CommandError("Option `--id=X` must be specified.")
         else:
-            self.ID = options['id']
+            self.deptID = options['id']
+
+    def getData(self):
+        data_dept = Get_datos_departamento(self.deptID, self.year)
+        dept = GrupoinvestDepartamento.objects.get(id=self.deptID)
+        invs = data_dept.get_investigadores()
+        produccion = {}  # data_dept.get_produccion()
+        actividad = {}  # data_dept.get_actividad()
+        return dept, invs, produccion, actividad
+
+    def create_report(self):
+        dept, invs, produccion, actividad = self.getData()
+        informe = Informe_pdf(self.year, dept, invs, produccion, actividad)
+        informe.go()
 
     def handle(self, *args, **options):
         self.checkArgs(options)
         self.create_report()
-
-    def create_report(self):
-        data_dept = Get_datos_departamento(self.ID, self.YEAR)
-        dept = GrupoinvestDepartamento.objects.get(id=self.ID)
-        invs = data_dept.get_investigadores()
-        produccion = {}  # data_dept.get_produccion()
-        actividad = {}  # data_dept.get_actividad()
-        informe = Informe_pdf(self.YEAR, dept, invs, produccion, actividad)
-        informe.go()

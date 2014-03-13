@@ -3,9 +3,9 @@
 from PIL import Image  # needed to get the logo size
 from slugify import slugify  # safe filename from string
 from reportlab.lib import colors
-from reportlab.lib.units import inch
+from reportlab.lib.units import inch, mm
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.rl_config import defaultPageSize
+from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (SimpleDocTemplate, Paragraph,
                                 Spacer, Table, TableStyle)
 from date_string_helpers import (getMonthText, cambia_fecha_a_normal,
@@ -28,36 +28,36 @@ class Informe_pdf:
     DEPARTAMENTO_SIZE = 12
     SUBTITLE_STYLE = "<font size=11>"
     TEXT_SIZE = 10
-    PAGE_NUMBERS_SIZE = 8
-    MARGIN = inch
-    PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
     DEFAULT_SPACER = 0.3 * inch
-    PAGE_HEIGHT = defaultPageSize[1]
-    PAGE_WIDTH = defaultPageSize[0]
 
-    def __init__(self, year, departamento, investigadores, produccion,
-                 actividad):
+    PAGE_WIDTH = A4[0]
+    PAGE_HEIGHT = A4[1]
+    MARGIN = 10 * mm
+
+    PAGE_NUMBERS_SIZE = 8
+    PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
+
+    def __init__(self, year, dept, investigadores, produccion, actividad):
         self.year = year
-        self.dept = departamento
+        self.dept = dept
         self.investigadores = investigadores
         self.produccion = produccion
         self.actividad = actividad
-
         self.logo()
 
     def logo(self):
-        IMG_PATH = 'cvn/management/commands/images/'
-        if os.path.exists(IMG_PATH + 'logo' + self.year + '.png'):
-            LOGO = 'logo' + self.year + '.png'
+        img_path = 'cvn/management/commands/images/'
+        if not os.path.exists(img_path + 'logo' + self.year + '.png'):
+            logo = 'logo.png'
         else:
-            LOGO = 'logo.png'
-        self.LOGO_PATH = IMG_PATH + LOGO
+            logo = 'logo' + self.year + '.png'
+        self.logo_path = img_path + logo
 
-        self.LOGO_WIDTH, self.LOGO_HEIGHT = Image.open(self.LOGO_PATH).size
+        self.logo_width, self.logo_height = Image.open(self.logo_path).size
 
-        LOGO_SCALE = 0.35
-        self.LOGO_WIDTH *= LOGO_SCALE
-        self.LOGO_HEIGHT *= LOGO_SCALE
+        logo_scale = 0.35
+        self.logo_width *= logo_scale
+        self.logo_height *= logo_scale
 
     def styleN(self):
         style = getSampleStyleSheet()['Normal']
@@ -73,6 +73,19 @@ class Informe_pdf:
         style.spaceBefore = 0.5 * inch
         return style
 
+    def styleTable(self):
+        style = TableStyle(
+            [('SIZE', (0, 0), (-1, -1), 8),
+             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
+             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
+             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
+                                                   colors.lightgrey]), ]
+        )
+        return style
+
     def myFirstPage(self, canvas, doc):
         canvas.saveState()
         # Nombre del Departamento
@@ -80,11 +93,11 @@ class Informe_pdf:
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
                           self.dept.nombre)
         # Logo
-        canvas.drawImage(self.LOGO_PATH,
-                         self.PAGE_WIDTH - self.MARGIN - self.LOGO_WIDTH,
-                         self.PAGE_HEIGHT - self.LOGO_HEIGHT - self.MARGIN,
-                         self.LOGO_WIDTH,
-                         self.LOGO_HEIGHT)
+        canvas.drawImage(self.logo_path,
+                         self.PAGE_WIDTH - self.MARGIN - self.logo_width,
+                         self.PAGE_HEIGHT - self.logo_height - self.MARGIN,
+                         self.logo_width,
+                         self.logo_height)
         canvas.restoreState()
 
     def myLaterPages(self, canvas, doc):
@@ -95,6 +108,14 @@ class Informe_pdf:
                                  u"pág. {0} - {1}"
                                  .format(doc.page, self.dept.nombre))
         canvas.restoreState()
+
+    def tablaInvestigadores(self):
+        HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
+                   "CATEGORÍA"]
+        data = [HEADERS] + self.investigadores
+        tabla = Table(data, repeatRows=1)
+        tabla.setStyle(self.styleTable())
+        return tabla
 
     def go(self):
 
@@ -118,9 +139,9 @@ class Informe_pdf:
         Story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
         # --------------------------------------------------------------------
 
-        produccion = self.lista_produccion()
-        for p in produccion:
-            Story.append(p)
+        #produccion = self.lista_produccion()
+        #for p in produccion:
+        #    Story.append(p)
 
         #p = self.lista_congresos()
         #Story.append(p)
@@ -136,24 +157,6 @@ class Informe_pdf:
 
         doc.build(Story, onFirstPage=self.myFirstPage,
                   onLaterPages=self.myLaterPages)
-
-    def tablaInvestigadores(self):
-        HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
-                   "CATEGORÍA"]
-        data = [HEADERS] + self.investigadores
-        tabla = Table(data, repeatRows=1)
-        LIST_STYLE = TableStyle(
-            [('SIZE', (0, 0), (-1, -1), 8),
-             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
-             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
-             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
-                                                   colors.lightgrey]), ]
-        )
-        tabla.setStyle(LIST_STYLE)
-        return tabla
 
     def lista_produccion(self):
         paragraphs = []
