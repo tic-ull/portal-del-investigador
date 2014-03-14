@@ -90,7 +90,7 @@ class Get_datos_departamento:
     def get_proyectos(self):
         proyectos = Proyecto.objects.filter(
             Q(usuario__in=self.investigadores)&
-            Q(fecha_inicio__isnull=False)&
+            Q(fecha_de_inicio__isnull=False)&
             Q(fecha_de_inicio__lte=self.fecha_inicio_max)
         ).order_by('fecha_de_inicio')
         
