@@ -21,15 +21,18 @@ class Get_datos_departamento:
         actividad: diccionario: tipo de actividad (congresos, convenios...)
          -> lista de tuplas
     """
+    TIPO_PRODUCCION = {'articulo': u'Artículo',
+                  'libro': u'Libro',
+                  'capitulo': u'Capítulo de Libro'}
     PRODUCCION = {u'Artículo': u'Artículos',
                   u'Libro': u'Libros',
                   u'Capítulo de Libro': u'Capítulos de libro'}
-
     def __init__(self, identificador, year, tipo="departamento"):
         #self.db_connection = db_connection
-        self.identificador = identificador
         assert(year.isdigit())
         assert (tipo == "departamento" or tipo == "instituto")
+        assert(identificador.isdigit())
+        self.identificador = int(identificador)
         self.year = int(year)
         self.tipo = tipo
         #self.setType()
@@ -118,54 +121,15 @@ class Get_datos_departamento:
         # Guardamos los objectos Usuario, de los investigadores GrupoinvestInvestigador
         # Se extraen de esta manera por estar en bbdd diferentes
         self.investigadores = Usuario.objects.filter(documento__in=lista_dni)
-        '''self.inst_base = """
-                            SELECT DISTINCT id
-                            FROM {0}_cvn_usuario
-                            WHERE documento IN (
-                                SELECT DISTINCT nif
-                                FROM {0}_GrupoInvest_investigador
-                                WHERE {1} = {2})""".format("mem12",
-                                                           self.tipo_id,
-                                                           self.identificador)'''
 
-    '''def dept_publicacion(self, tipo, instruccion_base):
-        instruccion = u"""
-                        SELECT DISTINCT fecha, titulo, nombre_publicacion, \
-                            autores, issn, volumen, numero, pagina_inicial, \
-                            pagina_final
-                        FROM {0}_cvn_publicacion
-                        WHERE YEAR(fecha) = {1} AND
-                              tipo_de_produccion LIKE '{2}' AND
-                              id IN ({3})
-                        ORDER BY fecha""".format("mem12", self.year, tipo,
-                                                 instruccion_base)
-        return instruccion'''
+    def get_libros(self):
+        return list(Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year) & Q(tipo_de_produccion='Libro')))
+    
+    def get_capitulos(self): 
+        return list(Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year) & Q(tipo_de_produccion='Capítulo de Libro')))
 
-    # Guardamos en self.produccion[label] las producciones correspondientes (label=articulo, capitulo, libro)
-    # Estas producciones estaran filtradas por el departamento y año que el usuario ha indicado.
-    def get_produccion(self):
-        # Publicaciones pertenecientes a los usuarios del departamento seleccionado en el año seleccionado
-        publicaciones = Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year))
-        '''inst_publicacion = u"""
-                            SELECT DISTINCT publicacion_id
-                            FROM {0}_cvn_publicacion_usuario
-                            WHERE usuario_id IN ({1})""".format("mem12",
-                                                                self.inst_base)
-        inst_tipo_public = u"""
-                            SELECT id
-                            FROM {0}_cvn_publicacion
-                            WHERE id IN ({1})""".format("mem12",
-                                                        inst_publicacion)'''
-        # tipo: capitulos, libros y articulos
-        for tipo, label in self.PRODUCCION.items():
-            #instruccion = self.dept_publicacion(tipo, inst_tipo_public)
-            self.produccion[label] = list(publicaciones.filter(tipo_de_produccion=tipo))
-            #cursor = self.db_connection.cursor()
-            #cursor.execute(instruccion)
-            #publicaciones = cursor.fetchall()
-            #self.produccion[label] = publicaciones
-
-        return self.produccion
+    def get_articulos(self): 
+        return list(Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year) & Q(tipo_de_produccion='Artículo')))
 
     # Actividad Científica
     def get_actividad(self):
@@ -222,7 +186,13 @@ class Get_datos_departamento:
         self.actividad["proyectos"] = proyectos'''
 
     def dataConvenios(self):
-        self.actividad["convenios"] = Convenio.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_inicio__year=self.year))
+
+        convenios = Convenio.objects.filter(usuario__in=self.investigadores) 
+        #fecha_inicio = datetime.date(self.year, 12, 31)
+        #fecha_fin = datetime.date(self.year, 1, 1)
+        #convenios = convenios.filter(Q(fecha_inicio__isnull=False)&Q(fecha_inicio__lte=fecha_inicio))
+        #investigadores = investigadores.filter(Q(cese__isnull=True)|Q(cese__gte=fecha_fin))
+        self.actividad["convenios"] = convenios
         '''inst_convenio = """
                         SELECT DISTINCT convenio_id
                         FROM {0}_cvn_convenio_usuario
