@@ -26,15 +26,21 @@ class Informe_pdf:
     PAGE_NUMBERS_SIZE = 8
     PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
 
-    def __init__(self, year, dept, investigadores, produccion, actividad):
+    def __init__(self, year, departamento, investigadores, articulos,
+                 libros, capitulosLibro, congresos, produccion, actividad):
         self.year = year
-        self.dept = dept
+        self.departamento = departamento
         self.investigadores = investigadores
+        self.articulos = articulos
+        self.libros = libros
+        self.capitulosLibro = capitulosLibro
+        self.congresos = congresos
+
         self.produccion = produccion
         self.actividad = actividad
-        self.logo()
+        self.setLogo()
 
-    def logo(self):
+    def setLogo(self):
         img_path = 'cvn/management/commands/images/'
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
@@ -49,30 +55,26 @@ class Informe_pdf:
         self.logo_height *= logo_scale
 
     def go(self):
-
         doc = SimpleDocTemplate(
-            slugify(self.year + '-' + self.dept.nombre) + '.pdf'
+            slugify(self.year + '-' + self.departamento.nombre) + '.pdf'
         )
+        story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
 
-        Story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
+        if self.investigadores:
+            self.showInvestigadores(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
-        Story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
+        if self.articulos:
+            self.showArticulos(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
-        # --------------------------------------------------------------------
-        # INVESTIGADORES
-        # --------------------------------------------------------------------
-        Story.append(Paragraph('INVESTIGADORES', self.styleH3()))
-        text = 'Número de investigadores: ' + str(len(self.investigadores))
-        Story.append(Paragraph(text, self.styleN()))
+        if self.libros:
+            self.showLibros(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
-        tablaInv = self.tablaInvestigadores()
-        Story.append(tablaInv)
-        Story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
-        # --------------------------------------------------------------------
-
-        #produccion = self.lista_produccion()
-        #for p in produccion:
-        #    Story.append(p)
+        if self.congresos:
+            self.showCongresos(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
         #p = self.lista_congresos()
         #Story.append(p)
@@ -86,73 +88,147 @@ class Informe_pdf:
         #p = self.lista_tesis()
         #Story.append(p)
 
-        doc.build(Story, onFirstPage=self.firstPage,
+        doc.build(story, onFirstPage=self.firstPage,
                   onLaterPages=self.laterPages)
 
     # -------------------------------------------------------------------------
     # PROCESADO DE LOS DATOS
     # -------------------------------------------------------------------------
 
-    def tablaInvestigadores(self):
+    def showInvestigadores(self, story):
+        story.append(Paragraph('INVESTIGADORES', self.styleH3()))
+        text = 'Número de investigadores: ' + str(len(self.investigadores))
+        story.append(Paragraph(text, self.styleN()))
+        story.append(self.tableInvestigadores())
+
+    def tableInvestigadores(self):
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
         data = [HEADERS] + self.investigadores
-        tabla = Table(data, repeatRows=1)
-        tabla.setStyle(self.styleTable())
-        return tabla
+        table = Table(data, repeatRows=1)
+        table.setStyle(self.styleTable())
+        return table
 
-    def lista_produccion(self):
-        paragraphs = []
-        for tipo_publicacion, publicaciones in self.produccion.items():
-            num_publicaciones = len(publicaciones)
-            if num_publicaciones > 0:
-                paragraphs.append(self.lista_publicaciones(
-                    tipo_publicacion, num_publicaciones, publicaciones))
-        return paragraphs
+    # -------------------------------------------------------------------------
 
-    def lista_publicaciones(self, tipo_publicacion,
-                            num_publicaciones, publicaciones):
-        texto = "<b>{2}{0}</font> [{1}]</b><br/>".format(
-            utf8(tipo_publicacion), num_publicaciones, self.SUBTITLE_STYLE)
-        for publicacion in publicaciones:
-            (fecha,
-             titulo,
-             nombre_publicacion,
-             autores,
-             issn,
-             volumen,
-             numero,
-             pagina_inicial,
-             pagina_final) = publicacion
+    def showArticulos(self, story):
+        story.append(Paragraph('ARTÍCULOS', self.styleH3()))
+        text = 'Número de artículos: ' + str(len(self.articulos))
+        story.append(Paragraph(text, self.styleN()))
+        self.listArticulos(story)
 
-            if fecha:
-                fecha = cambia_fecha_a_normal(fecha)
-                texto += "Fecha: {0}<br/>".format(utf8(fecha))
+    def listArticulos(self, story):
+        for art in self.articulos:
+            text = ""
+            if art.fecha:
+                text += u"<b>Fecha:</b> %s <br/>" % (
+                    art.fecha.strftime("%d/%m/%Y")
+                )
+            if art.titulo:
+                text += u"<b>%s</b><br/>" % (art.titulo)
+            if art.autores:
+                text += u"%s<br/>" % (art.autores)
+            if art.nombre_publicacion:
+                text += u"%s<br/>" % (art.nombre_publicacion)
+            if art.volumen:
+                text += u"Vol. %s, " % (art.volumen)
+            if art.numero:
+                text += u"Núm. %s, " % (art.numero)
+            if art.pagina_inicial and art.pagina_final:
+                text += u"Pág. %s-%s" % (
+                    art.pagina_inicial,
+                    art.pagina_final
+                )
+            if art.issn:
+                text += u" - ISSN: %s" % (art.issn)
+            story.append(Paragraph(text, self.styleN()))
 
-            if autores:
-                texto += "{0}.".format(utf8(autores))
+    # -------------------------------------------------------------------------
 
-            if titulo:
-                texto += " {0}".format(utf8(titulo))
-                if titulo[-1] != ".":
-                    texto += "."  # a veces el artículo lleva un punto final
+    def showLibros(self, story):
+        story.append(Paragraph('LIBROS', self.styleH3()))
+        text = 'Número de libros: ' + str(len(self.libros))
+        story.append(Paragraph(text, self.styleN()))
+        self.listLibros(story)
 
-            if nombre_publicacion:
-                texto += " <i>{0}</i>".format(utf8(nombre_publicacion))
+    def listLibros(self, story):
+        for libro in self.libros:
+            text = ""
+            if libro.fecha:
+                text += u"<b>Fecha:</b> %s <br/>" % (
+                    libro.fecha.strftime("%d/%m/%Y")
+                )
+            if libro.titulo:
+                text += u"<b>%s</b><br/>" % (libro.titulo)
+            if libro.autores:
+                text += u"%s<br/>" % (libro.autores)
+            if libro.nombre_publicacion:
+                text += u"%s <br/>" % (libro.nombre_publicacion)
+            if libro.isbn:
+                text += u"ISBN: %s" % (libro.isbn)
+            story.append(Paragraph(text, self.styleN()))
 
-            if volumen:
-                texto += ", vol {0}".format(utf8(volumen))
+    # -------------------------------------------------------------------------
 
-            if numero:
-                texto += ", núm. {0}".format(utf8(numero))
+    def showCapitulosLibro(self, story):
+        story.append(Paragraph('CAPÍTULOS DE LIBROS', self.styleH3()))
+        text = 'Número de capítulos de libros: ' + str(len(self.libros))
+        story.append(Paragraph(text, self.styleN()))
+        self.listLibros(story)
 
-            if pagina_inicial and pagina_final:
-                texto += ", p. {0}-{1}".format(pagina_inicial, pagina_final)
+    def listCapitulosLibro(self, story):
+        for capLibro in self.capitulosLibro:
+            text = ""
+            if capLibro.fecha:
+                text += u"<b>Fecha:</b> %s <br/>" % (
+                    capLibro.fecha.strftime("%d/%m/%Y")
+                )
+            if capLibro.titulo:
+                text += u"<b>%s</b><br/>" % (capLibro.titulo)
+            if capLibro.autores:
+                text += u"%s<br/>" % (capLibro.autores)
+            if capLibro.nombre_publicacion:
+                text += u"%s " % (capLibro.nombre_publicacion)
+            if capLibro.pagina_inicial and capLibro.pagina_final:
+                text += u"Pág. %s-%s" % (
+                    capLibro.pagina_inicial,
+                    capLibro.pagina_final
+                )
+            if capLibro.isbn:
+                text += u" - ISBN: %s" % (capLibro.isbn)
+            story.append(Paragraph(text, self.styleN()))
 
-            texto += ".<br/><br/>"  # punto final
+    # -------------------------------------------------------------------------
 
-        p = Paragraph(texto, self.styleN())
-        return p
+    def showCongresos(self, story):
+        story.append(Paragraph('COMUNICACIONES EN CONGRESOS', self.styleH3()))
+        text = 'Número de comunicaciones en congresos: ' + str(
+            len(self.congresos)
+        )
+        story.append(Paragraph(text, self.styleN()))
+        self.listCongresos(story)
+
+    def listCongresos(self, story):
+        for congreso in self.congresos:
+            text = ""
+            if congreso.titulo:
+                text += u"<b>%s</b><br/>" % (congreso.titulo)
+            if congreso.nombre_del_congreso:
+                text += u"%s " % (congreso.nombre_del_congreso)
+            if congreso.ciudad_de_realizacion and congreso.fecha_realizacion:
+                text += "(%s, %s)<br/>" % (
+                    congreso.ciudad_de_realizacion,
+                    congreso.fecha_realizacion.strftime("%B de %Y")
+                )
+            elif congreso.ciudad_de_realizacion:
+                text += "(%s)<br/>" % congreso.ciudad_de_realizacion
+            elif congreso.fecha_realizacion:
+                text += "(%s)<br/>" % congreso.fecha_realizacion
+            if congreso.autores:
+                text += u"%s" % (congreso.autores)
+            story.append(Paragraph(text, self.styleN()))
+
+    # -------------------------------------------------------------------------
 
     def lista_congresos(self):
         congresos = self.actividad["congresos"]
@@ -324,7 +400,7 @@ class Informe_pdf:
                                  self.PAGE_NUMBERS_MARGIN,
                                  u'Página %s - %s' % (
                                      doc.page,
-                                     self.dept.nombre
+                                     self.departamento.nombre
                                  ))
         canvas.restoreState()
 
@@ -332,7 +408,7 @@ class Informe_pdf:
         # Nombre del Departamento
         canvas.setFont(self.DEFAULT_FONT, self.DEPARTAMENTO_SIZE)
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
-                          self.dept.nombre)
+                          self.departamento.nombre)
         # Logo
         canvas.drawImage(self.logo_path,
                          self.PAGE_WIDTH - self.MARGIN - self.logo_width,
@@ -355,7 +431,6 @@ class Informe_pdf:
         style = getSampleStyleSheet()['Heading3']
         style.leading = 0
         style.allowWidows = 0
-        style.spaceBefore = 0.5 * inch
         return style
 
     def styleTable(self):
