@@ -11,7 +11,7 @@ def date_add(date, years, months, days):
     years = none_to_zero(years)
     months = none_to_zero(months)
     days = none_to_zero(days)
-    return datetime.date(date.years + years, date.months + months, date.days + days)
+    return datetime.date(date.year + years, date.month + months, date.day + days)
 
 class Get_datos_departamento:
 
