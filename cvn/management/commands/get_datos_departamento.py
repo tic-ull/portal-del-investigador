@@ -1,5 +1,6 @@
 # -*- encoding: utf8 -*-
 from django.db.models import Q
+import datetime
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestDepartamento
 from cvn.models import Usuario, Publicacion, Congreso, Proyecto, Convenio, TesisDoctoral
 
@@ -27,8 +28,9 @@ class Get_datos_departamento:
     def __init__(self, identificador, year, tipo="departamento"):
         #self.db_connection = db_connection
         self.identificador = identificador
-        self.year = year
+        assert(year.isdigit())
         assert (tipo == "departamento" or tipo == "instituto")
+        self.year = int(year)
         self.tipo = tipo
         #self.setType()
         self.table = self.setTable()
@@ -97,10 +99,16 @@ class Get_datos_departamento:
         # Lista con objetos GrupoinvestInvestigador
         investigadores = None
         if self.tipo == "departamento":
-            investigadores = list(GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador).order_by('apellido1', 'apellido2'))
+            investigadores = GrupoinvestInvestigador.objects.filter(departamento__id=self.identificador)
         else:
-            investigadores = list(GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador).order_by('apellido1', 'apellido2'))
-
+            investigadores = GrupoinvestInvestigador.objects.filter(instituto__id=self.identificador)
+        # Filter the users that where active on the selected year
+        fecha_inicio = datetime.date(self.year, 12, 31)
+        fecha_fin = datetime.date(self.year, 1, 1)
+        investigadores = investigadores.filter(Q(fecha_inicio__isnull=False)&Q(fecha_inicio__lte=fecha_inicio))
+        investigadores = investigadores.filter(Q(cese__isnull=True)|Q(cese__gte=fecha_fin))
+        investigadores = investigadores.order_by('apellido1', 'apellido2')
+        investigadores = list(investigadores)
         # Lista con informacion de investigadores
         self.tabla_investigadores = []
         for i in investigadores:
