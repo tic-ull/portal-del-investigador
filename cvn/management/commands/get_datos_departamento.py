@@ -132,15 +132,15 @@ class Get_datos_departamento:
         return list(Publicacion.objects.filter(Q(usuario__in=self.investigadores) & Q(fecha__year=self.year) & Q(tipo_de_produccion='Artículo')))
 
     # Actividad Científica
-    def get_actividad(self):
+    '''def get_actividad(self):
         self.dataCongresos()
         self.dataProyectos()
         self.dataConvenios()
         self.dataTesis()
-        return self.actividad
+        return self.actividad'''
 
-    def dataCongresos(self):
-        self.actividad["congresos"] = list(Congreso.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_realizacion__year=self.year)))
+    def get_congresos(self):
+        return list(Congreso.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_realizacion__year=self.year)))
         '''inst_congreso = """
                             SELECT DISTINCT congreso_id
                             FROM {0}_cvn_congreso_usuario
@@ -161,8 +161,8 @@ class Get_datos_departamento:
         congresos = cursor.fetchall()
         self.actividad["congresos"] = congresos'''
 
-    def dataProyectos(self):
-        self.actividad["proyectos"] = list(Proyecto.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_inicio__year=self.year)))
+    def get_proyectos(self):
+        return list(Proyecto.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_inicio__year=self.year)))
         '''inst_proyecto = """
                            SELECT DISTINCT proyecto_id
                            FROM {0}_cvn_proyecto_usuario
@@ -185,14 +185,14 @@ class Get_datos_departamento:
         proyectos = cursor.fetchall()
         self.actividad["proyectos"] = proyectos'''
 
-    def dataConvenios(self):
+    def get_convenios(self):
 
         convenios = Convenio.objects.filter(usuario__in=self.investigadores) 
         #fecha_inicio = datetime.date(self.year, 12, 31)
         #fecha_fin = datetime.date(self.year, 1, 1)
         #convenios = convenios.filter(Q(fecha_inicio__isnull=False)&Q(fecha_inicio__lte=fecha_inicio))
         #investigadores = investigadores.filter(Q(cese__isnull=True)|Q(cese__gte=fecha_fin))
-        self.actividad["convenios"] = convenios
+        return convenios
         '''inst_convenio = """
                         SELECT DISTINCT convenio_id
                         FROM {0}_cvn_convenio_usuario
@@ -224,9 +224,9 @@ class Get_datos_departamento:
         convenios = cursor.fetchall()
         self.actividad["convenios"] = convenios'''
 
-    def dataTesis(self):
+    def get_tesis(self):
         #tesis_with_director = []
-        self.actividad["tesis"] = list(TesisDoctoral.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_lectura__year=self.year)))
+        return list(TesisDoctoral.objects.filter(Q(usuario__in=self.investigadores)&Q(fecha_de_lectura__year=self.year)))
         '''inst_tesis = """
                      SELECT DISTINCT tesisdoctoral_id
                      FROM {0}_cvn_tesisdoctoral_usuario
