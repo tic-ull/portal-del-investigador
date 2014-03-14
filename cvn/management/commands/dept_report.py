@@ -24,6 +24,10 @@ class Command(BaseCommand):
         ),
     )
 
+    def handle(self, *args, **options):
+        self.checkArgs(options)
+        self.create_report()
+
     def checkArgs(self, options):
         if not options['year']:
             raise CommandError("Option `--year=YYYY` must be specified.")
@@ -35,6 +39,11 @@ class Command(BaseCommand):
         else:
             self.deptID = options['id']
 
+    def create_report(self):
+        dept, invs, produccion, actividad = self.getData()
+        informe = Informe_pdf(self.year, dept, invs, produccion, actividad)
+        informe.go()
+
     def getData(self):
         data_dept = Get_datos_departamento(self.deptID, self.year)
         dept = GrupoinvestDepartamento.objects.get(id=self.deptID)
@@ -42,12 +51,3 @@ class Command(BaseCommand):
         produccion = {}  # data_dept.get_produccion()
         actividad = {}  # data_dept.get_actividad()
         return dept, invs, produccion, actividad
-
-    def create_report(self):
-        dept, invs, produccion, actividad = self.getData()
-        informe = Informe_pdf(self.year, dept, invs, produccion, actividad)
-        informe.go()
-
-    def handle(self, *args, **options):
-        self.checkArgs(options)
-        self.create_report()

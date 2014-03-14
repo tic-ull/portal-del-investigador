@@ -1,34 +1,23 @@
 # -*- encoding: UTF-8 -*-
 
-from PIL import Image  # needed to get the logo size
-from slugify import slugify  # safe filename from string
-from reportlab.lib import colors
-from reportlab.lib.units import inch, mm
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import (SimpleDocTemplate, Paragraph,
-                                Spacer, Table, TableStyle)
+from PIL import Image
 from date_string_helpers import (getMonthText, cambia_fecha_a_normal,
                                  calcular_duracion, utf8)
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch, mm
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table,
+                                TableStyle)
+from slugify import slugify
 import os
 
 
 class Informe_pdf:
-    """
-    clase que genera un informe en formato PDF de un
-        departamento: diccionario de datos
-        investigadores: lista de tuplas con (nombre, primer apellido, i
-                                             segundo apellido, categoria)
-        produccion: diccionario: tipo de produccion (artículos, tesis,...)
-         -> lista de tuplas
-        actividad: diccionario: tipo de actividad (congresos, convenios...)
-         -> lista de tuplas
-    """
     DEFAULT_FONT = "Helvetica"
     DEPARTAMENTO_SIZE = 12
     SUBTITLE_STYLE = "<font size=11>"
-    TEXT_SIZE = 10
-    DEFAULT_SPACER = 0.3 * inch
+    DEFAULT_SPACER = 0.1 * inch
 
     PAGE_WIDTH = A4[0]
     PAGE_HEIGHT = A4[1]
@@ -58,64 +47,6 @@ class Informe_pdf:
         logo_scale = 0.35
         self.logo_width *= logo_scale
         self.logo_height *= logo_scale
-
-    def styleN(self):
-        style = getSampleStyleSheet()['Normal']
-        style.leading = 24
-        style.allowWidows = 0
-        style.spaceBefore = 0.5 * inch
-        return style
-
-    def styleH3(self):
-        style = getSampleStyleSheet()['Heading3']
-        style.leading = 0
-        style.allowWidows = 0
-        style.spaceBefore = 0.5 * inch
-        return style
-
-    def styleTable(self):
-        style = TableStyle(
-            [('SIZE', (0, 0), (-1, -1), 8),
-             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
-             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
-             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
-             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
-                                                   colors.lightgrey]), ]
-        )
-        return style
-
-    def myFirstPage(self, canvas, doc):
-        canvas.saveState()
-        # Nombre del Departamento
-        canvas.setFont(self.DEFAULT_FONT, self.DEPARTAMENTO_SIZE)
-        canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
-                          self.dept.nombre)
-        # Logo
-        canvas.drawImage(self.logo_path,
-                         self.PAGE_WIDTH - self.MARGIN - self.logo_width,
-                         self.PAGE_HEIGHT - self.logo_height - self.MARGIN,
-                         self.logo_width,
-                         self.logo_height)
-        canvas.restoreState()
-
-    def myLaterPages(self, canvas, doc):
-        canvas.saveState()
-        canvas.setFont(self.DEFAULT_FONT, self.PAGE_NUMBERS_SIZE)
-        canvas.drawCentredString(self.PAGE_WIDTH / 2.0,
-                                 self.PAGE_NUMBERS_MARGIN,
-                                 u"pág. {0} - {1}"
-                                 .format(doc.page, self.dept.nombre))
-        canvas.restoreState()
-
-    def tablaInvestigadores(self):
-        HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
-                   "CATEGORÍA"]
-        data = [HEADERS] + self.investigadores
-        tabla = Table(data, repeatRows=1)
-        tabla.setStyle(self.styleTable())
-        return tabla
 
     def go(self):
 
@@ -155,8 +86,20 @@ class Informe_pdf:
         #p = self.lista_tesis()
         #Story.append(p)
 
-        doc.build(Story, onFirstPage=self.myFirstPage,
-                  onLaterPages=self.myLaterPages)
+        doc.build(Story, onFirstPage=self.firstPage,
+                  onLaterPages=self.laterPages)
+
+    # -------------------------------------------------------------------------
+    # PROCESADO DE LOS DATOS
+    # -------------------------------------------------------------------------
+
+    def tablaInvestigadores(self):
+        HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
+                   "CATEGORÍA"]
+        data = [HEADERS] + self.investigadores
+        tabla = Table(data, repeatRows=1)
+        tabla.setStyle(self.styleTable())
+        return tabla
 
     def lista_produccion(self):
         paragraphs = []
@@ -363,3 +306,67 @@ class Informe_pdf:
             # end for tesis
         p = Paragraph(texto, self.styleN())
         return p
+
+    # -------------------------------------------------------------------------
+    # CONFIGURACIÓN DE LAS PÁGINAS
+    # -------------------------------------------------------------------------
+
+    def firstPage(self, canvas, doc):
+        canvas.saveState()
+        self.header(canvas)
+        canvas.restoreState()
+
+    def laterPages(self, canvas, doc):
+        canvas.saveState()
+        self.header(canvas)
+        canvas.setFont(self.DEFAULT_FONT, self.PAGE_NUMBERS_SIZE)
+        canvas.drawCentredString(self.PAGE_WIDTH / 2.0,
+                                 self.PAGE_NUMBERS_MARGIN,
+                                 u'Página %s - %s' % (
+                                     doc.page,
+                                     self.dept.nombre
+                                 ))
+        canvas.restoreState()
+
+    def header(self, canvas):
+        # Nombre del Departamento
+        canvas.setFont(self.DEFAULT_FONT, self.DEPARTAMENTO_SIZE)
+        canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
+                          self.dept.nombre)
+        # Logo
+        canvas.drawImage(self.logo_path,
+                         self.PAGE_WIDTH - self.MARGIN - self.logo_width,
+                         self.PAGE_HEIGHT - self.logo_height - self.MARGIN,
+                         self.logo_width,
+                         self.logo_height)
+
+    # --------------------------------------------------------------------
+    # ESTILOS DEL PDF
+    # --------------------------------------------------------------------
+
+    def styleN(self):
+        style = getSampleStyleSheet()['Normal']
+        style.leading = 24
+        style.allowWidows = 0
+        style.spaceBefore = 0.5 * inch
+        return style
+
+    def styleH3(self):
+        style = getSampleStyleSheet()['Heading3']
+        style.leading = 0
+        style.allowWidows = 0
+        style.spaceBefore = 0.5 * inch
+        return style
+
+    def styleTable(self):
+        style = TableStyle(
+            [('SIZE', (0, 0), (-1, -1), 8),
+             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
+             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
+             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+             ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
+                                                   colors.lightgrey]), ]
+        )
+        return style
