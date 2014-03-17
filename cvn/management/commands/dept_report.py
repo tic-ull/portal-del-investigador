@@ -41,10 +41,11 @@ class Command(BaseCommand):
 
     def create_report(self):
         (departamento, investigadores, articulos,
-         libros, capitulosLibro, congresos, proyectos) = self.getData()
+         libros, capitulosLibro, congresos, proyectos,
+         convenios, tesis) = self.getData()
         informe = Informe_pdf(self.year, departamento, investigadores,
                               articulos, libros, capitulosLibro,
-                              congresos, proyectos)
+                              congresos, proyectos, convenios, tesis)
         informe.go()
 
     def getData(self):
@@ -56,5 +57,8 @@ class Command(BaseCommand):
         capitulosLibro = dataDept.get_capitulos()
         congresos = dataDept.get_congresos()
         proyectos = dataDept.get_proyectos()
+        convenios = dataDept.get_convenios()
+        tesis = dataDept.get_tesis()
         return (departamento, investigadores, articulos,
-                libros, capitulosLibro, congresos, proyectos)
+                libros, capitulosLibro, congresos, proyectos,
+                convenios, tesis)
