@@ -31,7 +31,7 @@ class Informe_pdf:
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
                  capitulosLibro, congresos, proyectos, convenios, tesis):
-        self.year = year
+        self.year = str(year)
         self.departamento = departamento
         self.investigadores = investigadores
         self.articulos = articulos
