@@ -42,6 +42,9 @@ class Get_datos_departamento:
     def get_investigadores(self):
         return self.investigadores
 
+    def get_usuarios(self):
+        return self.usuarios
+
     def get_libros(self):
         libros = Publicacion.objects.filter(
             Q(usuario__in=self.usuarios) &
@@ -63,6 +66,14 @@ class Get_datos_departamento:
             Q(usuario__in=self.usuarios) &
             Q(fecha__year=self.year) &
             Q(tipo_de_produccion='Artículo')
+        ).order_by('fecha')
+        return list(publicaciones)
+
+    def getPublicaciones(self, usuarios, year, tipo):
+        publicaciones = Publicacion.objects.filter(
+            Q(usuario__in=usuarios) &
+            Q(fecha__year=year) &
+            Q(tipo_de_produccion=tipo)
         ).order_by('fecha')
         return list(publicaciones)
 
