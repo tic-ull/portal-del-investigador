@@ -5,12 +5,26 @@ import datetime
 
 class PublicacionManager(models.Manager):
     def byUsuariosYearTipo(self, usuarios, year, tipo):
-        publicaciones = Publicacion.objects.filter(
+        return Publicacion.objects.filter(
             Q(usuario__in=usuarios) &
             Q(fecha__year=year) &
             Q(tipo_de_produccion=tipo)
         ).order_by('fecha')
-        return list(publicaciones)
+
+class CongresoManager(models.Manager):
+    def byUsuariosYear(self, usuarios, year):
+        return Congreso.objects.filter(
+            Q(usuario__in=usuarios)&
+            Q(fecha_realizacion__year=year)
+        ).order_by('fecha_realizacion')
+
+class TesisDoctoralManager(models.Manager):
+    def byUsuariosYear(self, usuarios, year):
+        return TesisDoctoral.objects.filter(
+            Q(usuario__in=usuarios)&
+            Q(fecha_de_lectura__year=year)
+        ).order_by('fecha_de_lectura')
+
 
 # Modelo para almacenar los datos del investigador del Fecyt
 class Usuario(models.Model):
@@ -356,6 +370,7 @@ class Congreso(models.Model):
 
         # https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
+    objects = CongresoManager()
     usuario = models.ManyToManyField(Usuario, blank=True, null=True)
 
     # Campos recomendados
@@ -760,6 +775,7 @@ class TesisDoctoral(models.Model):
 
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE
     """
+    objects = TesisDoctoralManager()
     # Campos recomendados
     usuario = models.ManyToManyField(Usuario, blank=True, null=True)
 
