@@ -9,3 +9,4 @@ ViinV/settings_local.py
 virtualenv
 collected_static
 backups
+.ropeproject/
