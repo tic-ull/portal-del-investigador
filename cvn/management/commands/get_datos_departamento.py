@@ -4,16 +4,6 @@ import datetime
 from viinvDB.models import GrupoinvestInvestigador, GrupoinvestDepartamento
 from cvn.models import Usuario, Publicacion, Congreso, Proyecto, Convenio, TesisDoctoral
 
-def none_to_zero(element):
-    return element if not element is None else 0
-
-def date_add(date, years, months, days):
-    years = none_to_zero(years) 
-    months = none_to_zero(months)
-    days = none_to_zero(days)
-    delta = datetime.timedelta(days=days + months*30 + years*365)
-    return date + delta
-
 class Get_datos_departamento:
 
     def __init__(self, identificador, year, tipo="departamento"):
@@ -43,10 +33,6 @@ class Get_datos_departamento:
         investigadores = investigadores.filter(Q(cese__isnull=True)|Q(cese__gte=self.fecha_fin_min))
         investigadores = investigadores.order_by('apellido1', 'apellido2')
         
-        '''tabla_investigadores = []
-        for i in investigadores:
-            tabla_investigadores.append([i.nombre, i.apellido1, i.apellido2, i.categoria.nombre])'''
-
         lista_dni = [investigador.nif for investigador in investigadores]
         # Guardamos los objectos Usuario, de los investigadores GrupoinvestInvestigador
         # Se extraen de esta manera por estar en bbdd diferentes
@@ -96,16 +82,10 @@ class Get_datos_departamento:
         
         proyectos_list = []
         for proyecto in proyectos:
-            if proyecto.fecha_de_fin: # Si el proyecto usa fecha_de_fin en lugar de duracion
-                if proyecto.fecha_de_fin >= self.fecha_fin_min:
-                    proyectos_list.append(proyecto)
-            else: # Si el proyecto usa duracion_anyos, ...meses ...dias    
-                fecha_db_fin = date_add(proyecto.fecha_de_inicio,
-                                        proyecto.duracion_anyos,
-                                        proyecto.duracion_meses,
-                                        proyecto.duracion_dias)
-                if fecha_db_fin >= self.fecha_fin_min:
-                    proyectos_list.append(proyecto) 
+            fecha_db_fin = proyecto.getFechaFin() 
+            fecha_db_fin = fecha_db_fin if fecha_db_fin is not None else proyecto.fecha_de_inicio
+            if fecha_db_fin >= self.fecha_fin_min:
+                proyectos_list.append(proyecto) 
         return proyectos_list
 
     def get_convenios(self):
@@ -117,10 +97,8 @@ class Get_datos_departamento:
 
         convenios_list = []
         for convenio in convenios:
-            fecha_db_fin = date_add(convenio.fecha_de_inicio,
-                                    convenio.duracion_anyos,
-                                    convenio.duracion_meses,
-                                    convenio.duracion_dias)
+            fecha_db_fin = convenio.getFechaFin()
+            fecha_db_fin = fecha_db_fin if fecha_db_fin is not None else convenio.fecha_de_inicio
             if fecha_db_fin >= self.fecha_fin_min:
                 convenios_list.append(convenio)
         return convenios_list
