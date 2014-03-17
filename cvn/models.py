@@ -5,7 +5,6 @@ import datetime
 
 class PublicacionManager(models.Manager):
     def byUsuariosYearTipo(self, usuarios, year, tipo):
-        #import pdb; pdb.set_trace()
         return super(PublicacionManager, self).get_query_set().filter(
             Q(usuario__in=usuarios) &
             Q(fecha__year=year) &
@@ -26,6 +25,22 @@ class TesisDoctoralManager(models.Manager):
             Q(fecha_de_lectura__year=year)
         ).order_by('fecha_de_lectura')
 
+class ProyectoConvenioManager(models.Manager):
+    def byUsuariosYear(self, usuarios, year):
+        fecha_inicio_max = datetime.date(year, 12, 31)
+        fecha_fin_min = datetime.date(year, 1, 1)
+        elementos = super(ProyectoConvenioManager, self).get_query_set().filter(
+            Q(usuario__in=usuarios)&
+            Q(fecha_de_inicio__isnull=False)&
+            Q(fecha_de_inicio__lte=fecha_inicio_max)
+        ).order_by('fecha_de_inicio')
+        elementos_list = []
+        for elemento in elementos:
+            fecha_db_fin = elemento.getFechaFin()
+            fecha_db_fin = fecha_db_fin if fecha_db_fin is not None else elemento.fecha_de_inicio
+            if fecha_db_fin >= fecha_fin_min:
+                elementos_list.append(elemento)
+        return elementos_list
 
 # Modelo para almacenar los datos del investigador del Fecyt
 class Usuario(models.Model):
@@ -477,6 +492,7 @@ class Proyecto(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale\
         =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDIComp
     """
+    objects = ProyectoConvenioManager()
     usuario = models.ManyToManyField(Usuario, blank=True, null=True)
 
     # Campos recomendados
@@ -632,6 +648,7 @@ class Convenio(models.Model):
     https://cvn.fecyt.es/editor/cvn.html?locale\
     =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDINoComp
     """
+    objects = ProyectoConvenioManager()
     usuario = models.ManyToManyField(Usuario, blank=True, null=True)
 
     # Campos recomendados
