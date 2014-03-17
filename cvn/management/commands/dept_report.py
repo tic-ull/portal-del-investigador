@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn.models import Publicacion, Congreso, Proyecto, Convenio, TesisDoctoral
 from django.core.management.base import BaseCommand, CommandError
 from get_datos_departamento import Get_datos_departamento
 from informe_pdf import Informe_pdf
@@ -50,15 +51,22 @@ class Command(BaseCommand):
 
     def getData(self):
         dataDept = Get_datos_departamento(self.deptID, self.year)
+        usuarios = dataDept.get_usuarios()
         departamento = GrupoinvestDepartamento.objects.get(id=self.deptID)
         investigadores = dataDept.get_investigadores()
-        articulos = dataDept.get_articulos()
-        libros = dataDept.get_libros()
-        capitulosLibro = dataDept.get_capitulos()
-        congresos = dataDept.get_congresos()
-        proyectos = dataDept.get_proyectos()
-        convenios = dataDept.get_convenios()
-        tesis = dataDept.get_tesis()
+        articulos = Publicacion.objects.byUsuariosYearTipo(
+            usuarios, self.year, 'Artículo'
+        )
+        libros = Publicacion.objects.byUsuariosYearTipo(
+            usuarios, self.year, 'Libro'
+        )
+        capitulosLibro = Publicacion.objects.byUsuariosYearTipo(
+            usuarios, self.year, 'Capítulo de Libro'
+        )
+        congresos = Congreso.objects.byUsuariosYear(usuarios, self.year)
+        proyectos = Proyecto.objects.byUsuariosYear(usuarios, int(self.year))
+        convenios = Convenio.objects.byUsuariosYear(usuarios, int(self.year))
+        tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, self.year)
         return (departamento, investigadores, articulos,
                 libros, capitulosLibro, congresos, proyectos,
                 convenios, tesis)

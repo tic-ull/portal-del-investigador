@@ -1,6 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
 from PIL import Image
+from cvn import settings as stCVN
+from django.conf import settings as st
 from django.utils import translation
 from django.utils.translation import ugettext
 from reportlab.lib import colors
@@ -42,7 +44,7 @@ class Informe_pdf:
         self.setLogo()
 
     def setLogo(self):
-        img_path = 'cvn/management/commands/images/'
+        img_path = st.STATIC_ROOT + '/images/'
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
         else:
@@ -56,9 +58,11 @@ class Informe_pdf:
         self.logo_height *= logo_scale
 
     def go(self):
-        doc = SimpleDocTemplate(
-            slugify(self.year + '-' + self.departamento.nombre) + '.pdf'
-        )
+        pathFile = "%s/%s/" % (stCVN.PDF_DEPT_ROOT, self.year)
+        if not os.path.isdir(pathFile):
+            os.makedirs(pathFile)
+        fileName = slugify(self.year + "-" + self.departamento.nombre) + ".pdf"
+        doc = SimpleDocTemplate(pathFile + fileName)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
             self.showInvestigadores(story)

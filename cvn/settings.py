@@ -14,6 +14,7 @@ URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 PDF_ROOT = "cvn/pdf"
 XML_ROOT = "cvn/xml"
 OLD_PDF_ROOT = "cvn/old_cvn/"  # CVN antiguos
+PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/pdf_departamento')
 
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
 URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)
