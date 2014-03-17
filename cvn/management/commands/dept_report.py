@@ -40,14 +40,23 @@ class Command(BaseCommand):
             self.deptID = options['id']
 
     def create_report(self):
-        dept, invs, produccion, actividad = self.getData()
-        informe = Informe_pdf(self.year, dept, invs, produccion, actividad)
+        (departamento, investigadores, articulos,
+         libros, capitulosLibro, congresos, produccion,
+         actividad) = self.getData()
+        informe = Informe_pdf(self.year, departamento, investigadores,
+                              articulos, libros, capitulosLibro,
+                              congresos, produccion, actividad)
         informe.go()
 
     def getData(self):
-        data_dept = Get_datos_departamento(self.deptID, self.year)
-        dept = GrupoinvestDepartamento.objects.get(id=self.deptID)
-        invs = data_dept.get_investigadores()
+        dataDept = Get_datos_departamento(self.deptID, self.year)
+        departamento = GrupoinvestDepartamento.objects.get(id=self.deptID)
+        investigadores = dataDept.get_investigadores()
+        articulos = dataDept.get_articulos()
+        libros = dataDept.get_libros()
+        capitulosLibro = dataDept.get_capitulos()
+        congresos = dataDept.get_congresos()
         produccion = {}  # data_dept.get_produccion()
         actividad = {}  # data_dept.get_actividad()
-        return dept, invs, produccion, actividad
+        return (departamento, investigadores, articulos,
+                libros, capitulosLibro, congresos, produccion, actividad)
