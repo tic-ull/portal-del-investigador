@@ -2,6 +2,14 @@
 from django.db import models
 import datetime
 
+class PublicacionManager(models.Manager):
+    def byUsuarioYearTipo(self, usuarios, year, tipo):
+        publicaciones = Publicacion.objects.filter(
+            Q(usuario__in=usuarios) &
+            Q(fecha__year=year) &
+            Q(tipo_de_produccion=tipo)
+        ).order_by('fecha')
+        return list(publicaciones)
 
 # Modelo para almacenar los datos del investigador del Fecyt
 class Usuario(models.Model):
@@ -243,6 +251,7 @@ class Publicacion(models.Model):
 
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
+    objects = PublicacionManager()
     # Campo recomendado
     titulo = models.TextField(u'Título de la publicación',
                               blank=True, null=True)
