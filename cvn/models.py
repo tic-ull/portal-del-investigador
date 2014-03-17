@@ -3,7 +3,7 @@ from django.db import models
 import datetime
 
 class PublicacionManager(models.Manager):
-    def byUsuarioYearTipo(self, usuarios, year, tipo):
+    def byUsuariosYearTipo(self, usuarios, year, tipo):
         publicaciones = Publicacion.objects.filter(
             Q(usuario__in=usuarios) &
             Q(fecha__year=year) &
