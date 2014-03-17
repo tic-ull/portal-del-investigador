@@ -1,10 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from PIL import Image
-from date_string_helpers import (cambia_fecha_a_normal, calcular_duracion,
-                                 utf8)
 from django.utils import translation
 from django.utils.translation import ugettext
+from get_datos_departamento import date_add
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
@@ -28,8 +27,8 @@ class Informe_pdf:
     PAGE_NUMBERS_SIZE = 8
     PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
 
-    def __init__(self, year, departamento, investigadores, articulos,
-                 libros, capitulosLibro, congresos, proyectos):
+    def __init__(self, year, departamento, investigadores, articulos, libros,
+                 capitulosLibro, congresos, proyectos, convenios, tesis):
         self.year = year
         self.departamento = departamento
         self.investigadores = investigadores
@@ -38,6 +37,8 @@ class Informe_pdf:
         self.capitulosLibro = capitulosLibro
         self.congresos = congresos
         self.proyectos = proyectos
+        self.convenios = convenios
+        self.tesis = tesis
         self.setLogo()
 
     def setLogo(self):
@@ -80,6 +81,14 @@ class Informe_pdf:
             self.showProyectos(story)
             story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
+        if self.convenios:
+            self.showConvenios(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
+
+        if self.tesis:
+            self.showTesis(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
+
         doc.build(story, onFirstPage=self.firstPage,
                   onLaterPages=self.laterPages)
 
@@ -91,12 +100,21 @@ class Informe_pdf:
         story.append(Paragraph('INVESTIGADORES', self.styleH3()))
         text = 'Número de investigadores: ' + str(len(self.investigadores))
         story.append(Paragraph(text, self.styleN()))
+        story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
         story.append(self.tableInvestigadores())
 
     def tableInvestigadores(self):
+        tableInv = []
+        for inv in self.investigadores:
+            tableInv.append([
+                inv.nombre,
+                inv.apellido1,
+                inv.apellido2,
+                inv.categoria.nombre]
+            )
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
-        data = [HEADERS] + self.investigadores
+        data = [HEADERS] + tableInv
         table = Table(data, repeatRows=1)
         table.setStyle(self.styleTable())
         return table
@@ -255,89 +273,68 @@ class Informe_pdf:
 
     # -------------------------------------------------------------------------
 
-    def lista_convenios(self):
-        convenios = self.actividad["convenios"]
-        num_convenios = len(convenios)
-        #print num_convenios
-        texto = ""
-        if num_convenios > 0:
-            texto = "<b>{2}Convenios de investigación activos en {1} "\
-                    + "</font>[{0}]</b><br/>".format(num_convenios, self.year,
-                                                     self.SUBTITLE_STYLE)
-            for convenio in convenios:
-                (denominacion_del_convenio, fecha_de_inicio, cuantia_total,
-                 autores, duracion_anyos, duracion_meses,
-                 duracion_dias) = convenio
-                # TODO revisar este orden
-                if denominacion_del_convenio:
-                    texto += "Título: {0}.<br/>".format(utf8(
-                        denominacion_del_convenio))
-                if fecha_de_inicio:
-                    new_fecha_de_inicio = cambia_fecha_a_normal(
-                        fecha_de_inicio)
-                    texto += "Fecha de inicio: {0}<br/>".format(
-                        utf8(new_fecha_de_inicio))
-                    fecha_de_fin = calcular_duracion(fecha_de_inicio,
-                                                     duracion_anyos,
-                                                     duracion_meses,
-                                                     duracion_dias)
-                    if fecha_de_fin > fecha_de_inicio:
-                        fecha_de_fin = cambia_fecha_a_normal(fecha_de_fin)
-                        texto += "Fecha de finalización: {0}<br/>".format(
-                            utf8(fecha_de_fin))
-                if cuantia_total:
-                    texto += "Cuantía: {0}€<br/>".format(
-                        utf8(unicode(cuantia_total)))
-                if autores:
-                    texto += "Investigadores: {0}<br/>".format(utf8(autores))
-                texto += "<br/>"
-            # end for convenios
-        p = Paragraph(texto, self.styleN())
-        return p
+    def showConvenios(self, story):
+        story.append(Paragraph('CONVENIOS ACTIVOS', self.styleH3()))
+        text = 'Número de convenios activos: ' + str(
+            len(self.convenios)
+        )
+        story.append(Paragraph(text, self.styleN()))
+        self.listConvenios(story)
 
-    def lista_tesis(self):
-        tesis = self.actividad["tesis"]
-        num_tesis = len(tesis)
-        texto = ""
-        if num_tesis > 0:
-            texto = "<b>{1}Tesis doctorales</font> [{0}]</b><br/>".format(
-                num_tesis, self.SUBTITLE_STYLE)
-            for t in tesis:
-                (id,
-                 titulo,
-                 fecha_de_lectura,
-                 autor,
-                 universidad_que_titula,
-                 codirector,
-                 dir_nombre,
-                 dir_apellido1,
-                 dir_apellido2) = t
+    def listConvenios(self, story):
+        for conv in self.convenios:
+            text = ""
+            if conv.denominacion_del_proyecto:
+                text += u"<b>%s</b><br/>" % (conv.denominacion_del_proyecto)
+            if conv.fecha_de_inicio:
+                text += u"Fecha de inicio: %s<br/>" % (
+                    conv.fecha_de_inicio.strftime("%d/%m/%Y")
+                )
+            if (conv.duracion_anyos or conv.duracion_meses or
+               conv.duracion_dias):
+                date = date_add(conv.fecha_de_inicio,
+                                conv.duracion_anyos,
+                                conv.duracion_meses,
+                                conv.duracion_dias)
+                text += u"Fecha de finalización: %s<br/>" % (
+                    date.strftime("%d/%m/%Y")
+                )
+            if conv.cuantia_total:
+                text += u"Cuantía: %s<br/>" % (conv.cuantia_total)
+            if conv.autores:
+                text += u"Investigadores: %s" % (conv.autores)
+            story.append(Paragraph(text, self.styleN()))
 
-                if autor:
-                    texto += "Doctorando: {0}<br/>".format(utf8(autor))
-                if universidad_que_titula:
-                    texto += "Universidad que titula: {0}<br/>".format(
-                        utf8(universidad_que_titula))
+    # -------------------------------------------------------------------------
 
-                if autor:
-                    texto += "Título: {0}.<br/>".format(utf8(autor))
+    def showTesis(self, story):
+        story.append(Paragraph('TESIS DOCTORALES', self.styleH3()))
+        text = 'Número de tesis doctorales: ' + str(
+            len(self.tesis)
+        )
+        story.append(Paragraph(text, self.styleN()))
+        self.listTesis(story)
 
-                if dir_apellido1:
-                    texto += "Director: {0} {1} {2}<br/>".format(
-                        utf8(dir_nombre), utf8(dir_apellido1),
-                        utf8(dir_apellido2))
-
-                if codirector:
-                    texto += "Codirector: {0}<br/>".format(utf8(codirector))
-
-                if fecha_de_lectura:
-                    fecha_de_lectura = cambia_fecha_a_normal(fecha_de_lectura)
-                    texto += "Fecha de lectura: {0}<br/>".format(
-                        utf8(fecha_de_lectura))
-                texto += "<br/>"
-            # end for tesis
-        p = Paragraph(texto, self.styleN())
-        return p
+    def listTesis(self, story):
+        for t in self.tesis:
+            text = ""
+            if t.titulo:
+                text += u"<b>%s</b><br/>" % (t.titulo)
+            if t.autor:
+                text += u"Doctorando: %s<br/>" % (t.autor)
+            if t.universidad_que_titula:
+                text += u"Universidad: %s<br/>" % (
+                    t.universidad_que_titula
+                )
+            if t.usuario:
+                text += u"Director: %s" % (t.usuario)
+            if t.codirector:
+                text += u"Codirector: %s" % (t.codirector)
+            if t.fecha_de_lectura:
+                text += u"Fecha de lectura: %s<br/>" % (
+                    t.fecha_de_lectura.strftime("%d/%m/%Y")
+                )
+            story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
     # CONFIGURACIÓN DE LAS PÁGINAS
@@ -378,15 +375,13 @@ class Informe_pdf:
 
     def styleN(self):
         style = getSampleStyleSheet()['Normal']
-        style.leading = 24
+        style.leading = 12
         style.allowWidows = 0
         style.spaceBefore = 0.5 * inch
         return style
 
     def styleH3(self):
         style = getSampleStyleSheet()['Heading3']
-        style.leading = 0
-        style.allowWidows = 0
         return style
 
     def styleTable(self):
