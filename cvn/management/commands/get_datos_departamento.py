@@ -8,10 +8,11 @@ def none_to_zero(element):
     return element if not element is None else 0
 
 def date_add(date, years, months, days):
-    years = none_to_zero(years)
+    years = none_to_zero(years) 
     months = none_to_zero(months)
     days = none_to_zero(days)
-    return datetime.date(date.year + years, date.month + months, date.day + days)
+    delta = datetime.timedelta(days=days + months*30 + years*365)
+    return date + delta
 
 class Get_datos_departamento:
 
@@ -105,7 +106,7 @@ class Get_datos_departamento:
                                         proyecto.duracion_meses,
                                         proyecto.duracion_dias)
                 if fecha_db_fin >= self.fecha_fin_min:
-                    convenios_list.append(convenio) 
+                    proyectos_list.append(proyecto) 
         return proyectos_list
 
     def get_convenios(self):
@@ -119,8 +120,8 @@ class Get_datos_departamento:
         for convenio in convenios:
             fecha_db_fin = date_add(convenio.fecha_de_inicio,
                                     convenio.duracion_anyos,
-                                    convenio_duracion_meses,
-                                    convenio_duracion_dias)
+                                    convenio.duracion_meses,
+                                    convenio.duracion_dias)
             if fecha_db_fin >= self.fecha_fin_min:
                 convenios_list.append(convenio)
         return convenios_list
