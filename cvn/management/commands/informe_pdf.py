@@ -1,8 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
 from PIL import Image
-from date_string_helpers import (getMonthText, cambia_fecha_a_normal,
-                                 calcular_duracion, utf8)
+from date_string_helpers import (cambia_fecha_a_normal, calcular_duracion,
+                                 utf8)
+from django.utils import translation
+from django.utils.translation import ugettext
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
@@ -27,7 +29,7 @@ class Informe_pdf:
     PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
 
     def __init__(self, year, departamento, investigadores, articulos,
-                 libros, capitulosLibro, congresos, produccion, actividad):
+                 libros, capitulosLibro, congresos, proyectos):
         self.year = year
         self.departamento = departamento
         self.investigadores = investigadores
@@ -35,9 +37,7 @@ class Informe_pdf:
         self.libros = libros
         self.capitulosLibro = capitulosLibro
         self.congresos = congresos
-
-        self.produccion = produccion
-        self.actividad = actividad
+        self.proyectos = proyectos
         self.setLogo()
 
     def setLogo(self):
@@ -76,17 +76,9 @@ class Informe_pdf:
             self.showCongresos(story)
             story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
-        #p = self.lista_congresos()
-        #Story.append(p)
-
-        #p = self.lista_proyectos()
-        #Story.append(p)
-
-        #p = self.lista_convenios()
-        #Story.append(p)
-
-        #p = self.lista_tesis()
-        #Story.append(p)
+        if self.proyectos:
+            self.showProyectos(story)
+            story.append(Spacer(1, 1 * self.DEFAULT_SPACER))
 
         doc.build(story, onFirstPage=self.firstPage,
                   onLaterPages=self.laterPages)
@@ -209,6 +201,7 @@ class Informe_pdf:
         self.listCongresos(story)
 
     def listCongresos(self, story):
+        translation.activate('es')
         for congreso in self.congresos:
             text = ""
             if congreso.titulo:
@@ -216,9 +209,11 @@ class Informe_pdf:
             if congreso.nombre_del_congreso:
                 text += u"%s " % (congreso.nombre_del_congreso)
             if congreso.ciudad_de_realizacion and congreso.fecha_realizacion:
-                text += "(%s, %s)<br/>" % (
+                translation.activate('es')
+                text += "(%s, %s de %s)<br/>" % (
                     congreso.ciudad_de_realizacion,
-                    congreso.fecha_realizacion.strftime("%B de %Y")
+                    ugettext(congreso.fecha_realizacion.strftime("%B")),
+                    congreso.fecha_realizacion.strftime("%Y")
                 )
             elif congreso.ciudad_de_realizacion:
                 text += "(%s)<br/>" % congreso.ciudad_de_realizacion
@@ -227,77 +222,38 @@ class Informe_pdf:
             if congreso.autores:
                 text += u"%s" % (congreso.autores)
             story.append(Paragraph(text, self.styleN()))
+        translation.deactivate()
 
     # -------------------------------------------------------------------------
 
-    def lista_congresos(self):
-        congresos = self.actividad["congresos"]
-        num_congresos = len(congresos)
-        #print num_congresos
-        texto = ""
-        if num_congresos > 0:
-            texto = "<b>{1}Comunicaciones a congresos </font>[{0}]</b><br/>"\
-                .format(num_congresos, self.SUBTITLE_STYLE)
-            for congreso in congresos:
-                #print "Congreso:" , congreso
-                (titulo, nombre_del_congreso, autores,
-                 ciudad_de_realizacion, fecha_realizacion) = congreso
-                if autores:
-                    texto += "{0}.".format(utf8(autores))
-                if titulo:
-                    # FIXME change this to smart quotes
-                    texto += ' "{0}"'.format(utf8(titulo))
-                if nombre_del_congreso:
-                    texto += " en: <i>{0}</i>".format(
-                        utf8(nombre_del_congreso))
-                mes = getMonthText(fecha_realizacion)
-                if ciudad_de_realizacion and mes:
-                    texto += ", ({0}, {1} de {2})".format(
-                        utf8(ciudad_de_realizacion), mes, self.year)
-                elif ciudad_de_realizacion:
-                    texto += ", ({0})".format(utf8(ciudad_de_realizacion))
-                elif mes:
-                    texto += ", ({0} de {1})".format(mes, self.year)
+    def showProyectos(self, story):
+        story.append(Paragraph('PROYECTOS ACTIVOS', self.styleH3()))
+        text = 'Número de proyectos activos: ' + str(
+            len(self.proyectos)
+        )
+        story.append(Paragraph(text, self.styleN()))
+        self.listProyectos(story)
 
-                texto += ".<br/><br/>"  # punto final
-            # end for congresos
-        p = Paragraph(texto, self.styleN())
-        return p
+    def listProyectos(self, story):
+        for proy in self.proyectos:
+            text = ""
+            if proy.denominacion_del_proyecto:
+                text += u"<b>%s</b><br/>" % (proy.denominacion_del_proyecto)
+            if proy.fecha_de_inicio:
+                text += u"Fecha de inicio: %s<br/>" % (
+                    proy.fecha_de_inicio.strftime("%d/%m/%Y")
+                )
+            if proy.fecha_de_fin:
+                text += u"Fecha de finalización: %s<br/>" % (
+                    proy.fecha_de_fin.strftime("%d/%m/%Y")
+                )
+            if proy.cuantia_total:
+                text += u"Cuantía: %s<br/>" % (proy.cuantia_total)
+            if proy.autores:
+                text += u"Investigadores: %s" % (proy.autores)
+            story.append(Paragraph(text, self.styleN()))
 
-    def lista_proyectos(self):
-        proyectos = self.actividad["proyectos"]
-        num_proyectos = len(proyectos)
-        #print num_proyectos
-        texto = ""
-        if num_proyectos > 0:
-            texto = "<b>{2}Proyectos de investigación activos en {1} </font>"\
-                    + "[{0}]</b><br/>".format(
-                        num_proyectos, self.year, self.SUBTITLE_STYLE)
-            for proyecto in proyectos:
-                #print "Proyecto:" , proyecto
-                (denominacion_del_proyecto, fecha_de_inicio,
-                 fecha_de_fin, cuantia_total, autores) = proyecto
-                # TODO revisar este orden
-                if denominacion_del_proyecto:
-                    texto += "Denominación: {0}.<br/>".format(
-                        utf8(denominacion_del_proyecto))
-                if fecha_de_inicio:
-                    fecha_de_inicio = cambia_fecha_a_normal(fecha_de_inicio)
-                    texto += "Fecha de inicio: {0}<br/>".format(
-                        utf8(fecha_de_inicio))
-                if fecha_de_fin:
-                    fecha_de_fin = cambia_fecha_a_normal(fecha_de_fin)
-                    texto += "Fecha de finalización: {0}<br/>".format(
-                        utf8(fecha_de_fin))
-                if cuantia_total:
-                    texto += "Cuantía: {0}€<br/>".format(
-                        utf8(unicode(cuantia_total)))
-                if autores:
-                    texto += "Investigadores: {0}<br/>".format(utf8(autores))
-                texto += "<br/>"
-            # end for proyectos
-        p = Paragraph(texto, self.styleN())
-        return p
+    # -------------------------------------------------------------------------
 
     def lista_convenios(self):
         convenios = self.actividad["convenios"]
