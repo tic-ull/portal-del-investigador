@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from django.db import models
+import datetime
 
 
 # Modelo para almacenar los datos del investigador del Fecyt
@@ -575,6 +576,21 @@ class Proyecto(models.Model):
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
 
+    def getFechaFin(self):
+        fecha = None
+        if self.fecha_de_fin is not None: # Si ya tenemos la fecha de fin en la bbdd
+            fecha = self.fecha_de_fin
+        elif (self.fecha_de_inicio is not None) and\
+             ((self.duracion_anyos is not None) or\
+             (self.duracion_meses is not None) or\
+             (self.duracion_dias is not None)):  # Si podemos calcular la fecha como fecha inicio + duracion
+            years = self.duracion_anyos if not self.duracion_anyos is None else 0
+            months = self.duracion_meses if not self.duracion_meses is None else 0
+            days = self.duracion_dias if not self.duracion_dias is None else 0
+            delta = datetime.timedelta(days=days + months*30 + years*365)
+            fecha = self.fecha_de_inicio + delta
+        return fecha
+
     def __unicode__(self):
         return u'%s' % (self.denominacion_del_proyecto)
 
@@ -705,6 +721,20 @@ class Convenio(models.Model):
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+
+    def getFechaFin(self):
+        fecha = None
+        if (self.fecha_de_inicio is not None) and\
+           ((self.duracion_anyos is not None) or\
+           (self.duracion_meses is not None) or\
+           (self.duracion_dias is not None)): # Si podemos calcular la fecha como fecha inicio + duracio 
+            years = self.duracion_anyos if not self.duracion_anyos is None else 0
+            months = self.duracion_meses if not self.duracion_meses is None else 0
+            days = self.duracion_dias if not self.duracion_dias is None else 0
+            delta = datetime.timedelta(days=days + months*30 + years*365)
+            fecha = self.fecha_de_inicio + delta
+        return fecha
+        
 
     def __unicode__(self):
         return u'%s' % (self.denominacion_del_proyecto)
