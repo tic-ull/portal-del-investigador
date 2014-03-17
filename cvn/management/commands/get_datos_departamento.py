@@ -28,10 +28,9 @@ class Get_datos_departamento:
         self.fecha_fin_min = datetime.date(self.year, 1, 1) 
         
         ''' Consulta a la base de datos los investigadores.
-        self.tabla_investigadores => tabla con datos de los investigadores para ser usada fuera de la librería
-        self.investigadores => dni de los investigadores para usar en otras consultas. Son necesarios los dni ya que
-        estas consultas se pueden hacer en otra bbdd.'''
-        self.tabla_investigadores, self.investigadores = self.query_investigadores(int(identificador), tipo)
+        self.investigadores => objectos de investigadores para ser usada fuera de la librería
+        self.usuarios => investigadores en el departamento activos en el año (estan en una bbdd diferentes que self.investigadores). Usado en el resto de consultas'''
+        self.investigadores, self.usuarios = self.query_investigadores(int(identificador), tipo)
 
     def query_investigadores(self, identificador, tipo):
         investigadores = None
@@ -44,22 +43,22 @@ class Get_datos_departamento:
         investigadores = investigadores.filter(Q(cese__isnull=True)|Q(cese__gte=self.fecha_fin_min))
         investigadores = investigadores.order_by('apellido1', 'apellido2')
         
-        tabla_investigadores = []
+        '''tabla_investigadores = []
         for i in investigadores:
-            tabla_investigadores.append([i.nombre, i.apellido1, i.apellido2, i.categoria.nombre])
+            tabla_investigadores.append([i.nombre, i.apellido1, i.apellido2, i.categoria.nombre])'''
 
         lista_dni = [investigador.nif for investigador in investigadores]
         # Guardamos los objectos Usuario, de los investigadores GrupoinvestInvestigador
         # Se extraen de esta manera por estar en bbdd diferentes
-        lista_investigadores = Usuario.objects.filter(documento__in=lista_dni)
-        return tabla_investigadores, lista_investigadores
+        usuarios = Usuario.objects.filter(documento__in=lista_dni)
+        return investigadores, usuarios
 
     def get_investigadores(self):
-        return self.tabla_investigadores
+        return self.investigadores
 
     def get_libros(self):
         libros = Publicacion.objects.filter(
-            Q(usuario__in=self.investigadores) &
+            Q(usuario__in=self.usuarios) &
             Q(fecha__year=self.year) &
             Q(tipo_de_produccion='Libro')
         ).order_by('fecha')
@@ -67,7 +66,7 @@ class Get_datos_departamento:
     
     def get_capitulos(self): 
         capitulos = Publicacion.objects.filter(
-            Q(usuario__in=self.investigadores) &
+            Q(usuario__in=self.usuarios) &
             Q(fecha__year=self.year) &
             Q(tipo_de_produccion='Capítulo de Libro')
         ).order_by('fecha')
@@ -75,7 +74,7 @@ class Get_datos_departamento:
 
     def get_articulos(self): 
         publicaciones = Publicacion.objects.filter(
-            Q(usuario__in=self.investigadores) &
+            Q(usuario__in=self.usuarios) &
             Q(fecha__year=self.year) &
             Q(tipo_de_produccion='Artículo')
         ).order_by('fecha')
@@ -83,14 +82,14 @@ class Get_datos_departamento:
 
     def get_congresos(self):
         congresos = Congreso.objects.filter(
-            Q(usuario__in=self.investigadores)&
+            Q(usuario__in=self.usuarios)&
             Q(fecha_realizacion__year=self.year)
         ).order_by('fecha_realizacion')
         return list(congresos)
 
     def get_proyectos(self):
         proyectos = Proyecto.objects.filter(
-            Q(usuario__in=self.investigadores)&
+            Q(usuario__in=self.usuarios)&
             Q(fecha_de_inicio__isnull=False)&
             Q(fecha_de_inicio__lte=self.fecha_inicio_max)
         ).order_by('fecha_de_inicio')
@@ -111,7 +110,7 @@ class Get_datos_departamento:
 
     def get_convenios(self):
         convenios = Convenio.objects.filter(
-            Q(usuario__in=self.investigadores)&
+            Q(usuario__in=self.usuarios)&
             Q(fecha_de_inicio__isnull=False)&
             Q(fecha_de_inicio__lte=self.fecha_inicio_max)
         ).order_by('fecha_de_inicio') 
@@ -128,7 +127,7 @@ class Get_datos_departamento:
 
     def get_tesis(self):
         tesis = TesisDoctoral.objects.filter(
-            Q(usuario__in=self.investigadores)&
+            Q(usuario__in=self.usuarios)&
             Q(fecha_de_lectura__year=self.year)
         ).order_by('fecha_de_lectura')
         return list(tesis)
