@@ -17,9 +17,6 @@ class Get_datos_departamento:
         self.fecha_inicio_max = datetime.date(self.year, 12, 31)
         self.fecha_fin_min = datetime.date(self.year, 1, 1) 
         
-        ''' Consulta a la base de datos los investigadores.
-        self.investigadores => objectos de investigadores para ser usada fuera de la librería
-        self.usuarios => investigadores en el departamento activos en el año (estan en una bbdd diferentes que self.investigadores). Usado en el resto de consultas'''
         self.investigadores, self.usuarios = self.query_investigadores(int(identificador), tipo)
 
     def query_investigadores(self, identificador, tipo):
@@ -45,7 +42,7 @@ class Get_datos_departamento:
     def get_usuarios(self):
         return self.usuarios
 
-    def get_libros(self):
+    '''def get_libros(self):
         libros = Publicacion.objects.filter(
             Q(usuario__in=self.usuarios) &
             Q(fecha__year=self.year) &
@@ -67,24 +64,32 @@ class Get_datos_departamento:
             Q(fecha__year=self.year) &
             Q(tipo_de_produccion='Artículo')
         ).order_by('fecha')
-        return list(publicaciones)
+        return list(publicaciones)'''
 
+    '''
     def getPublicaciones(self, usuarios, year, tipo):
         publicaciones = Publicacion.objects.filter(
             Q(usuario__in=usuarios) &
             Q(fecha__year=year) &
             Q(tipo_de_produccion=tipo)
         ).order_by('fecha')
-        return list(publicaciones)
+        return list(publicaciones)'''
 
-    def get_congresos(self):
+    '''def get_congresos(self):
         congresos = Congreso.objects.filter(
             Q(usuario__in=self.usuarios)&
             Q(fecha_realizacion__year=self.year)
         ).order_by('fecha_realizacion')
         return list(congresos)
 
-    def get_proyectos(self):
+    def byUsuariosYear(self, usuarios, year): 
+        congresos = Congreso.objects.filter(
+            Q(usuario__in=usuarios)&
+            Q(fecha_realizacion__year=year)
+        ).order_by('fecha_realizacion')
+        return list(congresos)'''
+
+    '''def get_proyectos(self):
         proyectos = Proyecto.objects.filter(
             Q(usuario__in=self.usuarios)&
             Q(fecha_de_inicio__isnull=False)&
@@ -112,11 +117,11 @@ class Get_datos_departamento:
             fecha_db_fin = fecha_db_fin if fecha_db_fin is not None else convenio.fecha_de_inicio
             if fecha_db_fin >= self.fecha_fin_min:
                 convenios_list.append(convenio)
-        return convenios_list
+        return convenios_list'''
 
-    def get_tesis(self):
+    '''def get_tesis(self):
         tesis = TesisDoctoral.objects.filter(
             Q(usuario__in=self.usuarios)&
             Q(fecha_de_lectura__year=self.year)
         ).order_by('fecha_de_lectura')
-        return list(tesis)
+        return list(tesis)'''
