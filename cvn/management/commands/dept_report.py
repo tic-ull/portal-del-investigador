@@ -2,20 +2,13 @@
 
 from cvn.models import (Publicacion, Congreso, Proyecto, Convenio,
                         TesisDoctoral, Usuario)
+from cvn.utils import isdigit
 from django.core.management.base import BaseCommand, CommandError
 from django.db.models import Q
 from informe_pdf import Informe_pdf
 from optparse import make_option
 from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
 import datetime
-
-
-def checkDigit(obj):
-    if obj is None or not obj.isdigit():
-        return False
-    else:
-        return True
-
 
 class Command(BaseCommand):
     help = u'Genera un PDF con los datos de un Departamento'
@@ -36,54 +29,63 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.checkArgs(options)
-        self.create_report()
+        year = int(options['year'])
+        departamentos = [int(options['id'])] if type(options['id']) is str else None
+        self.create_reports(year, departamentos)
 
     def checkArgs(self, options):
-        if not checkDigit(options['year']):
+        if not isdigit(options['year']):
             raise CommandError(
                 "Option `--year=YYYY` must exist and be a number"
             )
+        if (not isdigit(options['id'])) and options['id'] is not None:
+            raise CommandError("Option `--id=X` must be a number")
+    
+    def create_reports(self, year, departamentos=None):
+        # Pasamos de una lista de ids de departamento a una lista de departamentos
+        if departamentos is None:
+            departamentos = GrupoinvestDepartamento.objects.all()
         else:
-            self.year = int(options['year'])
-        if not checkDigit(options['id']):
-            raise CommandError("Option `--id=X` must exist and be a number")
-        else:
-            self.deptID = int(options['id'])
+            departamentos = GrupoinvestDepartamento.objects.filter(id__in=departamentos)
 
-    def create_report(self):
-        (departamento, investigadores, articulos,
+        # Creamos un informe por cada departamento
+        for departamento in departamentos:
+            self.create_report(year, departamento)
+
+    def create_report(self, year, departamento):
+        (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
-         convenios, tesis) = self.getData()
-        informe = Informe_pdf(self.year, departamento, investigadores,
+         convenios, tesis) = self.getData(year, departamento)
+        informe = Informe_pdf(year, departamento, investigadores,
                               articulos, libros, capitulosLibro,
                               congresos, proyectos, convenios, tesis)
         informe.go()
 
-    def getData(self):
-        departamento = GrupoinvestDepartamento.objects.get(id=self.deptID)
-        investigadores, usuarios = self.getInvestigadores()
+    def getData(self, year, departamento):
+        #departamento = GrupoinvestDepartamento.objects.get(id=deptID)
+        investigadores, usuarios = self.getInvestigadores(year, departamento.id)
         articulos = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, self.year, 'Artículo'
+            usuarios, year, 'Artículo'
         )
         libros = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, self.year, 'Libro'
+            usuarios, year, 'Libro'
         )
         capitulosLibro = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, self.year, 'Capítulo de Libro'
+            usuarios, year, 'Capítulo de Libro'
         )
-        congresos = Congreso.objects.byUsuariosYear(usuarios, self.year)
-        proyectos = Proyecto.objects.byUsuariosYear(usuarios, self.year)
-        convenios = Convenio.objects.byUsuariosYear(usuarios, self.year)
-        tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, self.year)
-        return (departamento, investigadores, articulos,
+        congresos = Congreso.objects.byUsuariosYear(usuarios, year)
+        proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
+        convenios = Convenio.objects.byUsuariosYear(usuarios, year)
+        tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, year)
+        return (investigadores, articulos,
                 libros, capitulosLibro, congresos, proyectos,
                 convenios, tesis)
 
-    def getInvestigadores(self):
-        fechaInicioMax = datetime.date(self.year, 12, 31)
-        fechaFinMin = datetime.date(self.year, 1, 1)
+    def getInvestigadores(self, year, deptID):
+        fechaInicioMax = datetime.date(year, 12, 31)
+        fechaFinMin = datetime.date(year, 1, 1)
         investigadores = GrupoinvestInvestigador.objects.filter(
-            departamento__id=self.deptID
+            departamento__id=deptID
         ).filter(
             Q(fecha_inicio__isnull=False) &
             Q(fecha_inicio__lte=fechaInicioMax)

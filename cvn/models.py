@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 from django.db import models
 from django.db.models import Q
+from cvn.utils import noneToZero
 import datetime
 
 class PublicacionManager(models.Manager):
@@ -626,9 +627,9 @@ class Proyecto(models.Model):
              ((self.duracion_anyos is not None) or\
              (self.duracion_meses is not None) or\
              (self.duracion_dias is not None)):  # Si podemos calcular la fecha como fecha inicio + duracion
-            years = self.duracion_anyos if not self.duracion_anyos is None else 0
-            months = self.duracion_meses if not self.duracion_meses is None else 0
-            days = self.duracion_dias if not self.duracion_dias is None else 0
+            years = noneToZero(self.duracion_anyos)
+            months = noneToZero(self.duracion_meses)
+            days = noneToZero(self.duracion_dias)
             delta = datetime.timedelta(days=days + months*30 + years*365)
             fecha = self.fecha_de_inicio + delta
         return fecha
@@ -771,9 +772,9 @@ class Convenio(models.Model):
            ((self.duracion_anyos is not None) or\
            (self.duracion_meses is not None) or\
            (self.duracion_dias is not None)): # Si podemos calcular la fecha como fecha inicio + duracio 
-            years = self.duracion_anyos if not self.duracion_anyos is None else 0
-            months = self.duracion_meses if not self.duracion_meses is None else 0
-            days = self.duracion_dias if not self.duracion_dias is None else 0
+            years = noneToZero(self.duracion_anyos)
+            months = noneToZero(self.duracion_meses)
+            days = noneToZero(self.duracion_dias)
             delta = datetime.timedelta(days=days + months*30 + years*365)
             fecha = self.fecha_de_inicio + delta
         return fecha
