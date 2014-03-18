@@ -47,7 +47,7 @@ class Command(BaseCommand):
             departamentos = GrupoinvestDepartamento.objects.all()
         else:
             departamentos = GrupoinvestDepartamento.objects.filter(
-                id__in=departamentos
+                id__in=dept
             )
 
         for departamento in departamentos:
