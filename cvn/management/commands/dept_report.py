@@ -10,6 +10,7 @@ from optparse import make_option
 from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
 import datetime
 
+
 class Command(BaseCommand):
     help = u'Genera un PDF con los datos de un Departamento'
     option_list = BaseCommand.option_list + (
@@ -30,8 +31,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.checkArgs(options)
         year = int(options['year'])
-        departamentos = [int(options['id'])] if type(options['id']) is str else None
-        self.create_reports(year, departamentos)
+        dept = [int(options['id'])] if type(options['id']) is str else None
+        self.createReports(year, dept)
 
     def checkArgs(self, options):
         if not isdigit(options['year']):
@@ -40,19 +41,19 @@ class Command(BaseCommand):
             )
         if (not isdigit(options['id'])) and options['id'] is not None:
             raise CommandError("Option `--id=X` must be a number")
-    
-    def create_reports(self, year, departamentos=None):
-        # Pasamos de una lista de ids de departamento a una lista de departamentos
-        if departamentos is None:
+
+    def createReports(self, year, dept=None):
+        if dept is None:
             departamentos = GrupoinvestDepartamento.objects.all()
         else:
-            departamentos = GrupoinvestDepartamento.objects.filter(id__in=departamentos)
+            departamentos = GrupoinvestDepartamento.objects.filter(
+                id__in=departamentos
+            )
 
-        # Creamos un informe por cada departamento
         for departamento in departamentos:
-            self.create_report(year, departamento)
+            self.createReport(year, departamento)
 
-    def create_report(self, year, departamento):
+    def createReport(self, year, departamento):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
          convenios, tesis) = self.getData(year, departamento)
@@ -62,8 +63,9 @@ class Command(BaseCommand):
         informe.go()
 
     def getData(self, year, departamento):
-        #departamento = GrupoinvestDepartamento.objects.get(id=deptID)
-        investigadores, usuarios = self.getInvestigadores(year, departamento.id)
+        investigadores, usuarios = self.getInvestigadores(
+            year, departamento.id
+        )
         articulos = Publicacion.objects.byUsuariosYearTipo(
             usuarios, year, 'Artículo'
         )

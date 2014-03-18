@@ -17,17 +17,18 @@ import os
 
 
 class Informe_pdf:
-    DEFAULT_FONT = "Helvetica"
-    DEPARTAMENTO_SIZE = 12
-    SUBTITLE_STYLE = "<font size=11>"
+    BLUE_SECONDARY_ULL = colors.HexColor('#EBF3FA')
+    BLUE_ULL = colors.HexColor('#006699')
+    DEFAULT_FONT = 'Helvetica'
+    DEFAULT_FONT_BOLD = 'Helvetica-Bold'
     DEFAULT_SPACER = 0.1 * inch
-
-    PAGE_WIDTH = A4[0]
-    PAGE_HEIGHT = A4[1]
+    HEADER_FONT_SIZE = 14
     MARGIN = 10 * mm
-
-    PAGE_NUMBERS_SIZE = 8
+    PAGE_HEIGHT = A4[1]
     PAGE_NUMBERS_MARGIN = 0.75 * MARGIN
+    PAGE_NUMBERS_SIZE = 8
+    PAGE_WIDTH = A4[0]
+    VIOLET_ULL = colors.HexColor('#7A3B7A')
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
                  capitulosLibro, congresos, proyectos, convenios, tesis):
@@ -354,11 +355,10 @@ class Informe_pdf:
         canvas.restoreState()
 
     def header(self, canvas):
-        # Nombre del Departamento
-        canvas.setFont(self.DEFAULT_FONT, self.DEPARTAMENTO_SIZE)
+        canvas.setFont(self.DEFAULT_FONT_BOLD, self.HEADER_FONT_SIZE)
+        canvas.setFillColor(self.BLUE_ULL)
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
                           self.departamento.nombre)
-        # Logo
         canvas.drawImage(self.logo_path,
                          self.PAGE_WIDTH - self.MARGIN - self.logo_width,
                          self.PAGE_HEIGHT - self.logo_height - self.MARGIN,
@@ -378,17 +378,18 @@ class Informe_pdf:
 
     def styleH3(self):
         style = getSampleStyleSheet()['Heading3']
+        style.textColor = self.VIOLET_ULL
         return style
 
     def styleTable(self):
         style = TableStyle(
             [('SIZE', (0, 0), (-1, -1), 8),
-             ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.gray),
-             ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-             ('ALIGNMENT', (0, 0), (-1, 0), 'CENTER'),
-             ('BACKGROUND', (0, 0), (-1, 0), colors.black),
+             ('BOX', (0, 0), (-1, -1), 0.2, self.BLUE_ULL),
+             ('LINEABOVE', (0, 0), (-1, -1), 0.2, self.BLUE_ULL),
+             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+             ('BACKGROUND', (0, 0), (-1, 0), self.BLUE_ULL),
              ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
              ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white,
-                                                   colors.lightgrey]), ]
+                                                   self.BLUE_SECONDARY_ULL])]
         )
         return style
