@@ -1,47 +1,58 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: UTF-8 -*-
+
+from cvn.utils import noneToZero
 from django.db import models
 from django.db.models import Q
-from cvn.utils import noneToZero
 import datetime
 
+
 class PublicacionManager(models.Manager):
+
     def byUsuariosYearTipo(self, usuarios, year, tipo):
         return super(PublicacionManager, self).get_query_set().filter(
             Q(usuario__in=usuarios) &
             Q(fecha__year=year) &
             Q(tipo_de_produccion=tipo)
-        ).order_by('fecha')
+        ).distinct().order_by('fecha')
+
 
 class CongresoManager(models.Manager):
+
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
-            Q(usuario__in=usuarios)&
+            Q(usuario__in=usuarios) &
             Q(fecha_realizacion__year=year)
-        ).order_by('fecha_realizacion')
+        ).distinct().order_by('fecha_realizacion')
+
 
 class TesisDoctoralManager(models.Manager):
+
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
-            Q(usuario__in=usuarios)&
+            Q(usuario__in=usuarios) &
             Q(fecha_de_lectura__year=year)
-        ).order_by('fecha_de_lectura')
+        ).distinct().order_by('fecha_de_lectura')
+
 
 class ProyectoConvenioManager(models.Manager):
+
     def byUsuariosYear(self, usuarios, year):
-        fecha_inicio_max = datetime.date(year, 12, 31)
-        fecha_fin_min = datetime.date(year, 1, 1)
-        elementos = super(ProyectoConvenioManager, self).get_query_set().filter(
-            Q(usuario__in=usuarios)&
-            Q(fecha_de_inicio__isnull=False)&
-            Q(fecha_de_inicio__lte=fecha_inicio_max)
-        ).order_by('fecha_de_inicio')
-        elementos_list = []
-        for elemento in elementos:
-            fecha_db_fin = elemento.getFechaFin()
-            fecha_db_fin = fecha_db_fin if fecha_db_fin is not None else elemento.fecha_de_inicio
-            if fecha_db_fin >= fecha_fin_min:
-                elementos_list.append(elemento)
-        return elementos_list
+        fechaInicioMax = datetime.date(year, 12, 31)
+        fechaFinMin = datetime.date(year, 1, 1)
+        elements = super(ProyectoConvenioManager, self).get_query_set().filter(
+            Q(usuario__in=usuarios) &
+            Q(fecha_de_inicio__isnull=False) &
+            Q(fecha_de_inicio__lte=fechaInicioMax)
+        ).distinct().order_by('fecha_de_inicio')
+        elements_list = []
+        for element in elements:
+            fechaFin = element.getFechaFin()
+            if fechaFin is None:
+                fechaFin = element.fecha_de_inicio
+            if fechaFin >= fechaFinMin:
+                elements_list.append(element)
+        return elements_list
+
 
 # Modelo para almacenar los datos del investigador del Fecyt
 class Usuario(models.Model):
@@ -179,15 +190,18 @@ class SituacionProfesional(models.Model):
     duracion_dias = models.IntegerField(u'Duración en días',
                                         blank=True, null=True)
 
-    especializacion_primaria = models.CharField(u'Especialización primaria (Código Unesco)',
-                                                max_length=64,
-                                                blank=True, null=True)
-    especializacion_secundaria = models.CharField(u'Especialización secundaria (Código Unesco)',
-                                                  max_length=64,
-                                                  blank=True, null=True)
-    especializacion_terciaria = models.CharField(u'Especialización terciaria (Código Unesco)',
-                                                 max_length=64,
-                                                 blank=True, null=True)
+    especializacion_primaria = models.CharField(
+        u'Especialización primaria (Código Unesco)',
+        max_length=64, blank=True, null=True
+    )
+    especializacion_secundaria = models.CharField(
+        u'Especialización secundaria (Código Unesco)',
+        max_length=64, blank=True, null=True
+    )
+    especializacion_terciaria = models.CharField(
+        u'Especialización terciaria (Código Unesco)',
+        max_length=64, blank=True, null=True
+    )
 
     # NOTE Si no tiene fecha de finalización es la dedicación actual
     dedicacion_profesional = models.TextField(u'Dedicación Profesional',
@@ -201,9 +215,10 @@ class SituacionProfesional(models.Model):
 
     # Más campos
     docente = models.CharField(u'Docente', max_length=4, blank=True, null=True)
-    tipo_de_actividad_de_gestion = models.CharField(u'Tipo de actividad de gestión',
-                                                    max_length=64,
-                                                    blank=True, null=True)
+    tipo_de_actividad_de_gestion = models.CharField(
+        u'Tipo de actividad de gestión',
+        max_length=64, blank=True, null=True
+    )
 
     # NOTE Tabla Cargo o actividades anteriores
     facultad_or_escuela = models.CharField(u'Facultad, escuela, etc.',
@@ -217,9 +232,10 @@ class SituacionProfesional(models.Model):
                                          max_length=64, blank=True, null=True)
     pais_de_trabajo = models.CharField(u'País de trabajo',
                                        max_length=32, blank=True, null=True)
-    comunidad_or_region_trabajo = models.CharField(u'Comunidad/Región de trabajo',
-                                                   max_length=64,
-                                                   blank=True, null=True)
+    comunidad_or_region_trabajo = models.CharField(
+        u'Comunidad/Región de trabajo',
+        max_length=64, blank=True, null=True
+    )
 
     telefono_fijo_cod = models.CharField(u'Código internacional',
                                          max_length=12, blank=True, null=True)
@@ -239,8 +255,10 @@ class SituacionProfesional(models.Model):
     correo_electronico = models.EmailField(u'Correo electrónico',
                                            blank=True, null=True)
 
-    interes_doc_investigacion = models.TextField(u'Interés para docencia y/o investigación',
-                                                 blank=True, null=True)
+    interes_doc_investigacion = models.TextField(
+        u'Interés para docencia y/o investigación',
+        blank=True, null=True
+    )
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
@@ -405,9 +423,10 @@ class Congreso(models.Model):
     pais_de_realizacion = models.CharField(u'País de realización',
                                            max_length=500,
                                            blank=True, null=True)
-    comunidad_or_region_realizacion = models.CharField(u'Comunidad/Región de realizacion',
-                                                       max_length=500,
-                                                       blank=True, null=True)
+    comunidad_or_region_realizacion = models.CharField(
+        u'Comunidad/Región de realizacion',
+        max_length=500, blank=True, null=True
+    )
 
     entidad_organizadora = models.CharField(u'Entidad organizadora',
                                             max_length=250,
@@ -431,9 +450,10 @@ class Congreso(models.Model):
     nombre_de_publicacion = models.CharField(u'Nombre de la publicación',
                                              max_length=250,
                                              blank=True, null=True)
-    comite_admision_externa = models.CharField(u'Con comité de admisión externa',
-                                               max_length=250,
-                                               blank=True, null=True)
+    comite_admision_externa = models.CharField(
+        u'Con comité de admisión externa',
+        max_length=250, blank=True, null=True
+    )
 
     ambito = models.CharField(u'Ámbito del congreso',
                               max_length=50, blank=True, null=True)
@@ -463,9 +483,10 @@ class Congreso(models.Model):
 
     deposito_legal = models.CharField(u'Depósito legal',
                                       max_length=150, blank=True, null=True)
-    publicacion_acta_congreso = models.CharField(u'Publicación en acta congreso',
-                                                 max_length=100,
-                                                 blank=True, null=True)
+    publicacion_acta_congreso = models.CharField(
+        u'Publicación en acta congreso',
+        max_length=100, blank=True, null=True
+    )
 
     url = models.URLField(u'Url', max_length=500, blank=True, null=True)
 
@@ -500,8 +521,10 @@ class Proyecto(models.Model):
     denominacion_del_proyecto = models.CharField('Denominación del proyecto',
                                                  max_length=1000,
                                                  blank=True, null=True)
-    numero_de_investigadores = models.IntegerField(u'Número de investigadores/as',
-                                                   blank=True, null=True)
+    numero_de_investigadores = models.IntegerField(
+        u'Número de investigadores/as',
+        blank=True, null=True
+    )
 
     ### Investigadores responsables ###
     autores = models.TextField(u'Autores', blank=True, null=True)
@@ -515,9 +538,9 @@ class Proyecto(models.Model):
                                            blank=True, null=True)
     pais_del_proyecto = models.CharField(u'País del trabajo',
                                          max_length=500, blank=True, null=True)
-    comunidad_or_region_proyecto = models.CharField(u'Autónoma/Reg. del trabajo',
-                                                    max_length=500,
-                                                    blank=True, null=True)
+    comunidad_or_region_proyecto = models.CharField(
+        u'Autónoma/Reg. del trabajo',
+        max_length=500, blank=True, null=True)
 
     ### Entidades financiadoras ###
     #FIXME En el editor de la FECYT se pueden añadir múltiples
@@ -534,9 +557,10 @@ class Proyecto(models.Model):
     pais_de_la_entidad = models.CharField(u'País del trabajo',
                                           max_length=500,
                                           blank=True, null=True)
-    comunidad_or_region_entidad = models.CharField(u'Autónoma/Reg. del trabajo',
-                                                   max_length=500,
-                                                   blank=True, null=True)
+    comunidad_or_region_entidad = models.CharField(
+        u'Autónoma/Reg. del trabajo',
+        max_length=500, blank=True, null=True
+    )
 
     fecha_de_inicio = models.DateField(u'Fecha de inicio',
                                        blank=True, null=True)
@@ -612,25 +636,26 @@ class Proyecto(models.Model):
                                             max_length=500,
                                             blank=True, null=True)
 
-    aportacion_del_solicitante = models.TextField(u'Aportación del solicitante',
-                                                  max_length=2048,
-                                                  blank=True, null=True)
+    aportacion_del_solicitante = models.TextField(
+        u'Aportación del solicitante',
+        max_length=2048, blank=True, null=True
+    )
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
 
     def getFechaFin(self):
         fecha = None
-        if self.fecha_de_fin is not None: # Si ya tenemos la fecha de fin en la bbdd
+        if self.fecha_de_fin is not None:
             fecha = self.fecha_de_fin
-        elif (self.fecha_de_inicio is not None) and\
-             ((self.duracion_anyos is not None) or\
-             (self.duracion_meses is not None) or\
-             (self.duracion_dias is not None)):  # Si podemos calcular la fecha como fecha inicio + duracion
+        elif (self.fecha_de_inicio is not None and
+              self.duracion_anyos is not None or
+              self.duracion_meses is not None or
+              self.duracion_dias is not None):
             years = noneToZero(self.duracion_anyos)
             months = noneToZero(self.duracion_meses)
             days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=days + months*30 + years*365)
+            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
             fecha = self.fecha_de_inicio + delta
         return fecha
 
@@ -656,8 +681,10 @@ class Convenio(models.Model):
     denominacion_del_proyecto = models.CharField(u'Denominación del proyecto',
                                                  max_length=1000,
                                                  blank=True, null=True)
-    numero_de_investigadores = models.IntegerField(u'Número de investigadores/as',
-                                                   blank=True, null=True)
+    numero_de_investigadores = models.IntegerField(
+        u'Número de investigadores/as',
+        blank=True, null=True
+    )
 
     ### Investigadores responsables
     autores = models.TextField(u'Autores', blank=True, null=True)
@@ -677,9 +704,10 @@ class Convenio(models.Model):
     pais_de_la_entidad = models.CharField(u'País del trabajo',
                                           max_length=500,
                                           blank=True, null=True)
-    comunidad_or_region_entidad = models.CharField(u'Autónoma/Reg. del trabajo',
-                                                   max_length=500,
-                                                   blank=True, null=True)
+    comunidad_or_region_entidad = models.CharField(
+        u'Autónoma/Reg. del trabajo',
+        max_length=500, blank=True, null=True
+    )
 
     calidad_participacion = models.CharField(u'Calidad en que ha participado',
                                              max_length=500,
@@ -726,9 +754,10 @@ class Convenio(models.Model):
     pais_del_proyecto = models.CharField(u'País del trabajo',
                                          max_length=250,
                                          blank=True, null=True)
-    comunidad_or_region_proyecto = models.CharField(u'Autónoma/Reg. del trabajo',
-                                                    max_length=250,
-                                                    blank=True, null=True)
+    comunidad_or_region_proyecto = models.CharField(
+        u'Autónoma/Reg. del trabajo',
+        max_length=250, blank=True, null=True
+    )
 
     numero_personas_anyo = models.IntegerField(u'Número personas/año',
                                                blank=True, null=True)
@@ -768,17 +797,16 @@ class Convenio(models.Model):
 
     def getFechaFin(self):
         fecha = None
-        if (self.fecha_de_inicio is not None) and\
-           ((self.duracion_anyos is not None) or\
-           (self.duracion_meses is not None) or\
-           (self.duracion_dias is not None)): # Si podemos calcular la fecha como fecha inicio + duracio 
+        if (self.fecha_de_inicio is not None and
+           self.duracion_anyos is not None or
+           self.duracion_meses is not None or
+           self.duracion_dias is not None):
             years = noneToZero(self.duracion_anyos)
             months = noneToZero(self.duracion_meses)
             days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=days + months*30 + years*365)
+            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
             fecha = self.fecha_de_inicio + delta
         return fecha
-        
 
     def __unicode__(self):
         return u'%s' % (self.denominacion_del_proyecto)
@@ -815,9 +843,10 @@ class TesisDoctoral(models.Model):
                                           blank=True, null=True)
     pais_del_trabajo = models.CharField(u'País del trabajo',
                                         max_length=500, blank=True, null=True)
-    comunidad_or_region_trabajo = models.CharField(u'Comunidad/Región del trabajo',
-                                                   max_length=500,
-                                                   blank=True, null=True)
+    comunidad_or_region_trabajo = models.CharField(
+        u'Comunidad/Región del trabajo',
+        max_length=500, blank=True, null=True
+    )
 
     tipo_de_proyecto = models.CharField(u'Tipo de proyecto',
                                         max_length=150, blank=True, null=True)
@@ -835,8 +864,10 @@ class TesisDoctoral(models.Model):
 
     doctorado_europeo = models.CharField(u'Doctorado europeo',
                                          max_length=4, blank=True, null=True)
-    fecha_mencion_doctorado_europeo = models.DateField(u'Fecha de mención de doctorado europeo',
-                                                       blank=True, null=True)
+    fecha_mencion_doctorado_europeo = models.DateField(
+        u'Fecha de mención de doctorado europeo',
+        blank=True, null=True
+    )
 
     palabras_clave_titulo = models.CharField(u'Palabras clave del título',
                                              max_length=500,
