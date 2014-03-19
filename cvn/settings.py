@@ -15,6 +15,7 @@ PDF_ROOT = "cvn/pdf"
 XML_ROOT = "cvn/xml"
 OLD_PDF_ROOT = "cvn/old_cvn/"  # CVN antiguos
 PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/pdf_departamento')
+PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
 URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)

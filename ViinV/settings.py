@@ -321,6 +321,9 @@ FIXTURE_DIRS = (
 # Directorio de Backups
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 
+# Web Service Server
+WS_SERVER_URL = 'http://django1-pre.stic.ull.es/'
+
 try:
     execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))
 except IOError:

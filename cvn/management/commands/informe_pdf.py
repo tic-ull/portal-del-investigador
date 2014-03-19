@@ -2,7 +2,6 @@
 
 from PIL import Image
 from cvn import settings as stCVN
-from django.conf import settings as st
 from django.utils import translation
 from django.utils.translation import ugettext
 from reportlab.lib import colors
@@ -45,7 +44,7 @@ class Informe_pdf:
         self.setLogo()
 
     def setLogo(self):
-        img_path = st.STATIC_ROOT + '/images/'
+        img_path = stCVN.PDF_DEPT_IMAGES
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
         else:
