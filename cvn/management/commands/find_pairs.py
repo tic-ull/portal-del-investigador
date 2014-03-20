@@ -1,23 +1,23 @@
 # -*- encoding: utf8 -*-
-import datetime
 import logging
 import os
 import time
 import subprocess
 import signal
-import sys
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-from django.db.models import Q
-from cvn.models import Usuario, Proyecto, Publicacion, Congreso, Convenio, TesisDoctoral
+from cvn.models import Usuario, Proyecto,\
+    Publicacion, Congreso, Convenio, TesisDoctoral
 from string_utils.stringcmp import do_stringcmp
 from django.conf import settings as st
 from joblib import Parallel, delayed
 
 logger = logging.getLogger(__name__)
 
+
 def signal_handler(signal, frame):
     return None
+
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
     # return:
@@ -63,6 +63,7 @@ def backupDatabase(username, dbname, port):
         os.remove(filePath)
     return err
 
+
 def findDup(i, registros, NAME_FIELD, LIMIT):
     duplicates = {}
     pry1 = registros[i]
@@ -75,9 +76,10 @@ def findDup(i, registros, NAME_FIELD, LIMIT):
                                             pry1_name.lower(),
                                             pry2_name.lower())
             if percentage > LIMIT:
-                  pair = tuple([pry1, pry2])
-                  duplicates[pair] = percentage
+                pair = tuple([pry1, pry2])
+                duplicates[pair] = percentage
     return duplicates
+
 
 class Command(BaseCommand):
     help = u'Encuentra registros sospechosos de estar duplicados'
@@ -116,8 +118,10 @@ class Command(BaseCommand):
             help="specify the type of publication for searching",
         ),
     )
-    
-    PUBLICATION_TYPES = {'libro' : u'Libro', 'capitulo' : u'Capítulo de Libro', 'articulo' : u'Artículo'}
+
+    PUBLICATION_TYPES = {'libro': u'Libro',
+                         'capitulo': u'Capítulo de Libro',
+                         'articulo': u'Artículo'}
 
     TABLES = {'Proyecto': Proyecto,
               'Publicacion': Publicacion,
@@ -145,38 +149,41 @@ class Command(BaseCommand):
     FIELD_WIDTH = 28
     COLWIDTH = 50
 
-    def print_cabecera_registro(self, pry1, pry2, duplicates, pair, model_fields, count):
+    def print_cabecera_registro(self, pry1, pry2, duplicates,
+                                pair, model_fields, count):
         os.system("clear")
         log_print("=====================================================")
         log_print(" ID1 = {0} comparado con ID2 = {1} ({2:2.2f}%) {3}/{4}"
-            .format(pry1.id, pry2.id, duplicates[pair]*100, count, len(duplicates)))
+                  .format(pry1.id, pry2.id, duplicates[pair] * 100,
+                          count, len(duplicates)))
         log_print("=====================================================")
         # overview of the two registers
         log_print("Field".ljust(self.FIELD_WIDTH)
-            + "ID1".ljust(self.COLWIDTH)
-            + "ID2".ljust(self.COLWIDTH))
+                  + "ID1".ljust(self.COLWIDTH)
+                  + "ID2".ljust(self.COLWIDTH))
         log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
         for f in model_fields:
             if f not in (self.DONT_SET_FIELDS +
-                self.TIMESTAMP_FIELDS):
+                         self.TIMESTAMP_FIELDS):
                 f1 = pry1.__getattribute__(f)
                 f1 = "" if f1 is None else f1
                 f2 = pry2.__getattribute__(f)
                 f2 = "" if f2 is None else f2
                 if (f1 != f2):
-                    log_print(unicode(f)[:self.FIELD_WIDTH-1]
-                        .ljust(self.FIELD_WIDTH)
-                        + unicode(f1)[:self.COLWIDTH-1]
-                        .ljust(self.COLWIDTH)
-                        + unicode(f2)[:self.COLWIDTH-1]
-                        .ljust(self.COLWIDTH))
+                    log_print(unicode(f)[:self.FIELD_WIDTH - 1]
+                              .ljust(self.FIELD_WIDTH)
+                              + unicode(f1)[:self.COLWIDTH - 1]
+                              .ljust(self.COLWIDTH)
+                              + unicode(f2)[:self.COLWIDTH - 1]
+                              .ljust(self.COLWIDTH))
         log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
 
     def checkArgs(self, options):
         #Esta funcion chequea los argumentos pasados por el usuario
         if options['publication']:
             if options['publication'] not in self.PUBLICATION_TYPES:
-                raise CommandError('Option publication: allowed values: libro, capitulo, articulo')
+                raise CommandError('Option publication: allowed values:'
+                                   'libro, capitulo, articulo')
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
@@ -198,27 +205,41 @@ class Command(BaseCommand):
 
     def runQueries(self, options, TABLE):
         log_print("Buscando duplicados en el modelo " +
-                  "{0}".format(TABLE.__name__)) 
+                  "{0}".format(TABLE.__name__))
         if not options['year']:
             registros = TABLE.objects.exclude(usuario=None)
         else:
             self.YEAR = options['year']
             if TABLE == Proyecto:
-                registros = TABLE.objects.filter(fecha_de_inicio__year=self.YEAR).exclude(usuario=None)
+                registros = TABLE.objects.filter(
+                    fecha_de_inicio__year=self.YEAR
+                ).exclude(usuario=None)
 
             elif TABLE == Publicacion:
-                registros = TABLE.objects.filter(fecha__year=self.YEAR).exclude(usuario=None)
+                registros = TABLE.objects.filter(
+                    fecha__year=self.YEAR
+                ).exclude(usuario=None)
                 if options['publication']:
-                    registros = registros.filter(tipo_de_produccion=self.PUBLICATION_TYPES[options['publication']])
+                    registros = registros.filter(
+                        tipo_de_produccion=self.PUBLICATION_TYPES[
+                            options['publication']
+                        ]
+                    )
 
             elif TABLE == Congreso:
-                registros = TABLE.objects.filter(fecha_realizacion__year=self.YEAR).exclude(usuario=None)
+                registros = TABLE.objects.filter(
+                    fecha_realizacion__year=self.YEAR
+                ).exclude(usuario=None)
 
             elif TABLE == TesisDoctoral:
-                registros = TABLE.objects.filter(fecha_de_lectura__year=self.YEAR).exclude(usuario=None)
+                registros = TABLE.objects.filter(
+                    fecha_de_lectura__year=self.YEAR
+                ).exclude(usuario=None)
 
             elif TABLE == Convenio:
-                registros = TABLE.objects.filter(fecha_de_inicio__year=self.YEAR).exclude(usuario=None)
+                registros = TABLE.objects.filter(
+                    fecha_de_inicio__year=self.YEAR
+                ).exclude(usuario=None)
 
         if options['usuario']:
             usuario = options['usuario']
@@ -244,7 +265,9 @@ class Command(BaseCommand):
         # ENCONTRAR LOS PARES DUPLICADOS #
         #print "Finding pairs for indexes ..."
         #for idx1, pry1 in enumerate(registros[:-1]):
-        result = Parallel(n_jobs=threads)(delayed(findDup)(i, registros, NAME_FIELD, self.LIMIT) for i in range(0, len(registros)))
+        result = Parallel(n_jobs=threads)(delayed(findDup)(
+            i, registros, NAME_FIELD, self.LIMIT
+        ) for i in range(0, len(registros)))
         duplicates = {}
         for i in result:
             duplicates.update(i)
@@ -278,7 +301,9 @@ class Command(BaseCommand):
                         master.__setattr__(f, attr)
                     # A OR B, A != B
                     if any([f1, f2]) and f1 != f2:
-                        self.print_cabecera_registro(pair[0], pair[1], duplicates, pair, model_fields, count)
+                        self.print_cabecera_registro(pair[0], pair[1],
+                                                     duplicates, pair,
+                                                     model_fields, count)
                         log_print(f)
                         print "--------------------------------"
                         log_print(u"{0:5d}: {1}".format(pair[0].id, f1))
@@ -287,8 +312,8 @@ class Command(BaseCommand):
                         print "--------------------------------"
                         choice = self.choice(pair[0], pair[1])
 
-                        # Salir del for     =>  Deja de comparar registros de la pareja  =>  break
-                        # Salir del while   =>  Deja de comparar la pareja.              =>  repeat = True continua el while.
+                        # Salir del for => Deja de comparar registros de la pareja => break
+                        # Salir del while => Deja de comparar la pareja. => repeat = True continua el while.
                         if choice == -1:        # Reiniciar tupla saliendo del for
                             repeat = True
                             break
@@ -326,7 +351,8 @@ class Command(BaseCommand):
                 #model_fields = list(model_fields) + [NAME_FIELD]
                 model_fields = TABLE._meta.get_fields_with_model()
                 model_fields = [ field[0].get_attname() for field in model_fields ]
-                master, exit = self.mergePair(model_fields, pair, master, duplicates, count)
+                master, exit = self.mergePair(model_fields, pair,
+                                              master, duplicates, count)
                 if master:
                     master.save()
                     pairs_solved[(pair[0].id, pair[1].id)] = master.id
@@ -349,7 +375,8 @@ class Command(BaseCommand):
             duplicates = self.findDuplicates(registros, NAME_FIELD, 2)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             signal.signal(signal.SIGINT, signal_handler)
-            pairs_solved = self.confirmDuplicates(sorted_pairs, TABLE, NAME_FIELD, duplicates)
+            pairs_solved = self.confirmDuplicates(sorted_pairs, TABLE,
+                                                  NAME_FIELD, duplicates)
             self.commit_changes(TABLE, pairs_solved)
 
     def commit_changes(self, TABLE, pairs_solved):
@@ -395,3 +422,4 @@ class Command(BaseCommand):
 
     def test():
         print "TEST"
+
