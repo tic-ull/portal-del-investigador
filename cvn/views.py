@@ -1,18 +1,19 @@
 # -*- encoding: utf-8 -*-
+
+from cvn import settings as stCVN
 from cvn.forms import UploadCvnForm
-from cvn.helpers import (handleOldCVN, getUserViinV,
-                         addUserViinV, getDataCVN, dataCVNSession,
-                         setCVNFileName)
-from cvn.utilsCVN import (insert_pdf_to_bbdd_if_not_exists,
-                          UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
+from cvn.helpers import (handleOldCVN, getUserViinV, addUserViinV, getDataCVN,
+                         dataCVNSession, setCVNFileName)
+from cvn.utilsCVN import (insert_pdf_to_bbdd_if_not_exists, UtilidadesCVNtoXML,
+                          UtilidadesXMLtoBBDD)
+from django.conf import settings as st
 from django.core.files.base import ContentFile
-# Almacenar los ficheros subidos a la aplicación en el disco.
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django_cas.decorators import login_required
-import cvn.settings as st
+
 import datetime
 import logging
 
@@ -26,7 +27,7 @@ def main(request):
     # se muestra la información del mismo para advertir que sigue logueado
     try:
         # Usuario de la plantilla administrador
-        if request.user.username == st.ADMIN_USERNAME:
+        if request.user.username == stCVN.ADMIN_USERNAME:
             return HttpResponseRedirect(reverse('logout'))
         request.session['attributes']
     # Si el usuario no está logeado en el CAS se accede directamente
@@ -54,7 +55,8 @@ def index(request):
         # Se añade el usuario a la aplicación de ViinV
         invest = addUserViinV(context['user'])
     if investCVN:
-        insert_pdf_to_bbdd_if_not_exists(context['user']['NumDocumento'], investCVN)
+        insert_pdf_to_bbdd_if_not_exists(
+            context['user']['NumDocumento'], investCVN)
         # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(invest.nif))
         context.update(dataCVNSession(investCVN))
@@ -67,7 +69,7 @@ def index(request):
                                         instance=investCVN)
         try:
             if context['form'].is_valid() and \
-               (request.FILES['cvnfile'].content_type == st.PDF):
+               (request.FILES['cvnfile'].content_type == stCVN.PDF):
                 filePDF = request.FILES['cvnfile']
                 filePDF.name = setCVNFileName(invest)
                 # Se llama al webservice del FECYT para corroborar que
@@ -88,7 +90,9 @@ def index(request):
                         investCVN.xmlfile.delete()
                     investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'),
                                            ContentFile(xmlFecyt), save=False)
-                    investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
+                    investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
+                        fileXML=investCVN.xmlfile
+                    ).insertarXML(investCVN.investigador)
                     investCVN.save()
                     request.session['message'] = u'Se ha actualizado su CVN \
                      con éxito.'
