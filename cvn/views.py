@@ -70,7 +70,7 @@ def index(request):
                (request.FILES['cvnfile'].content_type == st.PDF):
                 filePDF = request.FILES['cvnfile']
                 filePDF.name = setCVNFileName(invest)
-                # Se llama al webservice del Fecyt para corroborar que
+                # Se llama al webservice del FECYT para corroborar que
                 # el CVN tiene formato válido
                 cvn = UtilidadesCVNtoXML(filePDF=filePDF)
                 xmlFecyt = cvn.getXML()
@@ -94,7 +94,7 @@ def index(request):
                      con éxito.'
                     return HttpResponseRedirect(reverse("cvn.views.index"))
                 else:
-                    # Error PDF introducido no tiene el formato de la Fecyt
+                    # Error PDF introducido no tiene el formato de la FECYT
                     if not xmlFecyt:
                         context['errors'] = u'El CVN no tiene formato FECYT'
                     # Error CVN no pertenece al usuario de la sesión

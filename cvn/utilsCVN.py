@@ -11,7 +11,7 @@ from cvn.models import (Usuario, Publicacion, Congreso,
 from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 from viinvDB.models import GrupoinvestInvestigador
-import base64  # Codificación para el web service del Fecyt
+import base64  # Codificación para el web service del FECYT
 import cvn.settings as st
 import datetime
 import logging
@@ -24,10 +24,10 @@ logger = logging.getLogger(__name__)
 # -----------------------
 class UtilidadesCVNtoXML:
     """
-        Clase que se encarga de acceder al Web Service de la Fecyt y
+        Clase que se encarga de acceder al Web Service de la FECYT y
         obtener la representación en XML del CVN en PDF.
         Parámetros:
-        - url_ws: Dirección hacia el Web Service del Fecyt.
+        - url_ws: Dirección hacia el Web Service del FECYT.
         - urlPDF: Ruta hacia donde están almacenados los PDF.
         - filePDF: Fichero PDF de donde va a extraer el XML.
     """
@@ -79,7 +79,7 @@ class UtilidadesCVNtoXML:
                                + ". Espera de 5 segundos para reintentar.")
                 time.sleep(5)
 
-        if resultXML.errorCode == 0:  # Formato CVN-XML del Fecyt
+        if resultXML.errorCode == 0:  # Formato CVN-XML del FECYT
             return base64.decodestring(resultXML.cvnXml)
         return False  # Retorna el fichero PDF con formato antiguo
 
@@ -424,7 +424,7 @@ class UtilidadesXMLtoBBDD:
         data = {}
         if tree is not None:
             data['ambito'] = u'' + st.SCOPE[tree.find('Type/Item').text.strip()]
-            # Campo supuestamente obligatorio en el Editor de Fecyt,
+            # Campo supuestamente obligatorio en el Editor de FECYT,
             # pero algunos PDFs no lo tienen.
             # Posiblemente se generaron con alguna versión anterior
             # del editor.
@@ -703,13 +703,13 @@ class UtilidadesXMLtoBBDD:
         for element in cvnItems:
             data = {}
             cvn_key = element.find('CvnItemID/CVNPK/Item').text.strip()
-            # Actividad docente (Paso 4 Editor Fecyt)
+            # Actividad docente (Paso 4 Editor FECYT)
             if cvn_key == u"030.040.000.000":
                 data = self.__dataActividadDocente__(element)
-            # Experiencia científica y tecnológica (Paso 5 Editor Fecyt)
+            # Experiencia científica y tecnológica (Paso 5 Editor FECYT)
             if cvn_key == u"050.020.020.000" or cvn_key == u"050.020.010.000":
                 data = self.__dataExperienciaCientifica__(element, cvn_key)
-            # Actividad científica y tecnológica (Paso 6 Editor Fecyt)
+            # Actividad científica y tecnológica (Paso 6 Editor FECYT)
             # Publicación, documentos científicos y técnicos
             if cvn_key == u"060.010.010.000":
                 data = self.__dataActividadCientificaPublicacion__(element)

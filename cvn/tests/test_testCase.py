@@ -187,7 +187,7 @@ class UserAccessTest(TestCase):
 
 class FecytWSTest(TestCase):
     """
-        Tests Web Service Fecyt
+        Tests Web Service FECYT
     """
     def setUp(self):
         """
@@ -332,14 +332,14 @@ class FecytWSTest(TestCase):
 
     def test_cvn2xml(self):
         """
-            Test: Obtiene la representación XML de un CVN con formato Fecyt
+            Test: Obtiene la representación XML de un CVN con formato FECYT
             a través del WebService.
         """
         dataPDF = binascii.b2a_base64(open(CVN_FILE).read())
-        # Llamada al WebService del Fecyt
+        # Llamada al WebService del FECYT
         resultXML = self.clientWS.service.cvnPdf2Xml(USER_WS, PASSWD_WS,
                                                      dataPDF)
-        self.assertEqual(resultXML.errorCode, 0)  # Formato CVN-XML del Fecyt
+        self.assertEqual(resultXML.errorCode, 0)  # Formato CVN-XML del FECYT
         # Almacena el fichero resultante
         dataXML = base64.b64decode(resultXML.cvnXml)
         open(XML_FILE, "w").write(dataXML)
@@ -352,7 +352,7 @@ class FecytWSTest(TestCase):
             fileXML = open(XML_FILE, "r")
         except IOError:
             # Si no existe el fichero XML con los datos del CVN,
-            # se ejecuta el test de llamada al Fecyt.
+            # se ejecuta el test de llamada al FECYT.
             self.test_cvn2xml()
             fileXML = open(XML_FILE, "r")
         # NOTE: urlXML -> Ruta en el servidor donde estarán los ficheros PDFs

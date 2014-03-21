@@ -5,7 +5,7 @@ from django.conf import settings as st
 # Usuario Administrador de la plantilla de administración de Django
 ADMIN_USERNAME = "admin"
 
-# Datos para la comunicación con el Web Service del Fecyt
+# Datos para la comunicación con el Web Service del FECYT
 USER_WS = "cvnPdfULL01"
 PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
@@ -25,7 +25,7 @@ URL_OLD_CVN = os.path.join(st.MEDIA_URL, OLD_PDF_ROOT)  # CVN antiguos
 PDF = "application/pdf"
 
 # Ficheros con los resultados de las diferentes operaciones
-# Fichero con los errores al obtener el XML utilizando el WS del Fecyt
+# Fichero con los errores al obtener el XML utilizando el WS del FECYT
 FILE_LOG_IMPORT = os.path.join(st.PROJECT_ROOT, 'errorCVN.log')
 # Fichero con los CVN con datos insertados en la BBDD de la aplicación
 FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log')
@@ -57,7 +57,7 @@ DIC_PERSONAL_DATA_XML = {
     u'Photo': u'imagen',
 }
 
-# Editor Fecyt (Paso 6): Actividad Científica y tecnológica
+# Editor FECYT (Paso 6): Actividad Científica y tecnológica
 ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION = {
     u'035': u'Artículo',
     u'148': u'Capítulo de Libro',

@@ -54,7 +54,7 @@ class ProyectoConvenioManager(models.Manager):
         return elements_list
 
 
-# Modelo para almacenar los datos del investigador del Fecyt
+# Modelo para almacenar los datos del investigador del FECYT
 class Usuario(models.Model):
     """
         Datos personales del usuario
@@ -155,7 +155,7 @@ class Usuario(models.Model):
 class SituacionProfesional(models.Model):
     """
     Situación profesional actual y anterior. Se fusionan ambas
-    tablas del editor del Fecyt en una.
+    tablas del editor del FECYT en una.
     Para saber cuando es la situación profesional actual,
     basta con mirar si el registro tiene algún valor en el campo fecha de fin.
 

@@ -42,7 +42,7 @@ class CVNTestCase(TestCase):
         Clase que contiene los test para corroborar el correcto
         funcionamiento de las siguientes funcionalidades (usuario):
         - Acceso a la aplicación por medio de un usuario CAS de pruebas.
-        - Subida de un CVN a la aplicación con formato Fecyt.
+        - Subida de un CVN a la aplicación con formato FECYT.
         - Descarga de un CVN a la aplicación.
         - Acceso a la aplicación por parte de un usuario no registrado
           en el CAS.
@@ -136,7 +136,7 @@ class CVNTestCase(TestCase):
         """
         test = self.selenium
         self.__inic_session__(USER_LOGIN, USER_PASSWD)
-        # Una vez en la sesión procede a la subida de un CVN con formato Fecyt
+        # Una vez en la sesión procede a la subida de un CVN con formato FECYT
         uploadCVN = test.find_element_by_xpath('//input[@name="cvnfile"]')
         uploadCVN.send_keys(CVN_LOCATION)
         test.find_element_by_xpath('//button[.="Actualizar"]').click()
@@ -158,7 +158,7 @@ class CVNTestCase(TestCase):
         """
         test = self.selenium
         self.__inic_session__(USER_LOGIN, USER_PASSWD)
-        # Una vez en la sesión procede a la subida de un CVN con formato Fecyt
+        # Una vez en la sesión procede a la subida de un CVN con formato FECYT
         uploadCVN = test.find_element_by_xpath('//input[@name="cvnfile"]')
         uploadCVN.send_keys(CVN_NOT_FECYT_LOCATION)
         test.find_element_by_xpath('//button[.="Actualizar"]').click()
@@ -257,7 +257,7 @@ class AdminCVNTestCase(LiveServerTestCase):
     def tearDownClass(cls):
         cls.drivers.quit()
         super(AdminCVNTestCase, cls).tearDownClass()
-        # Se elimina el fichero generado por la llamada al Fecyt
+        # Se elimina el fichero generado por la llamada al FECYT
         try:
             os.remove(XML_FILE)
         except OSError:
@@ -286,7 +286,7 @@ class AdminCVNTestCase(LiveServerTestCase):
 
     def test_02_callFecyt(self):
         """
-            Realiza una llamada al Fecyt para obtener el XML
+            Realiza una llamada al FECYT para obtener el XML
             correspondiente al CVN
         """
         test = self.selenium
@@ -300,7 +300,7 @@ class AdminCVNTestCase(LiveServerTestCase):
         time.sleep(2)
         test.find_element_by_xpath('//input[@value="1"]').click()
         test.find_element_by_xpath('//select[@name="action"]').click()
-        # Seleccionar la opción que llama al Fecyt
+        # Seleccionar la opción que llama al FECYT
         option = test.find_element_by_xpath('//option[@value="getAdminXML"]')
         option.click()
         option.submit()
