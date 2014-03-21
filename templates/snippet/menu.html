@@ -21,7 +21,7 @@
         <li class="nav-header"><i class="icon-user icon-white"></i> Menú principal</li>
         {% endif %}
     {% if not user.is_anonymous %}
-        <li><a href="/cvn/"><i class="icon-tasks"></i>Gestionar CVN</a></li>
+        <li><a href='{% url 'index' %}'><i class="icon-tasks"></i>Gestionar CVN</a></li>
         <li><a href="{% url 'logout' %}"><i class="icon-off"></i> Salir</a></li>
     {% else %}
         <li><a href="{% url 'login' %}"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>
