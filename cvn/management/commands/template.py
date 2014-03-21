@@ -1,10 +1,11 @@
-# -*- encoding: utf8 -*-
-from django.core.management.base import BaseCommand
+# -*- encoding: UTF-8 -*-
+
 from GrupoInvest.models import RRHH
-import csv
-import time
 from datetime import datetime
+from django.core.management.base import BaseCommand
+import csv
 import settings
+import time
 
 
 class Command(BaseCommand):

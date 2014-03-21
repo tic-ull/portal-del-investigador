@@ -1,9 +1,10 @@
-# -*- encoding: utf8 -*-
+# -*- encoding: UTF-8 -*-
+
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connections
 
 # TODO: No funcionan por la conexión a la BBDD
+
 
 class Command(BaseCommand):
     help = u'Genera las estadísticas de la memoria de investigación '\
@@ -44,7 +45,7 @@ class Command(BaseCommand):
             "Publicaciones en %s (por departamentos)"),
         "/tesis_departamentos.sql": (
             "Número de tesis leídas en %s (por departamentos)"),
-        }
+    }
 
     def __init__(self):
         super(Command, self).__init__()
@@ -59,8 +60,8 @@ class Command(BaseCommand):
 
     def create_stats(self):
         for sql_file, title in self.CONSULTAS_DEPARTAMENTOS.items():
-            self.generate_stat(self.SQL_PATH + self.DEPARTAMENTOS_PATH \
-                               + sql_file, title)
+            self.generate_stat(self.SQL_PATH + self.DEPARTAMENTOS_PATH +
+                               sql_file, title)
 
     def generate_stat(self, sql_file, title):
         #print sql_file, title

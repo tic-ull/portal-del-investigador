@@ -1,16 +1,17 @@
-# -*- encoding: utf8 -*-
+# -*- encoding: UTF-8 -*-
+
+from cvn.models import (Usuario, Proyecto, Publicacion, Congreso, Convenio,
+                        TesisDoctoral)
+from django.conf import settings as st
+from django.core.management.base import BaseCommand, CommandError
+from joblib import Parallel, delayed
+from optparse import make_option
+from string_utils.stringcmp import do_stringcmp
 import logging
 import os
-import time
-import subprocess
 import signal
-from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
-from cvn.models import Usuario, Proyecto,\
-    Publicacion, Congreso, Convenio, TesisDoctoral
-from string_utils.stringcmp import do_stringcmp
-from django.conf import settings as st
-from joblib import Parallel, delayed
+import subprocess
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +21,6 @@ def signal_handler(signal, frame):
 
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
-    # return:
-    #  - how many of them are different
-    # fields where one or two of the values is None,
-    # are not counted as different
-    # pass a EXCLUDE_FIELDS list with the fields you want
-    # to ignore in the comparison
     assert (type(obj1) == type(obj2),
             "The types of the objects are not the same, dude")
     difering = []
@@ -71,7 +66,6 @@ def findDup(i, registros, NAME_FIELD, LIMIT):
         pry1_name = pry1.__getattribute__(NAME_FIELD)
         pry2_name = pry2.__getattribute__(NAME_FIELD)
         if pry1_name and pry2_name:
-            # comparisons made in lower case
             percentage, time = do_stringcmp("qgram3avrg",
                                             pry1_name.lower(),
                                             pry2_name.lower())
@@ -144,7 +138,8 @@ class Command(BaseCommand):
     # mínima similitud para considerar dos registros como duplicados
     LIMIT = 0.75
 
-    DIFFERING_PAIRS = 0  # Default value. No contamos la denominación.
+    # Default value. No contamos la denominación
+    DIFFERING_PAIRS = 0
 
     FIELD_WIDTH = 28
     COLWIDTH = 50
@@ -157,7 +152,6 @@ class Command(BaseCommand):
                   .format(pry1.id, pry2.id, duplicates[pair] * 100,
                           count, len(duplicates)))
         log_print("=====================================================")
-        # overview of the two registers
         log_print("Field".ljust(self.FIELD_WIDTH)
                   + "ID1".ljust(self.COLWIDTH)
                   + "ID2".ljust(self.COLWIDTH))
@@ -179,7 +173,6 @@ class Command(BaseCommand):
         log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
 
     def checkArgs(self, options):
-        #Esta funcion chequea los argumentos pasados por el usuario
         if options['publication']:
             if options['publication'] not in self.PUBLICATION_TYPES:
                 raise CommandError('Option publication: allowed values:'
@@ -243,7 +236,6 @@ class Command(BaseCommand):
 
         if options['usuario']:
             usuario = options['usuario']
-            # obtenemos el usuario cuyo ID document es usuario
             try:
                 usuario = Usuario.objects.get(documento=usuario)
             except:
@@ -252,7 +244,7 @@ class Command(BaseCommand):
 
             if TABLE in [Congreso, Publicacion, Proyecto]:
                 registros = registros.filter(usuario=usuario)
-            else:  # TABLE is Convenio
+            else:
                 new_registros = []
                 for r in registros:
                     if usuario in r.usuario.all():
@@ -262,25 +254,17 @@ class Command(BaseCommand):
         return registros
 
     def findDuplicates(self, registros, NAME_FIELD, threads):
-        # ENCONTRAR LOS PARES DUPLICADOS #
-        #print "Finding pairs for indexes ..."
-        #for idx1, pry1 in enumerate(registros[:-1]):
         result = Parallel(n_jobs=threads)(delayed(findDup)(
             i, registros, NAME_FIELD, self.LIMIT
         ) for i in range(0, len(registros)))
         duplicates = {}
         for i in result:
             duplicates.update(i)
-        #import pdb; pdb.set_trace()
-        #for i in range(0, len(registros)):
-        #    newdups = self.findDup(i, registros, NAME_FIELD)
-        #    duplicates = dict(duplicates.items() + newdups.items())
         log_print("Total duplicates = {0} de {1} "
                   .format(len(duplicates), len(registros)))
         return duplicates
 
     def mergePair(self, model_fields, pair, master, duplicates, count):
-        #save = True
         repeat = True
         while repeat:
             repeat = False
@@ -294,12 +278,9 @@ class Command(BaseCommand):
                             master_f = f1 if len(f1) >= len(f2) else f2
                         except:
                             master_f = f1
-                    # A AND B, A == B
-                    # si existen los dos no podemos decidir
                     if f1 and f2 and f1 == f2:
                         attr = f1
                         master.__setattr__(f, attr)
-                    # A OR B, A != B
                     if any([f1, f2]) and f1 != f2:
                         self.print_cabecera_registro(pair[0], pair[1],
                                                      duplicates, pair,
@@ -312,20 +293,31 @@ class Command(BaseCommand):
                         print "--------------------------------"
                         choice = self.choice(pair[0], pair[1])
 
-                        # Salir del for => Deja de comparar registros de la pareja => break
-                        # Salir del while => Deja de comparar la pareja. => repeat = True continua el while.
-                        if choice == -1:        # Reiniciar tupla saliendo del for
+                        # Salir del for => Deja de comparar registros de la
+                        # pareja => break
+
+                        # Salir del while => Deja de comparar la pareja. =>
+                        # repeat = True continua el while
+
+                        # Reiniciar tupla saliendo del for
+                        if choice == -1:
                             repeat = True
                             break
-                        if choice == 0:         # Ignora la tupla saliendo de la función mergePair.
+                        # Ignora la tupla saliendo de la función mergePair
+                        if choice == 0:
                             return None, False
-                        if choice == 'q':       # Ignora la tupla saliendo de mergePair retornando exit=True.
+                        # Ignora la tupla saliendo de mergePair retornando
+                        # exit=True
+                        if choice == 'q':
                             return None, True
-                        if choice == "":        # Selecciona el registro recomendado.
+                         # Selecciona el registro recomendado
+                        if choice == "":
                             attr = master_f
-                        if choice == 1:       # Selecciona el registro de la tupla 1
+                       # Selecciona el registro de la tupla 1
+                        if choice == 1:
                             attr = f1
-                        if choice == 2:       # Selecciona el registro de la tupla 2
+                        # Selecciona el registro de la tupla 2
+                        if choice == 2:
                             attr = f2
                         master.__setattr__(f, attr)
                         log_print(u"SET TO: {0}".format(attr))
@@ -333,8 +325,6 @@ class Command(BaseCommand):
         return master, False
 
     def confirmDuplicates(self, sorted_pairs, TABLE, NAME_FIELD, duplicates):
-        # RECORRER LOS PARES DUPLICADOS
-        #TODO: Refactorizar
         pairs_solved = {}
         count = 0
         for pair in sorted_pairs:
@@ -344,13 +334,10 @@ class Command(BaseCommand):
 
             if difering_length == self.DIFFERING_PAIRS:
                 master = TABLE()
-                #print master
-                # todo a bit of fixing this
-                #model_fields = TABLE._meta.get_all_field_names()
-                #    - set([NAME_FIELD]))
-                #model_fields = list(model_fields) + [NAME_FIELD]
                 model_fields = TABLE._meta.get_fields_with_model()
-                model_fields = [ field[0].get_attname() for field in model_fields ]
+                model_fields = [
+                    field[0].get_attname() for field in model_fields
+                ]
                 master, exit = self.mergePair(model_fields, pair,
                                               master, duplicates, count)
                 if master:
@@ -419,7 +406,3 @@ class Command(BaseCommand):
             except:
                 pass
         return choice
-
-    def test():
-        print "TEST"
-
