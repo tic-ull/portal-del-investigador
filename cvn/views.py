@@ -90,9 +90,12 @@ def index(request):
                         investCVN.xmlfile.delete()
                     investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'),
                                            ContentFile(xmlFecyt), save=False)
-                    investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
-                        fileXML=investCVN.xmlfile
-                    ).insertarXML(investCVN.investigador)
+                    #investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
+                    #    fileXML=investCVN.xmlfile
+                    #).insertarXML(investCVN.investigador)
+                    utils = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile)
+                    utils.insertarXML(investCVN.investigador)
+                    investCVN.fecha_cvn = utils.getXMLDate()
                     investCVN.save()
                     request.session['message'] = u'Se ha actualizado su CVN \
                      con éxito.'
