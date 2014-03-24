@@ -57,10 +57,15 @@ class Command(BaseCommand):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
          convenios, tesis) = self.getData(year, departamento)
-        informe = Informe_pdf(year, departamento, investigadores,
-                              articulos, libros, capitulosLibro,
-                              congresos, proyectos, convenios, tesis)
-        informe.go()
+        print 'Generando PDF para %s ... ' % (departamento.nombre)
+        if investigadores:
+            informe = Informe_pdf(year, departamento, investigadores,
+                                  articulos, libros, capitulosLibro,
+                                  congresos, proyectos, convenios, tesis)
+            informe.go()
+            print 'OK\n'
+        else:
+            print 'ERROR: No hay Investigadores\n'
 
     def getData(self, year, departamento):
         investigadores, usuarios = self.getInvestigadores(
