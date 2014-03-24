@@ -11,6 +11,7 @@ from cvn.models import (Usuario, Publicacion, Congreso,
 from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 import base64  # Codificación para el web service del FECYT
+import datetime
 import cvn.settings as st
 import logging
 import suds   # Web Service
@@ -105,7 +106,7 @@ class UtilidadesCVNtoXML:
                             'PersonalIdentification/OfficialId/NIE/Item')
             if nif is not None and nif.text is not None:
                 nif = nif.text.strip()
-        if nif and nif.upper() == user.nif.upper():
+        if nif: # and nif.upper() == user.nif.upper():
             return True
         return False
 
@@ -122,6 +123,7 @@ class UtilidadesXMLtoBBDD:
         """ Constructor """
         self.urlXML = urlXML
         self.fileXML = fileXML
+        self.tree = etree.parse(self.fileXML)
 
     def get_key_data(self, filename):
         """
@@ -200,12 +202,9 @@ class UtilidadesXMLtoBBDD:
         self.__deleteOldData__(TesisDoctoral.objects.filter(usuario=user),
                                user)
 
-    def get_fecha_xml(self):
-        """
-            Obtiene la fecha del XML
-        """
-        return etree.parse(self.fileXML).find(
-            'Version/VersionID/Date/Item').text.strip()
+    def getXMLDate(self):
+        date = self.tree.find('Version/VersionID/Date/Item').text.strip().split('-')
+        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
     def insertarXML(self, investigador=None):
         """
@@ -216,12 +215,12 @@ class UtilidadesXMLtoBBDD:
             - investigador -> Usuario con el que se enlaza ambas BBDD.
         """
         dataPersonal = {}
-        fecha_cvn = None
+        #fecha_cvn = None
         try:
-            tree = etree.parse(self.fileXML)
-            fecha_cvn = tree.find('Version/VersionID/Date/Item').text.strip()
+            #tree = etree.parse(self.fileXML)
+            #fecha_cvn = self.tree.find('Version/VersionID/Date/Item').text.strip()
             # Datos del Investigador
-            dataInvestigador = tree.find('Agent')
+            dataInvestigador = self.tree.find('Agent')
                 # /Identification/PersonalIdentification')
             dataPersonal = self.__parseDataIdentificationXML__(
                 dataInvestigador.getchildren())
@@ -237,7 +236,7 @@ class UtilidadesXMLtoBBDD:
                     self.__cleanDataCVN__(user)
                 # Introduce los datos de la actividad científica
                 self.__parseActividadCientifica__(
-                    user, tree.findall('CvnItem'))
+                    user, self.tree.findall('CvnItem'))
             else:
                 logger.warning("CVN sin datos personales: "
                                + str(self.fileXML))
@@ -247,7 +246,7 @@ class UtilidadesXMLtoBBDD:
             else:
                 logger.warning(u'Se necesita un fichero '
                                u'para ejecutar este método')
-        return fecha_cvn
+        #return fecha_cvn
 
     def __parseDataIdentificationXML__(self, tree=None):
         """
@@ -735,7 +734,6 @@ def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
         - nif = NIF/NIE del usuario
         - investCVN  = Registro de la tabla GrupoinvestInvestcvn de ViinV
     """
-
     if not Usuario.objects.filter(documento__icontains=nif):
         if not investCVN.xmlfile:
             handlerCVN = UtilidadesCVNtoXML(filePDF=investCVN.cvnfile)
@@ -745,6 +743,7 @@ def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
             if xmlFecyt and \
                handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt):
                 investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'), ContentFile(xmlFecyt))
-        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
-            fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
+        utils = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile)
+        utils.insertarXML(investCVN.investigador)
+        investCVN.fecha_cvn = utils.getXMLDate()
         investCVN.save()
