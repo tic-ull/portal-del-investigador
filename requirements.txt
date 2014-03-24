@@ -15,3 +15,4 @@ selenium
 ipython
 joblib
 reportlab
+Werkzeug						# Werkzeug debugger
