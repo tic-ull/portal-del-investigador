@@ -10,10 +10,8 @@ from cvn.models import (Usuario, Publicacion, Congreso,
                         Proyecto, Convenio, TesisDoctoral)
 from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
-from viinvDB.models import GrupoinvestInvestigador
 import base64  # Codificación para el web service del FECYT
 import cvn.settings as st
-import datetime
 import logging
 import suds   # Web Service
 import time   # Sleep en caso de que haya un error de conexión
@@ -98,11 +96,13 @@ class UtilidadesCVNtoXML:
             logger.error("Fichero XML no encontrado.")
             return False
 
-        nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
+        nif = tree.find('Agent/Identification/'
+                        'PersonalIdentification/OfficialId/DNI/Item')
         if nif is not None and nif.text is not None:
             nif = nif.text.strip()
         else:
-            nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
+            nif = tree.find('Agent/Identification/'
+                            'PersonalIdentification/OfficialId/NIE/Item')
             if nif is not None and nif.text is not None:
                 nif = nif.text.strip()
         if nif and nif.upper() == user.nif.upper():
@@ -133,25 +133,33 @@ class UtilidadesXMLtoBBDD:
         if date_CVN is not None:
             date_CVN = date_CVN.text.strip()
         nombre = u''
-        nombre += tree.find('Agent/Identification/PersonalIdentification/GivenName/Item').text.strip()
+        nombre += tree.find('Agent/Identification/PersonalIdentification/'
+                            'GivenName/Item').text.strip()
 
-        first_family_name = tree.find('Agent/Identification/PersonalIdentification/FirstFamilyName/Item')
+        first_family_name = tree.find(
+            'Agent/Identification/PersonalIdentification/FirstFamilyName/Item'
+        )
         if first_family_name.text is not None:
             first_family_name = u'' + first_family_name.text.strip()
 
-        second_family_name = tree.find('Agent/Identification/PersonalIdentification/SecondFamilyName/Item')
+        second_family_name = tree.find(
+            'Agent/Identification/PersonalIdentification/SecondFamilyName/Item'
+        )
         if second_family_name is not None:
             second_family_name = u'' + unicode(second_family_name.text.strip())
 
-        birth_date = tree.find('Agent/Identification/PersonalIdentification/BirthDate/Item')
+        birth_date = tree.find('Agent/Identification/PersonalIdentification/'
+                               'BirthDate/Item')
         if birth_date is not None:
             birth_date = birth_date.text.strip()
 
-        nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/DNI/Item')
+        nif = tree.find('Agent/Identification/PersonalIdentification/'
+                        'OfficialId/DNI/Item')
         if nif is not None:
             nif = nif.text.strip()
         else:
-            nif = tree.find('Agent/Identification/PersonalIdentification/OfficialId/NIE/Item')
+            nif = tree.find('Agent/Identification/PersonalIdentification/'
+                            'OfficialId/NIE/Item')
             if nif is not None:
                 nif = nif.text.strip()
 
@@ -161,65 +169,6 @@ class UtilidadesXMLtoBBDD:
 
         return (date_CVN, nif, nombre, first_family_name,
                 second_family_name, birth_date, email)
-
-    def valorarXML(self):
-        """
-            Probabilidad de que CVN pertenezca a un usuario registrado
-            en el portal de ViinV
-
-            Return:
-            - lista_usuario: Lista de propietarios posibles del CVN analizado
-            - probabilidad: Medida de 0 a 1.
-        """
-        probabilidad = 0
-        (date_CVN, nif, nombre, primer_apellido,
-         segundo_apellido, birth_date, email) = self.get_key_data(self.fileXML)
-        # Se eliminan los datos erróneos que pueda contener el dni
-        # (en caso de que lo tenga introducido)
-        nif = formatNIF(nif)
-        if nif is not None:
-            usuario = GrupoinvestInvestigador.objects.filter(nif=nif)
-            if usuario:
-                probabilidad = 1
-                return (usuario, probabilidad)
-            else:
-                return (None, 0)
-        # No dispone de NIF se aplican otros baremos de matching
-        lista_usuarios = GrupoinvestInvestigador.objects.filter(
-            apellido1__iexact=primer_apellido)
-        if lista_usuarios is not None:
-            probabilidad += 0.2
-        # Se filtra la lista inicial por el segundo apellido
-        if segundo_apellido is not None:
-            lista_aux = lista_usuarios.filter(
-                apellido2__iexact=segundo_apellido)
-            if lista_aux:
-                probabilidad += 0.3
-                lista_usuarios = lista_aux
-        else:
-            probabilidad += 0.3
-        # Se filtra la lista inicial por el nombre
-        lista_aux = lista_usuarios.filter(nombre__icontains=nombre)
-        if lista_aux is not None:
-            probabilidad += 0.3
-            lista_usuarios = lista_aux
-        # Se filtra la lista por la fecha de nacimiento
-        if birth_date is not None:
-            birth_date = datetime.date(int(birth_date.split("-")[0]),
-                                       int(birth_date.split("-")[1]),
-                                       int(birth_date.split("-")[2]))
-            lista_aux = lista_usuarios.filter(fecha_nacimiento=birth_date)
-            if lista_aux is not None:
-                probabilidad += 0.075
-                lista_usuarios = lista_aux
-        # Se filtra la lista por el correo electrónico
-        lista_aux = lista_usuarios.filter(email=email)
-        if lista_aux is not None:
-            probabilidad += 0.075
-            lista_usuarios = lista_aux
-        # Se devuelve la lista de usuarios con la probabilidad de que sean
-        # propietarios del CVN analizado
-        return (lista_usuarios, probabilidad)
 
     def __deleteOldData__(self, data=[], user=None):
         """
@@ -255,7 +204,8 @@ class UtilidadesXMLtoBBDD:
         """
             Obtiene la fecha del XML
         """
-        return etree.parse(self.fileXML).find('Version/VersionID/Date/Item').text.strip()
+        return etree.parse(self.fileXML).find(
+            'Version/VersionID/Date/Item').text.strip()
 
     def insertarXML(self, investigador=None):
         """
@@ -273,7 +223,8 @@ class UtilidadesXMLtoBBDD:
             # Datos del Investigador
             dataInvestigador = tree.find('Agent')
                 # /Identification/PersonalIdentification')
-            dataPersonal = self.__parseDataIdentificationXML__(dataInvestigador.getchildren())
+            dataPersonal = self.__parseDataIdentificationXML__(
+                dataInvestigador.getchildren())
             search_data = searchDataUser(dataPersonal)
             if search_data:
                 search_user = Usuario.objects.filter(**search_data)
@@ -285,7 +236,8 @@ class UtilidadesXMLtoBBDD:
                     # Se eliminan los datos previos del usuario
                     self.__cleanDataCVN__(user)
                 # Introduce los datos de la actividad científica
-                self.__parseActividadCientifica__(user, tree.findall('CvnItem'))
+                self.__parseActividadCientifica__(
+                    user, tree.findall('CvnItem'))
             else:
                 logger.warning("CVN sin datos personales: "
                                + str(self.fileXML))
@@ -293,7 +245,8 @@ class UtilidadesXMLtoBBDD:
             if self.fileXML:
                 logger.error("Fichero " + self.fileXML + u" no encontrado.")
             else:
-                logger.warning(u"Se necesita un fichero para ejecutar este método")
+                logger.warning(u'Se necesita un fichero '
+                               u'para ejecutar este método')
         return fecha_cvn
 
     def __parseDataIdentificationXML__(self, tree=None):
@@ -329,14 +282,17 @@ class UtilidadesXMLtoBBDD:
         for element in tree:
             if element.tag == u'OfficialId':
                 dic[u'tipo_documento'] = u'' + element.getchildren()[0].tag
-                dic[u'documento'] = u'' + formatNIF(element.getchildren()[0].getchildren()[0].text.strip())
+                dic[u'documento'] = u'' + formatNIF(
+                    element.getchildren()[0].getchildren()[0].text.strip())
             elif element.tag == u'BirthRegion':
-                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[1].getchildren()[0].text.strip()
+                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = unicode(
+                    element.getchildren()[1].getchildren()[0].text.strip())
             else:
                 # En caso de que sea un investigador extranjero
                 # no tiene segundo apellido
                 try:
-                    dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[0].text.strip()
+                    dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = unicode(
+                        element.getchildren()[0].text.strip())
                 except TypeError:
                     pass
         return dic
@@ -351,9 +307,11 @@ class UtilidadesXMLtoBBDD:
         dic = {}
         for element in tree:
             if element.tag == u'Province' or element.tag == 'Region':
-                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[1].getchildren()[0].text.strip()
+                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = unicode(
+                    element.getchildren()[1].getchildren()[0].text.strip())
             else:
-                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = u'' + element.getchildren()[0].text.strip()
+                dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = unicode(
+                    element.getchildren()[0].text.strip())
         return dic
 
     def __dataContact__(self, tree=[]):
@@ -381,7 +339,8 @@ class UtilidadesXMLtoBBDD:
                         telephone_key = key + "num"
                     if children.tag == u'Extension':
                         telephone_key = key + "ext"
-                    dic[telephone_key] = u'' + children.getchildren()[0].text.strip()
+                    dic[telephone_key] = unicode(
+                        children.getchildren()[0].text.strip())
             else:
                 dic[key] = u'' + element.getchildren()[0].text.strip()
         return dic
@@ -396,20 +355,29 @@ class UtilidadesXMLtoBBDD:
         lista_autores = ''
         for author in tree:
             auxAuthor = ''
-            if author.find("GivenName/Item") is not None and author.find("GivenName/Item").text is not None:
+            if author.find("GivenName/Item") is not None and\
+               author.find("GivenName/Item").text is not None:
                 auxAuthor = u'' + author.find("GivenName/Item").text.strip()
-            if author.find("FirstFamilyName/Item") is not None and author.find("FirstFamilyName/Item").text is not None:
-                auxAuthor += u' ' + author.find("FirstFamilyName/Item").text.strip()
+            if author.find("FirstFamilyName/Item") is not None and\
+               author.find("FirstFamilyName/Item").text is not None:
+                auxAuthor += u' ' + author.find(
+                    "FirstFamilyName/Item").text.strip()
             # Algunas veces el campo está creado pero sin ningún valor.
             # El usuario introdujo un texto vacío.
-            if author.find("SecondFamilyName/Item") is not None and author.find("SecondFamilyName/Item").text is not None:
-                auxAuthor += u' ' + author.find("SecondFamilyName/Item").text.strip()
+            if author.find("SecondFamilyName/Item") is not None and\
+               author.find("SecondFamilyName/Item").text is not None:
+                auxAuthor += u' ' + author.find(
+                    "SecondFamilyName/Item").text.strip()
             # Este elemento se crea siempre al exportar el PDF al XML
             if author.find("Signature/Item").text is not None:
                 if auxAuthor:   # Si tiene datos, la firma va entre paréntesis
-                    lista_autores += auxAuthor + u' (' + author.find("Signature/Item").text.strip() + '); '
+                    lista_autores += unicode(auxAuthor +
+                                             ' (' +
+                                             author.find("Signature/Item").text.strip() +
+                                             '); ')
                 else:         # El único dato de los autores es la firma
-                    lista_autores += u'' + author.find("Signature/Item").text.strip() + '; '
+                    lista_autores += unicode(
+                        author.find("Signature/Item").text.strip() + '; ')
             else:
                 lista_autores += auxAuthor + '; '
         return lista_autores[:-2]
@@ -423,13 +391,16 @@ class UtilidadesXMLtoBBDD:
         """
         data = {}
         if tree is not None:
-            data['ambito'] = u'' + st.SCOPE[tree.find('Type/Item').text.strip()]
+            data['ambito'] = unicode(
+                st.SCOPE[tree.find('Type/Item').text.strip()])
             # Campo supuestamente obligatorio en el Editor de FECYT,
             # pero algunos PDFs no lo tienen.
             # Posiblemente se generaron con alguna versión anterior
             # del editor.
-            if data['ambito'] == u"Otros" and (tree.find('Others/Item') is not None):
-                data['otro_ambito'] = u'' + tree.find('Others/Item').text.strip()
+            if data['ambito'] == u"Otros" and\
+               (tree.find('Others/Item') is not None):
+                data['otro_ambito'] = unicode(
+                    tree.find('Others/Item').text.strip())
         return data
 
     def __getDuration__(self, code=""):
@@ -504,13 +475,17 @@ class UtilidadesXMLtoBBDD:
         if tree is not None:
             if tree.find("Volume/Item") is not None:
                 data['volumen'] = tree.find("Volume/Item").text.strip()
-            if tree.find("Number/Item") is not None and tree.find("Number/Item").text is not None:
+            if tree.find("Number/Item") is not None and\
+               tree.find("Number/Item").text is not None:
                 data['numero'] = tree.find("Number/Item").text.strip()
             #if tipo == u'Artículo':
-            if tree.find("InitialPage/Item") is not None and tree.find("InitialPage/Item").text is not None:
-                data['pagina_inicial'] = tree.find("InitialPage/Item").text.strip()
+            if tree.find("InitialPage/Item") is not None and\
+               tree.find("InitialPage/Item").text is not None:
+                data['pagina_inicial'] = tree.find(
+                    "InitialPage/Item").text.strip()
                 # checkPage(tree.find("InitialPage/Item").text)
-            if tree.find("FinalPage/Item") is not None and tree.find("FinalPage/Item").text is not None:
+            if tree.find("FinalPage/Item") is not None and\
+               tree.find("FinalPage/Item").text is not None:
                 data['pagina_final'] = tree.find("FinalPage/Item").text.strip()
         return data
 
@@ -529,23 +504,31 @@ class UtilidadesXMLtoBBDD:
         # Artículos (35), Capítulos (148), Libros (112)
         data = {}
         try:
-            tipo = st.ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION[tree.find('Subtype/SubType1/Item').text.strip()]
+            tipo = st.ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION[
+                tree.find('Subtype/SubType1/Item').text.strip()]
             data[u'tipo_de_produccion'] = u'' + tipo
             # Hay CVN que no tienen puesto el título
             if tree.find('Title/Name') is not None:
-                data[u'titulo'] = u'' + tree.find('Title/Name/Item').text.strip()
-            if tree.find('Link/Title/Name') is not None and tree.find('Link/Title/Name/Item').text is not None:
-                data[u'nombre_publicacion'] = u'' + tree.find('Link/Title/Name/Item').text.strip()
+                data[u'titulo'] = unicode(
+                    tree.find('Title/Name/Item').text.strip())
+            if tree.find('Link/Title/Name') is not None and\
+               tree.find('Link/Title/Name/Item').text is not None:
+                data[u'nombre_publicacion'] = unicode(
+                    tree.find('Link/Title/Name/Item').text.strip())
             data[u'autores'] = self.__getAutores__(tree.findall('Author'))
-            data.update(self.__getDataPublicacion__(tree.find('Location'), tipo))
+            data.update(self.__getDataPublicacion__(
+                tree.find('Location'), tipo))
             # Fecha: Dia/Mes/Año
             if tree.find('Date/OnlyDate/DayMonthYear') is not None:
-                data[u'fecha'] = u'' + tree.find('Date/OnlyDate/DayMonthYear/Item').text.strip()
+                data[u'fecha'] = unicode(
+                    tree.find('Date/OnlyDate/DayMonthYear/Item').text.strip())
             # Fecha: Año
             elif tree.find('Date/OnlyDate/Year') is not None:
-                data[u'fecha'] = u'' + formatDate(tree.find('Date/OnlyDate/Year/Item').text.strip())
+                data[u'fecha'] = unicode(formatDate(
+                    tree.find('Date/OnlyDate/Year/Item').text.strip()))
             if tipo != u'Libro' and tree.find('ExternalPK') is not None:
-                data[u'issn'] = u'' + tree.find('ExternalPK/Code/Item').text.strip()
+                data[u'issn'] = unicode(tree.find(
+                    'ExternalPK/Code/Item').text.strip())
         except KeyError:
             # El nodo no contiene ni artículos, ni capítulos ni libros.
             pass
@@ -569,24 +552,32 @@ class UtilidadesXMLtoBBDD:
             data[u'titulo'] = u'' + tree.find('Title/Name/Item').text.strip()
         for element in tree.findall('Link'):
             if element.find('CvnItemID/CodeCVNItem/Item').text.strip() == st.DATA_CONGRESO:
-                if element.find('Title/Name') is not None and element.find('Title/Name/Item').text is not None:
-                    data[u'nombre_del_congreso'] = u'' + element.find('Title/Name/Item').text.strip()
+                if element.find('Title/Name') is not None and\
+                   element.find('Title/Name/Item').text is not None:
+                    data[u'nombre_del_congreso'] = unicode(
+                        element.find('Title/Name/Item').text.strip())
                 # Fecha de realización
                 # Fecha: Dia/Mes/Año
                 if element.find('Date/OnlyDate/DayMonthYear') is not None:
-                    data[u'fecha_realizacion'] = u'' + element.find('Date/OnlyDate/DayMonthYear/Item').text.strip()
+                    data[u'fecha_realizacion'] = unicode(
+                        element.find(
+                            'Date/OnlyDate/DayMonthYear/Item').text.strip())
                 # Fecha: Año
                 elif element.find('Date/OnlyDate/Year') is not None:
-                    data[u'fecha_realizacion'] = u'' + formatDate(element.find('Date/OnlyDate/Year/Item').text.strip())
+                    data[u'fecha_realizacion'] = unicode(formatDate(
+                        element.find('Date/OnlyDate/Year/Item').text.strip()))
                 # Fecha de finalización
                 # Fecha: Dia/Mes/Año
                 if element.find('Date/EndDate/DayMonthYear') is not None:
-                    data[u'fecha_finalizacion'] = u'' + element.find('Date/EndDate/DayMonthYear/Item').text.strip()
+                    data[u'fecha_finalizacion'] = unicode(element.find(
+                        'Date/EndDate/DayMonthYear/Item').text.strip())
                 # Fecha: Año
                 elif element.find('Date/EndDate/Year') is not None:
-                    data[u'fecha_finalizacion'] = u'' + formatDate(element.find('Date/EndDate/Year/Item').text.strip())
+                    data[u'fecha_finalizacion'] = unicode(formatDate(
+                        element.find('Date/EndDate/Year/Item').text.strip()))
                 if element.find('Place/City') is not None:
-                    data[u'ciudad_de_realizacion'] = u'' + element.find('Place/City/Item').text.strip()
+                    data[u'ciudad_de_realizacion'] = unicode(element.find(
+                        'Place/City/Item').text.strip())
                 # Ámbito
                 data.update(self.__getAmbito__(element.find('Scope')))
 
@@ -613,7 +604,8 @@ class UtilidadesXMLtoBBDD:
         data = {}
         # Hay CVN que no tienen puesta la denominación del proyecto
         if tree.find('Title/Name') is not None:
-            data[u'denominacion_del_proyecto'] = u'' + tree.find('Title/Name/Item').text.strip()
+            data[u'denominacion_del_proyecto'] = unicode(tree.find(
+                'Title/Name/Item').text.strip())
 
         # Posibles nodos donde se almacena la fecha
         if tree.find('Date/StartDate'):
@@ -628,21 +620,28 @@ class UtilidadesXMLtoBBDD:
         # Fecha de inicio Convenios y Proyectos
         # Fecha: Dia/Mes/Año
         if tree.find('Date/' + nodo + '/DayMonthYear') is not None:
-            data[u'fecha_de_inicio'] = u'' + tree.find('Date/' + nodo + '/DayMonthYear/Item').text.strip()
+            data[u'fecha_de_inicio'] = unicode(tree.find(
+                'Date/' + nodo + '/DayMonthYear/Item').text.strip())
         # Fecha: Año
         elif tree.find('Date/' + nodo + '/Year') is not None:
-            data[u'fecha_de_inicio'] = u'' + formatDate(tree.find('Date/' + nodo + '/Year/Item').text.strip())
+            data[u'fecha_de_inicio'] = unicode(formatDate(
+                tree.find('Date/' + nodo + '/Year/Item').text.strip()))
 
         # Fecha final Proyectos
         if st.MODEL_TABLE[tipo] == u'Proyecto':
-            if tree.find('Date/EndDate/DayMonthYear') is not None and tree.find('Date/EndDate/DayMonthYear/Item').text is not None:
-                data[u'fecha_de_fin'] = u'' + tree.find('Date/EndDate/DayMonthYear/Item').text.strip()
-            elif tree.find('Date/EndDate/Year') is not None and tree.find('Date/EndDate/Year/Item').text is not None:
-                data[u'fecha_de_fin'] = u'' + formatDate(tree.find('Date/EndDate/Year/Item').text.strip())
+            if tree.find('Date/EndDate/DayMonthYear') is not None and\
+               tree.find('Date/EndDate/DayMonthYear/Item').text is not None:
+                data[u'fecha_de_fin'] = unicode(tree.find(
+                    'Date/EndDate/DayMonthYear/Item').text.strip())
+            elif tree.find('Date/EndDate/Year') is not None and\
+                 tree.find('Date/EndDate/Year/Item').text is not None:
+                data[u'fecha_de_fin'] = unicode(formatDate(tree.find(
+                    'Date/EndDate/Year/Item').text.strip()))
 
         # La duración del proyecto viene codificada en el formato:
         # P <num_years> Y <num_months> M <num_days> D
-        if tree.find('Date/Duration') is not None and tree.find('Date/Duration/Item').text is not None:
+        if tree.find('Date/Duration') is not None and\
+           tree.find('Date/Duration/Item').text is not None:
             duration_code = u'' + tree.find('Date/Duration/Item').text.strip()
             data.update(self.__getDuration__(duration_code))
             # TODO Calcular fecha final partiendo de la duración
@@ -653,9 +652,11 @@ class UtilidadesXMLtoBBDD:
         # Dimensión Económica
         for element in tree.findall('EconomicDimension'):
             economic_code = element.find('Value').attrib['code']
-            data[st.ECONOMIC_DIMENSION[economic_code]] = u'' + element.find('Value/Item').text.strip()
+            data[st.ECONOMIC_DIMENSION[economic_code]] = unicode(element.find(
+                'Value/Item').text.strip())
         if tree.find('ExternalPK/Code') is not None:
-            data[u'cod_segun_financiadora'] = u'' + tree.find('ExternalPK/Code/Item').text.strip()
+            data[u'cod_segun_financiadora'] = unicode(tree.find(
+                'ExternalPK/Code/Item').text.strip())
 
         # Ámbito
         data.update(self.__getAmbito__(tree.find('Scope')))
@@ -679,11 +680,15 @@ class UtilidadesXMLtoBBDD:
         # Comprueba si la actividad docente se trata de una tesis
         try:
             if tree.find('Subtype/SubType1/Item').text.strip() == st.DATA_TESIS:
-                data[u'titulo'] = u'' + tree.find('Title/Name/Item').text.strip()
-                data[u'universidad_que_titula'] = u'' + tree.find('Entity/EntityName/Item').text.strip()
+                data[u'titulo'] = unicode(tree.find(
+                    'Title/Name/Item').text.strip())
+                data[u'universidad_que_titula'] = unicode(tree.find(
+                    'Entity/EntityName/Item').text.strip())
                 data[u'autor'] = self.__getAutores__(tree.findall('Author'))
-                data[u'codirector'] = self.__getAutores__(tree.findall('Link/Author'))
-                data[u'fecha_de_lectura'] = u'' + tree.find('Date/OnlyDate/DayMonthYear/Item').text.strip()
+                data[u'codirector'] = self.__getAutores__(
+                    tree.findall('Link/Author'))
+                data[u'fecha_de_lectura'] = unicode(tree.find(
+                    'Date/OnlyDate/DayMonthYear/Item').text.strip())
         except AttributeError:
             # No tiene elemento tipo: 'Subtype/SubType1/Item'
             pass
@@ -735,10 +740,11 @@ def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
         if not investCVN.xmlfile:
             handlerCVN = UtilidadesCVNtoXML(filePDF=investCVN.cvnfile)
             xmlFecyt = handlerCVN.getXML()
-            # Si el CVN tiene formato FECYT y el usuario es el propietario se actualiza
+            # Si el CVN tiene formato FECYT y
+            # el usuario es el propietario se actualiza
             if xmlFecyt and \
                handlerCVN.checkCVNOwner(investCVN.investigador, xmlFecyt):
-                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'),
-                                       ContentFile(xmlFecyt))
-        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
+                investCVN.xmlfile.save(investCVN.cvnfile.name.replace('pdf', 'xml'), ContentFile(xmlFecyt))
+        investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
+            fileXML=investCVN.xmlfile).insertarXML(investCVN.investigador)
         investCVN.save()
