@@ -65,8 +65,7 @@ def index(request):
     # Envío del nuevo CVN
     if request.method == 'POST':
         context['form'] = UploadCvnForm(request.POST,
-                                        request.FILES,
-                                        instance=investCVN)
+                                        request.FILES)
         try:
             if context['form'].is_valid() and \
                (request.FILES['cvnfile'].content_type == stCVN.PDF):
@@ -80,7 +79,9 @@ def index(request):
                 # propietario se actualiza
                 if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt):
                     if investCVN:
-                        handleOldCVN(filePDF, investCVN.fecha_up)
+                        handleOldCVN(filePDF, investCVN)
+                        # se elimina el registro con el CVN antiguo
+                        investCVN.delete()
                     investCVN = context['form'].save(commit=False)
                     investCVN.fecha_up = datetime.date.today()
                     investCVN.cvnfile = filePDF
