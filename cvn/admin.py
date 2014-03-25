@@ -5,14 +5,14 @@ from cvn.models import (Usuario,
                         Convenio, TesisDoctoral)
 
 
-class UsuarioAdmin(admin.ModelAdmin):
+'''class UsuarioAdmin(admin.ModelAdmin):
     search_fields = ('documento',
                      'nombre',
                      'primer_apellido',
                      'segundo_apellido',
                      'documento',)
     ordering = ('created_at',)
-
+'''
 
 class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
     search_fields = ('titulo',
@@ -31,7 +31,7 @@ class ProyectoConvenioAdmin(admin.ModelAdmin):
                      'usuario__documento',)
     ordering = ('created_at',)
 
-admin.site.register(Usuario, UsuarioAdmin)
+admin.site.register(Usuario)
 # Actividad científica y tecnológica
 admin.site.register(Publicacion, PublicacionCongresoTesisAdmin)
 admin.site.register(Congreso, PublicacionCongresoTesisAdmin)

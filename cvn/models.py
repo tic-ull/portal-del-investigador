@@ -3,6 +3,7 @@
 from cvn.utils import noneToZero
 from django.db import models
 from django.db.models import Q
+from django.contrib.auth.models import User, UserManager
 import datetime
 
 
@@ -55,100 +56,17 @@ class ProyectoConvenioManager(models.Manager):
 
 
 # Modelo para almacenar los datos del investigador del FECYT
-class Usuario(models.Model):
+class Usuario(User):
     """
         Datos personales del usuario
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
     """
-    # Campos recomendados
-    primer_apellido = models.CharField(u'Primer Apellido',
-                                       max_length=50,
-                                       blank=True,
-                                       null=True)
-    segundo_apellido = models.CharField(u'Segundo Apellido',
-                                        max_length=50,
-                                        blank=True,
-                                        null=True)
-    nombre = models.CharField(u'Nombre',
-                              max_length=50,
-                              blank=True,
-                              null=True)
-    sexo = models.CharField(u'Sexo', max_length=10, blank=True, null=True)
-    fecha_nacimiento = models.DateField(u'Fecha de nacimiento',
-                                        blank=True, null=True)
-    tipo_documento = models.CharField(u'Tipo de Documento',
-                                      max_length=20, blank=True, null=True)
-    correo_electronico = models.EmailField(u'Correo electrónico',
-                                           blank=True, null=True)
     documento = models.CharField(u'Documento', max_length=20,
                                  blank=True, null=True, unique=True)
-
-    # NOTE Debería existir una tabla teléfono
-    telefono_fijo_cod = models.CharField(u'Código internacional',
-                                         max_length=16, blank=True, null=True)
-    telefono_fijo_num = models.CharField(u'Número',
-                                         max_length=32, blank=True, null=True)
-    telefono_fijo_ext = models.CharField(u'Extensión',
-                                         max_length=16, blank=True, null=True)
-
-    telefono_fax_cod = models.CharField(u'Código internacional',
-                                        max_length=16, blank=True, null=True)
-    telefono_fax_num = models.CharField(u'Número',
-                                        max_length=32, blank=True, null=True)
-    telefono_fax_ext = models.CharField(u'Extensión',
-                                        max_length=16, blank=True, null=True)
-
-    telefono_movil_cod = models.CharField(u'Código internacional',
-                                          max_length=16, blank=True, null=True)
-    telefono_movil_num = models.CharField(u'Número',
-                                          max_length=32, blank=True, null=True)
-    telefono_movil_ext = models.CharField(u'Extensión',
-                                          max_length=16, blank=True, null=True)
-
-    # Más campos
-    # TODO ruta a directorio de imagenes
-    imagen = models.ImageField(upload_to='static/files',
-                               blank=True, null=True)
-    pagina_web_personal = models.URLField(u'Web personal',
-                                          max_length=128,
-                                          blank=True, null=True)
-
-    direccion = models.CharField(u'Dirección de contacto',
-                                 max_length=300, blank=True, null=True)
-    resto_direccion = models.CharField(u'Resto de dirección de contacto',
-                                       max_length=300, blank=True, null=True)
-    codigo_postal = models.CharField(u'Código postal',
-                                     max_length=16, blank=True, null=True)
-
-    ciudad_de_contacto = models.CharField(u'Ciudad de contacto',
-                                          max_length=64, blank=True, null=True)
-    pais_de_contacto = models.CharField(u'País de contacto',
-                                        max_length=64, blank=True, null=True)
-    comunidad = models.CharField(u'Comunidad autónoma/Región de contacto',
-                                 max_length=64, blank=True, null=True)
-
-    provincia = models.CharField(u'Provincia',
-                                 max_length=64, blank=True, null=True)
-    nacionalidad = models.CharField(u'Nacionalidad',
-                                    max_length=64, blank=True, null=True)
-
-    ciudad_de_nacimiento = models.CharField(u'Ciudad de nacimiento',
-                                            max_length=64,
-                                            blank=True, null=True)
-    pais_de_nacimiento = models.CharField(u'País de nacimiento',
-                                          max_length=64, blank=True, null=True)
-    comunidad_nacimiento = models.CharField(u'Comunidad/Región de nacimiento',
-                                            max_length=64,
-                                            blank=True, null=True)
-
-    created_at = models.DateTimeField(u'Creado', auto_now_add=True)
-    updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+    objects = UserManager()  # Provides helper methods like create_user
 
     def __unicode__(self):
-        return u"%s %s %s  con documento %s" % (self.nombre,
-                                                self.primer_apellido,
-                                                self.segundo_apellido,
-                                                self.documento)
+        return self.username
 
 
 class Publicacion(models.Model):
