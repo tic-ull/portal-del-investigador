@@ -1,6 +1,6 @@
 # -*- encoding: utf8 -*-
 from django.contrib import admin
-from cvn.models import (Usuario, SituacionProfesional,
+from cvn.models import (Usuario,
                         Publicacion, Congreso, Proyecto,
                         Convenio, TesisDoctoral)
 
@@ -32,7 +32,6 @@ class ProyectoConvenioAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 admin.site.register(Usuario, UsuarioAdmin)
-admin.site.register(SituacionProfesional)
 # Actividad científica y tecnológica
 admin.site.register(Publicacion, PublicacionCongresoTesisAdmin)
 admin.site.register(Congreso, PublicacionCongresoTesisAdmin)
