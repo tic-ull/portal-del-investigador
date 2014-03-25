@@ -41,6 +41,7 @@ def main(request):
 def index(request):
     """ Vista que ve el usuario cuando accede a la aplicación """
     context = {}
+    user = request.user
     # El mensaje de que se ha subido el CVN de forma correcta está
     # en una variable de la sesión.
     try:
@@ -78,7 +79,7 @@ def index(request):
                 xmlFecyt = cvn.getXML()
                 # Si el CVN tiene formato FECYT y el usuario es el
                 # propietario se actualiza
-                if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt):
+                if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt, user):
                     if investCVN:
                         handleOldCVN(filePDF, investCVN.fecha_up)
                     investCVN = context['form'].save(commit=False)
