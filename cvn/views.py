@@ -62,6 +62,7 @@ def index(request):
         context.update(dataCVNSession(investCVN))
     logger.info("Acceso del investigador: " + invest.nombre + ' '
                 + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
+
     # Envío del nuevo CVN
     if request.method == 'POST':
         context['form'] = UploadCvnForm(request.POST,
