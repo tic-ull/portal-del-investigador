@@ -52,7 +52,8 @@ class Command(BaseCommand):
             )
 
         for departamento in departamentos:
-            self.createReport(year, departamento)
+            if not departamento.codigo == 'INVES':
+                self.createReport(year, departamento)
 
     def createReport(self, year, departamento):
         (investigadores, articulos,
@@ -94,22 +95,13 @@ class Command(BaseCommand):
              'cod_departamento=%s&ano=%s' % (st.WS_SERVER_URL,
                                              dept.codigo,
                                              year)
-
-        invesRRHH = [19712, 17797, 19847, 19339, 19522, 18959, 18705, 17811,
-                     25620, 18709, 18712, 18588, 18845, 18590, 18719, 18080,
-                     19875, 18215, 19484, 29739, 18732, 19633, 18228, 19000,
-                     18463, 18368, 24224, 19010, 19528, 18762, 19403, 31820,
-                     19981, 17872, 17857, 18260, 19541, 19543, 19416, 29146,
-                     18016, 18661, 18665, 19563, 18668, 18298, 18430]
-
-        #invesRRHH = urllib.urlopen(WS).read()
-        #invesRRHH = invesRRHH.replace('[', '').replace(']', '').split(', ')
-
+        invesRRHH = json.loads(urllib.urlopen(WS).read())
         inves = list()
         for inv in invesRRHH:
             WS = '%sodin/core/rest/get_info_pdi?cod_persona=%s&ano=%s' % (
                 st.WS_SERVER_URL, inv, year)
             dataInv = json.loads(urllib.urlopen(WS).read())
+            dataInv = self.checkInves(dataInv)
             inves.append(dataInv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
             k['apellido1'], k['apellido2']))
@@ -117,3 +109,14 @@ class Command(BaseCommand):
             documento__in=GrupoinvestInvestigador.objects.filter(
                 cod_persona__in=invesRRHH).values('nif'))
         return investigadores, usuarios
+
+    def checkInves(self, inv):
+        if not 'nombre' in inv:
+            inv['nombre'] = ''
+        if not 'apellido1' in inv:
+            inv['apellido1'] = ''
+        if not 'apellido2' in inv:
+            inv['apellido2'] = ''
+        if not 'categoria' in inv:
+            inv['categoria'] = ''
+        return inv
