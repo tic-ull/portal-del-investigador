@@ -1,18 +1,19 @@
 Django==1.5.1
 psycopg2
 django_extensions
-south							# DB migrations
-Pillow							# Images
-mysql-python						# MySQL
-suds							# Web Services
-lxml							# Parsing XML
-dateutils						# Fecha de caducidad
-python-slugify						# filename desde un String
-django-bootstrap-toolkit==2.8.0				# Bootstrap
+south							                        # DB migrations
+Pillow							                        # Images
+mysql-python						                    # MySQL
+suds							                        # Web Services
+lxml							                        # Parsing XML
+dateutils						                        # Fecha de caducidad
+python-slugify						                    # filename desde un String
+django-bootstrap-toolkit==2.8.0				            # Bootstrap
 -e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
 gunicorn
 selenium
 ipython
 joblib
 reportlab
-Werkzeug						# Werkzeug debugger
+Werkzeug						                        # Werkzeug debugger
+simplejson
