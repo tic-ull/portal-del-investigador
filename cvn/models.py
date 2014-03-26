@@ -3,7 +3,7 @@
 from cvn.utils import noneToZero
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.models import User, UserManager
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -56,14 +56,14 @@ class ProyectoConvenioManager(models.Manager):
 
 
 # Modelo para almacenar los datos del investigador del FECYT
-class Usuario(User):
+class Usuario(models.Model):
     """
         Datos personales del usuario
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
     """
+    user = models.OneToOneField(User)
     documento = models.CharField(u'Documento', max_length=20,
                                  blank=True, null=True, unique=True)
-    objects = UserManager()  # Provides helper methods like create_user
 
     def __unicode__(self):
         return self.username

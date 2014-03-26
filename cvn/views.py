@@ -2,18 +2,16 @@
 
 from cvn import settings as stCVN
 from cvn.forms import UploadCvnForm
-from cvn.helpers import (handleOldCVN, getUserViinV, addUserViinV, getDataCVN,
-                         dataCVNSession, setCVNFileName)
-from cvn.utilsCVN import (insert_pdf_to_bbdd_if_not_exists, UtilidadesCVNtoXML,
-                          UtilidadesXMLtoBBDD)
+from cvn.helpers import (handleOldCVN, getUserViinV, addUserViinV,
+                         getDataCVN, setCVNFileName)
+from cvn.utilsCVN import (UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
 from django.conf import settings as st
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django_cas.decorators import login_required
-
+from django.contrib.auth.decorators import login_required
 import datetime
 import logging
 
@@ -22,45 +20,33 @@ logger = logging.getLogger(__name__)
 
 # -- Vistas Aplicación CVN --
 def main(request):
-    """ Vista de acceso a la aplicación """
-    # En caso de que un usuario logueado acceda a la raiz,
-    # se muestra la información del mismo para advertir que sigue logueado
-    try:
-        # Usuario de la plantilla administrador
-        if request.user.username == stCVN.ADMIN_USERNAME:
-            return HttpResponseRedirect(reverse('logout'))
-        request.session['attributes']
-    # Si el usuario no está logeado en el CAS se accede directamente
-    # a la pantalla de logeo.
-    except KeyError:
-        return HttpResponseRedirect(reverse('login'))
     return HttpResponseRedirect(reverse('index'))
-
 
 @login_required
 def index(request):
     """ Vista que ve el usuario cuando accede a la aplicación """
     context = {}
     user = request.user
-    # El mensaje de que se ha subido el CVN de forma correcta está
-    # en una variable de la sesión.
-    try:
+    #  Mensajes con información para el usuario
+    if 'message' in request.session:
         context['message'] = request.session['message']
         del request.session['message']
-    except:  # Puede que no exista el mensaje en la sesión
-        pass
-    # Usuario CAS print context['user']['ou']
-    context['user'] = request.session['attributes']
+
+    if 'attributes' in request.session:
+        context['user'] = request.session['attributes']
+    else:
+        return HttpResponseRedirect(reverse('logout'))
+
     invest, investCVN = getUserViinV(context['user']['NumDocumento'])
     if not invest:
         # Se añade el usuario a la aplicación de ViinV
         invest = addUserViinV(context['user'])
-    if investCVN:
+    '''if investCVN:
         insert_pdf_to_bbdd_if_not_exists(
             context['user']['NumDocumento'], investCVN)
         # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(invest.nif))
-        context.update(dataCVNSession(investCVN))
+        context.update(dataCVNSession(investCVN))'''
     logger.info("Acceso del investigador: " + invest.nombre + ' '
                 + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
     # Envío del nuevo CVN
@@ -135,7 +121,7 @@ def downloadCVN(request):
             response['Content-Disposition'] = 'inline;filename=%s' \
                 % (investCVN.cvnfile.name.split('/')[-1])
         pdf.closed
-    except TypeError, IOError:
+    except (TypeError, IOError):
         raise Http404
     return response
 
