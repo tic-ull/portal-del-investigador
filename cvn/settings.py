@@ -59,8 +59,8 @@ DIC_PERSONAL_DATA_XML = {
 
 # Editor FECYT (Paso 6): Actividad Científica y tecnológica
 ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION = {
-    u'035': u'Artículo',
-    u'148': u'Capítulo de Libro',
+    u'035': u'Articulo',
+    u'148': u'Capitulo de Libro',
     u'112': u'Libro',
 }
 

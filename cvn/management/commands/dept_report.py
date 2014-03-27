@@ -72,13 +72,13 @@ class Command(BaseCommand):
             year, departamento
         )
         articulos = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, year, 'Artículo'
+            usuarios, year, 'Articulo'
         )
         libros = Publicacion.objects.byUsuariosYearTipo(
             usuarios, year, 'Libro'
         )
         capitulosLibro = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, year, 'Capítulo de Libro'
+            usuarios, year, 'Capitulo de Libro'
         )
         congresos = Congreso.objects.byUsuariosYear(usuarios, year)
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)

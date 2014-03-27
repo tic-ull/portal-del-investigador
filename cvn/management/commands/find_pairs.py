@@ -114,8 +114,8 @@ class Command(BaseCommand):
     )
 
     PUBLICATION_TYPES = {'libro': u'Libro',
-                         'capitulo': u'Capítulo de Libro',
-                         'articulo': u'Artículo'}
+                         'capitulo': u'Capitulo de Libro',
+                         'articulo': u'Articulo'}
 
     TABLES = {'Proyecto': Proyecto,
               'Publicacion': Publicacion,
