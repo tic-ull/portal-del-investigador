@@ -47,13 +47,11 @@ def index(request):
         # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(user.usuario))
         context.update(dataCVNSession(investCVN))
-    #logger.info("Acceso del investigador: " + invest.nombre + ' '
-    #            + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
+
     # Envío del nuevo CVN
     if request.method == 'POST':
         context['form'] = UploadCvnForm(request.POST,
-                                        request.FILES,
-                                        instance=investCVN)
+                                        request.FILES)
         try:
             if context['form'].is_valid() and \
                (request.FILES['cvnfile'].content_type == stCVN.PDF):
@@ -67,7 +65,9 @@ def index(request):
                 # propietario se actualiza
                 if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt, user):
                     if investCVN:
-                        handleOldCVN(filePDF, investCVN.fecha_up)
+                        handleOldCVN(filePDF, investCVN)
+                        # se elimina el registro con el CVN antiguo
+                        investCVN.delete()
                     investCVN = context['form'].save(commit=False)
                     investCVN.fecha_up = datetime.date.today()
                     investCVN.cvnfile = filePDF
