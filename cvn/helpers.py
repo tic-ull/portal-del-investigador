@@ -35,7 +35,7 @@ def formatNIF(data=None):
     return data.upper().replace(' ', '').replace('-', '').replace('.', '')
 
 
-def searchDataUser(data=None):
+'''def searchDataUser(data=None):
     """
         Función que devuelve un diccionario para buscar los datos
         de un usuario en la BBDD.
@@ -60,7 +60,7 @@ def searchDataUser(data=None):
         if 'nombre' in data:
             search_dic['nombre__iexact'] = data['nombre']
     return search_dic
-
+'''
 
 def formatCode(data, extension):
     """

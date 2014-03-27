@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 def main(request):
     return HttpResponseRedirect(reverse('index'))
 
+
 @login_required
 def index(request):
     """ Vista que ve el usuario cuando accede a la aplicación """
@@ -81,7 +82,7 @@ def index(request):
                     #    fileXML=investCVN.xmlfile
                     #).insertarXML(investCVN.investigador)
                     utils = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile)
-                    utils.insertarXML(investCVN.investigador)
+                    utils.insertarXML(investCVN.investigador, user)
                     investCVN.fecha_cvn = utils.getXMLDate()
                     investCVN.save()
                     request.session['message'] = u'Se ha actualizado su CVN \

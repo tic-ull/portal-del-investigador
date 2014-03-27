@@ -4,7 +4,7 @@
 # se repiten en todas las tablas y tiene un subárbol.
 from django.db.models.loading import get_model
 from django.core.files.base import ContentFile
-from cvn.helpers import (formatNIF, searchDataUser,
+from cvn.helpers import (formatNIF,
                          searchDataProduccionCientifica, formatDate)
 from cvn.models import (Usuario, Publicacion, Congreso,
                         Proyecto, Convenio, TesisDoctoral)
@@ -204,10 +204,11 @@ class UtilidadesXMLtoBBDD:
                                user)
 
     def getXMLDate(self):
-        date = self.tree.find('Version/VersionID/Date/Item').text.strip().split('-')
+        date = self.tree.find(
+            'Version/VersionID/Date/Item').text.strip().split('-')
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
-    def insertarXML(self, investigador=None):
+    def insertarXML(self, investigador, user):
         """
             Inserta los datos del CVN encontrados en el portal
             en la aplicación CVN
@@ -215,41 +216,19 @@ class UtilidadesXMLtoBBDD:
             Parametros:
             - investigador -> Usuario con el que se enlaza ambas BBDD.
         """
-        dataPersonal = {}
-        #fecha_cvn = None
         try:
-            #tree = etree.parse(self.fileXML)
-            #fecha_cvn = self.tree.find('Version/VersionID/Date/Item').text.strip()
-            # Datos del Investigador
-            dataInvestigador = self.tree.find('Agent')
-                # /Identification/PersonalIdentification')
-            dataPersonal = self.__parseDataIdentificationXML__(
-                dataInvestigador.getchildren())
-            search_data = searchDataUser(dataPersonal)
-            if search_data:
-                search_user = Usuario.objects.filter(**search_data)
-                if not search_user:
-                    #dataPersonal.update({'investigador': investigador})
-                    user = Usuario.objects.create(**dataPersonal)
-                else:
-                    user = search_user[0]
-                    # Se eliminan los datos previos del usuario
-                    self.__cleanDataCVN__(user)
+            self.__cleanDataCVN__(user)
                 # Introduce los datos de la actividad científica
-                self.__parseActividadCientifica__(
-                    user, self.tree.findall('CvnItem'))
-            else:
-                logger.warning("CVN sin datos personales: "
-                               + str(self.fileXML))
+            self.__parseActividadCientifica__(
+                user, self.tree.findall('CvnItem'))
         except IOError:
             if self.fileXML:
                 logger.error("Fichero " + self.fileXML + u" no encontrado.")
             else:
                 logger.warning(u'Se necesita un fichero '
                                u'para ejecutar este método')
-        #return fecha_cvn
 
-    def __parseDataIdentificationXML__(self, tree=None):
+    '''def __parseDataIdentificationXML__(self, tree=None):
         """
             Obtiene los datos de identificación del usuario.
             Incluye datos:
@@ -270,8 +249,8 @@ class UtilidadesXMLtoBBDD:
             if element.tag == u'Contact':
                 dic.update(self.__dataContact__(element.getchildren()))
         return dic
-
-    def __dataPersonalIdent__(self, tree=[]):
+    '''
+    '''def __dataPersonalIdent__(self, tree=[]):
         """
             Extrae un diccionario con los datos personales del usuario.
 
@@ -296,8 +275,8 @@ class UtilidadesXMLtoBBDD:
                 except TypeError:
                     pass
         return dic
-
-    def __dataAddress__(self, tree=[]):
+    '''
+    '''def __dataAddress__(self, tree=[]):
         """
             Obtiene los datos de la dirección del usuario.
             Variables:
@@ -313,8 +292,8 @@ class UtilidadesXMLtoBBDD:
                 dic[st.DIC_PERSONAL_DATA_XML[element.tag]] = unicode(
                     element.getchildren()[0].text.strip())
         return dic
-
-    def __dataContact__(self, tree=[]):
+    '''
+    '''def __dataContact__(self, tree=[]):
         """
             Obtiene los datos de contacto del usuario.
             (telefonos y correo electronico)
@@ -344,7 +323,7 @@ class UtilidadesXMLtoBBDD:
             else:
                 dic[key] = u'' + element.getchildren()[0].text.strip()
         return dic
-
+    '''
     def __getAutores__(self, tree=[]):
         """
             Obtiene los autores participantes en la Actividad Científica
@@ -371,10 +350,11 @@ class UtilidadesXMLtoBBDD:
             # Este elemento se crea siempre al exportar el PDF al XML
             if author.find("Signature/Item").text is not None:
                 if auxAuthor:   # Si tiene datos, la firma va entre paréntesis
-                    lista_autores += unicode(auxAuthor +
-                                             ' (' +
-                                             author.find("Signature/Item").text.strip() +
-                                             '); ')
+                    lista_autores += unicode(
+                        auxAuthor +
+                        ' (' +
+                        author.find("Signature/Item").text.strip() +
+                        '); ')
                 else:         # El único dato de los autores es la firma
                     lista_autores += unicode(
                         author.find("Signature/Item").text.strip() + '; ')
@@ -726,7 +706,7 @@ class UtilidadesXMLtoBBDD:
                 self.__saveData__(user, data, st.MODEL_TABLE[cvn_key])
 
 
-def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
+'''def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
     """
         Inserta el CVN en la BBDD si el usuario no lo tiene
          insertado previamente.
@@ -748,3 +728,4 @@ def insert_pdf_to_bbdd_if_not_exists(nif="", investCVN=None):
         utils.insertarXML(investCVN.investigador)
         investCVN.fecha_cvn = utils.getXMLDate()
         investCVN.save()
+'''

@@ -66,7 +66,7 @@ class Usuario(models.Model):
                                  blank=True, null=True, unique=True)
 
     def __unicode__(self):
-        return self.username
+        return self.user.username
 
 
 class Publicacion(models.Model):
