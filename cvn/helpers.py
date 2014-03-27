@@ -241,7 +241,7 @@ def addUserViinV(data={}):
 
 
 # TODO: Añadir esta funcion al modelo del Investigador
-def getDataCVN(nif=""):
+def getDataCVN(usuario):
     """
         Función que devuelve un diccionario con los datos
         a mostrar del CVN del usuario.
@@ -252,16 +252,15 @@ def getDataCVN(nif=""):
     context = {}
     context['CVN'] = True
     try:
-        user = Usuario.objects.get(documento__icontains=nif)
-        context['Publicaciones'] = user.publicacion_set\
+        context['Publicaciones'] = usuario.publicacion_set\
             .order_by('-fecha', 'titulo')
-        context['Congresos'] = user.congreso_set\
+        context['Congresos'] = usuario.congreso_set\
             .order_by('-fecha_realizacion', 'titulo')
-        context['Proyectos'] = user.proyecto_set\
+        context['Proyectos'] = usuario.proyecto_set\
             .order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['Convenios'] = user.convenio_set\
+        context['Convenios'] = usuario.convenio_set\
             .order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['TesisDoctorales'] = user.tesisdoctoral_set\
+        context['TesisDoctorales'] = usuario.tesisdoctoral_set\
             .order_by('-fecha_de_lectura', 'titulo')
     except ObjectDoesNotExist:
         context['CVN'] = False

@@ -435,7 +435,7 @@ class UtilidadesXMLtoBBDD:
             # Se crea el nuevo registro en la tabla correspondiente
             reg = table.objects.create(**data)
         # Añade el usuario a la tabla
-        reg.usuario.add(user)
+        reg.usuario.add(user.usuario)
 
     def __getDataPublicacion__(sefl, tree=[], tipo=""):
         """

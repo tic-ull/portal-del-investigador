@@ -3,7 +3,7 @@
 from cvn import settings as stCVN
 from cvn.forms import UploadCvnForm
 from cvn.helpers import (handleOldCVN, getUserViinV, addUserViinV,
-                         getDataCVN, setCVNFileName)
+                         getDataCVN, setCVNFileName, dataCVNSession)
 from cvn.utilsCVN import (UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
 from django.conf import settings as st
 from django.core.files.base import ContentFile
@@ -37,19 +37,18 @@ def index(request):
         context['user'] = request.session['attributes']
     else:
         return HttpResponseRedirect(reverse('logout'))
-
     invest, investCVN = getUserViinV(context['user']['NumDocumento'])
     if not invest:
         # Se añade el usuario a la aplicación de ViinV
         invest = addUserViinV(context['user'])
-    '''if investCVN:
-        insert_pdf_to_bbdd_if_not_exists(
-            context['user']['NumDocumento'], investCVN)
+    if investCVN:
+        #insert_pdf_to_bbdd_if_not_exists(
+        #    context['user']['NumDocumento'], investCVN)
         # Datos del CVN para mostrar e las tablas
-        context.update(getDataCVN(invest.nif))
-        context.update(dataCVNSession(investCVN))'''
-    logger.info("Acceso del investigador: " + invest.nombre + ' '
-                + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
+        context.update(getDataCVN(user.usuario))
+        context.update(dataCVNSession(investCVN))
+    #logger.info("Acceso del investigador: " + invest.nombre + ' '
+    #            + invest.apellido1 + ' ' + invest.apellido2 + ' ' + invest.nif)
     # Envío del nuevo CVN
     if request.method == 'POST':
         context['form'] = UploadCvnForm(request.POST,
