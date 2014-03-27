@@ -59,7 +59,8 @@ class Command(BaseCommand):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
          convenios, tesis) = self.getData(year, departamento)
-        print 'Generando PDF para %s ... ' % (departamento.nombre)
+        print 'Generando PDF para [%s-%s] %s ... ' % (
+            departamento.id, departamento.codigo, departamento.nombre)
         if investigadores:
             informe = Informe_pdf(year, departamento, investigadores,
                                   articulos, libros, capitulosLibro,
