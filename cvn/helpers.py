@@ -170,9 +170,10 @@ def handleOldCVN(cvn, investCVN):
     newName = cvn.name\
         .replace(u'.pdf', u'-' + str(investCVN.fecha_up) + u'.pdf')
     newPath = os.path.join(settings.MEDIA_ROOT,
-                           cvn_setts.OLD_PDF_ROOT,
-                           newName)
-    file_move_safe(oldPath, newPath)
+                           cvn_setts.OLD_PDF_ROOT)
+    if not os.path.isdir(newPath):
+        os.makedirs(newPath)
+    file_move_safe(oldPath, os.path.join(newPath, newName))
 
 
 def getUserViinV(documento=""):
