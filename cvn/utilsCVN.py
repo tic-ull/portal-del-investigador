@@ -82,7 +82,7 @@ class UtilidadesCVNtoXML:
             return base64.decodestring(resultXML.cvnXml)
         return False  # Retorna el fichero PDF con formato antiguo
 
-    def checkCVNOwner(self, user=None, fileXML=None):
+    def checkCVNOwner(self, invest, fileXML, user):
         """
             Este método se encarga de corroborar que el propietario del CVN
             es el mismo que está logeado en la sesión.
@@ -106,7 +106,8 @@ class UtilidadesCVNtoXML:
                             'PersonalIdentification/OfficialId/NIE/Item')
             if nif is not None and nif.text is not None:
                 nif = nif.text.strip()
-        if nif: # and nif.upper() == user.nif.upper():
+        if (user.has_perm('can_upload_other_users_cvn')) |\
+           (nif and nif.upper() == invest.nif.upper()):
             return True
         return False
 
