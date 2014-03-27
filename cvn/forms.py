@@ -6,7 +6,8 @@ from django.forms.widgets import ClearableFileInput
 from django.utils.encoding import force_unicode
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-from viinvDB.models import GrupoinvestInvestcvn
+#from viinvDB.models import GrupoinvestInvestcvn
+from cvn.models import CVN
 
 
 class ShortNameClarableFileInput(ClearableFileInput):
@@ -49,8 +50,8 @@ class UploadCvnForm(ModelForm):
         sus datos en la BBDD de la aplicación CVN
     """
     class Meta:
-        model = GrupoinvestInvestcvn
+        model = CVN
         widgets = {
-            'cvnfile': ShortNameClarableFileInput,
+            'cvn_file': ShortNameClarableFileInput,
         }
-        fields = ('cvnfile',)   # 'investigador'
+        fields = ('cvn_file',)   # 'investigador'
