@@ -2,7 +2,8 @@
 from django.contrib import admin
 from cvn.models import (Usuario,
                         Publicacion, Congreso, Proyecto,
-                        Convenio, TesisDoctoral)
+                        Convenio, TesisDoctoral, Investigador,
+                        CVN)
 
 
 class UsuarioAdmin(admin.ModelAdmin):
@@ -38,3 +39,6 @@ admin.site.register(Congreso, PublicacionCongresoTesisAdmin)
 admin.site.register(Proyecto, ProyectoConvenioAdmin)
 admin.site.register(Convenio, ProyectoConvenioAdmin)
 admin.site.register(TesisDoctoral, PublicacionCongresoTesisAdmin)
+# Tablas importadas de la aplicación antigua de Viinv
+admin.site.register(Investigador)
+admin.site.register(CVN)
