@@ -167,8 +167,10 @@ def handleOldCVN(cvn, investCVN):
                            investCVN.cvnfile.name)
     # Antes de mover a la carpeta históricos,
     # se le añade la fecha de subida al CVN nuevo.
-    newName = cvn.name\
-        .replace(u'.pdf', u'-' + str(investCVN.fecha_up) + u'.pdf')
+    newName = cvn.name.replace('.pdf', '')
+    newName += investCVN.fecha_up.strftime('-%d-%m-%Y-')
+    newName += datetime.datetime.today().strftime('%Hh%Mm%Ss')
+    newName += u'.pdf'
     newPath = os.path.join(settings.MEDIA_ROOT,
                            cvn_setts.OLD_PDF_ROOT)
     if not os.path.isdir(newPath):
