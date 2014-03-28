@@ -60,7 +60,7 @@ DATABASES = {
     }
 }
 
-DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'cvn.router.cvnRouter']
+DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'ViinV.router.cvnRouter']
 
 # Configuracion del logging
 LOG_FILENAME = os.path.join(PROJECT_ROOT, 'cvn.log')
