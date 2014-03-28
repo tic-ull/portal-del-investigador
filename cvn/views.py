@@ -70,8 +70,8 @@ def index(request):
                                         request.FILES)
         try:
             if context['form'].is_valid() and \
-               (request.FILES['cvnfile'].content_type == stCVN.PDF):
-                filePDF = request.FILES['cvnfile']
+               (request.FILES['cvn_file'].content_type == stCVN.PDF):
+                filePDF = request.FILES['cvn_file']
                 filePDF.name = setCVNFileName(invest)
                 # Se llama al webservice del FECYT para corroborar que
                 # el CVN tiene formato válido
