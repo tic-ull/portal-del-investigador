@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from cvn.models import Usuario
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -165,7 +164,7 @@ def handleOldCVN(cvn, investCVN):
         return
     oldPath = os.path.join(settings.MEDIA_ROOT,
                            #cvn_setts.PDF_ROOT,
-                           investCVN.cvnfile.name)
+                           investCVN.cvn_file.name)
     # Antes de mover a la carpeta históricos,
     # se le añade la fecha de subida al CVN nuevo.
     newName = cvn.name\
