@@ -138,6 +138,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'crequest.middleware.CrequestMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # NOTE situado en el 'settings_local'
@@ -187,6 +188,7 @@ INSTALLED_APPS = (
     'viinvDB',
     # Bootstrap
     'bootstrap_toolkit',
+    'crequest',
 )
 
 

@@ -16,3 +16,4 @@ ipython
 joblib
 reportlab
 Werkzeug						# Werkzeug debugger
+django-crequest

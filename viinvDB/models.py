@@ -1876,7 +1876,7 @@ class GrupoinvestInvestigador(models.Model):
     sexo = models.CharField(max_length=6L)
     email = models.CharField(max_length=60L)
     telefono = models.CharField(max_length=60L, blank=True)
-    categoria = models.ForeignKey(GrupoinvestCategoriainvestigador)
+    categoria = models.ForeignKey(GrupoinvestCategoriainvestigador, null=True, blank=True)
     departamento = models.ForeignKey(GrupoinvestDepartamento, null=True,
                                      blank=True)
     centro = models.ForeignKey(GrupoinvestCentro, null=True, blank=True)

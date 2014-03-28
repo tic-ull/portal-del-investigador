@@ -4,6 +4,7 @@ from cvn.utils import noneToZero
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
+from cvn.settings import XML_ROOT, PDF_ROOT
 import datetime
 
 
@@ -655,6 +656,72 @@ class TesisDoctoral(models.Model):
 
     class Meta:
         verbose_name_plural = u'Tesis Doctorales'
+
+
+########## TABLAS IMPORTADAS VIINV ##########
+###### Tabla investigador  ######
+class Investigador(models.Model):
+    """
+     Esta tabla alamecena los datos correspondientes al investigador.
+     Ha sido importada de la aplicación antigua del portal del
+     investigador.
+    """
+    usuario = models.ForeignKey('Usuario')
+    nombre = models.CharField(u'Nombre',
+                              max_length=50,
+                              blank=True,
+                              null=True)
+    primer_apellido = models.CharField(u'Primer Apellido',
+                                       max_length=50,
+                                       blank=True,
+                                       null=True)
+    segundo_apellido = models.CharField(u'Segundo Apellido',
+                                        max_length=50,
+                                        blank=True,
+                                        null=True)
+    nif = models.CharField(u'Documento', max_length=10)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    sexo = models.CharField(max_length=6)
+    email = models.CharField(max_length=60)
+    telefono = models.CharField(max_length=60, blank=True)
+    dedicacion = models.CharField(max_length=8)
+    file = models.CharField(max_length=100, blank=True)
+    descripcion = models.TextField(blank=True)
+    confirma_grupo_a = models.IntegerField(null=True, blank=True,
+                                           db_column='confirma_grupo_A')
+    confirma_grupo_b = models.IntegerField(null=True, blank=True,
+                                           db_column='confirma_grupo_B')
+    sexenios = models.IntegerField(null=True, blank=True)
+    inicio_sexenio = models.DateField(null=True, blank=True)
+    fin_sexenio = models.DateField(null=True, blank=True)
+    cas_username = models.CharField(max_length=100, blank=True)
+    cod_persona = models.CharField(max_length=5)
+    cese = models.DateField(null=True, blank=True)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_last_update = models.DateTimeField(null=True, blank=True)
+#    rrhh_id = models.IntegerField(unique=True, null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = u'Investigadores'
+
+
+###### Curriculum Vitae Normalizado (Aplicación Viinv) ######
+class CVN(models.Model):
+    """
+     Esta tabla almacena los datos referentes al CVN del usuario.
+     Ha sido importada de la aplicación antigua del portal del
+     investigador.
+    """
+    investigador = models.ForeignKey('Investigador')
+    cvn_file = models.FileField(upload_to=PDF_ROOT)
+    xml_file = models.FileField(upload_to=XML_ROOT)
+    fecha_cvn = models.DateField()
+    created_at = models.DateTimeField(u'Creado', auto_now_add=True)
+    updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+
+    def __unicode__(self):
+        return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn,)
+
 
 # This code needs to be in management.py
 from django.contrib.auth import models as auth_models
