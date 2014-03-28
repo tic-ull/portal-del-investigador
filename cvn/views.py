@@ -2,8 +2,8 @@
 
 from cvn import settings as stCVN
 from cvn.forms import UploadCvnForm
-from cvn.helpers import (handleOldCVN, getUserViinV, addUserViinV,
-                         getDataCVN, setCVNFileName, dataCVNSession)
+from cvn.helpers import (handleOldCVN, getDataCVN,
+                         setCVNFileName, dataCVNSession)
 from cvn.utilsCVN import (UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
 from django.conf import settings as st
 from django.core.files.base import ContentFile
@@ -37,16 +37,18 @@ def index(request):
         context['user'] = request.session['attributes']
     else:
         return HttpResponseRedirect(reverse('logout'))
-    invest, investCVN = getUserViinV(context['user']['NumDocumento'])
-    if not invest:
+    #  TODO: Obtener cvn de usuario con bbdd actual
+    #invest, cvn = getUserViinV(context['user']['NumDocumento'])
+    cvn = user.usuario.cvn
+    #if not invest:
         # Se añade el usuario a la aplicación de ViinV
-        invest = addUserViinV(context['user'])
-    if investCVN:
+    #    invest = addUserViinV(context['user'])
+    if cvn:
         #insert_pdf_to_bbdd_if_not_exists(
-        #    context['user']['NumDocumento'], investCVN)
+        #    context['user']['NumDocumento'], cvn)
         # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(user.usuario))
-        context.update(dataCVNSession(investCVN))
+        context.update(dataCVNSession(cvn))
 
     # Envío del nuevo CVN
     if request.method == 'POST':
@@ -54,36 +56,39 @@ def index(request):
                                         request.FILES)
         try:
             if context['form'].is_valid() and \
-               (request.FILES['cvnfile'].content_type == stCVN.PDF):
-                filePDF = request.FILES['cvnfile']
-                filePDF.name = setCVNFileName(invest)
+               (request.FILES['cvn_file'].content_type == stCVN.PDF):
+                filePDF = request.FILES['cvn_file']
+                filePDF.name = setCVNFileName(user)
                 # Se llama al webservice del FECYT para corroborar que
                 # el CVN tiene formato válido
-                cvn = UtilidadesCVNtoXML(filePDF=filePDF)
-                xmlFecyt = cvn.getXML()
+                util = UtilidadesCVNtoXML(filePDF=filePDF)
+                xmlFecyt = util.getXML()
                 # Si el CVN tiene formato FECYT y el usuario es el
                 # propietario se actualiza
-                if xmlFecyt and cvn.checkCVNOwner(invest, xmlFecyt, user):
-                    if investCVN:
-                        handleOldCVN(filePDF, investCVN)
+                if xmlFecyt and util.checkCVNOwner(user, xmlFecyt):
+                    if cvn:
+                        handleOldCVN(filePDF, cvn)
                         # se elimina el registro con el CVN antiguo
-                        investCVN.delete()
-                    investCVN = context['form'].save(commit=False)
-                    investCVN.fecha_up = datetime.date.today()
-                    investCVN.cvnfile = filePDF
-                    investCVN.investigador = invest
+                        cvn.delete()
+                    cvn = context['form'].save(commit=False)
+                    cvn.fecha_up = datetime.date.today()
+                    cvn.cvnfile = filePDF
+                    #cvn.investigador = invest
+                    #cvn.owner = user
                     # Borramos el viejo para que no se reenumere
-                    if investCVN.xmlfile:
-                        investCVN.xmlfile.delete()
-                    investCVN.xmlfile.save(filePDF.name.replace('pdf', 'xml'),
-                                           ContentFile(xmlFecyt), save=False)
-                    #investCVN.fecha_cvn = UtilidadesXMLtoBBDD(
-                    #    fileXML=investCVN.xmlfile
-                    #).insertarXML(investCVN.investigador)
-                    utils = UtilidadesXMLtoBBDD(fileXML=investCVN.xmlfile)
-                    utils.insertarXML(investCVN.investigador, user)
-                    investCVN.fecha_cvn = utils.getXMLDate()
-                    investCVN.save()
+                    if cvn.xml_file:
+                        cvn.xml_file.delete()
+                    cvn.xml_file.save(filePDF.name.replace('pdf', 'xml'),
+                                      ContentFile(xmlFecyt), save=False)
+                    #cvn.fecha_cvn = UtilidadesXMLtoBBDD(
+                    #    fileXML=cvn.xmlfile
+                    #).insertarXML(cvn.investigador)
+                    utils = UtilidadesXMLtoBBDD(fileXML=cvn.xml_file)
+                    utils.insertarXML(user)
+                    cvn.fecha_cvn = utils.getXMLDate()
+                    cvn.save()
+                    user.usuario.cvn = cvn
+                    user.usuario.save()
                     request.session['message'] = u'Se ha actualizado su CVN \
                      con éxito.'
                     return HttpResponseRedirect(reverse("cvn.views.index"))
@@ -101,25 +106,23 @@ def index(request):
         except KeyError:
             context['errors'] = u'Seleccione un archivo'
     else:
-        context['form'] = UploadCvnForm(instance=investCVN)
+        context['form'] = UploadCvnForm()
     return render_to_response("index.html", context, RequestContext(request))
 
 
 @login_required
 def downloadCVN(request):
     """ Descarga el CVN correspondiente al usuario logeado en la sesión """
-    context = {}
-    context['user'] = request.session['attributes']     # Usuario CAS
-    invest, investCVN = getUserViinV(context['user']['NumDocumento'])
-    if invest:  # El usuario para los test no se crea en la BBDD
-        logger.info("Descarga CVN investigador: " + invest.nombre + ' '
-                    + invest.apellido1 + ' ' + invest.apellido2 + ' '
-                    + invest.nif)
+    user = request.user
+    cvn = user.usuario.cvn
+    if cvn:  # El usuario para los test no se crea en la BBDD
+        logger.info("Descarga CVN investigador: " + user.username + ' '
+                    + user.usuario.documento)
     try:
-        with open(st.MEDIA_ROOT + '/' + investCVN.cvnfile.name, 'r') as pdf:
+        with open(st.MEDIA_ROOT + '/' + cvn.cvn_file.name, 'r') as pdf:
             response = HttpResponse(pdf.read(), mimetype='application/pdf')
             response['Content-Disposition'] = 'inline;filename=%s' \
-                % (investCVN.cvnfile.name.split('/')[-1])
+                % (cvn.cvn_file.name.split('/')[-1])
         pdf.closed
     except (TypeError, IOError):
         raise Http404

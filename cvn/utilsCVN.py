@@ -3,10 +3,8 @@
 # TODO Crear métodos para aquellos nodos como Telephone o Fax
 # se repiten en todas las tablas y tiene un subárbol.
 from django.db.models.loading import get_model
-from django.core.files.base import ContentFile
-from cvn.helpers import (formatNIF,
-                         searchDataProduccionCientifica, formatDate)
-from cvn.models import (Usuario, Publicacion, Congreso,
+from cvn.helpers import (searchDataProduccionCientifica, formatDate)
+from cvn.models import (Publicacion, Congreso,
                         Proyecto, Convenio, TesisDoctoral,
                         Articulo, Libro, Capitulo)
 from django.core.exceptions import ObjectDoesNotExist
@@ -78,12 +76,12 @@ class UtilidadesCVNtoXML:
                                + self.filePDF
                                + ". Espera de 5 segundos para reintentar.")
                 time.sleep(5)
-
-        if resultXML.errorCode == 0:  # Formato CVN-XML del FECYT
+        # Formato CVN-XML del FECYT
+        if resultXML.errorCode == 0:
             return base64.decodestring(resultXML.cvnXml)
         return False  # Retorna el fichero PDF con formato antiguo
 
-    def checkCVNOwner(self, invest, fileXML, user):
+    def checkCVNOwner(self, user, fileXML):
         """
             Este método se encarga de corroborar que el propietario del CVN
             es el mismo que está logeado en la sesión.
@@ -108,7 +106,7 @@ class UtilidadesCVNtoXML:
             if nif is not None and nif.text is not None:
                 nif = nif.text.strip()
         if (user.has_perm('can_upload_other_users_cvn')) or \
-           (nif and nif.upper() == invest.nif.upper()):
+           (nif and nif.upper() == user.usuario.documento.upper()):
             return True
         return False
 
@@ -212,7 +210,7 @@ class UtilidadesXMLtoBBDD:
             'Version/VersionID/Date/Item').text.strip().split('-')
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
-    def insertarXML(self, investigador, user):
+    def insertarXML(self, user):
         """
             Inserta los datos del CVN encontrados en el portal
             en la aplicación CVN

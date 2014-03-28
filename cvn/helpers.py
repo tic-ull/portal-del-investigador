@@ -62,6 +62,7 @@ def formatNIF(data=None):
     return search_dic
 '''
 
+
 def formatCode(data, extension):
     """
         Función que transforma el código de una etiqueta para realizar
@@ -147,7 +148,7 @@ def setCVNFileName(user):
         antes de almacenarlo.
     """
     obfusc = str(hashlib.md5(str(19 * int(user.id) + 5235)).hexdigest())[2:10]
-    return 'CVN-' + str(user.user.username) + '-' + obfusc + u'.pdf'
+    return 'CVN-' + str(user.username) + '-' + obfusc + u'.pdf'
 
 
 def handleOldCVN(cvn, investCVN):
@@ -160,7 +161,7 @@ def handleOldCVN(cvn, investCVN):
         - cvn: Fichero con el CVN del Investigador
     """
     # Si no tiene cvn subido no se hace el trasiego de documentos
-    if not cvn or not investCVN.fecha_up:
+    if not cvn or not investCVN.updated_at:
         return
     oldPath = os.path.join(settings.MEDIA_ROOT,
                            #cvn_setts.PDF_ROOT,
@@ -168,7 +169,7 @@ def handleOldCVN(cvn, investCVN):
     # Antes de mover a la carpeta históricos,
     # se le añade la fecha de subida al CVN nuevo.
     newName = cvn.name\
-        .replace(u'.pdf', u'-' + str(investCVN.fecha_up) + u'.pdf')
+        .replace(u'.pdf', u'-' + str(investCVN.updated_at) + u'.pdf')
     newPath = os.path.join(settings.MEDIA_ROOT,
                            cvn_setts.OLD_PDF_ROOT)
     if not os.path.isdir(newPath):

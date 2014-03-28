@@ -56,6 +56,23 @@ class ProyectoConvenioManager(models.Manager):
         return elements_list
 
 
+###### Curriculum Vitae Normalizado (Aplicación Viinv) ######
+class CVN(models.Model):
+    """
+     Esta tabla almacena los datos referentes al CVN del usuario.
+     Ha sido importada de la aplicación antigua del portal del
+     investigador.
+    """
+    cvn_file = models.FileField(upload_to=PDF_ROOT)
+    xml_file = models.FileField(upload_to=XML_ROOT)
+    fecha_cvn = models.DateField()
+    created_at = models.DateTimeField(u'Creado', auto_now_add=True)
+    updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+
+    def __unicode__(self):
+        return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn,)
+
+
 # Modelo para almacenar los datos del investigador del FECYT
 class Usuario(models.Model):
     """
@@ -63,6 +80,8 @@ class Usuario(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
     """
     user = models.OneToOneField(User)
+    cvn = models.OneToOneField(CVN, on_delete=models.SET_NULL,
+                               null=True, blank=True)
     documento = models.CharField(u'Documento', max_length=20,
                                  blank=True, null=True, unique=True)
 
@@ -722,55 +741,3 @@ class TesisDoctoral(models.Model):
     class Meta:
         verbose_name_plural = u'Investigadores'
 '''
-
-
-###### Curriculum Vitae Normalizado (Aplicación Viinv) ######
-class CVN(models.Model):
-    """
-     Esta tabla almacena los datos referentes al CVN del usuario.
-     Ha sido importada de la aplicación antigua del portal del
-     investigador.
-    """
-    owner = models.ForeignKey('Usuario')
-    cvn_file = models.FileField(upload_to=PDF_ROOT)
-    xml_file = models.FileField(upload_to=XML_ROOT)
-    fecha_cvn = models.DateField()
-    created_at = models.DateTimeField(u'Creado', auto_now_add=True)
-    updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
-
-    def __unicode__(self):
-        return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn,)
-
-
-# This code needs to be in management.py
-from django.contrib.auth import models as auth_models
-from django.db.models import signals
-from django.db import connection
-import logging
-logger = logging.getLogger(__name__)
-
-
-# Related ticket http://code.djangoproject.com/ticket/4748
-def alter_django_auth_permissions(sender, **kwargs):
-    if not auth_models.Permission in kwargs['created_models']:
-        return
-    SIZE_NAME = 128
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM auth_permission LIMIT 1")
-
-    for desc in cursor.description:
-        # See http://www.python.org/dev/peps/pep-0249/
-        (name, type_code, display_size, internal_size, precision,
-         scale, null_ok) = desc
-        if not name == 'name':
-            continue
-        if internal_size < SIZE_NAME:
-            logger.info('auth_permission: Column "name" gets altered.\
-                         Old: %d new: %d' % (internal_size, SIZE_NAME))
-            cursor.execute('''ALTER TABLE auth_permission ALTER COLUMN\
-                           "name" type VARCHAR(%s)''',
-                           [SIZE_NAME])
-        break
-    else:
-        raise Exception('table auth_permission has not column "name"')
-signals.post_syncdb.connect(alter_django_auth_permissions)
