@@ -7,7 +7,8 @@ from django.core.files.base import ContentFile
 from cvn.helpers import (formatNIF,
                          searchDataProduccionCientifica, formatDate)
 from cvn.models import (Usuario, Publicacion, Congreso,
-                        Proyecto, Convenio, TesisDoctoral)
+                        Proyecto, Convenio, TesisDoctoral,
+                        Articulo, Libro, Capitulo)
 from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 import base64  # Codificación para el web service del FECYT
@@ -106,7 +107,7 @@ class UtilidadesCVNtoXML:
                             'PersonalIdentification/OfficialId/NIE/Item')
             if nif is not None and nif.text is not None:
                 nif = nif.text.strip()
-        if (user.has_perm('can_upload_other_users_cvn')) |\
+        if (user.has_perm('can_upload_other_users_cvn')) or \
            (nif and nif.upper() == invest.nif.upper()):
             return True
         return False
@@ -197,6 +198,9 @@ class UtilidadesXMLtoBBDD:
         """
         # Actividad científica
         self.__deleteOldData__(Publicacion.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Articulo.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Libro.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Capitulo.objects.filter(usuario=user), user)
         self.__deleteOldData__(Congreso.objects.filter(usuario=user), user)
         self.__deleteOldData__(Proyecto.objects.filter(usuario=user), user)
         self.__deleteOldData__(Convenio.objects.filter(usuario=user), user)
@@ -486,7 +490,7 @@ class UtilidadesXMLtoBBDD:
         try:
             tipo = st.ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION[
                 tree.find('Subtype/SubType1/Item').text.strip()]
-            data[u'tipo_de_produccion'] = u'' + tipo
+            data[u'tipo_de_produccion'] = tipo
             # Hay CVN que no tienen puesto el título
             if tree.find('Title/Name') is not None:
                 data[u'titulo'] = unicode(
@@ -698,6 +702,14 @@ class UtilidadesXMLtoBBDD:
             # Publicación, documentos científicos y técnicos
             if cvn_key == u"060.010.010.000":
                 data = self.__dataActividadCientificaPublicacion__(element)
+                if data and 'tipo_de_produccion' in data:
+                    if data['tipo_de_produccion'] == 'Articulo':
+                        self.__saveData__(user, data, 'Articulo')
+                    if data['tipo_de_produccion'] == 'Libro':
+                        self.__saveData__(user, data, 'Libro')
+                    if data['tipo_de_produccion'] == 'Capitulo de Libro':
+                        self.__saveData__(user, data, 'Capitulo')
+                    continue
             # Trabajos presentados en congresos nacionales o internacionales.
             if cvn_key == u"060.010.020.000":
                 data = self.__dataActividadCientificaCongreso__(element)

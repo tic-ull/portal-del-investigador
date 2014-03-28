@@ -174,6 +174,24 @@ class Publicacion(models.Model):
         verbose_name_plural = u'Publicaciones'
 
 
+class Articulo(Publicacion):
+
+    class Meta:
+        verbose_name_plural = u'Artículos'
+
+
+class Libro(Publicacion):
+
+    class Meta:
+        verbose_name_plural = u'Libros'
+
+
+class Capitulo(Publicacion):
+
+    class Meta:
+        verbose_name_plural = u'Capítulos de Libros'
+
+
 class Congreso(models.Model):
     """
         Trabajos presentados en congresos nacionales o internacionales.
