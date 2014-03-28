@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -46,62 +46,12 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['Usuario'])
 
-        # Adding model 'SituacionProfesional'
-        db.create_table(u'cvn_situacionprofesional', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('usuario', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cvn.Usuario'])),
-            ('nombre_de_la_entidad', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
-            ('tipo_de_entidad', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('categoria_or_puesto', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('fecha_de_inicio', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('modalidad_del_contrato', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('fecha_de_fin', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('duracion_anyos', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('duracion_meses', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('duracion_dias', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('especializacion_primaria', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('especializacion_secundaria', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('especializacion_terciaria', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('dedicacion_profesional', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('tipo_de_dedicacion', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-            ('palabras_clave_dedicacion', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('docente', self.gf('django.db.models.fields.CharField')(max_length=4, null=True, blank=True)),
-            ('tipo_de_actividad_de_gestion', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('facultad_or_escuela', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('departamento_or_servicio', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('ciudad_de_trabajo', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('pais_de_trabajo', self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True)),
-            ('comunidad_or_region_trabajo', self.gf('django.db.models.fields.CharField')(max_length=64, null=True, blank=True)),
-            ('telefono_fijo_cod', self.gf('django.db.models.fields.CharField')(max_length=12, null=True, blank=True)),
-            ('telefono_fijo_num', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
-            ('telefono_fijo_ext', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
-            ('telefono_fax_cod', self.gf('django.db.models.fields.CharField')(max_length=12, null=True, blank=True)),
-            ('telefono_fax_num', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
-            ('telefono_fax_ext', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
-            ('correo_electronico', self.gf('django.db.models.fields.EmailField')(max_length=75, null=True, blank=True)),
-            ('interes_doc_investigacion', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-        ))
-        db.send_create_signal(u'cvn', ['SituacionProfesional'])
-
-        # Adding model 'Produccion'
-        db.create_table(u'cvn_produccion', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('usuario', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['cvn.Usuario'])),
-            ('indice_h', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
-            ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-        ))
-        db.send_create_signal(u'cvn', ['Produccion'])
-
         # Adding model 'Publicacion'
         db.create_table(u'cvn_publicacion', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('tipo_de_produccion', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('tipo_de_soporte', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
             ('nombre_publicacion', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('editorial', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
@@ -145,6 +95,24 @@ class Migration(SchemaMigration):
             ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
         ))
         db.create_unique(m2m_table_name, ['publicacion_id', 'usuario_id'])
+
+        # Adding model 'Articulo'
+        db.create_table(u'cvn_articulo', (
+            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cvn', ['Articulo'])
+
+        # Adding model 'Libro'
+        db.create_table(u'cvn_libro', (
+            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cvn', ['Libro'])
+
+        # Adding model 'Capitulo'
+        db.create_table(u'cvn_capitulo', (
+            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal(u'cvn', ['Capitulo'])
 
         # Adding model 'Congreso'
         db.create_table(u'cvn_congreso', (
@@ -334,17 +302,20 @@ class Migration(SchemaMigration):
         # Deleting model 'Usuario'
         db.delete_table(u'cvn_usuario')
 
-        # Deleting model 'SituacionProfesional'
-        db.delete_table(u'cvn_situacionprofesional')
-
-        # Deleting model 'Produccion'
-        db.delete_table(u'cvn_produccion')
-
         # Deleting model 'Publicacion'
         db.delete_table(u'cvn_publicacion')
 
         # Removing M2M table for field usuario on 'Publicacion'
         db.delete_table(db.shorten_name(u'cvn_publicacion_usuario'))
+
+        # Deleting model 'Articulo'
+        db.delete_table(u'cvn_articulo')
+
+        # Deleting model 'Libro'
+        db.delete_table(u'cvn_libro')
+
+        # Deleting model 'Capitulo'
+        db.delete_table(u'cvn_capitulo')
 
         # Deleting model 'Congreso'
         db.delete_table(u'cvn_congreso')
@@ -372,6 +343,14 @@ class Migration(SchemaMigration):
 
 
     models = {
+        u'cvn.articulo': {
+            'Meta': {'object_name': 'Articulo', '_ormbases': [u'cvn.Publicacion']},
+            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'cvn.capitulo': {
+            'Meta': {'object_name': 'Capitulo', '_ormbases': [u'cvn.Publicacion']},
+            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
+        },
         u'cvn.congreso': {
             'Meta': {'object_name': 'Congreso'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
@@ -450,14 +429,9 @@ class Migration(SchemaMigration):
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'})
         },
-        u'cvn.produccion': {
-            'Meta': {'object_name': 'Produccion'},
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'indice_h': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
-            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cvn.Usuario']"})
+        u'cvn.libro': {
+            'Meta': {'object_name': 'Libro', '_ormbases': [u'cvn.Publicacion']},
+            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'cvn.proyecto': {
             'Meta': {'object_name': 'Proyecto'},
@@ -541,43 +515,6 @@ class Migration(SchemaMigration):
             'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
-        },
-        u'cvn.situacionprofesional': {
-            'Meta': {'object_name': 'SituacionProfesional'},
-            'categoria_or_puesto': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'ciudad_de_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'comunidad_or_region_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'correo_electronico': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'dedicacion_profesional': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'departamento_or_servicio': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'docente': ('django.db.models.fields.CharField', [], {'max_length': '4', 'null': 'True', 'blank': 'True'}),
-            'duracion_anyos': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'duracion_dias': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'duracion_meses': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'especializacion_primaria': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'especializacion_secundaria': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'especializacion_terciaria': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'facultad_or_escuela': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'fecha_de_fin': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'fecha_de_inicio': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'interes_doc_investigacion': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'modalidad_del_contrato': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'nombre_de_la_entidad': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
-            'pais_de_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'palabras_clave_dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'telefono_fax_cod': ('django.db.models.fields.CharField', [], {'max_length': '12', 'null': 'True', 'blank': 'True'}),
-            'telefono_fax_ext': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'telefono_fax_num': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'telefono_fijo_cod': ('django.db.models.fields.CharField', [], {'max_length': '12', 'null': 'True', 'blank': 'True'}),
-            'telefono_fijo_ext': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'telefono_fijo_num': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'tipo_de_actividad_de_gestion': ('django.db.models.fields.CharField', [], {'max_length': '64', 'null': 'True', 'blank': 'True'}),
-            'tipo_de_dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
-            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['cvn.Usuario']"})
         },
         u'cvn.tesisdoctoral': {
             'Meta': {'object_name': 'TesisDoctoral'},
