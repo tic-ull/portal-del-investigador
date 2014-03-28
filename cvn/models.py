@@ -660,7 +660,7 @@ class TesisDoctoral(models.Model):
 
 ########## TABLAS IMPORTADAS VIINV ##########
 ###### Tabla investigador  ######
-class Investigador(models.Model):
+'''class Investigador(models.Model):
     """
      Esta tabla alamecena los datos correspondientes al investigador.
      Ha sido importada de la aplicación antigua del portal del
@@ -703,6 +703,7 @@ class Investigador(models.Model):
 
     class Meta:
         verbose_name_plural = u'Investigadores'
+'''
 
 
 ###### Curriculum Vitae Normalizado (Aplicación Viinv) ######
@@ -712,7 +713,7 @@ class CVN(models.Model):
      Ha sido importada de la aplicación antigua del portal del
      investigador.
     """
-    investigador = models.ForeignKey('Investigador')
+    owner = models.ForeignKey('Usuario')
     cvn_file = models.FileField(upload_to=PDF_ROOT)
     xml_file = models.FileField(upload_to=XML_ROOT)
     fecha_cvn = models.DateField()

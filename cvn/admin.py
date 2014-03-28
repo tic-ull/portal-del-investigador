@@ -2,18 +2,8 @@
 from django.contrib import admin
 from cvn.models import (Usuario,
                         Publicacion, Congreso, Proyecto,
-                        Convenio, TesisDoctoral, Investigador,
+                        Convenio, TesisDoctoral,
                         CVN)
-
-
-'''class UsuarioAdmin(admin.ModelAdmin):
-    search_fields = ('documento',
-                     'nombre',
-                     'primer_apellido',
-                     'segundo_apellido',
-                     'documento',)
-    ordering = ('created_at',)
-'''
 
 class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
     search_fields = ('titulo',
@@ -40,5 +30,4 @@ admin.site.register(Proyecto, ProyectoConvenioAdmin)
 admin.site.register(Convenio, ProyectoConvenioAdmin)
 admin.site.register(TesisDoctoral, PublicacionCongresoTesisAdmin)
 # Tablas importadas de la aplicación antigua de Viinv
-admin.site.register(Investigador)
 admin.site.register(CVN)
