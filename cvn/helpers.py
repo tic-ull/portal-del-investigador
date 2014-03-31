@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.move import file_move_safe
-from viinvDB.models import (GrupoinvestInvestigador,
-                            GrupoinvestInvestcvn,
-                            AuthUser,
-                            GrupoinvestCategoriainvestigador)
 import cvn.settings as cvn_setts    # Constantes para la importación de CVN
 import datetime
 import hashlib
@@ -174,71 +169,6 @@ def handleOldCVN(cvn, investCVN):
     if not os.path.isdir(newPath):
         os.makedirs(newPath)
     file_move_safe(oldPath, os.path.join(newPath, newName))
-
-
-def getUserViinV(documento=""):
-    """
-        Función que a partir del usuario CAS devuelve los datos
-        almacenados en Viinv.
-
-        Variables:
-        - documento: NIF/NIE del usuario CAS
-    """
-    invest = None
-    investCVN = None
-    try:
-        invest = GrupoinvestInvestigador.objects.get(nif=documento)
-        investCVN = GrupoinvestInvestcvn.objects.get(investigador=invest)
-    except GrupoinvestInvestigador.DoesNotExist:
-        pass
-    except GrupoinvestInvestcvn.DoesNotExist:
-        pass
-    return invest, investCVN
-
-
-def addUserViinV(data={}):
-    """
-        Función que añade a ViinV al usuario logueado por CAS si no existe.
-
-        Variables:
-        - data: Datos del usuario logeado por CAS
-
-        {'username': 'lcerrudo', 'first_name': 'LUIS MARINO',
-         'last_name': 'CERROD CONCEPCION',
-        'TipoDocumento': 'NIF', 'NumDocumento': '42185973V',
-        'ou': ['PDI', 'srv_wifi', 'Alumnos', 'srv_soft',
-        'rol_becario', 'srv_webpages', 'srv_ddv', 'srv_vpn',
-        'CCTI', 'srv_siga_ull.es', 'NACFicheros', 'Act',
-        'srv_google', 'srv_siga'],
-        'email': 'lcerrudo@ull.edu.es'}
-    """
-    if data:
-        User.objects.db_manager('portalinvestigador')\
-            .create_user(username=data['username'],
-                         password='',
-                         email=data['email'])
-        data_invest = {}
-        data_invest['nombre'] = data['first_name']
-        apellidos = data['last_name'].split(' ')
-        try:
-            data_invest['apellido1'] = apellidos[0]
-            data_invest['apellido2'] = apellidos[1]
-        except IndexError:
-            data_invest['apellido2'] = ''
-        data_invest['nif'] = data['NumDocumento']
-        data_invest['email'] = data['email']
-        # Los siguientes datos no vienen en el CAS, hay un demonio
-        # que lo corrige luego a través de los datos de RRHH
-        data_invest['sexo'] = 'Hombre'
-        data_invest['categoria'] = GrupoinvestCategoriainvestigador\
-            .objects.get(nombre='INVES')
-        data_invest['cod_persona'] = 'INVES'
-        # FIXME: En la última versión de la BBDD de ViinV
-        # este campo no es obligatorio, ACTUALIZAR
-        data_invest['dedicacion'] = ''
-        data_invest['user'] = AuthUser.objects.get(username=data['username'])
-        invest = GrupoinvestInvestigador.objects.create(**data_invest)
-        return invest
 
 
 # TODO: Añadir esta funcion al modelo del Investigador

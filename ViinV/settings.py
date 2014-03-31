@@ -37,7 +37,6 @@ INSTALLED_APPS = (
     #'django.contrib.sites',
     'south',
     'cvn',
-    'viinvDB',
     'bootstrap_toolkit',
     'crequest',
 )
@@ -123,8 +122,6 @@ DATABASES = {
         'HOST': 'django1-pre.stic.ull.es'
     }
 }
-
-DATABASE_ROUTERS = ['viinvDB.router.viinvRouter', 'ViinV.router.cvnRouter']
 
 # Internationalization
 LANGUAGE_CODE = 'es-ES'
@@ -222,13 +219,6 @@ LOGGING = {
     },
     'loggers': {
         'cvn': {
-            'handlers': ['default', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': True
-        },
-        # Logs de la plantilla de ADMIN
-        # TODO: Ver si es mejor cambiar el 'handler'
-        'viinvDB.admin': {
             'handlers': ['default', 'mail_admins'],
             'level': 'INFO',
             'propagate': True

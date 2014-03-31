@@ -38,15 +38,8 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse('logout'))
     #  TODO: Obtener cvn de usuario con bbdd actual
-    #invest, cvn = getUserViinV(context['user']['NumDocumento'])
     cvn = user.usuario.cvn
-    #if not invest:
-        # Se añade el usuario a la aplicación de ViinV
-    #    invest = addUserViinV(context['user'])
     if cvn:
-        #insert_pdf_to_bbdd_if_not_exists(
-        #    context['user']['NumDocumento'], cvn)
-        # Datos del CVN para mostrar e las tablas
         context.update(getDataCVN(user.usuario))
         context.update(dataCVNSession(cvn))
 
@@ -73,16 +66,11 @@ def index(request):
                     cvn = context['form'].save(commit=False)
                     cvn.fecha_up = datetime.date.today()
                     cvn.cvnfile = filePDF
-                    #cvn.investigador = invest
-                    #cvn.owner = user
                     # Borramos el viejo para que no se reenumere
                     if cvn.xml_file:
                         cvn.xml_file.delete()
                     cvn.xml_file.save(filePDF.name.replace('pdf', 'xml'),
                                       ContentFile(xmlFecyt), save=False)
-                    #cvn.fecha_cvn = UtilidadesXMLtoBBDD(
-                    #    fileXML=cvn.xmlfile
-                    #).insertarXML(cvn.investigador)
                     utils = UtilidadesXMLtoBBDD(fileXML=cvn.xml_file)
                     utils.insertarXML(user)
                     cvn.fecha_cvn = utils.getXMLDate()

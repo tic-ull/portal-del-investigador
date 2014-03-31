@@ -8,8 +8,6 @@ from django.test import TestCase
 from drivers import WebDriverList, test_drivers
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from viinvDB.models import (GrupoinvestInvestigador, GrupoinvestInvestcvn,
-                            AuthUser, GrupoinvestCategoriainvestigador)
 
 # TODO: Fichero settings para test
 # ################################
@@ -142,8 +140,8 @@ class CVNTestCase(TestCase):
         test.find_element_by_xpath('//button[.="Actualizar"]').click()
         # Comprobar que se ha subido con éxito
         try:
-            upload = test\
-                .find_element_by_xpath('//table/tbody/tr/td/strong[.="Actualizado"]')
+            upload = test.find_element_by_xpath(
+                '//table/tbody/tr/td/strong[.="Actualizado"]')
         except NoSuchElementException:
             upload = None
         self.assertIsNotNone(upload)
@@ -179,8 +177,8 @@ class CVNTestCase(TestCase):
         test = self.selenium
         self.__inic_session__(USER_LOGIN, USER_PASSWD)
         try:
-            cvn = test\
-                .find_element_by_xpath('//a[@href="/investigacion/cvn/download/"]')
+            cvn = test.find_element_by_xpath(
+                '//a[@href="/investigacion/cvn/download/"]')
             time.sleep(2)
             cvn.click()
         except NoSuchElementException:
@@ -193,11 +191,6 @@ class CVNTestCase(TestCase):
         test.switch_to_window(test.window_handles[1])
         time.sleep(2)
         self.assertIn('pdf', test.page_source)
-        #~ if test.name == u'firefox':
-            #~ self.assertIn(u'CVN -', test.title)
-        #~ elif test.name == u'chrome':
-            #~ self.assertIn(u"application/pdf", test.page_source)
-        #~ self.assertNotRaises(Http404, lambda:test.switch_to_window(test.window_handles[1]))
         test.switch_to_window(test.window_handles[0])
         time.sleep(2)
         test.find_element_by_link_text("Cerrar sesión").click()
@@ -211,7 +204,9 @@ class CVNTestCase(TestCase):
         test = self.selenium
         self.__inic_session__("NOCAS", "NOCAS")
         msg_alert = test.find_element_by_xpath('//div[@id="status"]').text
-        self.assertIn(u'No se puede determinar que las credenciales proporcionadas', msg_alert)
+        self.assertIn(
+            u'No se puede determinar que las credenciales proporcionadas',
+            msg_alert)
 
 
 class AdminCVNTestCase(LiveServerTestCase):
@@ -232,7 +227,7 @@ class AdminCVNTestCase(LiveServerTestCase):
             Método privado que crea un usuario en la BBDD del portal
             con un CVN de pruebas.
         """
-        user = User.objects.db_manager('portalinvestigador')\
+        '''user = User.objects.db_manager('portalinvestigador')\
                            .create_user(pk=1, username=USER_LOGIN,
                                         password='', email='')
         data_invest = {'pk': 1, 'nombre': user.first_name, 'nif': USER_NIF,
@@ -243,6 +238,7 @@ class AdminCVNTestCase(LiveServerTestCase):
         invest = GrupoinvestInvestigador.objects.create(**data_invest)
         GrupoinvestInvestcvn.objects.create(pk=1, investigador=invest,
                                             cvnfile=CVN_FILE)
+        '''
 
     @classmethod
     def setUpClass(cls):
