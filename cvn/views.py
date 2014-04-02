@@ -65,7 +65,9 @@ def index(request):
                         cvn.delete()
                     cvn = context['form'].save(commit=False)
                     cvn.fecha_up = datetime.date.today()
-                    cvn.cvnfile = filePDF
+                    cvn.cvn_file = filePDF
+                    #cvn.investigador = invest
+                    #cvn.owner = user
                     # Borramos el viejo para que no se reenumere
                     if cvn.xml_file:
                         cvn.xml_file.delete()
