@@ -55,7 +55,7 @@ def index(request):
                 # Se llama al webservice del FECYT para corroborar que
                 # el CVN tiene formato válido
                 util = UtilidadesCVNtoXML(filePDF=filePDF)
-                xmlFecyt = util.getXML()
+                (xmlFecyt, numErrorCode,) = util.getXML()
                 # Si el CVN tiene formato FECYT y el usuario es el
                 # propietario se actualiza
                 if xmlFecyt and util.checkCVNOwner(user, xmlFecyt):
@@ -85,7 +85,7 @@ def index(request):
                 else:
                     # Error PDF introducido no tiene el formato de la FECYT
                     if not xmlFecyt:
-                        context['errors'] = u'El CVN no tiene formato FECYT'
+                        context['errors'] = stCVN.ERROR_CODES[numErrorCode]
                     # Error CVN no pertenece al usuario de la sesión
                     else:
                         context['errors'] = u'El NIF/NIE del CVN no coincide\

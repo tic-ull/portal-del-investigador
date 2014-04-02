@@ -113,3 +113,22 @@ CVN_CADUCIDAD = 1   # Año
 INVALID_PAGE = -1
 # Indica que no se ha podido crear un diccionario de búsqueda
 INVALID_SEARCH = -1
+
+# Errores FECYT
+ERROR_CODES = {
+    1: u'Error en el servidor',
+    2: u'El PDF no tenía XML incrustado',
+    3: u'El usuario con el que se pretende hacer la importación no existe\
+         en la base de datos',
+    4: u'Contraseña incorrecta',
+    5: u'La base de datos de instituciones no está accesible para el\
+         servicio web',
+    6: u'Error no determinado en el procesdo de autentificación',
+    8: u'No se permiten importaciones para esta institución',
+    10: u'El CvnRootBean obtenido del XML o PDF no es válido',
+    13: u'El CVN-XML no es válido',
+    14: u'No se ha podido extraer el CVNRootBean desde el CVN-XML',
+    16: u'El XML viene vacío',
+    17: u'El proceso de conversión de CVNRootBean de 1.2.5 a 1.3.0\
+          ha fallado'
+}

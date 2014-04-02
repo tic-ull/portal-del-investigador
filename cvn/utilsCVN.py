@@ -73,13 +73,14 @@ class UtilidadesCVNtoXML:
                 webServiceResponse = True
             except:
                 logger.warning("No hay Respuesta para el fichero: "
-                               + self.filePDF
+                               + self.filePDF.name
                                + ". Espera de 5 segundos para reintentar.")
                 time.sleep(5)
         # Formato CVN-XML del FECYT
         if resultXML.errorCode == 0:
-            return base64.decodestring(resultXML.cvnXml)
-        return False  # Retorna el fichero PDF con formato antiguo
+            return (base64.decodestring(resultXML.cvnXml), None,)
+        # Retorna el código de error devuelto por el webservice de la FECYT
+        return (False, resultXML.errorCode,)
 
     def checkCVNOwner(self, user, fileXML):
         """
