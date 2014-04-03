@@ -1,11 +1,21 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as stCVN
+from cvn.helpers import (searchDataProduccionCientifica, formatDate)
 from cvn.utils import noneToZero
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
-from django.contrib.auth.models import User
-from cvn.settings import XML_ROOT, PDF_ROOT
+from django.db.models.loading import get_model
+from lxml import etree
+import base64
 import datetime
+import logging
+import suds
+import time
+
+logger = logging.getLogger(__name__)
 
 
 class PublicacionManager(models.Manager):
@@ -56,27 +66,365 @@ class ProyectoConvenioManager(models.Manager):
         return elements_list
 
 
-###### Curriculum Vitae Normalizado (Aplicación Viinv) ######
+class FECYT(models.Model):
+
+    @staticmethod
+    def getXML(filePDF):
+        try:
+            dataPDF = base64.encodestring(filePDF.read())
+        except IOError:
+            logger.error(u'ERROR: No existe el fichero o directorio: %s' % (
+                filePDF.name))
+            return False
+
+        # Web Service - FECYT
+        clientWS = suds.client.Client(stCVN.URL_WS)
+        WSResponse = False
+        while not WSResponse:
+            try:
+                resultXML = clientWS.service.cvnPdf2Xml(
+                    stCVN.USER_WS, stCVN.PASSWD_WS, dataPDF)
+                WSResponse = True
+            except:
+                logger.warning(u'WARNING: No hay respuesta del WS \
+                    de la FECYT para el fichero %s' % (filePDF.name))
+                time.sleep(5)
+
+        # Format CVN-XML of FECYT
+        if resultXML.errorCode == 0:
+            return base64.decodestring(resultXML.cvnXml)
+        return False
+
+    class Meta:
+        managed = False
+
+
+###### Curriculum Vitae Normalizado ######
 class CVN(models.Model):
-    """
-     Esta tabla almacena los datos referentes al CVN del usuario.
-     Ha sido importada de la aplicación antigua del portal del
-     investigador.
-    """
-    cvn_file = models.FileField(upload_to=PDF_ROOT)
-    xml_file = models.FileField(upload_to=XML_ROOT)
+    cvn_file = models.FileField(upload_to=stCVN.PDF_ROOT)
+    xml_file = models.FileField(upload_to=stCVN.XML_ROOT)
     fecha_cvn = models.DateField()
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
 
     def __unicode__(self):
-        return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn,)
+        return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
+
+    @staticmethod
+    def checkCVNOwner(user, fileXML):
+        try:
+            treeXML = etree.XML(fileXML)
+        except IOError:
+            logger.error(u'ERROR: No existe el fichero %s' % (fileXML))
+
+        nif = treeXML.find('Agent/Identification/'
+                           'PersonalIdentification/OfficialId/DNI/Item')
+        if nif and nif.text:
+            nif = nif.text.strip()
+        if (user.has_perm('can_upload_other_users_cvn') or
+           (nif and nif.upper() == user.usuario.documento.upper())):
+            return True
+        return False
+
+    @staticmethod
+    def getXMLDate(fileXML):
+        treeXML = etree.XML(fileXML)
+        date = treeXML.find(
+            'Version/VersionID/Date/Item').text.strip().split('-')
+        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+    def insertXML(self, user):
+        try:
+            self.__cleanDataCVN__(user)
+            CVNItems = etree.parse(self.xml_file).findall('CvnItem')
+            self.__parseScientificProduction__(user, CVNItems)
+        except IOError:
+            if self.xml_file:
+                logger.error(u'ERROR: No existe el fichero %s' % (
+                    self.xml_file.name))
+            else:
+                logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
+
+    def __cleanDataCVN__(self, user=None):
+        self.__deleteOldData__(Articulo.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Libro.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Capitulo.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Publicacion.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Congreso.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Proyecto.objects.filter(usuario=user), user)
+        self.__deleteOldData__(Convenio.objects.filter(usuario=user), user)
+        self.__deleteOldData__(TesisDoctoral.objects.filter(usuario=user),
+                               user)
+
+    def __deleteOldData__(self, dataCVN=[], user=None):
+        for reg in dataCVN:
+            if reg.usuario.count() > 1:
+                reg.usuario.remove(user)
+            else:
+                reg.delete()
+
+    def __parseScientificProduction__(self, user, CVNItems):
+        for CVNItem in CVNItems:
+            data = {}
+            cvn_key = CVNItem.find('CvnItemID/CVNPK/Item').text.strip()
+            # Actividad docente (Paso 4 Editor FECYT)
+            if stCVN.MODEL_TABLE[cvn_key] == 'TesisDoctoral':
+                data = self.__dataTeaching__(CVNItem)
+            # Experiencia científica y tecnológica (Paso 5 Editor FECYT)
+            if stCVN.MODEL_TABLE[cvn_key] in ['Proyecto', 'Convenio']:
+                data = self.__dataScientificExperience__(CVNItem, cvn_key)
+            # Actividad científica y tecnológica (Paso 6 Editor FECYT)
+            # Publicación, documentos científicos y técnicos
+            if stCVN.MODEL_TABLE[cvn_key] == 'Publicacion':
+                data = self.__dataPublications__(CVNItem)
+                if data and 'tipo_de_produccion' in data:
+                    if data['tipo_de_produccion'] == 'Articulo':
+                        self.__saveData__(user, data, 'Articulo')
+                    if data['tipo_de_produccion'] == 'Libro':
+                        self.__saveData__(user, data, 'Libro')
+                    if data['tipo_de_produccion'] == 'Capitulo de Libro':
+                        self.__saveData__(user, data, 'Capitulo')
+                    continue
+             # Trabajos presentados en congresos nacionales o
+             # internacionales.
+            if stCVN.MODEL_TABLE[cvn_key] == 'Congreso':
+                data = self.__dataCongress__(CVNItem)
+            # Almacena los datos
+            if data:
+                self.__saveData__(user, data, stCVN.MODEL_TABLE[cvn_key])
+
+    def __dataTeaching__(self, treeXML):
+        dataCVN = {}
+        try:
+            if treeXML.find(
+                'Subtype/SubType1/Item'
+            ).text.strip() == stCVN.DATA_TESIS:
+                dataCVN[u'titulo'] = unicode(treeXML.find(
+                    'Title/Name/Item').text.strip())
+                dataCVN[u'universidad_que_titula'] = unicode(treeXML.find(
+                    'Entity/EntityName/Item').text.strip())
+                dataCVN[u'autor'] = self.__getAuthors__(
+                    treeXML.findall('Author'))
+                dataCVN[u'codirector'] = self.__getAuthors__(
+                    treeXML.findall('Link/Author'))
+                dataCVN[u'fecha_de_lectura'] = unicode(treeXML.find(
+                    'Date/OnlyDate/DayMonthYear/Item').text.strip())
+        except AttributeError:
+            pass
+        return dataCVN
+
+    def __getAuthors__(self, treeXML):
+        authors = ''
+        for author in treeXML:
+            authorItem = ''
+            if (author.find("GivenName/Item") and
+               author.find("GivenName/Item").text):
+                authorItem = unicode(author.find(
+                    "GivenName/Item").text.strip())
+            if (author.find("FirstFamilyName/Item") and
+               author.find("FirstFamilyName/Item").text):
+                authorItem += u' ' + unicode(author.find(
+                    "FirstFamilyName/Item").text.strip())
+            if (author.find("SecondFamilyName/Item") and
+               author.find("SecondFamilyName/Item").text):
+                authorItem += u' ' + unicode(
+                    author.find("SecondFamilyName/Item").text.strip())
+            if author.find("Signature/Item").text:
+                if authorItem:
+                    authors += unicode(
+                        authorItem + ' (' + author.find(
+                            "Signature/Item").text.strip() + '); ')
+                else:
+                    authors += unicode(author.find(
+                        "Signature/Item").text.strip() + '; ')
+            else:
+                authors += authorItem + '; '
+        return authors[:-2]
+
+    def __dataScientificExperience__(self, treeXML, typeItem):
+        dataCVN = {}
+        # Demonicación del Proyecto
+        if treeXML.find('Title/Name'):
+            dataCVN[u'denominacion_del_proyecto'] = unicode(treeXML.find(
+                'Title/Name/Item').text.strip())
+        # Posibles nodos Fecha
+        if treeXML.find('Date/StartDate'):
+            node = 'StartDate'
+        else:
+            node = 'OnlyDate'
+        # Fecha de Inicio: Día/Mes/Año
+        if treeXML.find('Date/' + node + '/DayMonthYear'):
+            dataCVN[u'fecha_de_inicio'] = unicode(treeXML.find(
+                'Date/' + node + '/DayMonthYear/Item').text.strip())
+        # Fecha de Inicio: Año
+        elif treeXML.find('Date/' + node + '/Year'):
+            dataCVN[u'fecha_de_inicio'] = unicode(formatDate(treeXML.find(
+                'Date/' + node + '/Year/Item').text.strip()))
+        # Fecha de Finalización
+        if stCVN.MODEL_TABLE[typeItem] == u'Proyecto':
+            if (treeXML.find('Date/EndDate/DayMonthYear') and
+               treeXML.find('Date/EndDate/DayMonthYear/Item').text):
+                dataCVN[u'fecha_de_fin'] = unicode(treeXML.find(
+                    'Date/EndDate/DayMonthYear/Item').text.strip())
+            elif (treeXML.find('Date/EndDate/Year') and
+                  treeXML.find('Date/EndDate/Year/Item').text):
+                dataCVN[u'fecha_de_fin'] = unicode(formatDate(treeXML.find(
+                    'Date/EndDate/Year/Item').text.strip()))
+        # Duración: P <num_years> Y <num_months> M <num_days> D
+        if (treeXML.find('Date/Duration') and
+           treeXML.find('Date/Duration/Item').text):
+            duration = unicode(treeXML.find('Date/Duration/Item').text.strip())
+            dataCVN.update(self.__getDuration__(duration))
+        # Autores
+        dataCVN[u'autores'] = self.__getAuthors__(treeXML.findall('Author'))
+        # Dimensión Económica
+        for itemXML in treeXML.findall('EconomicDimension'):
+            economic = itemXML.find('Value').attrib['code']
+            dataCVN[stCVN.ECONOMIC_DIMENSION[economic]] = unicode(itemXML.find(
+                'Value/Item').text.strip())
+        if treeXML.find('ExternalPK/Code'):
+            dataCVN[u'cod_segun_financiadora'] = unicode(treeXML.find(
+                'ExternalPK/Code/Item').text.strip())
+        # Ámbito
+        dataCVN.update(self.__getScope__(treeXML.find('Scope')))
+        return dataCVN
+
+    def __getDuration__(self, duration):
+        """
+             Format: P<num_years>Y<num_months>M<num_days>D
+        """
+        dataCVN = {}
+        number = ''
+        for item in duration[1:]:
+            if item.isdigit():
+                number = item
+            else:
+                if item == 'Y':
+                    dataCVN['duracion_anyos'] = unicode(number)
+                if item == 'M':
+                    dataCVN['duracion_meses'] = unicode(number)
+                if item == 'D':
+                    dataCVN['duracion_dias'] = unicode(number)
+        return dataCVN
+
+    def __getScope__(self, treeXML):
+        dataCVN = {}
+        if treeXML:
+            dataCVN['ambito'] = unicode(stCVN.SCOPE[treeXML.find(
+                'Type/Item').text.strip()])
+            if dataCVN['ambito'] == u'Otros' and treeXML.find('Others/Item'):
+                dataCVN['otro_ambito'] = unicode(treeXML.find(
+                    'Others/Item').text.strip())
+        return dataCVN
+
+    def __dataPublications__(self, treeXML):
+        # Artículos (35), Capítulos (148), Libros (112)
+        dataCVN = {}
+        try:
+            typePublication = stCVN.ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION[
+                treeXML.find('Subtype/SubType1/Item').text.strip()]
+            dataCVN[u'tipo_de_produccion'] = typePublication
+            if treeXML.find('Title/Name'):
+                dataCVN[u'titulo'] = unicode(treeXML.find(
+                    'Title/Name/Item').text.strip())
+            if (treeXML.find('Link/Title/Name') and
+               treeXML.find('Link/Title/Name/Item').text):
+                dataCVN[u'nombre_publicacion'] = unicode(treeXML.find(
+                    'Link/Title/Name/Item').text.strip())
+            dataCVN[u'autores'] = self.__getAuthors__(treeXML.findall(
+                'Author'))
+            dataCVN.update(self.__getDataPublication__(treeXML.find(
+                'Location'), typePublication))
+            # Fecha: Dia/Mes/Año
+            if treeXML.find('Date/OnlyDate/DayMonthYear'):
+                dataCVN[u'fecha'] = unicode(treeXML.find(
+                    'Date/OnlyDate/DayMonthYear/Item').text.strip())
+            # Fecha: Año
+            elif treeXML.find('Date/OnlyDate/Year'):
+                dataCVN[u'fecha'] = unicode(formatDate(treeXML.find(
+                    'Date/OnlyDate/Year/Item').text.strip()))
+            if typePublication != u'Libro' and treeXML.find('ExternalPK'):
+                dataCVN[u'issn'] = unicode(treeXML.find(
+                    'ExternalPK/Code/Item').text.strip())
+        except KeyError:
+            pass
+        except AttributeError:
+            pass
+        return dataCVN
+
+    def __getDataPublication__(self, treeXML, typePublication):
+        dataCVN = {}
+        if treeXML:
+            if treeXML.find('Volume/Item'):
+                dataCVN['volumen'] = treeXML.find('Volume/Item').text.strip()
+            if (treeXML.find('Number/Item') and
+               treeXML.find('Number/Item').text):
+                dataCVN['numero'] = treeXML.find('Number/Item').text.strip()
+            if (treeXML.find('InitialPage/Item') and
+               treeXML.find('InitialPage/Item').text):
+                dataCVN['pagina_inicial'] = treeXML.find(
+                    'InitialPage/Item').text.strip()
+            if (treeXML.find('FinalPage/Item') and
+               treeXML.find('FinalPage/Item').text):
+                dataCVN['pagina_final'] = treeXML.find(
+                    'FinalPage/Item').text.strip()
+        return dataCVN
+
+    def __saveData__(self, user=None, dataCVN={}, tableName=None):
+        # Se comprueba si existe el dataCVN
+        searchData = searchDataProduccionCientifica(dataCVN)
+        if not searchData:
+            searchData = {'pk': stCVN.INVALID_SEARCH}
+        table = get_model('cvn', tableName)
+        try:
+            reg = table.objects.get(**searchData)
+            table.objects.filter(pk=reg.id).update(**dataCVN)
+        except ObjectDoesNotExist:
+            reg = table.objects.create(**dataCVN)
+        reg.usuario.add(user.usuario)
+        reg.save()
+
+    def __dataCongress__(self, treeXML):
+        dataCVN = {}
+        if treeXML.find('Title/Name'):
+            dataCVN[u'titulo'] = unicode(treeXML.find(
+                'Title/Name/Item').text.strip())
+        for itemXML in treeXML.findall('Link'):
+            if itemXML.find(
+                'CvnItemID/CodeCVNItem/Item'
+            ).text.strip() == stCVN.DATA_CONGRESO:
+                if (itemXML.find('Title/Name') and
+                   itemXML.find('Title/Name/Item').text):
+                    dataCVN[u'nombre_del_congreso'] = unicode(itemXML.find(
+                        'Title/Name/Item').text.strip())
+                # Fecha: Dia/Mes/Año
+                if itemXML.find('Date/OnlyDate/DayMonthYear'):
+                    dataCVN[u'fecha_realizacion'] = unicode(itemXML.find(
+                        'Date/OnlyDate/DayMonthYear/Item').text.strip())
+                # Fecha: Año
+                elif itemXML.find('Date/OnlyDate/Year'):
+                    dataCVN[u'fecha_realizacion'] = unicode(formatDate(
+                        itemXML.find('Date/OnlyDate/Year/Item').text.strip()))
+                # Fecha: Dia/Mes/Año
+                if itemXML.find('Date/EndDate/DayMonthYear'):
+                    dataCVN[u'fecha_finalizacion'] = unicode(itemXML.find(
+                        'Date/EndDate/DayMonthYear/Item').text.strip())
+                # Fecha: Año
+                elif itemXML.find('Date/EndDate/Year'):
+                    dataCVN[u'fecha_finalizacion'] = unicode(formatDate(
+                        itemXML.find('Date/EndDate/Year/Item').text.strip()))
+                if itemXML.find('Place/City'):
+                    dataCVN[u'ciudad_de_realizacion'] = unicode(itemXML.find(
+                        'Place/City/Item').text.strip())
+                # Ámbito
+                dataCVN.update(self.__getScope__(itemXML.find('Scope')))
+        dataCVN[u'autores'] = self.__getAuthors__(treeXML.findall('Author'))
+        return dataCVN
 
 
 # Modelo para almacenar los datos del investigador del FECYT
 class Usuario(models.Model):
     """
-        Datos personales del usuario
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
     """
     user = models.OneToOneField(User)
@@ -91,8 +439,6 @@ class Usuario(models.Model):
 
 class Publicacion(models.Model):
     """
-        Publicaciones, documentos científicos y técnicos.
-
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
     objects = PublicacionManager()
@@ -213,8 +559,6 @@ class Capitulo(Publicacion):
 
 class Congreso(models.Model):
     """
-        Trabajos presentados en congresos nacionales o internacionales.
-
         # https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
     objects = CongresoManager()
@@ -320,9 +664,6 @@ class Congreso(models.Model):
 ################### Experiencia científica y tecnológica ####################
 class Proyecto(models.Model):
     """
-        Participación en proyectos de I+D+i financiados en convocatorias
-        competitivas de Administraciones o entidades públicas y privadas.
-
         https://cvn.fecyt.es/editor/cvn.html?locale\
         =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDIComp
     """
@@ -480,9 +821,6 @@ class Proyecto(models.Model):
 
 class Convenio(models.Model):
     """
-    Participación en contratos, convenios o proyectos de I+D+i
-    no competitivos con Administraciones o entidades públicas o privadas
-
     https://cvn.fecyt.es/editor/cvn.html?locale\
     =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDINoComp
     """
@@ -630,8 +968,6 @@ class Convenio(models.Model):
 ############################ Actividad Docente ##########################
 class TesisDoctoral(models.Model):
     """
-        Dirección de tesis doctorales y/o proyectos fin de carrera
-
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE
     """
     objects = TesisDoctoralManager()
@@ -687,57 +1023,3 @@ class TesisDoctoral(models.Model):
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
-
-    def __unicode__(self):
-        return u'%s de fecha %s' % (self.titulo, self.fecha_de_lectura)
-
-    class Meta:
-        verbose_name_plural = u'Tesis Doctorales'
-
-
-########## TABLAS IMPORTADAS VIINV ##########
-###### Tabla investigador  ######
-'''class Investigador(models.Model):
-    """
-     Esta tabla alamecena los datos correspondientes al investigador.
-     Ha sido importada de la aplicación antigua del portal del
-     investigador.
-    """
-    usuario = models.ForeignKey('Usuario')
-    nombre = models.CharField(u'Nombre',
-                              max_length=50,
-                              blank=True,
-                              null=True)
-    primer_apellido = models.CharField(u'Primer Apellido',
-                                       max_length=50,
-                                       blank=True,
-                                       null=True)
-    segundo_apellido = models.CharField(u'Segundo Apellido',
-                                        max_length=50,
-                                        blank=True,
-                                        null=True)
-    nif = models.CharField(u'Documento', max_length=10)
-    fecha_nacimiento = models.DateField(null=True, blank=True)
-    sexo = models.CharField(max_length=6)
-    email = models.CharField(max_length=60)
-    telefono = models.CharField(max_length=60, blank=True)
-    dedicacion = models.CharField(max_length=8)
-    file = models.CharField(max_length=100, blank=True)
-    descripcion = models.TextField(blank=True)
-    confirma_grupo_a = models.IntegerField(null=True, blank=True,
-                                           db_column='confirma_grupo_A')
-    confirma_grupo_b = models.IntegerField(null=True, blank=True,
-                                           db_column='confirma_grupo_B')
-    sexenios = models.IntegerField(null=True, blank=True)
-    inicio_sexenio = models.DateField(null=True, blank=True)
-    fin_sexenio = models.DateField(null=True, blank=True)
-    cas_username = models.CharField(max_length=100, blank=True)
-    cod_persona = models.CharField(max_length=5)
-    cese = models.DateField(null=True, blank=True)
-    fecha_inicio = models.DateField(null=True, blank=True)
-    fecha_last_update = models.DateTimeField(null=True, blank=True)
-#    rrhh_id = models.IntegerField(unique=True, null=True, blank=True)
-
-    class Meta:
-        verbose_name_plural = u'Investigadores'
-'''

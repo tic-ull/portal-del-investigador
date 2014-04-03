@@ -4,7 +4,6 @@ from cvn import settings as stCVN
 from cvn.forms import UploadCvnForm
 from cvn.helpers import (handleOldCVN, getDataCVN,
                          setCVNFileName, dataCVNSession)
-from cvn.utilsCVN import (UtilidadesCVNtoXML, UtilidadesXMLtoBBDD)
 from django.conf import settings as st
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
@@ -12,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from cvn.models import FECYT, CVN
 import datetime
 import logging
 
@@ -48,41 +48,33 @@ def index(request):
         context['form'] = UploadCvnForm(request.POST,
                                         request.FILES)
         try:
-            if context['form'].is_valid() and \
-               (request.FILES['cvn_file'].content_type == stCVN.PDF):
+            if (context['form'].is_valid() and
+               request.FILES['cvn_file'].content_type == stCVN.PDF):
                 filePDF = request.FILES['cvn_file']
                 filePDF.name = setCVNFileName(user)
-                # Se llama al webservice del FECYT para corroborar que
-                # el CVN tiene formato válido
-                util = UtilidadesCVNtoXML(filePDF=filePDF)
-                xmlFecyt = util.getXML()
-                # Si el CVN tiene formato FECYT y el usuario es el
-                # propietario se actualiza
-                if xmlFecyt and util.checkCVNOwner(user, xmlFecyt):
+                xmlFECYT = FECYT().getXML(filePDF)
+                if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
                     if cvn:
                         handleOldCVN(filePDF, cvn)
-                        # se elimina el registro con el CVN antiguo
                         cvn.delete()
+                    if cvn and cvn.xml_file:
+                        cvn.xml_file.delete()
                     cvn = context['form'].save(commit=False)
                     cvn.fecha_up = datetime.date.today()
                     cvn.cvnfile = filePDF
-                    # Borramos el viejo para que no se reenumere
-                    if cvn.xml_file:
-                        cvn.xml_file.delete()
                     cvn.xml_file.save(filePDF.name.replace('pdf', 'xml'),
-                                      ContentFile(xmlFecyt), save=False)
-                    utils = UtilidadesXMLtoBBDD(fileXML=cvn.xml_file)
-                    utils.insertarXML(user)
-                    cvn.fecha_cvn = utils.getXMLDate()
+                                      ContentFile(xmlFECYT), save=False)
+                    cvn.fecha_cvn = CVN().getXMLDate(xmlFECYT)
                     cvn.save()
                     user.usuario.cvn = cvn
                     user.usuario.save()
+                    cvn.insertXML(user)
                     request.session['message'] = u'Se ha actualizado su CVN \
                      con éxito.'
                     return HttpResponseRedirect(reverse("cvn.views.index"))
                 else:
                     # Error PDF introducido no tiene el formato de la FECYT
-                    if not xmlFecyt:
+                    if not xmlFECYT:
                         context['errors'] = u'El CVN no tiene formato FECYT'
                     # Error CVN no pertenece al usuario de la sesión
                     else:
