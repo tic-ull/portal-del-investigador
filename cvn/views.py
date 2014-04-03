@@ -1,13 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
 from cvn.forms import UploadCVNForm
-from cvn.helpers import (handleOldCVN, setCVNFileName, dataCVNSession, saveProductionToContext)
+from cvn.helpers import (handleOldCVN, setCVNFileName,
+                         saveProductionToContext, dataCVNSession)
 from cvn.models import FECYT, CVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
+from django.forms.util import ErrorList
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.template import RequestContext
@@ -40,14 +41,12 @@ def index(request):
         context['CVN'] = True
         context.update(dataCVNSession(cvn))
         saveProductionToContext(user.usuario, context)
+
     context['form'] = UploadCVNForm()
-    # Envío del nuevo CVN
     if request.method == 'POST':
         form = UploadCVNForm(request.POST, request.FILES)
         if form.is_valid():
-            # and request.FILES['cvn_file'].content_type == stCVN.PDF):
             filePDF = request.FILES['cvn_file']
-            filePDF.name = setCVNFileName(user)
             xmlFECYT = FECYT().getXML(filePDF)
             if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
                 if cvn:
@@ -58,6 +57,7 @@ def index(request):
 
                 cvn = form.save(commit=False)
                 cvn.fecha_up = datetime.date.today()
+                filePDF.name = setCVNFileName(user)
                 cvn.cvnfile = filePDF
                 cvn.xml_file.save(filePDF.name.replace('pdf', 'xml'),
                                   ContentFile(xmlFECYT), save=False)
@@ -72,10 +72,12 @@ def index(request):
                 return HttpResponseRedirect(reverse("cvn.views.index"))
             else:
                 if not xmlFECYT:
-                    context['errors'] = u'El CVN no tiene formato FECYT'
+                    form.errors['cvn_file'] = ErrorList(
+                        [u'El CVN no es válido para la FECYT.'])
                 else:
-                    context['errors'] = u'El NIF/NIE del CVN no coincide\
-                                          con el del usuario.'
+                    form.errors['cvn_file'] = ErrorList(
+                        [u'El NIF/NIE del CVN no coincide'
+                         ' con el de su usuario.'])
         context['form'] = form
 
     return render(request, "index.html", context)
