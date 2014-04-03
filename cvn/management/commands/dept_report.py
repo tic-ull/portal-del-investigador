@@ -9,6 +9,7 @@ from informe_pdf import Informe_pdf
 from optparse import make_option
 from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
 import urllib
+import ast
 
 
 class Command(BaseCommand):
@@ -27,6 +28,8 @@ class Command(BaseCommand):
             help="Specify the ID of the Department",
         ),
     )
+    WS_BASE_URL = '%sodin/core/rest/' % (st.WS_SERVER_URL)
+
 
     def handle(self, *args, **options):
         self.checkArgs(options)
@@ -42,15 +45,39 @@ class Command(BaseCommand):
         if (not isdigit(options['id'])) and options['id'] is not None:
             raise CommandError("Option `--id=X` must be a number")
 
+    def getDataWSDept(self, listCodeDept):
+        dataDept = []
+        for codDept in listCodeDept:
+            WS = self.WS_BASE_URL + 'get_info_departamento?cod_departamento=%s'\
+                % (codDept)
+            dataWS = urllib.urlopen(WS).read()
+            dataDept.append(ast.literal_eval(dataWS))
+        return dataDept
+
+
     def createReports(self, year, dept=None):
         if dept is None:
-            departamentos = GrupoinvestDepartamento.objects.all()
+            #WS = '%sodin/core/rest/get_departamentos' % (st.WS_SERVER_URL)
+            WS = self.WS_BASE_URL + 'get_departamentos'
+            departamentos = urllib.urlopen(WS).read()
+            departamentos = departamentos.replace('[', '')\
+                                         .replace(']', '')\
+                                         .split(', ')
+            departamentos = self.getDataWSDept(departamentos)
+            #departamentos = GrupoinvestDepartamento.objects.all()
         else:
-            departamentos = GrupoinvestDepartamento.objects.filter(
-                id__in=dept
-            )
+           # WS = '%sodin/core/rest/get_info_departamento?cod_departamento=%s'
+            #     % (st.WS_SERVER_URL, dept)
+            WS = self.WS_BASE_URL + 'get_info_departamento?cod_departamento=%s'\
+                % (dept)
+            dataWS = urllib.urlopen(WS).read()
+            departamentos = [ast.literal_eval(dataWS)]
+#            departamentos = GrupoinvestDepartamento.objects.filter(
+#                id__in=dept
+#            )
 
         for departamento in departamentos:
+            print departamento
             self.createReport(year, departamento)
 
     def createReport(self, year, departamento):
