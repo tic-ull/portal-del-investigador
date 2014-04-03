@@ -99,7 +99,6 @@ class FECYT(models.Model):
         managed = False
 
 
-###### Curriculum Vitae Normalizado ######
 class CVN(models.Model):
     cvn_file = models.FileField(upload_to=stCVN.PDF_ROOT)
     xml_file = models.FileField(upload_to=stCVN.XML_ROOT)
@@ -121,6 +120,11 @@ class CVN(models.Model):
                            'PersonalIdentification/OfficialId/DNI/Item')
         if nif and nif.text:
             nif = nif.text.strip()
+        else:
+            nif = treeXML.find('Agent/Identification/PersonalIdentification/'
+                               'OfficialId/NIE/Item')
+            if nif and nif.text:
+                nif = nif.text.strip()
         if (user.has_perm('can_upload_other_users_cvn') or
            (nif and nif.upper() == user.usuario.documento.upper())):
             return True
@@ -167,29 +171,23 @@ class CVN(models.Model):
         for CVNItem in CVNItems:
             data = {}
             cvn_key = CVNItem.find('CvnItemID/CVNPK/Item').text.strip()
-            # Actividad docente (Paso 4 Editor FECYT)
-            if stCVN.MODEL_TABLE[cvn_key] == 'TesisDoctoral':
-                data = self.__dataTeaching__(CVNItem)
-            # Experiencia científica y tecnológica (Paso 5 Editor FECYT)
-            if stCVN.MODEL_TABLE[cvn_key] in ['Proyecto', 'Convenio']:
-                data = self.__dataScientificExperience__(CVNItem, cvn_key)
-            # Actividad científica y tecnológica (Paso 6 Editor FECYT)
-            # Publicación, documentos científicos y técnicos
-            if stCVN.MODEL_TABLE[cvn_key] == 'Publicacion':
-                data = self.__dataPublications__(CVNItem)
-                if data and 'tipo_de_produccion' in data:
-                    if data['tipo_de_produccion'] == 'Articulo':
-                        self.__saveData__(user, data, 'Articulo')
-                    if data['tipo_de_produccion'] == 'Libro':
-                        self.__saveData__(user, data, 'Libro')
-                    if data['tipo_de_produccion'] == 'Capitulo de Libro':
-                        self.__saveData__(user, data, 'Capitulo')
-                    continue
-             # Trabajos presentados en congresos nacionales o
-             # internacionales.
-            if stCVN.MODEL_TABLE[cvn_key] == 'Congreso':
-                data = self.__dataCongress__(CVNItem)
-            # Almacena los datos
+            if cvn_key in stCVN.MODEL_TABLE:
+                if stCVN.MODEL_TABLE[cvn_key] == 'TesisDoctoral':
+                    data = self.__dataTeaching__(CVNItem)
+                if stCVN.MODEL_TABLE[cvn_key] in ['Proyecto', 'Convenio']:
+                    data = self.__dataScientificExperience__(CVNItem, cvn_key)
+                if stCVN.MODEL_TABLE[cvn_key] == 'Publicacion':
+                    data = self.__dataPublications__(CVNItem)
+                    if data and 'tipo_de_produccion' in data:
+                        if data['tipo_de_produccion'] == 'Articulo':
+                            self.__saveData__(user, data, 'Articulo')
+                        if data['tipo_de_produccion'] == 'Libro':
+                            self.__saveData__(user, data, 'Libro')
+                        if data['tipo_de_produccion'] == 'Capitulo de Libro':
+                            self.__saveData__(user, data, 'Capitulo')
+                        continue
+                if stCVN.MODEL_TABLE[cvn_key] == 'Congreso':
+                    data = self.__dataCongress__(CVNItem)
             if data:
                 self.__saveData__(user, data, stCVN.MODEL_TABLE[cvn_key])
 
