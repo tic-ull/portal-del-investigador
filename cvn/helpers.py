@@ -171,32 +171,12 @@ def handleOldCVN(cvn, investCVN):
     file_move_safe(oldPath, os.path.join(newPath, newName))
 
 
-# TODO: Añadir esta funcion al modelo del Investigador
-def getDataCVN(usuario):
-    """
-        Función que devuelve un diccionario con los datos
-        a mostrar del CVN del usuario.
-
-        Variables:
-        - nif: NIF/NIE del usuario.
-    """
-    context = {}
-    context['CVN'] = True
-    try:
-        context['Publicaciones'] = usuario.publicacion_set\
-            .order_by('-fecha', 'titulo')
-        context['Congresos'] = usuario.congreso_set\
-            .order_by('-fecha_realizacion', 'titulo')
-        context['Proyectos'] = usuario.proyecto_set\
-            .order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['Convenios'] = usuario.convenio_set\
-            .order_by('-fecha_de_inicio', 'denominacion_del_proyecto')
-        context['TesisDoctorales'] = usuario.tesisdoctoral_set\
-            .order_by('-fecha_de_lectura', 'titulo')
-    except ObjectDoesNotExist:
-        context['CVN'] = False
-    return context
-
+def saveProductionToContext(usuario, context):
+    context['Publicaciones'] = usuario.publicacion_set.all()
+    context['Congresos'] = usuario.congreso_set.all()
+    context['Proyectos'] = usuario.proyecto_set.all()
+    context['Convenios'] = usuario.convenio_set.all()
+    context['TesisDoctorales'] = usuario.tesisdoctoral_set.all()
 
 def dataCVNSession(investCVN=None):
     """

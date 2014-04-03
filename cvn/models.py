@@ -420,7 +420,6 @@ class CVN(models.Model):
         return dataCVN
 
 
-# Modelo para almacenar los datos del investigador del FECYT
 class Usuario(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
@@ -535,6 +534,7 @@ class Publicacion(models.Model):
 
     class Meta:
         verbose_name_plural = u'Publicaciones'
+        ordering = ['-fecha', 'titulo']
 
 
 class Articulo(Publicacion):
@@ -657,6 +657,7 @@ class Congreso(models.Model):
 
     class Meta:
         verbose_name_plural = u'Congresos'
+        ordering = ['-fecha_realizacion', 'titulo']
 
 
 ################### Experiencia científica y tecnológica ####################
@@ -815,6 +816,7 @@ class Proyecto(models.Model):
 
     class Meta:
         verbose_name_plural = u'Proyectos'
+        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
 
 
 class Convenio(models.Model):
@@ -961,6 +963,7 @@ class Convenio(models.Model):
 
     class Meta:
         verbose_name_plural = u'Convenios'
+        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
 
 
 ############################ Actividad Docente ##########################
@@ -1021,3 +1024,6 @@ class TesisDoctoral(models.Model):
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+    class Meta:
+        verbose_name_plural = u'Tesis Doctorales'
+        ordering = ['-fecha_de_lectura', 'titulo']

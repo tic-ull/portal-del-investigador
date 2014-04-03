@@ -2,14 +2,14 @@
 
 from cvn import settings as stCVN
 from cvn.forms import UploadCVNForm
-from cvn.helpers import (handleOldCVN, getDataCVN, setCVNFileName, dataCVNSession)
+from cvn.helpers import (handleOldCVN, setCVNFileName, dataCVNSession, saveProductionToContext)
 from cvn.models import FECYT, CVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
 from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 import datetime
 import logging
@@ -37,9 +37,9 @@ def index(request):
         return HttpResponseRedirect(reverse('logout'))
     cvn = user.usuario.cvn
     if cvn:
-        context.update(getDataCVN(user.usuario))
+        context['CVN'] = True
         context.update(dataCVNSession(cvn))
-
+        saveProductionToContext(user.usuario, context)
     context['form'] = UploadCVNForm()
     # Envío del nuevo CVN
     if request.method == 'POST':
@@ -76,10 +76,9 @@ def index(request):
                 else:
                     context['errors'] = u'El NIF/NIE del CVN no coincide\
                                           con el del usuario.'
-#        else:
-#            context['errors'] = u'El CVN tiene que ser un PDF.'
         context['form'] = form
-    return render_to_response("index.html", context, RequestContext(request))
+
+    return render(request, "index.html", context)
 
 
 @login_required
@@ -106,6 +105,5 @@ def ull_report(request):
     """ Informe completo de la actividad de la ULL,
         extraida del usuario especial ULL """
     context = {}
-    context.update(getDataCVN('00000000A'))
-    return render_to_response("ull_report.html", context,
-                              RequestContext(request))
+    saveProductionToContext(request.user.usuario, context)
+    return render(request, "ull_report.html", context)
