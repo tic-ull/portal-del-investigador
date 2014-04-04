@@ -84,6 +84,8 @@ class Usuario(models.Model):
                                null=True, blank=True)
     documento = models.CharField(u'Documento', max_length=20,
                                  blank=True, null=True, unique=True)
+    rrhh_code = models.CharField(u'Código persona', max_length=20,
+                                 blank=True, null=True, unique=True)
 
     def __unicode__(self):
         return self.user.username

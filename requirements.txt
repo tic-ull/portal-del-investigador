@@ -1,15 +1,10 @@
 Django
 django_extensions
-<<<<<<< HEAD
 django-debug-toolbar
 psycopg2
-south
 ipython
 Pillow
-Werkzeug
-=======
 south							                        # DB migrations
-Pillow							                        # Images
 mysql-python						                    # MySQL
 suds							                        # Web Services
 lxml							                        # Parsing XML
@@ -17,21 +12,10 @@ dateutils						                        # Fecha de caducidad
 python-slugify						                    # filename desde un String
 django-bootstrap-toolkit==2.8.0				            # Bootstrap
 -e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
->>>>>>> pdf_departamento
 gunicorn
-mysql-python
-suds                                                    # Web Services
-lxml                                                    # Parsing XML
-dateutils                                               # Fecha de caducidad
-python-slugify                                          # filename desde un String
-django-bootstrap-toolkit==2.8.0                         # Bootstrap
--e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS - ULL
 selenium
 joblib
 reportlab
-<<<<<<< HEAD
 django-crequest
-=======
 Werkzeug						                        # Werkzeug debugger
 simplejson
->>>>>>> pdf_departamento
