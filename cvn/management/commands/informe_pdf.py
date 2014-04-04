@@ -98,11 +98,10 @@ class Informe_pdf:
         tableInv = []
         for inv in self.investigadores:
             tableInv.append([
-                inv.nombre,
-                inv.apellido1,
-                inv.apellido2,
-                inv.categoria.nombre]
-            )
+                inv['nombre'],
+                inv['apellido1'],
+                inv['apellido2'],
+                inv['categoria']])
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
         data = [HEADERS] + tableInv

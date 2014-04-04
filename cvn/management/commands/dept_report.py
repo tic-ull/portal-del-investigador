@@ -8,6 +8,7 @@ from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from optparse import make_option
 from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
+import simplejson as json
 import urllib
 import ast
 
@@ -77,14 +78,15 @@ class Command(BaseCommand):
 #            )
 
         for departamento in departamentos:
-            print departamento
-            self.createReport(year, departamento)
+            if not departamento.codigo == 'INVES':
+                self.createReport(year, departamento)
 
     def createReport(self, year, departamento):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
          convenios, tesis) = self.getData(year, departamento)
-        print 'Generando PDF para %s ... ' % (departamento.nombre)
+        print 'Generando PDF para [%s-%s] %s ... ' % (
+            departamento.id, departamento.codigo, departamento.nombre)
         if investigadores:
             informe = Informe_pdf(year, departamento, investigadores,
                                   articulos, libros, capitulosLibro,
@@ -120,12 +122,28 @@ class Command(BaseCommand):
              'cod_departamento=%s&ano=%s' % (st.WS_SERVER_URL,
                                              dept.codigo,
                                              year)
-        invesRRHH = urllib.urlopen(WS).read()
-        invesRRHH = invesRRHH.replace('[', '').replace(']', '').split(', ')
-        investigadores = GrupoinvestInvestigador.objects.filter(
-            cod_persona__in=invesRRHH
-        ).order_by('apellido1', 'apellido2')
-
-        lista_dni = [investigador.nif for investigador in investigadores]
-        usuarios = Usuario.objects.filter(documento__in=lista_dni)
+        invesRRHH = json.loads(urllib.urlopen(WS).read())
+        inves = list()
+        for inv in invesRRHH:
+            WS = '%sodin/core/rest/get_info_pdi?cod_persona=%s&ano=%s' % (
+                st.WS_SERVER_URL, inv, year)
+            dataInv = json.loads(urllib.urlopen(WS).read())
+            dataInv = self.checkInves(dataInv)
+            inves.append(dataInv)
+        investigadores = sorted(inves, key=lambda k: "%s %s" % (
+            k['apellido1'], k['apellido2']))
+        usuarios = Usuario.objects.filter(
+            documento__in=GrupoinvestInvestigador.objects.filter(
+                cod_persona__in=invesRRHH).values('nif'))
         return investigadores, usuarios
+
+    def checkInves(self, inv):
+        if not 'nombre' in inv:
+            inv['nombre'] = ''
+        if not 'apellido1' in inv:
+            inv['apellido1'] = ''
+        if not 'apellido2' in inv:
+            inv['apellido2'] = ''
+        if not 'categoria' in inv:
+            inv['categoria'] = ''
+        return inv
