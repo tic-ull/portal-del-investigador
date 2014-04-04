@@ -12,6 +12,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import datetime
 import logging
 
@@ -124,6 +125,7 @@ def ull_report(request):
     """ Informe completo de la actividad de la ULL,
         extraida del usuario especial ULL """
     context = {}
-    context.update(getDataCVN('00000000A'))
+    usuario = User.objects.get(username='informe_ull').usuario
+    context.update(getDataCVN(usuario))
     return render_to_response("ull_report.html", context,
                               RequestContext(request))
