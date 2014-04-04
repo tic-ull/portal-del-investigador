@@ -1,7 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.helpers import (searchDataProduccionCientifica, formatDate)
 from cvn.utils import noneToZero
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -256,8 +255,8 @@ class CVN(models.Model):
                 'Date/' + node + '/DayMonthYear/Item').text.strip())
         # Fecha de Inicio: Año
         elif treeXML.find('Date/' + node + '/Year'):
-            dataCVN[u'fecha_de_inicio'] = unicode(formatDate(treeXML.find(
-                'Date/' + node + '/Year/Item').text.strip()))
+            dataCVN[u'fecha_de_inicio'] = unicode(treeXML.find(
+                'Date/' + node + '/Year/Item').text.strip() + '-1-1')
         # Fecha de Finalización
         if stCVN.MODEL_TABLE[typeItem] == u'Proyecto':
             if (treeXML.find('Date/EndDate/DayMonthYear') and
@@ -266,8 +265,8 @@ class CVN(models.Model):
                     'Date/EndDate/DayMonthYear/Item').text.strip())
             elif (treeXML.find('Date/EndDate/Year') and
                   treeXML.find('Date/EndDate/Year/Item').text):
-                dataCVN[u'fecha_de_fin'] = unicode(formatDate(treeXML.find(
-                    'Date/EndDate/Year/Item').text.strip()))
+                dataCVN[u'fecha_de_fin'] = unicode(treeXML.find(
+                    'Date/EndDate/Year/Item').text.strip() + '-1-1')
         # Duración: P <num_years> Y <num_months> M <num_days> D
         if (treeXML.find('Date/Duration') and
            treeXML.find('Date/Duration/Item').text):
@@ -339,8 +338,8 @@ class CVN(models.Model):
                     'Date/OnlyDate/DayMonthYear/Item').text.strip())
             # Fecha: Año
             elif treeXML.find('Date/OnlyDate/Year'):
-                dataCVN[u'fecha'] = unicode(formatDate(treeXML.find(
-                    'Date/OnlyDate/Year/Item').text.strip()))
+                dataCVN[u'fecha'] = unicode(treeXML.find(
+                    'Date/OnlyDate/Year/Item').text.strip() + '-1-1')
             if typePublication != u'Libro' and treeXML.find('ExternalPK'):
                 dataCVN[u'issn'] = unicode(treeXML.find(
                     'ExternalPK/Code/Item').text.strip())
@@ -369,18 +368,26 @@ class CVN(models.Model):
         return dataCVN
 
     def __saveData__(self, user=None, dataCVN={}, tableName=None):
-        # Se comprueba si existe el dataCVN
-        searchData = searchDataProduccionCientifica(dataCVN)
-        if not searchData:
-            searchData = {'pk': stCVN.INVALID_SEARCH}
+        dataSearch = self.__getDataSearch__(dataCVN)
+        if not dataSearch:
+            dataSearch = {'pk': stCVN.INVALID_SEARCH}
         table = get_model('cvn', tableName)
         try:
-            reg = table.objects.get(**searchData)
+            reg = table.objects.get(**dataSearch)
             table.objects.filter(pk=reg.id).update(**dataCVN)
         except ObjectDoesNotExist:
             reg = table.objects.create(**dataCVN)
         reg.usuario.add(user.usuario)
         reg.save()
+
+    def __getDataSearch__(self, dataCVN=None):
+        itemCVN = {}
+        if 'denominacion_del_proyecto' in dataCVN:
+            itemCVN['denominacion_del_proyecto__iexact'] = (
+                dataCVN['denominacion_del_proyecto'])
+        elif 'titulo' in dataCVN:
+            itemCVN['titulo__iexact'] = dataCVN['titulo']
+        return itemCVN
 
     def __dataCongress__(self, treeXML):
         dataCVN = {}
@@ -401,16 +408,20 @@ class CVN(models.Model):
                         'Date/OnlyDate/DayMonthYear/Item').text.strip())
                 # Fecha: Año
                 elif itemXML.find('Date/OnlyDate/Year'):
-                    dataCVN[u'fecha_realizacion'] = unicode(formatDate(
-                        itemXML.find('Date/OnlyDate/Year/Item').text.strip()))
+                    dataCVN[u'fecha_realizacion'] = unicode(
+                        itemXML.find(
+                            'Date/OnlyDate/Year/Item'
+                        ).text.strip() + '-1-1')
                 # Fecha: Dia/Mes/Año
                 if itemXML.find('Date/EndDate/DayMonthYear'):
                     dataCVN[u'fecha_finalizacion'] = unicode(itemXML.find(
                         'Date/EndDate/DayMonthYear/Item').text.strip())
                 # Fecha: Año
                 elif itemXML.find('Date/EndDate/Year'):
-                    dataCVN[u'fecha_finalizacion'] = unicode(formatDate(
-                        itemXML.find('Date/EndDate/Year/Item').text.strip()))
+                    dataCVN[u'fecha_finalizacion'] = unicode(
+                        itemXML.find(
+                            'Date/EndDate/Year/Item'
+                        ).text.strip() + '-1-1')
                 if itemXML.find('Place/City'):
                     dataCVN[u'ciudad_de_realizacion'] = unicode(itemXML.find(
                         'Place/City/Item').text.strip())
@@ -420,7 +431,6 @@ class CVN(models.Model):
         return dataCVN
 
 
-# Modelo para almacenar los datos del investigador del FECYT
 class Usuario(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
@@ -535,6 +545,7 @@ class Publicacion(models.Model):
 
     class Meta:
         verbose_name_plural = u'Publicaciones'
+        ordering = ['-fecha', 'titulo']
 
 
 class Articulo(Publicacion):
@@ -657,6 +668,7 @@ class Congreso(models.Model):
 
     class Meta:
         verbose_name_plural = u'Congresos'
+        ordering = ['-fecha_realizacion', 'titulo']
 
 
 ################### Experiencia científica y tecnológica ####################
@@ -815,6 +827,7 @@ class Proyecto(models.Model):
 
     class Meta:
         verbose_name_plural = u'Proyectos'
+        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
 
 
 class Convenio(models.Model):
@@ -961,6 +974,7 @@ class Convenio(models.Model):
 
     class Meta:
         verbose_name_plural = u'Convenios'
+        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
 
 
 ############################ Actividad Docente ##########################
@@ -1021,3 +1035,7 @@ class TesisDoctoral(models.Model):
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+
+    class Meta:
+        verbose_name_plural = u'Tesis Doctorales'
+        ordering = ['-fecha_de_lectura', 'titulo']

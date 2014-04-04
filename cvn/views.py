@@ -1,23 +1,18 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.helpers import (handleOldCVN, getDataCVN, dataCVNSession)
+from cvn.utils import (saveScientificProductionToContext, getDataCVN,
+                       movOldCVN)
 from cvn.models import FECYT, CVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.forms.util import ErrorList
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.shortcuts import render
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-# -- Vistas Aplicación CVN --
-def main(request):
-    return HttpResponseRedirect(reverse('index'))
 
 
 @login_required
@@ -35,10 +30,10 @@ def index(request):
         return HttpResponseRedirect(reverse('logout'))
     cvn = user.usuario.cvn
     if cvn:
-        context.update(getDataCVN(user.usuario))
-        context.update(dataCVNSession(cvn))
+        context['CVN'] = True
+        context.update(getDataCVN(cvn))
+        saveScientificProductionToContext(user.usuario, context)
 
-    # Upload CVN
     context['form'] = UploadCVNForm()
     if request.method == 'POST':
         formCVN = UploadCVNForm(request.POST, request.FILES)
@@ -47,7 +42,7 @@ def index(request):
             xmlFECYT = FECYT().getXML(filePDF)
             if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
                 if cvn:
-                    handleOldCVN(filePDF, cvn)
+                    movOldCVN(cvn)
                     cvn.delete()
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
@@ -66,7 +61,7 @@ def index(request):
                         [u'El NIF/NIE del CVN no coincide'
                          ' con el de su usuario.'])
         context['form'] = formCVN
-    return render_to_response("index.html", context, RequestContext(request))
+    return render(request, "index.html", context)
 
 
 @login_required
@@ -93,6 +88,5 @@ def ull_report(request):
     """ Informe completo de la actividad de la ULL,
     extraida del usuario especial ULL """
     context = {}
-    context.update(getDataCVN('00000000A'))
-    return render_to_response("ull_report.html", context,
-                              RequestContext(request))
+    saveScientificProductionToContext(request.user.usuario, context)
+    return render(request, "ull_report.html", context)

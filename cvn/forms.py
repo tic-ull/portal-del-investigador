@@ -3,7 +3,6 @@
 from cvn.models import CVN
 from django import forms
 from cvn import settings as stCVN
-from cvn.helpers import setCVNFileName
 from django.core.files.base import ContentFile
 import datetime
 
@@ -20,8 +19,8 @@ class UploadCVNForm(forms.ModelForm):
     def save(self, user=None, fileXML=None, commit=True):
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.fecha_up = datetime.date.today()
-        if user:
-            cvn.cvn_file.name = setCVNFileName(user)
+        if user and user.username:
+            cvn.cvn_file.name = u'CVN-%s.pdf' % (user.username)
         if fileXML:
             cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                               ContentFile(fileXML), save=False)
