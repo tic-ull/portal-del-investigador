@@ -18,11 +18,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# -- Vistas Aplicación CVN --
-def main(request):
-    return HttpResponseRedirect(reverse('index'))
-
-
 @login_required
 def index(request):
     context = {}
