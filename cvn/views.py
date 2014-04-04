@@ -56,9 +56,7 @@ def index(request):
                 user.usuario.cvn = cvn
                 user.usuario.save()
                 cvn.insertXML(user)
-                request.session['message'] = u'Se ha actualizado su CVN \
-                 con éxito.'
-                return HttpResponseRedirect(reverse("cvn.views.index"))
+                context['message'] = u'CVN actualizado con éxito.'
             else:
                 if not xmlFECYT:
                     formCVN.errors['cvn_file'] = ErrorList(
@@ -93,7 +91,7 @@ def downloadCVN(request):
 @login_required
 def ull_report(request):
     """ Informe completo de la actividad de la ULL,
-        extraida del usuario especial ULL """
+    extraida del usuario especial ULL """
     context = {}
     context.update(getDataCVN('00000000A'))
     return render_to_response("ull_report.html", context,
