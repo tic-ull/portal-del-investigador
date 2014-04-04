@@ -7,7 +7,7 @@ from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from optparse import make_option
-from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
+#from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
 import simplejson as json
 import urllib
 
@@ -68,14 +68,14 @@ class Command(BaseCommand):
          convenios, tesis) = self.getData(year, departamento)
         print 'Generando PDF para [%s] %s ... ' % (
             departamento['cod_departamento'], departamento['nombre'])
-#        if investigadores:
-#            informe = Informe_pdf(year, departamento, investigadores,
-#                                  articulos, libros, capitulosLibro,
-#                                  congresos, proyectos, convenios, tesis)
-#            informe.go()
-#            print 'OK\n'
-#        else:
-#            print 'ERROR: No hay Investigadores\n'
+        if investigadores:
+            informe = Informe_pdf(year, departamento, investigadores,
+                                  articulos, libros, capitulosLibro,
+                                  congresos, proyectos, convenios, tesis)
+            informe.go()
+            print 'OK\n'
+        else:
+            print 'ERROR: No hay Investigadores\n'
 
     def getData(self, year, departamento):
         investigadores, usuarios = self.getInvestigadores(
@@ -99,23 +99,19 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def getInvestigadores(self, year, dept):
-        WS = '%sodin/core/rest/get_pdi_vigente?' \
-             'cod_departamento=%s&ano=%s' % (st.WS_SERVER_URL,
-                                             dept.codigo,
-                                             year)
+        WS = '%sget_pdi_vigente?cod_departamento=%s&ano=%s'\
+            % (st.WS_SERVER_URL, dept['cod_departamento'], year)
         invesRRHH = json.loads(urllib.urlopen(WS).read())
         inves = list()
         for inv in invesRRHH:
-            WS = '%sodin/core/rest/get_info_pdi?cod_persona=%s&ano=%s' % (
+            WS = '%sget_info_pdi?cod_persona=%s&ano=%s' % (
                 st.WS_SERVER_URL, inv, year)
             dataInv = json.loads(urllib.urlopen(WS).read())
             dataInv = self.checkInves(dataInv)
             inves.append(dataInv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
             k['apellido1'], k['apellido2']))
-        usuarios = Usuario.objects.filter(
-            documento__in=GrupoinvestInvestigador.objects.filter(
-                cod_persona__in=invesRRHH).values('nif'))
+        usuarios = Usuario.objects.filter(rrhh_code__in=invesRRHH)
         return investigadores, usuarios
 
     def checkInves(self, inv):
