@@ -1,18 +1,15 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.helpers import (handleOldCVN, getDataCVN, setCVNFileName,
-                         dataCVNSession)
+from cvn.helpers import (handleOldCVN, getDataCVN, dataCVNSession)
 from cvn.models import FECYT, CVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
-from django.core.files.base import ContentFile
 from django.core.urlresolvers import reverse
 from django.forms.util import ErrorList
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-import datetime
 import logging
 
 logger = logging.getLogger(__name__)
@@ -44,8 +41,8 @@ def index(request):
     # Upload CVN
     context['form'] = UploadCVNForm()
     if request.method == 'POST':
-        form = UploadCVNForm(request.POST, request.FILES)
-        if form.is_valid():
+        formCVN = UploadCVNForm(request.POST, request.FILES)
+        if formCVN.is_valid():
             filePDF = request.FILES['cvn_file']
             xmlFECYT = FECYT().getXML(filePDF)
             if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
@@ -54,16 +51,8 @@ def index(request):
                     cvn.delete()
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
-
-                cvn = form.save(commit=False)
-                cvn.fecha_up = datetime.date.today()
-                filePDF.name = setCVNFileName(user)
-                cvn.cvnfile = filePDF
-                cvn.xml_file.save(filePDF.name.replace('pdf', 'xml'),
-                                  ContentFile(xmlFECYT), save=False)
-                cvn.fecha_cvn = CVN().getXMLDate(xmlFECYT)
+                cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=False)
                 cvn.save()
-
                 user.usuario.cvn = cvn
                 user.usuario.save()
                 cvn.insertXML(user)
@@ -72,13 +61,13 @@ def index(request):
                 return HttpResponseRedirect(reverse("cvn.views.index"))
             else:
                 if not xmlFECYT:
-                    form.errors['cvn_file'] = ErrorList(
+                    formCVN.errors['cvn_file'] = ErrorList(
                         [u'El CVN no es válido para la FECYT.'])
                 else:
-                    form.errors['cvn_file'] = ErrorList(
+                    formCVN.errors['cvn_file'] = ErrorList(
                         [u'El NIF/NIE del CVN no coincide'
                          ' con el de su usuario.'])
-        context['form'] = form
+        context['form'] = formCVN
     return render_to_response("index.html", context, RequestContext(request))
 
 
