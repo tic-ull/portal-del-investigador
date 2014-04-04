@@ -118,12 +118,12 @@ class CVN(models.Model):
 
         nif = treeXML.find('Agent/Identification/'
                            'PersonalIdentification/OfficialId/DNI/Item')
-        if nif and nif.text:
+        if nif is not None and nif.text:
             nif = nif.text.strip()
         else:
             nif = treeXML.find('Agent/Identification/PersonalIdentification/'
                                'OfficialId/NIE/Item')
-            if nif and nif.text:
+            if nif is not None and nif.text:
                 nif = nif.text.strip()
         if (user.has_perm('can_upload_other_users_cvn') or
            (nif and nif.upper() == user.usuario.documento.upper())):
