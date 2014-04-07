@@ -3,13 +3,14 @@
 from cvn.models import (Usuario, Congreso, Proyecto, Convenio,
                         TesisDoctoral, Articulo, Libro,
                         CVN, Capitulo)
-from django.contrib import admin, messages
-from cvn.utilsCVN import UtilidadesCVNtoXML, UtilidadesXMLtoBBDD
-from django.core.files.base import ContentFile
+from django.contrib import admin  # , messages
+#from cvn.utilsCVN import UtilidadesCVNtoXML, UtilidadesXMLtoBBDD
+#from django.core.files.base import ContentFile
 
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class PublicacionCongresoTesisAdmin(admin.ModelAdmin):
     search_fields = ('titulo',
@@ -35,11 +36,7 @@ class CVNAdmin(admin.ModelAdmin):
                      'usuario__documento',)
     ordering = ('updated_at',)
 
-    def pdf_to_xml(self, request, queryset):
-        """
-         Obtiene la representación XML del CVN-PDF realizando
-         una llamada al webservice de la FECYT
-        """
+    '''def pdf_to_xml(self, request, queryset):
         for qs in queryset:
             xmlFecyt = UtilidadesCVNtoXML(filePDF=qs.cvn_file).getXML()
             if xmlFecyt:  # Formato FECYT
@@ -66,10 +63,6 @@ class CVNAdmin(admin.ModelAdmin):
 
 
     def xml_to_bbdd(self, request, queryset):
-        """
-         Introduce la información contenida en el XML en las
-         tablas correspondientes de la BBDD.
-        """
         for qs in queryset:
             util = UtilidadesXMLtoBBDD(fileXML=qs.xml_file)
             util.insertarXML(qs.usuario.user)
@@ -82,6 +75,7 @@ class CVNAdmin(admin.ModelAdmin):
 
     xml_to_bbdd.short_description = u"XML->BBDD. Importar los datos de \
         los CVN-XML seleccionados a la BBDD local"
+    '''
 
 admin.site.register(Usuario)
 admin.site.register(Articulo, PublicacionCongresoTesisAdmin)
