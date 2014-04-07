@@ -2,8 +2,11 @@ from django.db.models.signals import post_save, post_syncdb
 from cvn.models import Usuario
 from django.contrib.auth.models import User, Permission
 from crequest.middleware import CrequestMiddleware
-from django.db import connection
-import logging
+#from django.db import connection
+from django.conf import settings as st
+import simplejson as json
+import urllib
+#import logging
 
 
 def create_profile(sender, instance, created, **kwargs):
@@ -16,7 +19,9 @@ def create_profile(sender, instance, created, **kwargs):
         if request:
             cas_info = request.session['attributes']
             usuario.documento = cas_info['NumDocumento']
-            #usuario.rrhh_code = json.loads(urllib.urlopen(WS).read())
+            WS = st.WS_SERVER_URL + 'get_codpersona?nif='\
+                + cas_info['NumDocumento']
+            usuario.rrhh_code = json.loads(urllib.urlopen(WS).read())
         usuario.save()
 
 post_save.connect(create_profile, sender=User,
