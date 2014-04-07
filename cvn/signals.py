@@ -1,8 +1,8 @@
-from django.db.models.signals import post_save, post_syncdb
+from crequest.middleware import CrequestMiddleware
 from cvn.models import Usuario
 from django.contrib.auth.models import User, Permission
-from crequest.middleware import CrequestMiddleware
 from django.db import connection
+from django.db.models.signals import post_save, post_syncdb
 import logging
 
 
