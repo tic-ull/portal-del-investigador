@@ -19,14 +19,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['CVN'])
 
-        # Adding model 'Usuario'
-        db.create_table(u'cvn_usuario', (
+        # Adding model 'UserProfile'
+        db.create_table(u'cvn_userprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('cvn', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.CVN'], unique=True, null=True, on_delete=models.SET_NULL, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
+            ('cvn', self.gf('django.db.models.fields.related.OneToOneField')(related_name='user_profile', null=True, on_delete=models.SET_NULL, to=orm['cvn.CVN'], blank=True, unique=True)),
             ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
         ))
-        db.send_create_signal(u'cvn', ['Usuario'])
+        db.send_create_signal(u'cvn', ['UserProfile'])
 
         # Adding model 'Publicacion'
         db.create_table(u'cvn_publicacion', (
@@ -69,14 +69,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['Publicacion'])
 
-        # Adding M2M table for field usuario on 'Publicacion'
-        m2m_table_name = db.shorten_name(u'cvn_publicacion_usuario')
+        # Adding M2M table for field user_profile on 'Publicacion'
+        m2m_table_name = db.shorten_name(u'cvn_publicacion_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('publicacion', models.ForeignKey(orm[u'cvn.publicacion'], null=False)),
-            ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['publicacion_id', 'usuario_id'])
+        db.create_unique(m2m_table_name, ['publicacion_id', 'userprofile_id'])
 
         # Adding model 'Articulo'
         db.create_table(u'cvn_articulo', (
@@ -136,14 +136,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['Congreso'])
 
-        # Adding M2M table for field usuario on 'Congreso'
-        m2m_table_name = db.shorten_name(u'cvn_congreso_usuario')
+        # Adding M2M table for field user_profile on 'Congreso'
+        m2m_table_name = db.shorten_name(u'cvn_congreso_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('congreso', models.ForeignKey(orm[u'cvn.congreso'], null=False)),
-            ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['congreso_id', 'usuario_id'])
+        db.create_unique(m2m_table_name, ['congreso_id', 'userprofile_id'])
 
         # Adding model 'Proyecto'
         db.create_table(u'cvn_proyecto', (
@@ -189,14 +189,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['Proyecto'])
 
-        # Adding M2M table for field usuario on 'Proyecto'
-        m2m_table_name = db.shorten_name(u'cvn_proyecto_usuario')
+        # Adding M2M table for field user_profile on 'Proyecto'
+        m2m_table_name = db.shorten_name(u'cvn_proyecto_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('proyecto', models.ForeignKey(orm[u'cvn.proyecto'], null=False)),
-            ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['proyecto_id', 'usuario_id'])
+        db.create_unique(m2m_table_name, ['proyecto_id', 'userprofile_id'])
 
         # Adding model 'Convenio'
         db.create_table(u'cvn_convenio', (
@@ -238,14 +238,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['Convenio'])
 
-        # Adding M2M table for field usuario on 'Convenio'
-        m2m_table_name = db.shorten_name(u'cvn_convenio_usuario')
+        # Adding M2M table for field user_profile on 'Convenio'
+        m2m_table_name = db.shorten_name(u'cvn_convenio_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('convenio', models.ForeignKey(orm[u'cvn.convenio'], null=False)),
-            ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['convenio_id', 'usuario_id'])
+        db.create_unique(m2m_table_name, ['convenio_id', 'userprofile_id'])
 
         # Adding model 'TesisDoctoral'
         db.create_table(u'cvn_tesisdoctoral', (
@@ -270,28 +270,28 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'cvn', ['TesisDoctoral'])
 
-        # Adding M2M table for field usuario on 'TesisDoctoral'
-        m2m_table_name = db.shorten_name(u'cvn_tesisdoctoral_usuario')
+        # Adding M2M table for field user_profile on 'TesisDoctoral'
+        m2m_table_name = db.shorten_name(u'cvn_tesisdoctoral_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('tesisdoctoral', models.ForeignKey(orm[u'cvn.tesisdoctoral'], null=False)),
-            ('usuario', models.ForeignKey(orm[u'cvn.usuario'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['tesisdoctoral_id', 'usuario_id'])
+        db.create_unique(m2m_table_name, ['tesisdoctoral_id', 'userprofile_id'])
 
 
     def backwards(self, orm):
         # Deleting model 'CVN'
         db.delete_table(u'cvn_cvn')
 
-        # Deleting model 'Usuario'
-        db.delete_table(u'cvn_usuario')
+        # Deleting model 'UserProfile'
+        db.delete_table(u'cvn_userprofile')
 
         # Deleting model 'Publicacion'
         db.delete_table(u'cvn_publicacion')
 
-        # Removing M2M table for field usuario on 'Publicacion'
-        db.delete_table(db.shorten_name(u'cvn_publicacion_usuario'))
+        # Removing M2M table for field user_profile on 'Publicacion'
+        db.delete_table(db.shorten_name(u'cvn_publicacion_user_profile'))
 
         # Deleting model 'Articulo'
         db.delete_table(u'cvn_articulo')
@@ -305,26 +305,26 @@ class Migration(SchemaMigration):
         # Deleting model 'Congreso'
         db.delete_table(u'cvn_congreso')
 
-        # Removing M2M table for field usuario on 'Congreso'
-        db.delete_table(db.shorten_name(u'cvn_congreso_usuario'))
+        # Removing M2M table for field user_profile on 'Congreso'
+        db.delete_table(db.shorten_name(u'cvn_congreso_user_profile'))
 
         # Deleting model 'Proyecto'
         db.delete_table(u'cvn_proyecto')
 
-        # Removing M2M table for field usuario on 'Proyecto'
-        db.delete_table(db.shorten_name(u'cvn_proyecto_usuario'))
+        # Removing M2M table for field user_profile on 'Proyecto'
+        db.delete_table(db.shorten_name(u'cvn_proyecto_user_profile'))
 
         # Deleting model 'Convenio'
         db.delete_table(u'cvn_convenio')
 
-        # Removing M2M table for field usuario on 'Convenio'
-        db.delete_table(db.shorten_name(u'cvn_convenio_usuario'))
+        # Removing M2M table for field user_profile on 'Convenio'
+        db.delete_table(db.shorten_name(u'cvn_convenio_user_profile'))
 
         # Deleting model 'TesisDoctoral'
         db.delete_table(u'cvn_tesisdoctoral')
 
-        # Removing M2M table for field usuario on 'TesisDoctoral'
-        db.delete_table(db.shorten_name(u'cvn_tesisdoctoral_usuario'))
+        # Removing M2M table for field user_profile on 'TesisDoctoral'
+        db.delete_table(db.shorten_name(u'cvn_tesisdoctoral_user_profile'))
 
 
     models = {
@@ -365,15 +365,15 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'cvn.articulo': {
-            'Meta': {'object_name': 'Articulo', '_ormbases': [u'cvn.Publicacion']},
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Articulo', '_ormbases': [u'cvn.Publicacion']},
             u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'cvn.capitulo': {
-            'Meta': {'object_name': 'Capitulo', '_ormbases': [u'cvn.Publicacion']},
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Capitulo', '_ormbases': [u'cvn.Publicacion']},
             u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'cvn.congreso': {
-            'Meta': {'object_name': 'Congreso'},
+            'Meta': {'ordering': "['-fecha_realizacion', 'titulo']", 'object_name': 'Congreso'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'ciudad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -408,11 +408,11 @@ class Migration(SchemaMigration):
             'titulo_publicacion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.convenio': {
-            'Meta': {'object_name': 'Convenio'},
+            'Meta': {'ordering': "['-fecha_de_inicio', 'denominacion_del_proyecto']", 'object_name': 'Convenio'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'calidad_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -448,7 +448,7 @@ class Migration(SchemaMigration):
             'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
             'tipo_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.cvn': {
             'Meta': {'object_name': 'CVN'},
@@ -459,12 +459,16 @@ class Migration(SchemaMigration):
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})
         },
+        u'cvn.fecyt': {
+            'Meta': {'object_name': 'FECYT', 'managed': 'False'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
         u'cvn.libro': {
-            'Meta': {'object_name': 'Libro', '_ormbases': [u'cvn.Publicacion']},
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Libro', '_ormbases': [u'cvn.Publicacion']},
             u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'cvn.proyecto': {
-            'Meta': {'object_name': 'Proyecto'},
+            'Meta': {'ordering': "['-fecha_de_inicio', 'denominacion_del_proyecto']", 'object_name': 'Proyecto'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'aportacion_del_solicitante': ('django.db.models.fields.TextField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
@@ -504,10 +508,10 @@ class Migration(SchemaMigration):
             'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'tipo_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.publicacion': {
-            'Meta': {'object_name': 'Publicacion'},
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Publicacion'},
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'categoria': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -543,11 +547,11 @@ class Migration(SchemaMigration):
             'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.tesisdoctoral': {
-            'Meta': {'object_name': 'TesisDoctoral'},
+            'Meta': {'ordering': "['-fecha_de_lectura', 'titulo']", 'object_name': 'TesisDoctoral'},
             'autor': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'calificacion': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'ciudad_del_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -566,14 +570,14 @@ class Migration(SchemaMigration):
             'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'universidad_que_titula': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'usuario': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.Usuario']", 'null': 'True', 'blank': 'True'})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
-        u'cvn.usuario': {
-            'Meta': {'object_name': 'Usuario'},
-            'cvn': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.CVN']", 'unique': 'True', 'null': 'True', 'on_delete': 'models.SET_NULL', 'blank': 'True'}),
+        u'cvn.userprofile': {
+            'Meta': {'object_name': 'UserProfile'},
+            'cvn': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user_profile'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['cvn.CVN']", 'blank': 'True', 'unique': 'True'}),
             'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
         }
     }
 

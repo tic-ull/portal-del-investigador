@@ -5,7 +5,7 @@ when you run "manage.py test".
 
 Replace this with more appropriate tests for your application.
 """
-from cvn.models import Usuario
+from cvn.models import UserProfile
 from cvn.settings import USER_WS, PASSWD_WS, URL_WS
 from cvn.utilsCVN import UtilidadesXMLtoBBDD
 from django.conf import settings as setts
@@ -358,7 +358,7 @@ class FecytWSTest(TestCase):
         #  y XMLs necesarios para los test
         xmlCVN = UtilidadesXMLtoBBDD(fileXML=fileXML.name.split('/')[-1])
         xmlCVN.insertarXML()
-        user = Usuario.objects.get(documento='123456788A')
+        user = UserProfile.objects.get(documento='123456788A')
 
         # Número de publicaciones totales
         # (Artículos, Capítulos de Libros y Libros)

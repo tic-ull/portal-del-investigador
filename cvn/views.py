@@ -27,11 +27,11 @@ def index(request):
         context['user'] = request.session['attributes']
     else:
         return HttpResponseRedirect(reverse('logout'))
-    cvn = user.usuario.cvn
+    cvn = user.profile.cvn
     if cvn:
         context['CVN'] = True
         context.update(getDataCVN(cvn))
-        saveScientificProductionToContext(user.usuario, context)
+        saveScientificProductionToContext(user.profile, context)
 
     context['form'] = UploadCVNForm()
     if request.method == 'POST':
@@ -47,9 +47,12 @@ def index(request):
                     cvn.xml_file.delete()
                 cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=False)
                 cvn.save()
-                user.usuario.cvn = cvn
-                user.usuario.save()
+                user.profile.cvn = cvn
+                user.profile.save()
                 cvn.insertXML(user)
+                context['CVN'] = True
+                context.update(getDataCVN(cvn))
+                saveScientificProductionToContext(user.profile, context)
                 context['message'] = _(u'CVN actualizado con éxito.')
             else:
                 if not xmlFECYT:
@@ -66,10 +69,10 @@ def index(request):
 @login_required
 def download_cvn(request):
     user = request.user
-    cvn = user.usuario.cvn
+    cvn = user.profile.cvn
     if cvn:
         logger.info("Download CVN: " + user.username + ' - '
-                    + user.usuario.documento)
+                    + user.profile.documento)
     try:
         filename = st.MEDIA_ROOT + '/' + cvn.cvn_file.name
         download_name = cvn.cvn_file.name.split('/')[-1]
@@ -88,5 +91,5 @@ def ull_report(request):
     """ Informe completo de la actividad de la ULL,
     extraida del usuario especial ULL """
     context = {}
-    saveScientificProductionToContext(request.user.usuario, context)
+    saveScientificProductionToContext(request.user.profile, context)
     return render(request, "ull_report.html", context)

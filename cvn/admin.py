@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import (Usuario, Congreso, Proyecto, Convenio,
+from cvn.models import (UserProfile, Congreso, Proyecto, Convenio,
                         TesisDoctoral, Articulo, Libro,
                         CVN, Capitulo)
 from django.contrib import admin
@@ -76,7 +76,7 @@ class CVNAdmin(admin.ModelAdmin):
         los CVN-XML seleccionados a la BBDD local"
     '''
 
-admin.site.register(Usuario)
+admin.site.register(UserProfile)
 admin.site.register(Articulo, PublicacionCongresoTesisAdmin)
 admin.site.register(Libro, PublicacionCongresoTesisAdmin)
 admin.site.register(Capitulo, PublicacionCongresoTesisAdmin)
