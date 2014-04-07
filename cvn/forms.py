@@ -1,9 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as stCVN
 from cvn.models import CVN
 from django import forms
-from cvn import settings as stCVN
 from django.core.files.base import ContentFile
+from django.utils.translation import ugettext_lazy as _
 import datetime
 
 
@@ -12,7 +13,7 @@ class UploadCVNForm(forms.ModelForm):
     def clean_cvn_file(self):
         fileCVN = self.cleaned_data['cvn_file']
         if fileCVN.content_type != stCVN.PDF:
-            raise forms.ValidationError("El CVN debe estar en formato PDF.")
+            raise forms.ValidationError(_("El CVN debe estar en formato PDF."))
         else:
             return fileCVN
 

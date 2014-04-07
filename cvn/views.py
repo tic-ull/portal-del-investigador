@@ -1,15 +1,15 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.utils import (saveScientificProductionToContext, getDataCVN,
-                       movOldCVN)
 from cvn.models import FECYT, CVN
+from cvn.utils import saveScientificProductionToContext, getDataCVN, movOldCVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.forms.util import ErrorList
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 def index(request):
     context = {}
     user = request.user
-    #  Mensajes con información para el usuario
     if 'message' in request.session:
         context['message'] = request.session['message']
         del request.session['message']
@@ -51,32 +50,33 @@ def index(request):
                 user.usuario.cvn = cvn
                 user.usuario.save()
                 cvn.insertXML(user)
-                context['message'] = u'CVN actualizado con éxito.'
+                context['message'] = _(u'CVN actualizado con éxito.')
             else:
                 if not xmlFECYT:
                     formCVN.errors['cvn_file'] = ErrorList(
-                        [u'El CVN no es válido para la FECYT.'])
+                        [_(u'El CVN no es válido para la FECYT.')])
                 else:
                     formCVN.errors['cvn_file'] = ErrorList(
-                        [u'El NIF/NIE del CVN no coincide'
-                         ' con el de su usuario.'])
+                        [_(u'El NIF/NIE del CVN no coincide'
+                           ' con el de su usuario.')])
         context['form'] = formCVN
     return render(request, "index.html", context)
 
 
 @login_required
-def downloadCVN(request):
-    """ Descarga el CVN correspondiente al usuario logeado en la sesión """
+def download_cvn(request):
     user = request.user
     cvn = user.usuario.cvn
-    if cvn:  # El usuario para los test no se crea en la BBDD
-        logger.info("Descarga CVN investigador: " + user.username + ' '
+    if cvn:
+        logger.info("Download CVN: " + user.username + ' - '
                     + user.usuario.documento)
     try:
-        with open(st.MEDIA_ROOT + '/' + cvn.cvn_file.name, 'r') as pdf:
+        filename = st.MEDIA_ROOT + '/' + cvn.cvn_file.name
+        download_name = cvn.cvn_file.name.split('/')[-1]
+        with open(filename, 'r') as pdf:
             response = HttpResponse(pdf.read(), mimetype='application/pdf')
-            response['Content-Disposition'] = 'inline;filename=%s' \
-                % (cvn.cvn_file.name.split('/')[-1])
+            response['Content-Disposition'] = 'inline; filename=%s' % (
+                download_name)
         pdf.closed
     except (TypeError, IOError):
         raise Http404
