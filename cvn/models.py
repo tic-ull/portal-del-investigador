@@ -91,7 +91,7 @@ class FECYT(models.Model):
 
         # Format CVN-XML of FECYT
         if resultXML.errorCode == 0:
-            return base64.decodestring(resultXML.cvnXml)
+            return (base64.decodestring(resultXML.cvnXml), 0)
         return (False, resultXML.errorCode)
 
     class Meta:
