@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: UTF-8 -*-
+
 from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
@@ -8,9 +9,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Note: Don't use "from appname.models import ModelName".
-        # Use orm.ModelName to refer to models in this application,
-        # and orm['appname.ModelName'] for models in other applications.
         ct = orm['contenttypes.ContentType'].objects.get_or_create(
             name='global_permission', app_label='cvn')[0]
         orm['auth.Permission'].objects.get_or_create(

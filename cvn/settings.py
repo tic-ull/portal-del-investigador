@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: UTF-8 -*-
+
 import os
 from django.conf import settings as st
 

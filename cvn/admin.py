@@ -3,9 +3,7 @@
 from cvn.models import (Usuario, Congreso, Proyecto, Convenio,
                         TesisDoctoral, Articulo, Libro,
                         CVN, Capitulo)
-from django.contrib import admin  # , messages
-#from cvn.utilsCVN import UtilidadesCVNtoXML, UtilidadesXMLtoBBDD
-#from django.core.files.base import ContentFile
+from django.contrib import admin
 
 import logging
 
@@ -36,7 +34,8 @@ class CVNAdmin(admin.ModelAdmin):
                      'usuario__documento',)
     ordering = ('updated_at',)
 
-    '''def pdf_to_xml(self, request, queryset):
+    '''
+    def pdf_to_xml(self, request, queryset):
         for qs in queryset:
             xmlFecyt = UtilidadesCVNtoXML(filePDF=qs.cvn_file).getXML()
             if xmlFecyt:  # Formato FECYT
