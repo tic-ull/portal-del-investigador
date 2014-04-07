@@ -38,7 +38,7 @@ def index(request):
         formCVN = UploadCVNForm(request.POST, request.FILES)
         if formCVN.is_valid():
             filePDF = request.FILES['cvn_file']
-            xmlFECYT = FECYT().getXML(filePDF)
+            (xmlFECYT, errorCode) = FECYT().getXML(filePDF)
             if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
                 if cvn:
                     movOldCVN(cvn)
