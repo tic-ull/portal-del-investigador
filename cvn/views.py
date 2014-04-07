@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as stCVN
 from cvn.forms import UploadCVNForm
 from cvn.models import FECYT, CVN
 from cvn.utils import saveScientificProductionToContext, getDataCVN, movOldCVN
@@ -54,7 +55,7 @@ def index(request):
             else:
                 if not xmlFECYT:
                     formCVN.errors['cvn_file'] = ErrorList(
-                        [_(u'El CVN no es válido para la FECYT.')])
+                        [_(stCVN.ERROR_CODES[errorCode])])
                 else:
                     formCVN.errors['cvn_file'] = ErrorList(
                         [_(u'El NIF/NIE del CVN no coincide'
