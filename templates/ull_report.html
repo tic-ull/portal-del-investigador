@@ -19,11 +19,10 @@
 	<h1 class="main-title">Datos de actividad científica en la Universidad de La Laguna [2012] </h1>
 
 <!-- Datos de los cvn Subidos -->
-{% if CVN %}
 	<hr>
 	<div class="tabbable">
 		  <ul class="nav nav-tabs">
-				<li class="active"><a href="#congreso" data-toggle="tab">Congresos({{ Congresos|length }})</a></li>
+				<li class="active"><a href="#congreso" data-toggle="tab">Congresos ({{ Congresos|length }})</a></li>
 				<li><a href="#publicacion" data-toggle="tab">Publicaciones ({{ Publicaciones|length }})</a></li>
 				<li><a href="#convenio" data-toggle="tab">Convenios ({{ Convenios|length }})</a></li>
 				<li><a href="#proyecto" data-toggle="tab">Proyectos ({{ Proyectos|length }})</a></li>
@@ -252,5 +251,4 @@
 				</div>
 		  </div>
 	</div>
-{% endif %}
 {% endblock main %}

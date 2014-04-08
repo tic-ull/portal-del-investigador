@@ -1,12 +1,14 @@
-from django.db.models.signals import post_save, post_syncdb
-from cvn.models import Usuario
-from django.contrib.auth.models import User, Permission
+# -*- encoding: UTF-8 -*-
+
 from crequest.middleware import CrequestMiddleware
-#from django.db import connection
+from cvn.models import Usuario
 from django.conf import settings as st
+from django.contrib.auth.models import User  # , Permission
+# from django.db import connection
+from django.db.models.signals import post_save  # , post_syncdb
+#import logging
 import simplejson as json
 import urllib
-#import logging
 
 
 def create_profile(sender, instance, created, **kwargs):
