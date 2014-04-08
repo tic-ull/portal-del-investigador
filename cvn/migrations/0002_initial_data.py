@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
         ct = orm['contenttypes.ContentType'].objects.get_or_create(
@@ -269,8 +268,10 @@ class Migration(SchemaMigration):
             'cvn': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user_profile'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['cvn.CVN']", 'blank': 'True', 'unique': 'True'}),
             'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
         }
     }
 
     complete_apps = ['cvn']
+    symmetrical = True

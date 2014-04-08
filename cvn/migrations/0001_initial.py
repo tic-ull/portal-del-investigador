@@ -25,6 +25,7 @@ class Migration(SchemaMigration):
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
             ('cvn', self.gf('django.db.models.fields.related.OneToOneField')(related_name='user_profile', null=True, on_delete=models.SET_NULL, to=orm['cvn.CVN'], blank=True, unique=True)),
             ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
+            ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
         ))
         db.send_create_signal(u'cvn', ['UserProfile'])
 
@@ -577,6 +578,7 @@ class Migration(SchemaMigration):
             'cvn': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user_profile'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['cvn.CVN']", 'blank': 'True', 'unique': 'True'}),
             'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
         }
     }

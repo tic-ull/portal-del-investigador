@@ -1,9 +1,14 @@
+# -*- encoding: UTF-8 -*-
+
 from crequest.middleware import CrequestMiddleware
 from cvn.models import UserProfile
+from django.conf import settings as st
 from django.contrib.auth.models import User, Permission
 from django.db import connection
 from django.db.models.signals import post_save, post_syncdb
 import logging
+import simplejson as json
+import urllib
 
 
 def create_profile(sender, instance, created, **kwargs):
@@ -16,6 +21,9 @@ def create_profile(sender, instance, created, **kwargs):
         if request:
             cas_info = request.session['attributes']
             profile.documento = cas_info['NumDocumento']
+            WS = st.WS_SERVER_URL + 'get_codpersona?nif='\
+                + cas_info['NumDocumento']
+            profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
         profile.save()
 
 post_save.connect(create_profile, sender=User,

@@ -61,7 +61,8 @@ class Informe_pdf:
         pathFile = "%s/%s/" % (stCVN.PDF_DEPT_ROOT, self.year)
         if not os.path.isdir(pathFile):
             os.makedirs(pathFile)
-        fileName = slugify(self.year + "-" + self.departamento.nombre) + ".pdf"
+        fileName = slugify(self.year + "-" + self.departamento['nombre'])\
+            + ".pdf"
         doc = SimpleDocTemplate(pathFile + fileName)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
@@ -98,11 +99,10 @@ class Informe_pdf:
         tableInv = []
         for inv in self.investigadores:
             tableInv.append([
-                inv.nombre,
-                inv.apellido1,
-                inv.apellido2,
-                inv.categoria.nombre]
-            )
+                inv['nombre'],
+                inv['apellido1'],
+                inv['apellido2'],
+                inv['categoria']])
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
         data = [HEADERS] + tableInv
@@ -349,7 +349,7 @@ class Informe_pdf:
                                  self.PAGE_NUMBERS_MARGIN,
                                  u'Página %s - %s' % (
                                      doc.page,
-                                     self.departamento.nombre
+                                     self.departamento['nombre']
                                  ))
         canvas.restoreState()
 
@@ -357,7 +357,7 @@ class Informe_pdf:
         canvas.setFont(self.DEFAULT_FONT_BOLD, self.HEADER_FONT_SIZE)
         canvas.setFillColor(self.BLUE_ULL)
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
-                          self.departamento.nombre)
+                          self.departamento['nombre'])
         canvas.drawImage(self.logo_path,
                          self.PAGE_WIDTH - self.MARGIN - self.logo_width,
                          self.PAGE_HEIGHT - self.logo_height - self.MARGIN,

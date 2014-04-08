@@ -7,7 +7,8 @@ from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from optparse import make_option
-from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
+#from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
+import simplejson as json
 import urllib
 
 
@@ -44,20 +45,29 @@ class Command(BaseCommand):
 
     def createReports(self, year, dept=None):
         if dept is None:
-            departamentos = GrupoinvestDepartamento.objects.all()
+            #WS = '%sodin/core/rest/get_departamentos' % (st.WS_SERVER_URL)
+            WS = '%sget_departamentos' % (st.WS_SERVER_URL)
+            departamentos = urllib.urlopen(WS).read()
+            departamentos = departamentos.replace('[', '')\
+                                         .replace(']', '')\
+                                         .split(', ')
         else:
-            departamentos = GrupoinvestDepartamento.objects.filter(
-                id__in=dept
-            )
+            departamentos = dept
 
-        for departamento in departamentos:
-            self.createReport(year, departamento)
+        for cod_dept in departamentos:
+            if not cod_dept == 'INVES':
+                WS = '%sget_info_departamento?cod_departamento=%s'\
+                    % (st.WS_SERVER_URL, cod_dept)
+                departamento = json.loads(urllib.urlopen(WS).read())
+                if departamento:  # Diccionario con datos
+                    self.createReport(year, departamento)
 
     def createReport(self, year, departamento):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
          convenios, tesis) = self.getData(year, departamento)
-        print 'Generando PDF para %s ... ' % (departamento.nombre)
+        print 'Generando PDF para [%s] %s ... ' % (
+            departamento['cod_departamento'], departamento['nombre'])
         if investigadores:
             informe = Informe_pdf(year, departamento, investigadores,
                                   articulos, libros, capitulosLibro,
@@ -89,16 +99,28 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def getInvestigadores(self, year, dept):
-        WS = '%sodin/core/rest/get_pdi_vigente?' \
-             'cod_departamento=%s&ano=%s' % (st.WS_SERVER_URL,
-                                             dept.codigo,
-                                             year)
-        invesRRHH = urllib.urlopen(WS).read()
-        invesRRHH = invesRRHH.replace('[', '').replace(']', '').split(', ')
-        investigadores = GrupoinvestInvestigador.objects.filter(
-            cod_persona__in=invesRRHH
-        ).order_by('apellido1', 'apellido2')
-
-        lista_dni = [investigador.nif for investigador in investigadores]
-        usuarios = Usuario.objects.filter(documento__in=lista_dni)
+        WS = '%sget_pdi_vigente?cod_departamento=%s&ano=%s'\
+            % (st.WS_SERVER_URL, dept['cod_departamento'], year)
+        invesRRHH = json.loads(urllib.urlopen(WS).read())
+        inves = list()
+        for inv in invesRRHH:
+            WS = '%sget_info_pdi?cod_persona=%s&ano=%s' % (
+                st.WS_SERVER_URL, inv, year)
+            dataInv = json.loads(urllib.urlopen(WS).read())
+            dataInv = self.checkInves(dataInv)
+            inves.append(dataInv)
+        investigadores = sorted(inves, key=lambda k: "%s %s" % (
+            k['apellido1'], k['apellido2']))
+        usuarios = Usuario.objects.filter(rrhh_code__in=invesRRHH)
         return investigadores, usuarios
+
+    def checkInves(self, inv):
+        if not 'nombre' in inv:
+            inv['nombre'] = ''
+        if not 'apellido1' in inv:
+            inv['apellido1'] = ''
+        if not 'apellido2' in inv:
+            inv['apellido2'] = ''
+        if not 'categoria' in inv:
+            inv['categoria'] = ''
+        return inv

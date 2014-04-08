@@ -151,7 +151,7 @@ FIXTURE_DIRS = (
 
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/'
+WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
 
 LOG_FILENAME = os.path.join(PROJECT_ROOT, 'cvn.log')
 
