@@ -19,3 +19,4 @@ reportlab
 django-crequest
 Werkzeug						                        # Werkzeug debugger
 simplejson
+factory-boy
