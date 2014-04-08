@@ -14,13 +14,12 @@ class CVNTestCase(TestCase):
         self.user = User.objects.create(username='rabadmar')
         xml = open(os.path.join(st.MEDIA_ROOT, 'cvn/xml/dyeray.xml'), 'r')
         self.example_xml = xml.read()
+        self.fileXML = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-rabadmar.xml')
 
     def test_insertXML(self):
         """ Insert the data of XML data in the database """
         try:
-            XML = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-rabadmar.xml')
-            fileXML = open(XML, 'r')
-            cvn = CVN(xml_file=fileXML)
+            cvn = CVN(xml_file=self.fileXML)
             cvn.insertXML(self.user.profile)
             self.assertEqual(self.user.profile.publicacion_set.filter(
                 tipo_de_produccion='Articulo').count(), 0)
