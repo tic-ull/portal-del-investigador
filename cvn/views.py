@@ -29,11 +29,6 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse('logout'))
     cvn = user.usuario.cvn
-    if cvn:
-        context['CVN'] = True
-        context.update(getDataCVN(cvn))
-        saveScientificProductionToContext(user.usuario, context)
-
     context['form'] = UploadCVNForm()
     if request.method == 'POST':
         formCVN = UploadCVNForm(request.POST, request.FILES)
@@ -61,6 +56,10 @@ def index(request):
                         [_(u'El NIF/NIE del CVN no coincide'
                            ' con el de su usuario.')])
         context['form'] = formCVN
+    if cvn:
+        context['CVN'] = True
+        context.update(getDataCVN(cvn))
+        saveScientificProductionToContext(user.usuario, context)
     return render(request, "index.html", context)
 
 
@@ -86,8 +85,6 @@ def download_cvn(request):
 
 @login_required
 def ull_report(request):
-    """ Informe completo de la actividad de la ULL,
-    extraida del usuario especial ULL """
     context = {}
     saveScientificProductionToContext(request.user.usuario, context)
     return render(request, "ull_report.html", context)
