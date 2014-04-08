@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as stCVN
 from cvn.forms import UploadCVNForm
 from cvn.models import FECYT, CVN
 from cvn.utils import saveScientificProductionToContext, getDataCVN, movOldCVN
@@ -28,17 +29,12 @@ def index(request):
     else:
         return HttpResponseRedirect(reverse('logout'))
     cvn = user.profile.cvn
-    if cvn:
-        context['CVN'] = True
-        context.update(getDataCVN(cvn))
-        saveScientificProductionToContext(user.profile, context)
-
     context['form'] = UploadCVNForm()
     if request.method == 'POST':
         formCVN = UploadCVNForm(request.POST, request.FILES)
         if formCVN.is_valid():
             filePDF = request.FILES['cvn_file']
-            xmlFECYT = FECYT().getXML(filePDF)
+            (xmlFECYT, errorCode) = FECYT().getXML(filePDF)
             if xmlFECYT and CVN().checkCVNOwner(user, xmlFECYT):
                 if cvn:
                     movOldCVN(cvn)
@@ -46,8 +42,6 @@ def index(request):
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
                 cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=True)
-                #import pdb; pdb.set_trace()
-                #cvn.save()
                 user.profile.cvn = cvn
                 user.profile.save()
                 cvn.insertXML(user.profile)
@@ -55,12 +49,16 @@ def index(request):
             else:
                 if not xmlFECYT:
                     formCVN.errors['cvn_file'] = ErrorList(
-                        [_(u'El CVN no es válido para la FECYT.')])
+                        [_(stCVN.ERROR_CODES[errorCode])])
                 else:
                     formCVN.errors['cvn_file'] = ErrorList(
                         [_(u'El NIF/NIE del CVN no coincide'
                            ' con el de su usuario.')])
         context['form'] = formCVN
+    if cvn:
+        context['CVN'] = True
+        context.update(getDataCVN(cvn))
+        saveScientificProductionToContext(user.profile, context)
     return render(request, "index.html", context)
 
 
@@ -86,8 +84,6 @@ def download_cvn(request):
 
 @login_required
 def ull_report(request):
-    """ Informe completo de la actividad de la ULL,
-    extraida del usuario especial ULL """
     context = {}
     saveScientificProductionToContext(request.user.profile, context)
     return render(request, "ull_report.html", context)
