@@ -109,11 +109,11 @@ class CVN(models.Model):
         return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
 
     @staticmethod
-    def checkCVNOwner(user, fileXML):
+    def can_user_upload_cvn(user, xml):
         try:
-            treeXML = etree.XML(fileXML)
+            treeXML = etree.XML(xml)
         except IOError:
-            logger.error(u'ERROR: No existe el fichero %s' % (fileXML))
+            logger.error(u'ERROR: No existe el fichero %s' % (xml))
 
         nif = treeXML.find('Agent/Identification/'
                            'PersonalIdentification/OfficialId/DNI/Item')
