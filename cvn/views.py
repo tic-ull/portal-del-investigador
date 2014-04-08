@@ -45,14 +45,12 @@ def index(request):
                     cvn.delete()
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
-                cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=False)
-                cvn.save()
+                cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=True)
+                #import pdb; pdb.set_trace()
+                #cvn.save()
                 user.profile.cvn = cvn
                 user.profile.save()
-                cvn.insertXML(user)
-                context['CVN'] = True
-                context.update(getDataCVN(cvn))
-                saveScientificProductionToContext(user.profile, context)
+                cvn.insertXML(user.profile)
                 context['message'] = _(u'CVN actualizado con éxito.')
             else:
                 if not xmlFECYT:

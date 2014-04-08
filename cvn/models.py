@@ -138,9 +138,9 @@ class CVN(models.Model):
 
     def insertXML(self, user_profile):
         try:
-            self._cleanDataCVN(user)
+            self._cleanDataCVN(user_profile)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
-            self._parseScientificProduction(user, CVNItems)
+            self._parseScientificProduction(user_profile, CVNItems)
         except IOError:
             if self.xml_file:
                 logger.error(u'ERROR: No existe el fichero %s' % (
@@ -148,26 +148,32 @@ class CVN(models.Model):
             else:
                 logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
 
-    def _cleanDataCVN(self, user=None):
-        self._deleteOldData(Articulo.objects.filter(user_profile=user), user)
-        self._deleteOldData(Libro.objects.filter(user_profile=user), user)
-        self._deleteOldData(Capitulo.objects.filter(user_profile=user), user)
+    def _cleanDataCVN(self, user_profile=None):
+        self._deleteOldData(Articulo.objects.filter(
+            user_profile=user_profile), user_profile)
+        self._deleteOldData(Libro.objects.filter(
+            user_profile=user_profile), user_profile)
+        self._deleteOldData(Capitulo.objects.filter(
+            user_profile=user_profile), user_profile)
         self._deleteOldData(Publicacion.objects.filter(
-            user_profile=user), user)
-        self._deleteOldData(Congreso.objects.filter(user_profile=user), user)
-        self._deleteOldData(Proyecto.objects.filter(user_profile=user), user)
-        self._deleteOldData(Convenio.objects.filter(user_profile=user), user)
+            user_profile=user_profile), user_profile)
+        self._deleteOldData(Congreso.objects.filter(
+            user_profile=user_profile), user_profile)
+        self._deleteOldData(Proyecto.objects.filter(
+            user_profile=user_profile), user_profile)
+        self._deleteOldData(Convenio.objects.filter(
+            user_profile=user_profile), user_profile)
         self._deleteOldData(TesisDoctoral.objects.filter(
-            user_profile=user), user)
+            user_profile=user_profile), user_profile)
 
-    def _deleteOldData(self, produccion_list=[], user=None):
+    def _deleteOldData(self, produccion_list=[], user_profile=None):
         for prod in produccion_list:
             if prod.user_profile.count() > 1:
-                prod.user_profile.remove(user)
+                prod.user_profile.remove(user_profile)
             else:
                 prod.delete()
 
-    def _parseScientificProduction(self, user, CVNItems):
+    def _parseScientificProduction(self, user_profile, CVNItems):
         for CVNItem in CVNItems:
             data = {}
             cvn_key = CVNItem.find('CvnItemID/CVNPK/Item').text.strip()
@@ -180,16 +186,16 @@ class CVN(models.Model):
                     data = self._dataPublications(CVNItem)
                     if data and 'tipo_de_produccion' in data:
                         if data['tipo_de_produccion'] == 'Articulo':
-                            self._saveData(user, data, 'Articulo')
+                            self._saveData(user_profile, data, 'Articulo')
                         if data['tipo_de_produccion'] == 'Libro':
-                            self._saveData(user, data, 'Libro')
+                            self._saveData(user_profile, data, 'Libro')
                         if data['tipo_de_produccion'] == 'Capitulo de Libro':
-                            self._saveData(user, data, 'Capitulo')
+                            self._saveData(user_profile, data, 'Capitulo')
                         continue
                 if stCVN.MODEL_TABLE[cvn_key] == 'Congreso':
                     data = self._dataCongress(CVNItem)
             if data:
-                self._saveData(user, data, stCVN.MODEL_TABLE[cvn_key])
+                self._saveData(user_profile, data, stCVN.MODEL_TABLE[cvn_key])
 
     def _dataTeaching(self, treeXML):
         dataCVN = {}
@@ -368,7 +374,7 @@ class CVN(models.Model):
                     'FinalPage/Item').text.strip()
         return dataCVN
 
-    def _saveData(self, user=None, dataCVN={}, tableName=None):
+    def _saveData(self, user_profile=None, dataCVN={}, tableName=None):
         dataSearch = self._getDataSearch(dataCVN)
         if not dataSearch:
             dataSearch = {'pk': stCVN.INVALID_SEARCH}
@@ -378,7 +384,7 @@ class CVN(models.Model):
             table.objects.filter(pk=reg.id).update(**dataCVN)
         except ObjectDoesNotExist:
             reg = table.objects.create(**dataCVN)
-        reg.user_profile.add(user.profile)
+        reg.user_profile.add(user_profile)
         reg.save()
 
     def _getDataSearch(self, dataCVN=None):
