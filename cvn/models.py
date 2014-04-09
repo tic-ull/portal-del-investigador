@@ -130,8 +130,8 @@ class CVN(models.Model):
         return False
 
     @staticmethod
-    def getXMLDate(fileXML):
-        treeXML = etree.XML(fileXML)
+    def getXMLDate(xml):
+        treeXML = etree.XML(xml)
         date = treeXML.find(
             'Version/VersionID/Date/Item').text.strip().split('-')
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
@@ -139,6 +139,7 @@ class CVN(models.Model):
     def insertXML(self, user_profile):
         try:
             self._cleanDataCVN(user_profile)
+            self.xml_file.seek(0)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
             self._parseScientificProduction(user_profile, CVNItems)
         except IOError:

@@ -10,7 +10,7 @@ import os
 class CVNTestCase(TestCase):
 
     def setUp(self):
-        xml = open(os.path.join(stCVN.TEST_ROOT, 'xml/dyeray.xml'), 'r')
+        xml = open(os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
         self.example_xml = xml.read()
 
     def test_insertXML(self):
@@ -35,8 +35,8 @@ class CVNTestCase(TestCase):
 
     def test_insert_cvn_old_information_deleted(self):
         try:
-            file_one = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-rabadmar.xml')
-            file_two = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-rabadmar.xml')
+            file_one = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml')
+            file_two = os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml')
             u = UserFactory.create()
             cvn = CVN(xml_file=open(file_one, 'r'))
             cvn.insertXML(u.profile)
@@ -44,17 +44,20 @@ class CVNTestCase(TestCase):
             congresos = u.profile.congreso_set.all()
             convenios = u.profile.convenio_set.all()
             proyectos = u.profile.proyecto_set.all()
-            tesis = u.tesisdoctoral_set.all()
-            import pdb; pdb.set_trace()
-            cvn.xml_file = file_two
+            tesis = u.profile.tesisdoctoral_set.all()
+            cvn.xml_file = open(file_two, 'r')
             cvn.insertXML(u.profile)
+            self.assertEqual(publicaciones.count(), 0)
+            self.assertEqual(congresos.count(), 0)
+            self.assertEqual(convenios.count(), 0)
+            self.assertEqual(proyectos.count(), 0)
+            self.assertEqual(tesis.count(), 0)
         except:
             raise
 
-
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()
-        u.profile.documento = '00000000A'
+        u.profile.documento = '12345678A'
         self.assertFalse(CVN.can_user_upload_cvn(u, self.example_xml))
 
     def test_admin_permission_to_upload_cvn(self):
@@ -63,5 +66,5 @@ class CVNTestCase(TestCase):
 
     def test_check_permission_to_upload_cvn(self):
         u = UserFactory.create()
-        u.profile.documento = '78637064H'
+        u.profile.documento = '00000000A'
         self.assertTrue(CVN.can_user_upload_cvn(u, self.example_xml))
