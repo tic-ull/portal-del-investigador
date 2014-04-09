@@ -7,8 +7,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import Q
 from django.db.models.loading import get_model
+from django.conf import settings as st
+from django.core.files.move import file_move_safe
 from lxml import etree
 import base64
+import os
 import datetime
 import logging
 import suds
@@ -135,6 +138,18 @@ class CVN(models.Model):
         date = treeXML.find(
             'Version/VersionID/Date/Item').text.strip().split('-')
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+    def backup_pdf(self):
+        cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
+        old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
+        new_file_name = self.cvn_file.name.split('/')[-1].replace(
+            u'.pdf', u'-' + str(
+             self.updated_at.strftime('%Y-%m-%d')
+            ) + u'.pdf')
+        old_cvn_file = os.path.join(old_path, new_file_name)
+        if not os.path.isdir(old_path):
+            os.makedirs(old_path)
+        file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
 
     def insertXML(self, user_profile):
         try:

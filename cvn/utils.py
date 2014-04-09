@@ -2,10 +2,7 @@
 
 from cvn import settings as stCVN
 from dateutil.relativedelta import relativedelta
-from django.conf import settings as st
-from django.core.files.move import file_move_safe
 import datetime
-import os
 
 
 def saveScientificProductionToContext(usuario, context):
@@ -25,21 +22,6 @@ def getDataCVN(cvn=None):
     else:
         context['fecha_valido'] = cvn.fecha_cvn + date
     return context
-
-
-def movOldCVN(cvn):
-    if not cvn:
-        pass
-    cvn_file = os.path.join(st.MEDIA_ROOT, cvn.cvn_file.name)
-    old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
-    new_file_name = cvn.cvn_file.name.split('/')[-1].replace(
-        u'.pdf', u'-' + str(
-            cvn.updated_at.strftime('%Y-%m-%d')
-        ) + u'.pdf')
-    old_cvn_file = os.path.join(old_path, new_file_name)
-    if not os.path.isdir(old_path):
-        os.makedirs(old_path)
-    file_move_safe(cvn_file, old_cvn_file, allow_overwrite=True)
 
 
 def isdigit(obj):

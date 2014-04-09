@@ -10,14 +10,13 @@ import os
 class CVNTestCase(TestCase):
 
     def setUp(self):
-        xml = open(os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
-        self.example_xml = xml.read()
+        self.xml_ull = open(os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
+        self.xml_empty =  open(os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml'), 'r')
 
     def test_insertXML(self):
         """ Insert the data of XML data in the database """
         try:
-            fileXML = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml')
-            cvn = CVN(xml_file=open(fileXML, 'r'))
+            cvn = CVN(xml_file=self.xml_ull)
             user = UserFactory.create()
             cvn.insertXML(user.profile)
             self.assertEqual(user.profile.publicacion_set.filter(
@@ -33,19 +32,17 @@ class CVNTestCase(TestCase):
         except:
             raise
 
-    def test_insert_cvn_old_information_deleted(self):
+    def test_on_insert_cvn_old_production_tables_are_deleted(self):
         try:
-            file_one = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml')
-            file_two = os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml')
             u = UserFactory.create()
-            cvn = CVN(xml_file=open(file_one, 'r'))
+            cvn = CVN(xml_file=self.xml_ull)
             cvn.insertXML(u.profile)
             publicaciones = u.profile.publicacion_set.all()
             congresos = u.profile.congreso_set.all()
             convenios = u.profile.convenio_set.all()
             proyectos = u.profile.proyecto_set.all()
             tesis = u.profile.tesisdoctoral_set.all()
-            cvn.xml_file = open(file_two, 'r')
+            cvn.xml_file = self.xml_empty
             cvn.insertXML(u.profile)
             self.assertEqual(publicaciones.count(), 0)
             self.assertEqual(congresos.count(), 0)
@@ -55,16 +52,32 @@ class CVNTestCase(TestCase):
         except:
             raise
 
+    def test_on_insert_cvn_old_pdf_is_moved(self):
+        try:
+            u = UserFactory.create()
+            cvn = CVN(xml_file=self.xml_ull)
+            cvn.insertXML(u.profile)
+            # Get pdf path
+
+            cvn.xml_file = self.xml_empty
+            cvn.insertXML(u.profile)
+            # Check new pdf exists
+        except:
+            raise
+
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()
         u.profile.documento = '12345678A'
-        self.assertFalse(CVN.can_user_upload_cvn(u, self.example_xml))
+        example_xml = self.xml_ull.read()
+        self.assertFalse(CVN.can_user_upload_cvn(u, example_xml))
 
     def test_admin_permission_to_upload_cvn(self):
         a = AdminFactory.create()
-        self.assertTrue(CVN.can_user_upload_cvn(a, self.example_xml))
+        example_xml = self.xml_ull.read()
+        self.assertTrue(CVN.can_user_upload_cvn(a, example_xml))
 
     def test_check_permission_to_upload_cvn(self):
         u = UserFactory.create()
         u.profile.documento = '00000000A'
-        self.assertTrue(CVN.can_user_upload_cvn(u, self.example_xml))
+        example_xml = self.xml_ull.read()
+        self.assertTrue(CVN.can_user_upload_cvn(u, example_xml))

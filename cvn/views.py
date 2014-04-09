@@ -3,7 +3,7 @@
 from cvn import settings as stCVN
 from cvn.forms import UploadCVNForm
 from cvn.models import FECYT, CVN
-from cvn.utils import saveScientificProductionToContext, getDataCVN, movOldCVN
+from cvn.utils import saveScientificProductionToContext, getDataCVN
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -37,7 +37,7 @@ def index(request):
             (xmlFECYT, errorCode) = FECYT().getXML(filePDF)
             if xmlFECYT and CVN.can_user_upload_cvn(user, xmlFECYT):
                 if cvn:
-                    movOldCVN(cvn)
+                    cvn.backup_pdf()
                     cvn.delete()
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
