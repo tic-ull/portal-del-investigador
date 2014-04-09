@@ -13,8 +13,8 @@ class CVNTestCase(TestCase):
         self.xml_ull = open(os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
         self.xml_empty =  open(os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml'), 'r')
 
-    def test_insertXML(self):
-        """ Insert the data of XML data in the database """
+    def test_insertXML_ULL(self):
+        """ Insert the data of XML in the database """
         try:
             cvn = CVN(xml_file=self.xml_ull)
             user = UserFactory.create()
