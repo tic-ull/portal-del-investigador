@@ -14,7 +14,7 @@ class CVNTestCase(TestCase):
         self.user = User.objects.create(username='rabadmar')
         xml = open(os.path.join(st.MEDIA_ROOT, 'cvn/xml/dyeray.xml'), 'r')
         self.example_xml = xml.read()
-        self.fileXML = os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-rabadmar.xml')
+        self.fileXML = open(os.path.join(st.MEDIA_ROOT, 'cvn/xml/CVN-rabadmar.xml'), 'r')
 
     def test_insertXML(self):
         """ Insert the data of XML data in the database """
