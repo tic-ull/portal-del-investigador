@@ -53,17 +53,12 @@ class CVNTestCase(TestCase):
             raise
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-        try:
-            u = UserFactory.create()
-            cvn = CVN(xml_file=self.xml_ull)
-            cvn.insertXML(u.profile)
-            # Get pdf path
-
-            cvn.xml_file = self.xml_empty
-            cvn.insertXML(u.profile)
-            # Check new pdf exists
-        except:
-            raise
+            #pdf_ull = open(os.path.join(stCVN.TEST_ROOT, 'pdf/CVN-ULL.pdf'), 'r')
+            #cvn = CVN(pdf_file=self.pdf_ull)
+            #cvn.pdf_file.save(self.pdf_ull.name,
+            #                  ContentFile(pdf_ull), save=False)
+            #cvn.backup_pdf()
+            pass
 
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()

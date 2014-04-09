@@ -41,7 +41,7 @@ def index(request):
                     cvn.delete()
                 if cvn and cvn.xml_file:
                     cvn.xml_file.delete()
-                cvn = formCVN.save(user=user, fileXML=xmlFECYT, commit=True)
+                cvn = formCVN.save(user=user, xml=xmlFECYT, commit=True)
                 user.profile.cvn = cvn
                 user.profile.save()
                 cvn.insertXML(user.profile)
