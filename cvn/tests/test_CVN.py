@@ -2,7 +2,6 @@
 
 from cvn import settings as stCVN
 from cvn.models import CVN
-from django.contrib.auth.models import User
 from django.test import TestCase
 from factories import UserFactory, AdminFactory
 import os
@@ -11,26 +10,26 @@ import os
 class CVNTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create(username='rabadmar')
         xml = open(os.path.join(stCVN.TEST_ROOT, 'xml/dyeray.xml'), 'r')
         self.example_xml = xml.read()
 
     def test_insertXML(self):
         """ Insert the data of XML data in the database """
         try:
-            fileXML = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-rabadmar.xml')
+            fileXML = os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml')
             cvn = CVN(xml_file=open(fileXML, 'r'))
-            cvn.insertXML(self.user.profile)
-            self.assertEqual(self.user.profile.publicacion_set.filter(
-                tipo_de_produccion='Articulo').count(), 0)
-            self.assertEqual(self.user.profile.publicacion_set.filter(
-                tipo_de_produccion='Libro').count(), 0)
-            self.assertEqual(self.user.profile.publicacion_set.filter(
-                tipo_de_produccion='Capitulo de Libro').count(), 0)
-            self.assertEqual(self.user.profile.congreso_set.count(), 0)
-            self.assertEqual(self.user.profile.convenio_set.count(), 0)
-            self.assertEqual(self.user.profile.proyecto_set.count(), 1)
-            self.assertEqual(self.user.profile.tesisdoctoral_set.count(), 0)
+            user = UserFactory.create()
+            cvn.insertXML(user.profile)
+            self.assertEqual(user.profile.publicacion_set.filter(
+                tipo_de_produccion='Articulo').count(), 1135)
+            self.assertEqual(user.profile.publicacion_set.filter(
+                tipo_de_produccion='Libro').count(), 6)
+            self.assertEqual(user.profile.publicacion_set.filter(
+                tipo_de_produccion='Capitulo de Libro').count(), 32)
+            self.assertEqual(user.profile.congreso_set.count(), 55)
+            self.assertEqual(user.profile.convenio_set.count(), 38)
+            self.assertEqual(user.profile.proyecto_set.count(), 11)
+            self.assertEqual(user.profile.tesisdoctoral_set.count(), 0)
         except:
             raise
 
