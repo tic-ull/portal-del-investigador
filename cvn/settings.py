@@ -130,3 +130,5 @@ ERROR_CODES = {
     16: u'El XML está vacío.',
     17: u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado.'
 }
+
+TEST_ROOT = st.BASE_DIR + '/cvn/tests/files/'
