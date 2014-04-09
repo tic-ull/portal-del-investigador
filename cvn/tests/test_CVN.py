@@ -1,9 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
-from django.test import TestCase
+from cvn import settings as stCVN
 from cvn.models import CVN
 from django.contrib.auth.models import User
-from cvn import settings as stCVN
+from django.test import TestCase
+from factories import UserFactory, AdminFactory
 import os
 
 
@@ -11,6 +12,8 @@ class CVNTestCase(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username='rabadmar')
+        xml = open(os.path.join(stCVN.TEST_ROOT, 'xml/dyeray.xml'), 'r')
+        self.example_xml = xml.read()
 
     def test_insertXML(self):
         """ Insert the data of XML data in the database """
@@ -30,3 +33,17 @@ class CVNTestCase(TestCase):
             self.assertEqual(self.user.profile.tesisdoctoral_set.count(), 0)
         except:
             raise
+
+    def test_check_no_permission_to_upload_cvn(self):
+        u = UserFactory.create()
+        u.profile.documento = '00000000A'
+        self.assertFalse(CVN.can_user_upload_cvn(u, self.example_xml))
+
+    def test_admin_permission_to_upload_cvn(self):
+        a = AdminFactory.create()
+        self.assertTrue(CVN.can_user_upload_cvn(a, self.example_xml))
+
+    def test_check_permission_to_upload_cvn(self):
+        u = UserFactory.create()
+        u.profile.documento = '78637064H'
+        self.assertTrue(CVN.can_user_upload_cvn(u, self.example_xml))
