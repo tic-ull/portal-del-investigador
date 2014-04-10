@@ -4,14 +4,19 @@ from cvn import settings as stCVN
 from cvn.models import CVN
 from django.test import TestCase
 from factories import UserFactory, AdminFactory
+from django.core.files.base import ContentFile
+from django.conf import settings as st
+import datetime
 import os
 
 
 class CVNTestCase(TestCase):
 
     def setUp(self):
-        self.xml_ull = open(os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
-        self.xml_empty =  open(os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml'), 'r')
+        self.xml_ull = open(os.path.join(stCVN.TEST_ROOT,
+                            'xml/CVN-ULL.xml'), 'r')
+        self.xml_empty = open(os.path.join(stCVN.TEST_ROOT,
+                              'xml/empty.xml'), 'r')
 
     def test_insertXML_ULL(self):
         """ Insert the data of XML in the database """
@@ -53,12 +58,18 @@ class CVNTestCase(TestCase):
             raise
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-            #pdf_ull = open(os.path.join(stCVN.TEST_ROOT, 'pdf/CVN-ULL.pdf'), 'r')
-            #cvn = CVN(pdf_file=self.pdf_ull)
-            #cvn.pdf_file.save(self.pdf_ull.name,
-            #                  ContentFile(pdf_ull), save=False)
-            #cvn.backup_pdf()
-            pass
+            pdf_ull = open(os.path.join(stCVN.TEST_ROOT,
+                           'cvn/CVN-ULL.pdf'), 'r')
+            cvn = CVN()
+            cvn.updated_at = datetime.datetime.now()
+            cvn.cvn_file.save('CVN-ULL.pdf',
+                              ContentFile(pdf_ull.read()),
+                              save=False)
+            cvn.backup_pdf()
+            relative_path = ('cvn/old_cvn/CVN-ULL-' +
+                             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
+            full_path = os.path.join(st.MEDIA_ROOT, relative_path)
+            self.assertTrue(os.path.isfile(full_path))
 
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()
