@@ -10,3 +10,4 @@ virtualenv
 collected_static
 backups
 .ropeproject/
+.coverage
