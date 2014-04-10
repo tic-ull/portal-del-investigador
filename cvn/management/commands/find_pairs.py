@@ -21,8 +21,6 @@ def signal_handler(signal, frame):
 
 
 def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
-    assert (type(obj1) == type(obj2),
-            "The types of the objects are not the same, dude")
     difering = []
     tipo = type(obj1)
     fields = tipo._meta.get_all_field_names()

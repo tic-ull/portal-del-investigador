@@ -144,7 +144,7 @@ class CVN(models.Model):
         old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
         new_file_name = self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(
-             self.updated_at.strftime('%Y-%m-%d')
+                self.updated_at.strftime('%Y-%m-%d')
             ) + u'.pdf')
         old_cvn_file = os.path.join(old_path, new_file_name)
         if not os.path.isdir(old_path):
@@ -353,8 +353,7 @@ class CVN(models.Model):
                     'Link/Title/Name/Item').text.strip())
             dataCVN[u'autores'] = self._getAuthors(treeXML.findall(
                 'Author'))
-            dataCVN.update(self._getDataPublication(treeXML.find(
-                'Location'), typePublication))
+            dataCVN.update(self._getDataPublication(treeXML.find('Location')))
             # Fecha: Dia/Mes/Año
             if treeXML.find('Date/OnlyDate/DayMonthYear'):
                 dataCVN[u'fecha'] = unicode(treeXML.find(
@@ -372,23 +371,22 @@ class CVN(models.Model):
             pass
         return dataCVN
 
-    def _getDataPublication(self, treeXML, typePublication):
-        dataCVN = {}
+    def _getDataPublication(self, treeXML):
+        data = {}
         if treeXML:
-            if treeXML.find('Volume/Item'):
-                dataCVN['volumen'] = treeXML.find('Volume/Item').text.strip()
-            if (treeXML.find('Number/Item') and
-               treeXML.find('Number/Item').text):
-                dataCVN['numero'] = treeXML.find('Number/Item').text.strip()
-            if (treeXML.find('InitialPage/Item') and
-               treeXML.find('InitialPage/Item').text):
-                dataCVN['pagina_inicial'] = treeXML.find(
-                    'InitialPage/Item').text.strip()
-            if (treeXML.find('FinalPage/Item') and
-               treeXML.find('FinalPage/Item').text):
-                dataCVN['pagina_final'] = treeXML.find(
-                    'FinalPage/Item').text.strip()
-        return dataCVN
+            volume = treeXML.find('Volume/Item')
+            if volume is not None and volume.text is not None:
+                data['volumen'] = volume.text.strip()
+            number = treeXML.find('Number/Item')
+            if number is not None and number.text is not None:
+                data['numero'] = number.text.strip()
+            page = treeXML.find('InitialPage/Item')
+            if page is not None and page.text is not None:
+                data['pagina_inicial'] = page.text.strip()
+            page = treeXML.find('FinalPage/Item')
+            if page is not None and page.text is not None:
+                data['pagina_final'] = page.text.strip()
+        return data
 
     def _saveData(self, user_profile=None, dataCVN={}, tableName=None):
         dataSearch = self._getDataSearch(dataCVN)
