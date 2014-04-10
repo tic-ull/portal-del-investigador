@@ -8,10 +8,11 @@ from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
 import unittest  # , time, re
+from django import test
 import time
 
 
-class LoginCAS(unittest.TestCase):
+class LoginCAS(test.LiveServerTestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()

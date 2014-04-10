@@ -1,6 +1,8 @@
 *.pyc
 *.log
 *.swp
+*.bak
+*.*~
 build/
 src/
 static/files/
