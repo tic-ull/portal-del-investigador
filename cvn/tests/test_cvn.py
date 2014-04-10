@@ -68,6 +68,40 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data[u'ambito'], u'Autonómica')
                 break
 
+    def test_check_insert_data_publications(self):
+        cvn = CVN(xml_file=self.xml_test)
+        cvn.xml_file.seek(0)
+        items = etree.parse(cvn.xml_file).findall('CvnItem')
+        for item in items:
+            data = {}
+            key = item.find('CvnItemID/CVNPK/Item').text.strip()
+            if (key in stCVN.MODEL_TABLE and
+               stCVN.MODEL_TABLE[key] == 'Publicacion'):
+                data = cvn._dataPublications(item)
+                self.assertIn(u'tipo_de_produccion', data)
+                self.assertEqual(
+                    data[u'tipo_de_produccion'], u'Capitulo de Libro')
+                self.assertIn(u'titulo', data)
+                self.assertEqual(data[u'titulo'], u'Título de la publicación')
+                self.assertIn(u'nombre_publicacion', data)
+                self.assertEqual(
+                    data[u'nombre_publicacion'], u'Nombre de la publicación')
+                self.assertIn(u'autores', data)
+                self.assertEqual(data[u'autores'], u'Firma')
+                self.assertIn(u'volumen', data)
+                self.assertEqual(data[u'volumen'], u'1')
+                self.assertIn(u'numero', data)
+                self.assertEqual(data[u'numero'], u'1')
+                self.assertIn(u'pagina_inicial', data)
+                self.assertEqual(data[u'pagina_inicial'], u'1')
+                self.assertIn(u'pagina_final', data)
+                self.assertEqual(data[u'pagina_final'], u'100')
+                self.assertIn(u'fecha', data)
+                self.assertEqual(data[u'fecha'], u'2014-04-01')
+                self.assertIn(u'issn', data)
+                self.assertEqual(data[u'issn'], u'0395-2037')
+                break
+
     def test_on_insert_cvn_old_production_tables_are_deleted(self):
         try:
             u = UserFactory.create()
