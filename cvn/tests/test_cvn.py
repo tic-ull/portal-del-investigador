@@ -71,7 +71,7 @@ class CVNTestCase(TestCase):
     def test_on_insert_cvn_old_production_tables_are_deleted(self):
         try:
             u = UserFactory.create()
-            cvn = CVN(xml_file=self.xml_ull)
+            cvn = CVN(xml_file=self.xml_test)
             cvn.insertXML(u.profile)
             publicaciones = u.profile.publicacion_set.all()
             congresos = u.profile.congreso_set.all()
@@ -105,16 +105,16 @@ class CVNTestCase(TestCase):
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()
         u.profile.documento = '12345678A'
-        example_xml = self.xml_ull.read()
+        example_xml = self.xml_test.read()
         self.assertFalse(CVN.can_user_upload_cvn(u, example_xml))
 
     def test_admin_permission_to_upload_cvn(self):
         a = AdminFactory.create()
-        example_xml = self.xml_ull.read()
+        example_xml = self.xml_test.read()
         self.assertTrue(CVN.can_user_upload_cvn(a, example_xml))
 
     def test_check_permission_to_upload_cvn(self):
         u = UserFactory.create()
         u.profile.documento = '00000000A'
-        example_xml = self.xml_ull.read()
+        example_xml = self.xml_test.read()
         self.assertTrue(CVN.can_user_upload_cvn(u, example_xml))
