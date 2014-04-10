@@ -20,3 +20,5 @@ django-crequest
 Werkzeug						                        # Werkzeug debugger
 simplejson
 factory-boy
+coverage
+django-coverage

@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'cvn',
     'bootstrap_toolkit',
     'crequest',
+    'django_coverage',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)

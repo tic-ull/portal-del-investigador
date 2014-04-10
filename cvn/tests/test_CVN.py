@@ -4,6 +4,9 @@ from cvn import settings as stCVN
 from cvn.models import CVN
 from django.test import TestCase
 from factories import UserFactory, AdminFactory
+from django.core.files.base import ContentFile
+from django.conf import settings as st
+import datetime
 from lxml import etree
 import os
 
@@ -11,12 +14,12 @@ import os
 class CVNTestCase(TestCase):
 
     def setUp(self):
-        self.xml_ull = open(
-            os.path.join(stCVN.TEST_ROOT, 'xml/CVN-ULL.xml'), 'r')
-        self.xml_empty = open(
-            os.path.join(stCVN.TEST_ROOT, 'xml/empty.xml'), 'r')
-        self.xml_test = open(
-            os.path.join(stCVN.TEST_ROOT, 'xml/CVN-Test.xml'), 'r')
+        self.xml_ull = open(os.path.join(stCVN.TEST_ROOT,
+                            'xml/CVN-ULL.xml'), 'r')
+        self.xml_empty = open(os.path.join(stCVN.TEST_ROOT,
+                              'xml/empty.xml'), 'r')
+        self.xml_test = open(os.path.join(stCVN.TEST_ROOT,
+                             'xml/CVN-Test.xml'), 'r')
 
     def test_insert_xml_ull(self):
         """ Insert the data of XML in the database """
@@ -120,17 +123,18 @@ class CVNTestCase(TestCase):
             raise
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-        try:
-            u = UserFactory.create()
-            cvn = CVN(xml_file=self.xml_ull)
-            cvn.insertXML(u.profile)
-            # Get pdf path
-
-            cvn.xml_file = self.xml_empty
-            cvn.insertXML(u.profile)
-            # Check new pdf exists
-        except:
-            raise
+            pdf_ull = open(os.path.join(stCVN.TEST_ROOT,
+                           'cvn/CVN-ULL.pdf'), 'r')
+            cvn = CVN()
+            cvn.updated_at = datetime.datetime.now()
+            cvn.cvn_file.save('CVN-ULL.pdf',
+                              ContentFile(pdf_ull.read()),
+                              save=False)
+            cvn.backup_pdf()
+            relative_path = ('cvn/old_cvn/CVN-ULL-' +
+                             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
+            full_path = os.path.join(st.MEDIA_ROOT, relative_path)
+            self.assertTrue(os.path.isfile(full_path))
 
     def test_check_no_permission_to_upload_cvn(self):
         u = UserFactory.create()
