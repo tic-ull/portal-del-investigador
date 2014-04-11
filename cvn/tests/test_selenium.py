@@ -9,7 +9,7 @@ from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
 import unittest  # , time, re
 from django import test
-import time
+#import time
 
 
 class LoginCAS(test.LiveServerTestCase):
@@ -84,6 +84,8 @@ class LoginCAS(test.LiveServerTestCase):
             "id_cvn_file").send_keys(st.BASE_DIR +
                                      "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.assertTrue(self.is_element_present(By.CLASS_NAME,
+                                                "errorlist"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def test_upload_cvn_user_admin(self):
