@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:CVN xsi:schemaLocation="http://cv.normalizado.org/cvn CVN.xsd" xmlns:tns="http://cv.normalizado.org/cvn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Version>
+    <VersionID>
+      <Date code="000.020.000.020">
+        <Item>2014-04-11</Item>
+      </Date>
+      <CodificationVersion code="000.020.000.080">
+        <Item>1.3.0</Item>
+      </CodificationVersion>
+    </VersionID>
+  </Version>
+  <Agent>
+    <Identification>
+      <PersonalIdentification>
+        <GivenName code="000.010.000.020">
+          <Item>ULL</Item>
+        </GivenName>
+        <FirstFamilyName code="000.010.000.010">
+          <Item>Gestión</Item>
+        </FirstFamilyName>
+        <SecondFamilyName code="000.010.000.010">
+          <Item>Investigación</Item>
+        </SecondFamilyName>
+        <OfficialId>
+          <DNI code="000.010.000.100">
+            <Item>00000000A</Item>
+          </DNI>
+        </OfficialId>
+      </PersonalIdentification>
+    </Identification>
+    <Contact>
+      <Telephone Type="000">
+        <Number code="000.010.000.210">
+          <Item>922845029</Item>
+        </Number>
+      </Telephone>
+      <InternetEmailAddress code="000.010.000.230">
+        <Item>stic.investigacion@ull.es</Item>
+      </InternetEmailAddress>
+    </Contact>
+  </Agent>
+  <CvnItem>
+    <CvnItemID>
+      <CVNPK>
+        <Item>010.010.000.000</Item>
+      </CVNPK>
+      <CodeCVNItem>
+        <Item>210</Item>
+      </CodeCVNItem>
+      <ExperienceType>
+        <Item>030</Item>
+      </ExperienceType>
+      <ResultType>
+        <Item>010</Item>
+      </ResultType>
+    </CvnItemID>
+    <Entity>
+      <EntityName code="010.010.000.020">
+        <Item>Universidad de La Laguna</Item>
+      </EntityName>
+      <EntityID>
+        <CVNPK code="010.010.000.020">
+          <Item>8435246600011002700000001438700</Item>
+        </CVNPK>
+      </EntityID>
+    </Entity>
+  </CvnItem>
+  <CvnItem>
+    <CvnItemID>
+      <CVNPK>
+        <Item>050.020.010.000</Item>
+      </CVNPK>
+      <CodeCVNItem>
+        <Item>160</Item>
+      </CodeCVNItem>
+      <ExperienceType>
+        <Item>020</Item>
+      </ExperienceType>
+      <ResultType>
+        <Item>010</Item>
+      </ResultType>
+    </CvnItemID>
+    <Title>
+      <Name code="050.020.010.010">
+        <Item>Denominación del proyecto</Item>
+      </Name>
+      <Type>000</Type>
+      <Category>000</Category>
+    </Title>
+    <Title>
+      <Name code="050.020.010.250">
+        <Item>Nombre del programa</Item>
+      </Name>
+      <Type>000</Type>
+      <Category>OTHERS</Category>
+    </Title>
+    <Description code="050.020.010.340">
+      <Item>Resultados más relevantes</Item>
+    </Description>
+    <Description code="050.020.010.420">
+      <Item>Aportación del solicitante</Item>
+    </Description>
+    <Subject>
+      <Type code="050.020.010.020">
+        <Item>010</Item>
+      </Type>
+      <SubjectList code="050.020.010.020">
+        <Item>THESAURUS_CODES</Item>
+      </SubjectList>
+      <SubjectAgency code="050.020.010.020">
+        <Item>CVN</Item>
+      </SubjectAgency>
+      <Description>
+        <Primary code="050.020.010.020">
+          <Item>008000000000000000000000</Item>
+        </Primary>
+      </Description>
+    </Subject>
+    <Subject>
+      <Type code="050.020.010.350">
+        <Item>010</Item>
+      </Type>
+      <SubjectList code="050.020.010.350">
+        <Item>THESAURUS_CODES</Item>
+      </SubjectList>
+      <SubjectAgency code="050.020.010.350">
+        <Item>CVN</Item>
+      </SubjectAgency>
+      <Description>
+        <Primary code="050.020.010.350">
+          <Item>008000000000000000000000</Item>
+        </Primary>
+      </Description>
+    </Subject>
+    <Filter>
+      <Type code="050.020.010.030">
+        <Item>180</Item>
+      </Type>
+      <Value code="050.020.010.030">
+        <Item>310</Item>
+      </Value>
+    </Filter>
+    <Filter>
+      <Type code="050.020.010.230">
+        <Item>000</Item>
+      </Type>
+      <Value code="050.020.010.230">
+        <Item>OTHERS</Item>
+      </Value>
+      <Others code="050.020.010.240">
+        <Item>Otro</Item>
+      </Others>
+    </Filter>
+    <Link>
+      <CvnItemID>
+        <CodeCVNItem>
+          <Item>190</Item>
+        </CodeCVNItem>
+      </CvnItemID>
+      <Entity>
+        <Type code="050.020.010.210">
+          <Item>000</Item>
+        </Type>
+        <EntityName code="050.020.010.190">
+          <Item>Entidad/es financiadora/s</Item>
+        </EntityName>
+      </Entity>
+      <Place>
+        <Moment>
+          <Item>000</Item>
+        </Moment>
+        <City code="050.020.010.390">
+          <Item>Ciudad</Item>
+        </City>
+        <Region>
+          <Code code="050.020.010.370">
+            <Item>ES70</Item>
+          </Code>
+          <Name code="050.020.010.370">
+            <Item>Canarias</Item>
+          </Name>
+        </Region>
+        <CountryCode code="050.020.010.360">
+          <Item>724</Item>
+        </CountryCode>
+      </Place>
+    </Link>
+    <Entity>
+      <Type code="050.020.010.120">
+        <Item>000</Item>
+      </Type>
+      <EntityName code="050.020.010.100">
+        <Item>Entidad de realización</Item>
+      </EntityName>
+    </Entity>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <StartDate>
+        <MonthYear code="050.020.010.270">
+          <Item>2014-04</Item>
+        </MonthYear>
+      </StartDate>
+      <EndDate>
+        <Year code="050.020.010.410">
+          <Item>2015</Item>
+        </Year>
+      </EndDate>
+      <Duration code="050.020.010.280">
+        <Item>P1Y1M1D</Item>
+      </Duration>
+      <DurationType>010</DurationType>
+    </Date>
+    <Author>
+      <GivenName code="050.020.010.140">
+        <Item>Nombre</Item>
+      </GivenName>
+      <FirstFamilyName code="050.020.010.140">
+        <Item>Primer Apellido</Item>
+      </FirstFamilyName>
+      <SecondFamilyName code="050.020.010.140">
+        <Item>Segundo Apellido</Item>
+      </SecondFamilyName>
+      <Signature code="050.020.010.140">
+        <Item>Firma</Item>
+      </Signature>
+      <SignatureOrder code="050.020.010.140">
+        <Item>1</Item>
+      </SignatureOrder>
+      <Roll>540</Roll>
+    </Author>
+    <Dedication code="050.020.010.430">
+      <Item>030</Item>
+    </Dedication>
+    <Roll>
+      <Value code="050.020.010.170">
+        <Item>890</Item>
+      </Value>
+    </Roll>
+    <Collaborator>
+      <Type code="050.020.010.150">
+        <Item>000</Item>
+      </Type>
+      <Value code="050.020.010.150">
+        <Item>1</Item>
+      </Value>
+      <Category code="050.020.010.150">
+        <Item>000</Item>
+      </Category>
+    </Collaborator>
+    <Collaborator>
+      <Type code="050.020.010.160">
+        <Item>010</Item>
+      </Type>
+      <Value code="050.020.010.160">
+        <Item>1</Item>
+      </Value>
+      <Category code="050.020.010.160">
+        <Item>000</Item>
+      </Category>
+    </Collaborator>
+    <Place>
+      <Moment>
+        <Item>000</Item>
+      </Moment>
+      <City code="050.020.010.090">
+        <Item>Ciudad</Item>
+      </City>
+      <Region>
+        <Code code="050.020.010.070">
+          <Item>ES70</Item>
+        </Code>
+        <Name code="050.020.010.070">
+          <Item>Canarias</Item>
+        </Name>
+      </Region>
+      <CountryCode code="050.020.010.060">
+        <Item>724</Item>
+      </CountryCode>
+    </Place>
+    <EconomicDimension>
+      <Value code="050.020.010.290">
+        <Item>1</Item>
+      </Value>
+      <CurrencyType code="050.020.010.290">
+        <Item>EUR</Item>
+      </CurrencyType>
+      <Type code="050.020.010.290">
+        <Item>000</Item>
+      </Type>
+    </EconomicDimension>
+    <EconomicDimension>
+      <Value code="050.020.010.300">
+        <Item>1</Item>
+      </Value>
+      <CurrencyType code="050.020.010.300">
+        <Item>EUR</Item>
+      </CurrencyType>
+      <Type code="050.020.010.300">
+        <Item>010</Item>
+      </Type>
+    </EconomicDimension>
+    <EconomicDimension>
+      <Value code="050.020.010.310">
+        <Item>1</Item>
+      </Value>
+      <CurrencyType code="050.020.010.310">
+        <Item>EUR</Item>
+      </CurrencyType>
+      <Type code="050.020.010.310">
+        <Item>020</Item>
+      </Type>
+    </EconomicDimension>
+    <EconomicDimension>
+      <Value code="050.020.010.320">
+        <Item>1</Item>
+      </Value>
+      <CurrencyType code="050.020.010.320">
+        <Item>EUR</Item>
+      </CurrencyType>
+      <Type code="050.020.010.320">
+        <Item>030</Item>
+      </Type>
+    </EconomicDimension>
+    <EconomicDimension>
+      <Value code="050.020.010.330">
+        <Item>1</Item>
+      </Value>
+      <CurrencyType code="050.020.010.330">
+        <Item>EUR</Item>
+      </CurrencyType>
+      <Type code="050.020.010.330">
+        <Item>010</Item>
+      </Type>
+    </EconomicDimension>
+    <ExternalPK>
+      <Type code="050.020.010.260">
+        <Item>000</Item>
+      </Type>
+      <Code code="050.020.010.260">
+        <Item>Cód. según financiadora</Item>
+      </Code>
+    </ExternalPK>
+    <Scope>
+      <Type code="050.020.010.040">
+        <Item>020</Item>
+      </Type>
+    </Scope>
+  </CvnItem>
+</tns:CVN>
