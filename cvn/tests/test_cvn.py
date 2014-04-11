@@ -2,12 +2,12 @@
 
 from cvn import settings as stCVN
 from cvn.models import CVN
+from django.conf import settings as st
+from django.core.files.base import ContentFile
 from django.test import TestCase
 from factories import UserFactory, AdminFactory
-from django.core.files.base import ContentFile
-from django.conf import settings as st
-import datetime
 from lxml import etree
+import datetime
 import os
 
 
@@ -40,7 +40,7 @@ class CVNTestCase(TestCase):
         except:
             raise
 
-    def test_check_insert_data_congreso(self):
+    def test_check_read_data_congress(self):
         cvn = CVN(xml_file=self.xml_test)
         cvn.xml_file.seek(0)
         items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -66,9 +66,8 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data[u'autores'], u'STIC')
                 self.assertIn(u'ambito', data)
                 self.assertEqual(data[u'ambito'], u'Autonómica')
-                break
 
-    def test_check_insert_data_publications(self):
+    def test_check_read_data_publication(self):
         cvn = CVN(xml_file=self.xml_test)
         cvn.xml_file.seek(0)
         items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -79,15 +78,27 @@ class CVNTestCase(TestCase):
                stCVN.MODEL_TABLE[key] == 'Publicacion'):
                 data = cvn._dataPublications(item)
                 self.assertIn(u'tipo_de_produccion', data)
-                self.assertEqual(
-                    data[u'tipo_de_produccion'], u'Capitulo de Libro')
+                self.assertIn(
+                    data[u'tipo_de_produccion'],
+                    ['Articulo', 'Capitulo de Libro', 'Libro'])
                 self.assertIn(u'titulo', data)
-                self.assertEqual(data[u'titulo'], u'Título de la publicación')
                 self.assertIn(u'nombre_publicacion', data)
-                self.assertEqual(
-                    data[u'nombre_publicacion'], u'Nombre de la publicación')
                 self.assertIn(u'autores', data)
-                self.assertEqual(data[u'autores'], u'Firma')
+                if data['tipo_de_produccion'] == 'Articulo':
+                    self.assertEqual(data[u'titulo'], u'TÍTULO')
+                    self.assertEqual(
+                        data[u'nombre_publicacion'], u'NOMBRE')
+                    self.assertEqual(data[u'autores'], u'STIC; STIC2')
+                else:
+                    self.assertEqual(
+                        data[u'titulo'], u'Título de la publicación')
+                    self.assertEqual(
+                        data[u'nombre_publicacion'],
+                        u'Nombre de la publicación')
+                    if data['tipo_de_produccion'] == 'Libro':
+                        self.assertEqual(data[u'autores'], u'STIC')
+                    else:
+                        self.assertEqual(data[u'autores'], u'Firma')
                 self.assertIn(u'volumen', data)
                 self.assertEqual(data[u'volumen'], u'1')
                 self.assertIn(u'numero', data)
@@ -98,9 +109,80 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data[u'pagina_final'], u'100')
                 self.assertIn(u'fecha', data)
                 self.assertEqual(data[u'fecha'], u'2014-04-01')
-                self.assertIn(u'issn', data)
-                self.assertEqual(data[u'issn'], u'0395-2037')
-                break
+                if data['tipo_de_produccion'] != 'Libro':
+                    self.assertIn(u'issn', data)
+                    self.assertEqual(data[u'issn'], u'0395-2037')
+
+    def test_check_read_data_project(self):
+        cvn = CVN(xml_file=self.xml_test)
+        cvn.xml_file.seek(0)
+        items = etree.parse(cvn.xml_file).findall('CvnItem')
+        for item in items:
+            data = {}
+            key = item.find('CvnItemID/CVNPK/Item').text.strip()
+            if (key in stCVN.MODEL_TABLE and
+               stCVN.MODEL_TABLE[key] in ['Proyecto', 'Convenio']):
+                data = cvn._dataScientificExperience(item, key)
+                self.assertIn(u'denominacion_del_proyecto', data)
+                self.assertEqual(
+                    data[u'denominacion_del_proyecto'],
+                    u'Denominación del proyecto')
+                self.assertIn(u'fecha_de_inicio', data)
+                self.assertEqual(data[u'fecha_de_inicio'], u'2014-04-01')
+                if u'fecha_de_fin' in data:
+                    self.assertEqual(data[u'fecha_de_fin'], u'2014-04-05')
+                else:
+                    if (u'duracion_anyos' in data and
+                       u'duracion_meses' in data and
+                       u'duracion_dias' in data):
+                        self.assertEqual(data[u'duracion_anyos'], u'1')
+                        self.assertEqual(data[u'duracion_meses'], u'1')
+                        self.assertEqual(data[u'duracion_dias'], u'1')
+                self.assertIn(u'autores', data)
+                self.assertIn(u'ambito', data)
+                if stCVN.MODEL_TABLE[key] == 'Proyecto':
+                    self.assertEqual(data[u'autores'], u'Firma')
+                    self.assertEqual(data[u'ambito'], u'Internacional no UE')
+                else:
+                    self.assertEqual(data[u'autores'], u'STIC')
+                    self.assertEqual(data[u'ambito'], u'Autonómica')
+                self.assertIn(u'cod_segun_financiadora', data)
+                self.assertEqual(
+                    data[u'cod_segun_financiadora'],
+                    u'Cód. según financiadora')
+                self.assertIn(u'cuantia_total', data)
+                self.assertEqual(data[u'cuantia_total'], u'1')
+                self.assertIn(u'cuantia_subproyecto', data)
+                self.assertEqual(data[u'cuantia_subproyecto'], u'1')
+                self.assertIn(u'porcentaje_en_subvencion', data)
+                self.assertEqual(data[u'porcentaje_en_subvencion'], u'1')
+                self.assertIn(u'porcentaje_en_credito', data)
+                self.assertEqual(data[u'porcentaje_en_credito'], u'1')
+                self.assertIn(u'porcentaje_mixto', data)
+                self.assertEqual(data[u'porcentaje_mixto'], u'1')
+
+    def test_check_read_data_tesis(self):
+        cvn = CVN(xml_file=self.xml_test)
+        cvn.xml_file.seek(0)
+        items = etree.parse(cvn.xml_file).findall('CvnItem')
+        for item in items:
+            data = {}
+            key = item.find('CvnItemID/CVNPK/Item').text.strip()
+            if (key in stCVN.MODEL_TABLE and
+               stCVN.MODEL_TABLE[key] == 'TesisDoctoral'):
+                data = cvn._dataTeaching(item)
+                self.assertIn(u'titulo', data)
+                self.assertEqual(data[u'titulo'], u'Título del trabajo')
+                self.assertIn(u'universidad_que_titula', data)
+                self.assertEqual(
+                    data[u'universidad_que_titula'],
+                    u'Universidad que titula')
+                self.assertIn(u'autor', data)
+                self.assertEqual(data[u'autor'], u'Firma')
+                self.assertIn(u'codirector', data)
+                self.assertEqual(data[u'codirector'], u'Firma')
+                self.assertIn(u'fecha_de_lectura', data)
+                self.assertEqual(data[u'fecha_de_lectura'], u'2014-04-01')
 
     def test_on_insert_cvn_old_production_tables_are_deleted(self):
         try:
