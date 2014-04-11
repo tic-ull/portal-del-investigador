@@ -1,15 +1,16 @@
 # -*- encoding: UTF-8 -*-
 
-from selenium.webdriver.common.by import By
 #from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.support.ui import Select
+from cvn.models import User
+from django import test
 from django.conf import settings as st
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
+from selenium.webdriver.common.by import By
 import unittest  # , time, re
-from django import test
-#import time
+import time
 
 
 class LoginCAS(test.LiveServerTestCase):
@@ -79,7 +80,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-#        driver.find_element_by_id("id_cvn_file").clear()
+        #driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
             "id_cvn_file").send_keys(st.BASE_DIR +
                                      "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")
@@ -99,11 +100,19 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
+        # Add admin permissions after login CAS
+        time.sleep(1)
+        u = User.objects.get(username="invipas")
+        u.is_staff = True
+        u.is_superuser = True
+        u.save()
 #        driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
             "id_cvn_file").send_keys(st.BASE_DIR +
                                      "/cvn/tests/files/cvn/CVN-Test.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.assertTrue(self.is_element_present(By.CLASS_NAME,
+                                                "alert-success"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def test_user_download_cvn(self):
