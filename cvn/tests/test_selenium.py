@@ -138,6 +138,12 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_css_selector(
             "img[alt=\"Descargar CVN\"]").click()
         time.sleep(2)
+        # Check if CVN window is open
+        self.assertEqual(len(driver.window_handles), 2)
+        # Change to CVN window
+        driver.switch_to_window(driver.window_handles[-1])
+        # Return to 'Main' windows
+        driver.switch_to_window(driver.window_handles[0])
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def is_element_present(self, how, what):
