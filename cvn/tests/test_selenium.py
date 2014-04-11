@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-#from selenium.webdriver.common.by import By
+from selenium.webdriver.common.by import By
 #from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.support.ui import Select
 from django.conf import settings as st
@@ -32,6 +32,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
+        self.assertTrue(self.is_element_present(By.CLASS_NAME, "main-title"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def test_login_no_cas(self):
@@ -45,10 +46,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-        time.sleep(2)
-#        self.failUnless(driver.find_element_by_text(
-#                        u"No se puede determinar que las credenciales" +
-#                        "proporcionadas sean auténticas."))
+        self.assertTrue(self.is_element_present(By.ID, "status"))
 
     def test_upload_cvn_fecyt(self):
         driver = self.driver
@@ -64,8 +62,10 @@ class LoginCAS(test.LiveServerTestCase):
 #        driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
             "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-Test-2.pdf")
+                                     "/cvn/tests/files/cvn/CVN-Test_2.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
+        self.assertTrue(self.is_element_present(By.CLASS_NAME,
+                                                "alert-success"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def test_upload_cvn_no_fecyt(self):
