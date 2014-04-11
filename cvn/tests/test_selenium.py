@@ -122,15 +122,22 @@ class LoginCAS(test.LiveServerTestCase):
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
                    "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
-        driver.find_element_by_id("username").send_keys("invipas")
+        driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-#        driver.find_element_by_id("id_cvn_file").clear()
+        # First upload CVN
+        time.sleep(2)
         driver.find_element_by_id(
             "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-Test.pdf")
+                                     "/cvn/tests/files/cvn/CVN-Test_2.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
+        # Download CVN
+        time.sleep(2)
+        self.assertTrue(self.is_element_present(By.CLASS_NAME, "alert-info"))
+        driver.find_element_by_css_selector(
+            "img[alt=\"Descargar CVN\"]").click()
+        time.sleep(2)
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def is_element_present(self, how, what):
