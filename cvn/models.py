@@ -20,7 +20,19 @@ import time
 logger = logging.getLogger(__name__)
 
 
-class PublicacionManager(models.Manager):
+class ProduccionManager(models.Manager):
+
+    def removeByUserProfile(self, user_profile):
+        produccion_list = super(ProduccionManager, self).get_query_set()\
+            .filter(user_profile=user_profile)
+        for prod in produccion_list:
+            if prod.user_profile.count() > 1:
+                prod.user_profile.remove(user_profile)
+            else:
+                prod.delete()
+
+
+class PublicacionManager(ProduccionManager):
 
     def byUsuariosYearTipo(self, usuarios, year, tipo):
         return super(PublicacionManager, self).get_query_set().filter(
@@ -30,7 +42,7 @@ class PublicacionManager(models.Manager):
         ).distinct().order_by('fecha')
 
 
-class CongresoManager(models.Manager):
+class CongresoManager(ProduccionManager):
 
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
@@ -39,7 +51,7 @@ class CongresoManager(models.Manager):
         ).distinct().order_by('fecha_realizacion')
 
 
-class TesisDoctoralManager(models.Manager):
+class TesisDoctoralManager(ProduccionManager):
 
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
@@ -48,7 +60,7 @@ class TesisDoctoralManager(models.Manager):
         ).distinct().order_by('fecha_de_lectura')
 
 
-class ProyectoConvenioManager(models.Manager):
+class ProyectoConvenioManager(ProduccionManager):
 
     def byUsuariosYear(self, usuarios, year):
         fechaInicioMax = datetime.date(year, 12, 31)
@@ -112,28 +124,30 @@ class CVN(models.Model):
         return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
 
     @staticmethod
-    def can_user_upload_cvn(user, xml):
-        try:
-            treeXML = etree.XML(xml)
-        except IOError:
-            logger.error(u'ERROR: No existe el fichero %s' % (xml))
+    def get_nif_from_xml(xml):
+        nif = ''
+        xml_tree = etree.XML(xml)
+        id_node = xml_tree.find(
+            'Agent/Identification/PersonalIdentification/OfficialId')
+        nif_node = id_node.find('DNI/Item')
+        if nif_node is None:
+            nif_node = id_node.find('NIE/Item')
 
-        nif = treeXML.find('Agent/Identification/'
-                           'PersonalIdentification/OfficialId/DNI/Item')
-        if nif is not None and nif.text:
-            nif = nif.text.strip()
-        else:
-            nif = treeXML.find('Agent/Identification/PersonalIdentification/'
-                               'OfficialId/NIE/Item')
-            if nif is not None and nif.text:
-                nif = nif.text.strip()
+        if nif_node is not None:
+            nif = nif_node.text.strip()
+
+        return nif
+
+    @classmethod
+    def can_user_upload_cvn(cls, user, xml):
+        nif = cls.get_nif_from_xml(xml)
         if (user.has_perm('can_upload_other_users_cvn') or
-           (nif and nif.upper() == user.profile.documento.upper())):
+           nif.upper() == user.profile.documento.upper()):
             return True
         return False
 
     @staticmethod
-    def getXMLDate(xml):
+    def get_date_from_xml(xml):
         treeXML = etree.XML(xml)
         date = treeXML.find(
             'Version/VersionID/Date/Item').text.strip().split('-')
@@ -153,7 +167,7 @@ class CVN(models.Model):
 
     def insertXML(self, user_profile):
         try:
-            self._cleanDataCVN(user_profile)
+            self._remove_producciones(user_profile)
             self.xml_file.seek(0)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
             self._parseScientificProduction(user_profile, CVNItems)
@@ -164,30 +178,12 @@ class CVN(models.Model):
             else:
                 logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
 
-    def _cleanDataCVN(self, user_profile=None):
-        self._deleteOldData(Articulo.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Libro.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Capitulo.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Publicacion.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Congreso.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Proyecto.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(Convenio.objects.filter(
-            user_profile=user_profile), user_profile)
-        self._deleteOldData(TesisDoctoral.objects.filter(
-            user_profile=user_profile), user_profile)
-
-    def _deleteOldData(self, produccion_list=[], user_profile=None):
-        for prod in produccion_list:
-            if prod.user_profile.count() > 1:
-                prod.user_profile.remove(user_profile)
-            else:
-                prod.delete()
+    def _remove_producciones(self, user_profile=None):
+        Publicacion.objects.removeByUserProfile(user_profile)
+        Congreso.objects.removeByUserProfile(user_profile)
+        Proyecto.objects.removeByUserProfile(user_profile)
+        Convenio.objects.removeByUserProfile(user_profile)
+        TesisDoctoral.objects.removeByUserProfile(user_profile)
 
     def _parseScientificProduction(self, user_profile, CVNItems):
         for CVNItem in CVNItems:

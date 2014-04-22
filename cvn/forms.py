@@ -25,7 +25,7 @@ class UploadCVNForm(forms.ModelForm):
         if xml:
             cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                               ContentFile(xml), save=False)
-            cvn.fecha_cvn = CVN.getXMLDate(xml)
+            cvn.fecha_cvn = CVN.get_date_from_xml(xml)
         if commit:
             cvn.save()
         return cvn
