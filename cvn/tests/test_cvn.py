@@ -184,26 +184,6 @@ class CVNTestCase(TestCase):
                 self.assertIn(u'fecha_de_lectura', data)
                 self.assertEqual(data[u'fecha_de_lectura'], u'2014-04-01')
 
-    def test_on_insert_cvn_old_production_tables_are_deleted(self):
-        try:
-            u = UserFactory.create()
-            cvn = CVN(xml_file=self.xml_test)
-            cvn.insertXML(u.profile)
-            publicaciones = u.profile.publicacion_set.all()
-            congresos = u.profile.congreso_set.all()
-            convenios = u.profile.convenio_set.all()
-            proyectos = u.profile.proyecto_set.all()
-            tesis = u.profile.tesisdoctoral_set.all()
-            cvn.xml_file = self.xml_empty
-            cvn.insertXML(u.profile)
-            self.assertEqual(publicaciones.count(), 0)
-            self.assertEqual(congresos.count(), 0)
-            self.assertEqual(convenios.count(), 0)
-            self.assertEqual(proyectos.count(), 0)
-            self.assertEqual(tesis.count(), 0)
-        except:
-            raise
-
     def test_on_insert_cvn_old_pdf_is_moved(self):
             pdf_ull = open(os.path.join(stCVN.TEST_ROOT,
                            'cvn/CVN-ULL.pdf'), 'r')
@@ -212,7 +192,7 @@ class CVNTestCase(TestCase):
             cvn.cvn_file.save('CVN-ULL.pdf',
                               ContentFile(pdf_ull.read()),
                               save=False)
-            cvn.remove()
+            cvn._backup_pdf()
             relative_path = ('cvn/old_cvn/CVN-ULL-' +
                              cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
             full_path = os.path.join(st.MEDIA_ROOT, relative_path)

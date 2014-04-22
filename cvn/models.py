@@ -154,9 +154,12 @@ class CVN(models.Model):
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
     def remove(self):
+        # Removes data related to CVN that is not on the CVN class.
         self._backup_pdf()
         if self.xml_file:
-            self.xml_file.delete()
+            self.xml_file.delete()      # Remove pdf file
+        self._remove_producciones()     # Removed info related to pdf
+                                        # from all databases
 
     def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
@@ -170,12 +173,11 @@ class CVN(models.Model):
             os.makedirs(old_path)
         file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
 
-    def insertXML(self, user_profile):
+    def insert_xml(self, user_profile):
         try:
-            self._remove_producciones(user_profile)
             self.xml_file.seek(0)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
-            self._parseScientificProduction(user_profile, CVNItems)
+            self._parse_producciones(user_profile, CVNItems)
         except IOError:
             if self.xml_file:
                 logger.error(u'ERROR: No existe el fichero %s' % (
@@ -183,14 +185,14 @@ class CVN(models.Model):
             else:
                 logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
 
-    def _remove_producciones(self, user_profile=None):
-        Publicacion.objects.removeByUserProfile(user_profile)
-        Congreso.objects.removeByUserProfile(user_profile)
-        Proyecto.objects.removeByUserProfile(user_profile)
-        Convenio.objects.removeByUserProfile(user_profile)
-        TesisDoctoral.objects.removeByUserProfile(user_profile)
+    def _remove_producciones(self):
+        Publicacion.objects.removeByUserProfile(self.user_profile)
+        Congreso.objects.removeByUserProfile(self.user_profile)
+        Proyecto.objects.removeByUserProfile(self.user_profile)
+        Convenio.objects.removeByUserProfile(self.user_profile)
+        TesisDoctoral.objects.removeByUserProfile(self.user_profile)
 
-    def _parseScientificProduction(self, user_profile, CVNItems):
+    def _parse_producciones(self, user_profile, CVNItems):
         for CVNItem in CVNItems:
             data = {}
             cvn_key = CVNItem.find('CvnItemID/CVNPK/Item').text.strip()
