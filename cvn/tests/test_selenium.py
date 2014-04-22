@@ -15,6 +15,11 @@ import time
 
 class LoginCAS(test.LiveServerTestCase):
 
+    def __init__(self, *args, **kwargs):
+        super(LoginCAS, self).__init__(*args, **kwargs)
+        if not st.DEBUG:
+            st.DEBUG = True
+
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)

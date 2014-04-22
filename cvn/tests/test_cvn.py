@@ -212,7 +212,7 @@ class CVNTestCase(TestCase):
             cvn.cvn_file.save('CVN-ULL.pdf',
                               ContentFile(pdf_ull.read()),
                               save=False)
-            cvn.backup_pdf()
+            cvn.remove()
             relative_path = ('cvn/old_cvn/CVN-ULL-' +
                              cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
             full_path = os.path.join(st.MEDIA_ROOT, relative_path)

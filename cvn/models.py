@@ -153,7 +153,12 @@ class CVN(models.Model):
             'Version/VersionID/Date/Item').text.strip().split('-')
         return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
-    def backup_pdf(self):
+    def remove(self):
+        self._backup_pdf()
+        if self.xml_file:
+            self.xml_file.delete()
+
+    def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
         old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
         new_file_name = self.cvn_file.name.split('/')[-1].replace(

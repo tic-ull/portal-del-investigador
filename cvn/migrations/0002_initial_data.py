@@ -10,7 +10,7 @@ class Migration(DataMigration):
         ct = orm['contenttypes.ContentType'].objects.get_or_create(
             name='global_permission', app_label='cvn')[0]
         orm['auth.Permission'].objects.get_or_create(
-            name='Can upload a CVN that doesnt correspond with his NIF',
+            name='Can upload CVN with other NIF',
             codename='can_upload_other_users_cvn', content_type=ct)
         u = orm['auth.User'].objects.get_or_create(username='informe_ull')[0]
         orm.UserProfile.objects.get_or_create(user=u)
