@@ -20,10 +20,12 @@ def create_profile(sender, instance, created, **kwargs):
         request = CrequestMiddleware.get_request(None)
         if request:
             cas_info = request.session['attributes']
-            profile.documento = cas_info['NumDocumento']
-            WS = st.WS_SERVER_URL + 'get_codpersona?nif='\
-                + cas_info['NumDocumento']
-            profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
+            if 'NumDocumento' in cas_info:
+                profile.documento = cas_info['NumDocumento']
+                WS = st.WS_SERVER_URL + 'get_codpersona?nif=i%s' % (
+                    cas_info['NumDocumento'])
+                if urllib.urlopen(WS).code == 200:
+                    profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
         profile.save()
 
 post_save.connect(create_profile, sender=User,
