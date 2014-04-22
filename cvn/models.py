@@ -141,7 +141,6 @@ class CVN(models.Model):
 
     def remove(self):
         self._backup_pdf()
-        self.cvn_file.delete()
         if self.xml_file:
             self.xml_file.delete()
 
