@@ -15,4 +15,5 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
+    url(r'^investigacion/$', RedirectView.as_view(url=reverse_lazy('index')))
 )
