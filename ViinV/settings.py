@@ -236,8 +236,6 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
 )
 
-#SITE_ID = 1
-
 # ---------------------------------------------------------- #
 
 try:
