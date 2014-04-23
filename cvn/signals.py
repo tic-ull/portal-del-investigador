@@ -12,18 +12,19 @@ import urllib
 
 
 def create_profile(sender, instance, created, **kwargs):
-    if created:
-        profile = UserProfile.objects.create(user=instance)
-        request = CrequestMiddleware.get_request()
-        if request and 'attributes' in request.session:
-            cas_info = request.session['attributes']
-            if 'NumDocumento' in cas_info:
-                profile.documento = cas_info['NumDocumento']
-                WS = st.WS_SERVER_URL + 'get_codpersona?nif=i%s' % (
-                    cas_info['NumDocumento'])
-                if urllib.urlopen(WS).code == 200:
-                    profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
-        profile.save()
+    if not created:
+        return
+    profile = UserProfile.objects.create(user=instance)
+    request = CrequestMiddleware.get_request()
+    if request and 'attributes' in request.session:
+        cas_info = request.session['attributes']
+        if 'NumDocumento' in cas_info:
+            profile.documento = cas_info['NumDocumento']
+            WS = st.WS_SERVER_URL + 'get_codpersona?nif=i%s' % (
+                cas_info['NumDocumento'])
+            if urllib.urlopen(WS).code == 200:
+                profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
+    profile.save()
 
 post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 

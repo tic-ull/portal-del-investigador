@@ -7,8 +7,8 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        ct = orm['contenttypes.ContentType'].objects.get_or_create(
-            name='global_permission', app_label='cvn')[0]
+        ct = orm['contenttypes.ContentType'].objects.create(
+            app_label='cvn', model='cvn')
         orm['auth.Permission'].objects.get_or_create(
             name='Can upload CVN with other NIF',
             codename='can_upload_other_users_cvn', content_type=ct)
