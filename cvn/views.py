@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 import logging
 
 logger = logging.getLogger(__name__)
@@ -42,5 +43,6 @@ def download_cvn(request):
 @login_required
 def ull_report(request):
     context = {}
-    scientific_production_to_context(request.user.profile, context)
+    userULL = User.objects.get(username='GesInv-ULL')
+    scientific_production_to_context(userULL.profile, context)
     return render(request, 'ull_report.html', context)
