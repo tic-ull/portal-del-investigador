@@ -1,8 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.models import CVN
-from django.conf import settings as st
+from cvn.models import (CVN, Congreso, Publicacion, Convenio, Proyecto,
+                        TesisDoctoral)
+from cvn.parser_helpers import parse_produccion_type
 from django.core.files.base import ContentFile
 from django.test import TestCase
 from factories import UserFactory, AdminFactory
@@ -33,7 +34,7 @@ class CVNTestCase(TestCase):
             self.assertEqual(user.profile.publicacion_set.filter(
                 tipo_de_produccion='Libro').count(), 6)
             self.assertEqual(user.profile.publicacion_set.filter(
-                tipo_de_produccion='Capitulo de Libro').count(), 32)
+                tipo_de_produccion='Capitulo').count(), 32)
             self.assertEqual(user.profile.congreso_set.count(), 55)
             self.assertEqual(user.profile.convenio_set.count(), 38)
             self.assertEqual(user.profile.proyecto_set.count(), 11)
@@ -47,10 +48,9 @@ class CVNTestCase(TestCase):
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
             data = {}
-            key = item.find('CvnItemID/CVNPK/Item').text.strip()
-            if (key in stCVN.MODEL_TABLE and
-               stCVN.MODEL_TABLE[key] == 'Congreso'):
-                data = cvn._dataCongress(item)
+            tipo = parse_produccion_type(item)
+            if tipo == 'Congreso':
+                data = Congreso.objects.create(item, None, False)
                 self.assertIn(u'titulo', data)
                 self.assertEqual(data[u'titulo'], u'Título')
                 self.assertIn(u'nombre_del_congreso', data)
@@ -73,15 +73,13 @@ class CVNTestCase(TestCase):
         cvn.xml_file.seek(0)
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            data = {}
-            key = item.find('CvnItemID/CVNPK/Item').text.strip()
-            if (key in stCVN.MODEL_TABLE and
-               stCVN.MODEL_TABLE[key] == 'Publicacion'):
-                data = cvn._dataPublications(item)
+            tipo = parse_produccion_type(item)
+            if tipo == 'Publicacion':
+                data = Publicacion.objects.create(item, None, False)
                 self.assertIn(u'tipo_de_produccion', data)
                 self.assertIn(
                     data[u'tipo_de_produccion'],
-                    ['Articulo', 'Capitulo de Libro', 'Libro'])
+                    ['Articulo', 'Capitulo', 'Libro'])
                 self.assertIn(u'titulo', data)
                 self.assertIn(u'nombre_publicacion', data)
                 self.assertIn(u'autores', data)
@@ -119,11 +117,13 @@ class CVNTestCase(TestCase):
         cvn.xml_file.seek(0)
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            data = {}
-            key = item.find('CvnItemID/CVNPK/Item').text.strip()
-            if (key in stCVN.MODEL_TABLE and
-               stCVN.MODEL_TABLE[key] in ['Proyecto', 'Convenio']):
-                data = cvn._dataScientificExperience(item, key)
+            tipo = parse_produccion_type(item)
+            if tipo == 'Proyecto' or tipo == 'Convenio':
+                data = {}
+                if tipo == 'Proyecto':
+                    data = Proyecto.objects.create(item, None, False)
+                elif tipo == 'Convenio':
+                    data = Convenio.objects.create(item, None, False)
                 self.assertIn(u'denominacion_del_proyecto', data)
                 self.assertEqual(
                     data[u'denominacion_del_proyecto'],
@@ -141,7 +141,7 @@ class CVNTestCase(TestCase):
                         self.assertEqual(data[u'duracion_dias'], u'1')
                 self.assertIn(u'autores', data)
                 self.assertIn(u'ambito', data)
-                if stCVN.MODEL_TABLE[key] == 'Proyecto':
+                if tipo == 'Proyecto':
                     self.assertEqual(data[u'autores'], u'Firma')
                     self.assertEqual(data[u'ambito'], u'Internacional no UE')
                 else:
@@ -168,10 +168,9 @@ class CVNTestCase(TestCase):
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
             data = {}
-            key = item.find('CvnItemID/CVNPK/Item').text.strip()
-            if (key in stCVN.MODEL_TABLE and
-               stCVN.MODEL_TABLE[key] == 'TesisDoctoral'):
-                data = cvn._dataTeaching(item)
+            tipo = parse_produccion_type(item)
+            if tipo == 'TesisDoctoral':
+                data = TesisDoctoral.objects.create(item, None, False)
                 self.assertIn(u'titulo', data)
                 self.assertEqual(data[u'titulo'], u'Título del trabajo')
                 self.assertIn(u'universidad_que_titula', data)
