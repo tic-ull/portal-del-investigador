@@ -39,7 +39,7 @@ class UploadCVNForm(forms.ModelForm):
             cvn.save()
             self.user.profile.cvn = cvn
             self.user.profile.save()
-            self.user.profile.cvn.insert_xml(self.user.profile)
+            self.user.profile.cvn.insert_xml()
         return cvn
 
     class Meta:

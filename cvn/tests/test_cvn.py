@@ -26,7 +26,8 @@ class CVNTestCase(TestCase):
         try:
             cvn = CVN(xml_file=self.xml_ull)
             user = UserFactory.create()
-            cvn.insertXML(user.profile)
+            user.profile.cvn = cvn
+            cvn.insert_xml()
             self.assertEqual(user.profile.publicacion_set.filter(
                 tipo_de_produccion='Articulo').count(), 1135)
             self.assertEqual(user.profile.publicacion_set.filter(
@@ -192,10 +193,11 @@ class CVNTestCase(TestCase):
             cvn.cvn_file.save('CVN-ULL.pdf',
                               ContentFile(pdf_ull.read()),
                               save=False)
+            relative_path = (
+                cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
+                cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
             cvn._backup_pdf()
-            relative_path = ('cvn/old_cvn/CVN-ULL-' +
-                             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
-            full_path = os.path.join(st.MEDIA_ROOT, relative_path)
+            full_path = os.path.join(stCVN.OLD_PDF_ROOT, relative_path)
             self.assertTrue(os.path.isfile(full_path))
 
     def test_check_no_permission_to_upload_cvn(self):
