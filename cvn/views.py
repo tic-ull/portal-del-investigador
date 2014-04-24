@@ -14,9 +14,6 @@ logger = logging.getLogger(__name__)
 @login_required
 def index(request):
     context = {}
-    if 'message' in request.session:
-        context['message'] = request.session['message']
-        del request.session['message']
     if 'attributes' in request.session:
         context['user'] = request.session['attributes']
     user = request.user
