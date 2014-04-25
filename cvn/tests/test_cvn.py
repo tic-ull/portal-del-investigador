@@ -61,7 +61,6 @@ class CVNTestCase(TestCase):
         self.assertEqual(count, 1214)
         self.assertEqual(Articulo.objects.all().count(), 1135)
 
-
     def test_check_read_data_congress(self):
         cvn = CVN(xml_file=self.xml_test)
         cvn.xml_file.seek(0)
@@ -126,10 +125,13 @@ class CVNTestCase(TestCase):
                     data = Proyecto.objects.create(item, u.profile)
                 elif tipo == 'Convenio':
                     data = Convenio.objects.create(item, u.profile)
-                self.assertEqual(data.denominacion_del_proyecto, u'Denominación del proyecto')
-                self.assertEqual(data.fecha_de_inicio, datetime.date(2014, 04, 01))
+                self.assertEqual(data.denominacion_del_proyecto,
+                                 u'Denominación del proyecto')
+                self.assertEqual(data.fecha_de_inicio,
+                                 datetime.date(2014, 04, 01))
                 if tipo == 'Proyecto':
-                    self.assertEqual(data.fecha_de_fin, datetime.date(2014, 04, 05))
+                    self.assertEqual(data.fecha_de_fin,
+                                     datetime.date(2014, 04, 05))
                 else:
                     self.assertEqual(data.duracion_anyos, 1)
                     self.assertEqual(data.duracion_meses, 1)
@@ -140,7 +142,8 @@ class CVNTestCase(TestCase):
                 else:
                     self.assertEqual(data.autores, u'STIC')
                     self.assertEqual(data.ambito, u'Autonómica')
-                self.assertEqual(data.cod_segun_financiadora, u'Cód. según financiadora')
+                self.assertEqual(data.cod_segun_financiadora,
+                                 u'Cód. según financiadora')
                 self.assertEqual(data.cuantia_total, 1)
                 self.assertEqual(data.cuantia_subproyecto, 1)
                 self.assertEqual(data.porcentaje_en_subvencion, 1)
@@ -158,10 +161,12 @@ class CVNTestCase(TestCase):
             if tipo == 'TesisDoctoral':
                 data = TesisDoctoral.objects.create(item, u.profile)
                 self.assertEqual(data.titulo, u'Título del trabajo')
-                self.assertEqual(data.universidad_que_titula, u'Universidad que titula')
+                self.assertEqual(data.universidad_que_titula,
+                                 u'Universidad que titula')
                 self.assertEqual(data.autor, u'Firma')
                 self.assertEqual(data.codirector, u'Firma')
-                self.assertEqual(data.fecha_de_lectura, datetime.date(2014, 04, 01))
+                self.assertEqual(data.fecha_de_lectura,
+                                 datetime.date(2014, 04, 01))
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
             pdf_ull = open(os.path.join(stCVN.TEST_ROOT,
@@ -182,15 +187,15 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         u.profile.documento = '12345678A'
         example_xml = self.xml_test.read()
-        self.assertFalse(CVN.can_user_upload_cvn(u, example_xml))
+        self.assertFalse(u.profile.can_upload_cvn(example_xml))
 
     def test_admin_permission_to_upload_cvn(self):
         a = AdminFactory.create()
         example_xml = self.xml_test.read()
-        self.assertTrue(CVN.can_user_upload_cvn(a, example_xml))
+        self.assertTrue(a.profile.can_upload_cvn(example_xml))
 
     def test_check_permission_to_upload_cvn(self):
         u = UserFactory.create()
         u.profile.documento = '00000000A'
         example_xml = self.xml_test.read()
-        self.assertTrue(CVN.can_user_upload_cvn(u, example_xml))
+        self.assertTrue(u.profile.can_upload_cvn(example_xml))

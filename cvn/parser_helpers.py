@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 from cvn import settings as stCVN
+import datetime
 
 
 def parse_scope(treeXML):
@@ -115,3 +116,10 @@ def parse_publicacion_location(treeXML):
         if page is not None and page.text is not None:
             data['pagina_final'] = page.text.strip()
     return data
+
+
+def parse_date(xml):
+    '''Input: root node'''
+    date = xml.find(
+        'Version/VersionID/Date/Item').text.strip().split('-')
+    return datetime.date(int(date[0]), int(date[1]), int(date[2]))

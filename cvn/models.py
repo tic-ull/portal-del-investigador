@@ -23,17 +23,17 @@ import sys
 logger = logging.getLogger(__name__)
 
 
-def get_produccion_from_fecyt_code(code, subtype):
-    if code == '':
-        return None
-    if code == 'TesisDoctoral' and subtype != 'TesisDoctoral':
-        return None
-    if code == 'Publicacion':
-        code = subtype
-    return getattr(sys.modules[__name__], code)
-
-
 class FECYT(models.Model):
+
+    @staticmethod
+    def get_produccion_from_code(code, subtype):
+        if code == '':
+            return None
+        if code == 'TesisDoctoral' and subtype != 'TesisDoctoral':
+            return None
+        if code == 'Publicacion':
+            code = subtype
+        return getattr(sys.modules[__name__], code)
 
     @staticmethod
     def getXML(filePDF):
@@ -75,22 +75,6 @@ class CVN(models.Model):
 
     def __unicode__(self):
         return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
-
-    @staticmethod
-    def can_user_upload_cvn(user, xml):
-        xml_tree = etree.XML(xml)
-        nif = parse_nif(xml_tree)
-        if (user.has_perm('can_upload_other_users_cvn') or
-           nif.upper() == user.profile.documento.upper()):
-            return True
-        return False
-
-    @staticmethod
-    def get_date_from_xml(xml):
-        treeXML = etree.XML(xml)
-        date = treeXML.find(
-            'Version/VersionID/Date/Item').text.strip().split('-')
-        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
@@ -135,7 +119,7 @@ class CVN(models.Model):
         for CVNItem in CVNItems:
             code = parse_produccion_type(CVNItem)
             subtype = parse_produccion_subtype(CVNItem)
-            produccion = get_produccion_from_fecyt_code(code, subtype)
+            produccion = FECYT.get_produccion_from_code(code, subtype)
             if produccion is None:
                 continue
             produccion.objects.create(CVNItem, self.user_profile)
@@ -153,6 +137,14 @@ class UserProfile(models.Model):
                                  blank=True, null=True, unique=True)
     rrhh_code = models.CharField(u'Código persona', max_length=20,
                                  blank=True, null=True, unique=True)
+
+    def can_upload_cvn(self, xml):
+        xml_tree = etree.XML(xml)
+        nif = parse_nif(xml_tree)
+        if (self.user.has_perm('can_upload_other_users_cvn') or
+           nif.upper() == self.user.profile.documento.upper()):
+            return True
+        return False
 
     def __unicode__(self):
         return self.user.username
