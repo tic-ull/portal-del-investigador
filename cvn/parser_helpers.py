@@ -3,6 +3,8 @@ from cvn import settings as stCVN
 
 
 def parse_scope(treeXML):
+    '''Input: Scope node
+       Example: CvnItem/Link/Scope'''
     dataCVN = {}
     if treeXML:
         dataCVN['ambito'] = unicode(stCVN.SCOPE[treeXML.find(
@@ -14,9 +16,9 @@ def parse_scope(treeXML):
 
 
 def parse_duration(duration):
-    """
-         Format: P<num_years>Y<num_months>M<num_days>D
-    """
+    '''Input: Duration/Item node
+       Example: CvnItem/Date/Duration/Item
+    '''
     dataCVN = {}
     number = ''
     for item in duration[1:]:
@@ -33,6 +35,7 @@ def parse_duration(duration):
 
 
 def parse_nif(xml):
+    '''Input: root node'''
     nif = ''
     id_node = xml.find(
         'Agent/Identification/PersonalIdentification/OfficialId')
@@ -47,6 +50,7 @@ def parse_nif(xml):
 
 
 def parse_authors(author_list):
+    '''Input: A list of Author nodes'''
     authors = ''
     for author in author_list:
         authorItem = ''
@@ -76,6 +80,7 @@ def parse_authors(author_list):
 
 
 def parse_produccion_type(xml):
+    '''Input: CvnItem node'''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
     if not cvn_key in stCVN.FECYT_CODE:
         return ''
@@ -83,6 +88,7 @@ def parse_produccion_type(xml):
 
 
 def parse_produccion_subtype(xml):
+    '''Input: CvnItem node'''
     subtype = xml.find('Subtype/SubType1/Item')
     if subtype is None:
         return ''
@@ -93,6 +99,7 @@ def parse_produccion_subtype(xml):
 
 
 def parse_publicacion_location(treeXML):
+    '''Input: Location node'''
     data = {}
     if treeXML:
         volume = treeXML.find('Volume/Item')
