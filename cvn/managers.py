@@ -14,7 +14,19 @@ class ProduccionManager(models.Manager):
 
     # Creates a produccion with the information from insertion_dict
     # produccion: Convenio, Proyecto, Capitulo, etc.
-    def _create(self, insertion_dict, user_profile):
+    def _saveData(self, dataCVN, user_profile):
+        dataSearch = self._getDataSearch(dataCVN)
+        if not dataSearch:
+            dataSearch = {'pk': stCVN.INVALID_SEARCH}
+        table = get_model('cvn', tableName)
+        try:
+            reg = table.objects.get(**dataSearch)
+            table.objects.filter(pk=reg.id).update(**dataCVN)
+        except ObjectDoesNotExist:
+            reg = table.objects.create(**dataCVN)
+        reg.user_profile.add(user_profile)
+        reg.save()
+    '''def _create(self, insertion_dict, user_profile):
         search_dict = self._get_search_dict(insertion_dict)
         if not len(search_dict):
             return
@@ -28,6 +40,7 @@ class ProduccionManager(models.Manager):
         reg.user_profile.add(user_profile)
         reg.save()
         return reg
+    '''
 
     # Creates a slice of dictionary with keys used to search
     def _get_search_dict(self, dictionary):
