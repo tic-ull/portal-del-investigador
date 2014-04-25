@@ -14,9 +14,7 @@ class ProduccionManager(models.Manager):
 
     # Creates a produccion with the information from insertion_dict
     # produccion: Convenio, Proyecto, Capitulo, etc.
-    def _create(self, insertion_dict, user_profile, commit):
-        if not commit:
-            return insertion_dict
+    def _create(self, insertion_dict, user_profile):
         search_dict = self._get_search_dict(insertion_dict)
         if not len(search_dict):
             return
@@ -39,7 +37,7 @@ class ProduccionManager(models.Manager):
                 out_dict[item] = dictionary[item]
         return out_dict
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
         pass
 
     def removeByUserProfile(self, user_profile):
@@ -54,7 +52,7 @@ class ProduccionManager(models.Manager):
 
 class PublicacionManager(ProduccionManager):
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
         dataCVN = {}
         dataCVN[u'tipo_de_produccion'] = parse_produccion_subtype(item)
         if item.find('Title/Name'):
@@ -78,8 +76,7 @@ class PublicacionManager(ProduccionManager):
         if item.find('ExternalPK'):
             dataCVN[u'issn'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
-        return super(PublicacionManager, self)._create(
-            dataCVN, user_profile, commit)
+        return super(PublicacionManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYearTipo(self, usuarios, year, tipo):
         return super(PublicacionManager, self).get_query_set().filter(
@@ -91,7 +88,7 @@ class PublicacionManager(ProduccionManager):
 
 class CongresoManager(ProduccionManager):
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
         dataCVN = {}
         if item.find('Title/Name'):
             dataCVN[u'titulo'] = unicode(item.find(
@@ -130,8 +127,7 @@ class CongresoManager(ProduccionManager):
                 # Ámbito
                 dataCVN.update(parse_scope(itemXML.find('Scope')))
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        return super(CongresoManager, self)._create(
-            dataCVN, user_profile, commit)
+        return super(CongresoManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
@@ -142,7 +138,7 @@ class CongresoManager(ProduccionManager):
 
 class TesisDoctoralManager(ProduccionManager):
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
         dataCVN = {}
         dataCVN[u'titulo'] = unicode(item.find(
             'Title/Name/Item').text.strip())
@@ -154,8 +150,7 @@ class TesisDoctoralManager(ProduccionManager):
             item.findall('Link/Author'))
         dataCVN[u'fecha_de_lectura'] = unicode(item.find(
             'Date/OnlyDate/DayMonthYear/Item').text.strip())
-        return super(TesisDoctoralManager, self)._create(
-            dataCVN, user_profile, commit)
+        return super(TesisDoctoralManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
@@ -168,7 +163,7 @@ class ProyectoManager(ProduccionManager):
 
     search_items = ['denominacion_del_proyecto']
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
         dataCVN = {}
         # Demonicación del Proyecto
         if item.find('Title/Name'):
@@ -213,8 +208,7 @@ class ProyectoManager(ProduccionManager):
                 'ExternalPK/Code/Item').text.strip())
         # Ámbito
         dataCVN.update(parse_scope(item.find('Scope')))
-        return super(ProyectoManager, self)._create(
-            dataCVN, user_profile, commit)
+        return super(ProyectoManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         fechaInicioMax = datetime.date(year, 12, 31)
@@ -238,7 +232,7 @@ class ConvenioManager(ProduccionManager):
 
     search_items = ['denominacion_del_proyecto']
 
-    def create(self, item, user_profile, commit=True):
+    def create(self, item, user_profile):
 
         dataCVN = {}
         # Demonicación del Proyecto
@@ -275,8 +269,7 @@ class ConvenioManager(ProduccionManager):
                 'ExternalPK/Code/Item').text.strip())
         # Ámbito
         dataCVN.update(parse_scope(item.find('Scope')))
-        return super(ConvenioManager, self)._create(
-            dataCVN, user_profile, commit)
+        return super(ConvenioManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         fechaInicioMax = datetime.date(year, 12, 31)
