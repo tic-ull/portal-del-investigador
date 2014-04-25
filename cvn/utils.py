@@ -18,7 +18,7 @@ def scientific_production_to_context(user, context):
 
 def date_cvn_to_context(cvn, context):
     if not cvn:
-        return False
+        return
     context['fecha_cvn'] = cvn.fecha_cvn
     date = relativedelta(years=stCVN.CVN_CADUCIDAD)
     if (cvn.fecha_cvn + date) < datetime.date.today():
