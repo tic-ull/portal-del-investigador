@@ -18,9 +18,10 @@ def index(request):
     if 'attributes' in request.session:
         context['user'] = request.session['attributes']
     user = request.user
-    context['form'] = UploadCVNForm()
+    context['form'] = UploadCVNForm(instance=user.profile.cvn)
     if request.method == 'POST':
-        form = UploadCVNForm(request.POST, request.FILES, user=user)
+        form = UploadCVNForm(request.POST, request.FILES, user=user,
+                             instance=user.profile.cvn)
         if form.is_valid():
             form.save()
             context['message'] = _(u'CVN actualizado con éxito.')

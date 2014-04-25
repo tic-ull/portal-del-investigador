@@ -102,9 +102,9 @@ class FECYT(models.Model):
 
 
 class CVN(models.Model):
-    cvn_file = models.FileField(upload_to=stCVN.PDF_ROOT)
-    xml_file = models.FileField(upload_to=stCVN.XML_ROOT)
-    fecha_cvn = models.DateField()
+    cvn_file = models.FileField(u'PDF', upload_to=stCVN.PDF_ROOT)
+    xml_file = models.FileField(u'XML', upload_to=stCVN.XML_ROOT)
+    fecha_cvn = models.DateField(u'Fecha del CVN')
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
 
@@ -145,7 +145,7 @@ class CVN(models.Model):
             self.xml_file.delete()
 
     def _backup_pdf(self):
-        cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
+        cvn_path = os.path.join(st.MEDIA_ROOT, stCVN.PDF_ROOT + self.cvn_file.name)
         old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
         new_file_name = self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(

@@ -11,6 +11,8 @@ class UploadCVNForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        if 'instance' in kwargs and kwargs['instance'] is not None:
+            self.user = kwargs['instance'].user_profile.user
         super(UploadCVNForm, self).__init__(*args, **kwargs)
 
     def clean_cvn_file(self):
@@ -27,16 +29,14 @@ class UploadCVNForm(forms.ModelForm):
 
     def save(self, commit=True):
         cvn = super(UploadCVNForm, self).save(commit=False)
-        if self.user and self.user.username:
+        if self.user:
             cvn.cvn_file.name = u'CVN-%s.pdf' % (self.user.username)
-        if self.xml:
-            cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
-                              ContentFile(self.xml), save=False)
-            cvn.fecha_cvn = CVN.getXMLDate(self.xml)
+        if self.user.profile.cvn:
+            self.user.profile.cvn.remove()
         if commit:
-            if self.user.profile.cvn:
-                self.user.profile.cvn.remove()
-            cvn.save()
+            cvn.fecha_cvn = CVN.getXMLDate(self.xml)
+            cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
+                              ContentFile(self.xml))
             self.user.profile.cvn = cvn
             self.user.profile.save()
             self.user.profile.cvn.insertXML(self.user.profile)

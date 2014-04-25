@@ -6,7 +6,7 @@ import datetime
 
 
 def scientific_production_to_context(user, context):
-    if not user:
+    if not user.cvn:
         return False
     context['Publicaciones'] = user.publicacion_set.all()
     context['Congresos'] = user.congreso_set.all()
