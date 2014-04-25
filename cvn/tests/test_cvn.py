@@ -58,11 +58,8 @@ class CVNTestCase(TestCase):
             if cvn_key == '060.010.010.000' and subtype == '035':
                 count = count + 1
                 Articulo.objects.create(item, u.profile)
-        #self.assertEqual(count, 1135)
-        #self.assertEqual(Articulo.objects.all().count(), 1135)
-        #self.assertEqual(u.profile.articulo_set.count(), 1135)
-        #self.assertEqual(u.profile.produccion_set.filter(tipo_de_produccion='Articulo').count, 1135)
-        self.assertEqual(u.profile.produccion_set.count, 1135)
+        self.assertEqual(count, 1214)
+        self.assertEqual(Articulo.objects.all().count(), 1135)
 
 
     def test_check_read_data_congress(self):
