@@ -12,9 +12,9 @@ PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 
 # Rutas de los XML y PDF
-PDF_ROOT = "cvn/pdf"
-XML_ROOT = "cvn/xml"
-OLD_PDF_ROOT = "cvn/old_cvn/"  # CVN antiguos
+PDF_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/pdf")
+XML_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/xml")
+OLD_PDF_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/old_cvn/")  # CVN antiguos
 PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/pdf_departamento')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 
@@ -58,20 +58,20 @@ DIC_PERSONAL_DATA_XML = {
     u'Photo': u'imagen',
 }
 
-# Editor FECYT (Paso 6): Actividad Científica y tecnológica
-ACTIVIDAD_CIENTIFICA_TIPO_PUBLICACION = {
+# Codigo de tipo de produccion en rama Subtype/SubType1/Item
+# del xml FECYT
+FECYT_CODE_SUBTYPE = {
     u'035': u'Articulo',
-    u'148': u'Capitulo de Libro',
+    u'148': u'Capitulo',
     u'112': u'Libro',
+    u'100': u'TesisDoctoral',
 }
 
 # Indica que el nodo 'Link' contiene los datos del congreso
 DATA_CONGRESO = u"110"
-# Indica que el nodo 'Link' contiene los datos de una tesis
-DATA_TESIS = u"100"
 
 # Devuelve las tabla correspondiente donde almacenar los datos
-MODEL_TABLE = {
+FECYT_CODE = {
     # Actividad científica y tecnológica
     u"060.010.010.000": u'Publicacion',
     u"060.010.020.000": u'Congreso',
@@ -113,7 +113,7 @@ CVN_CADUCIDAD = 1   # Año
 # Dato de la página introducido en un formato no reconocible
 INVALID_PAGE = -1
 # Indica que no se ha podido crear un diccionario de búsqueda
-INVALID_SEARCH = -1
+#INVALID_SEARCH = -1
 
 # Errores FECYT
 ERROR_CODES = {
@@ -131,4 +131,4 @@ ERROR_CODES = {
     17: u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado.'
 }
 
-TEST_ROOT = st.BASE_DIR + '/cvn/tests/files/'
+TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
