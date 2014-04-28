@@ -532,7 +532,7 @@ class Proyecto(models.Model):
             years = noneToZero(self.duracion_anyos)
             months = noneToZero(self.duracion_meses)
             days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days + months * 30 + years * 365)
+            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
             fecha = self.fecha_de_inicio + delta
         return fecha
 
@@ -682,7 +682,7 @@ class Convenio(models.Model):
             years = noneToZero(self.duracion_anyos)
             months = noneToZero(self.duracion_meses)
             days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days + months * 30 + years * 365)
+            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
             fecha = self.fecha_de_inicio + delta
         return fecha
 
