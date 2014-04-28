@@ -526,15 +526,13 @@ class Proyecto(models.Model):
         if self.fecha_de_fin is not None:
             fecha = self.fecha_de_fin
         elif (self.fecha_de_inicio is not None and
-              self.duracion is not None):
-#              self.duracion_anyos is not None or
-#              self.duracion_meses is not None or
-#              self.duracion_dias is not None):
-#            years = noneToZero(self.duracion_anyos)
-#            months = noneToZero(self.duracion_meses)
-#            days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=self.duracion)
-            #(days + months * 30 + years * 365))
+              self.duracion_anyos is not None or
+              self.duracion_meses is not None or
+              self.duracion_dias is not None):
+            years = noneToZero(self.duracion_anyos)
+            months = noneToZero(self.duracion_meses)
+            days = noneToZero(self.duracion_dias)
+            delta = datetime.timedelta(days + months * 30 + years * 365)
             fecha = self.fecha_de_inicio + delta
         return fecha
 
@@ -678,16 +676,13 @@ class Convenio(models.Model):
     def getFechaFin(self):
         fecha = None
         if (self.fecha_de_inicio is not None and
-           self.duracion is not None):
-#        if (self.fecha_de_inicio is not None and
-#           self.duracion_anyos is not None or
-#           self.duracion_meses is not None or
-#           self.duracion_dias is not None):
-#            years = noneToZero(self.duracion_anyos)
-#            months = noneToZero(self.duracion_meses)
-#            days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=self.duracion)
-            #(days + months * 30 + years * 365))
+           self.duracion_anyos is not None or
+           self.duracion_meses is not None or
+           self.duracion_dias is not None):
+            years = noneToZero(self.duracion_anyos)
+            months = noneToZero(self.duracion_meses)
+            days = noneToZero(self.duracion_dias)
+            delta = datetime.timedelta(days + months * 30 + years * 365)
             fecha = self.fecha_de_inicio + delta
         return fecha
 

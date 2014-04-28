@@ -21,17 +21,18 @@ def parse_duration(duration):
        Example: CvnItem/Date/Duration/Item
     '''
     dataCVN = {}
+    dataCVN['duracion'] = 0
     number = ''
     for item in duration[1:]:
         if item.isdigit():
             number = item
         else:
             if item == 'Y':
-                dataCVN['duracion_anyos'] = unicode(number)
+                dataCVN['duracion'] += int(unicode(number)) * 365
             if item == 'M':
-                dataCVN['duracion_meses'] = unicode(number)
+                dataCVN['duracion'] += int(unicode(number)) * 30
             if item == 'D':
-                dataCVN['duracion_dias'] = unicode(number)
+                dataCVN['duracion'] += int(unicode(number))
     return dataCVN
 
 
