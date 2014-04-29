@@ -118,8 +118,51 @@ def parse_publicacion_location(treeXML):
     return data
 
 
-def parse_date(xml):
-    '''Input: root node'''
-    date = xml.find(
-        'Version/VersionID/Date/Item').text.strip().split('-')
+def _parse_segregated_date(xml):
+    date = xml.find('DayMonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+    date = xml.find('MonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), 1)
+    date = xml.find('Year/Item')
+    if date is not None:
+        return datetime.date(int(date.text), 1, 1)
+    return None
+
+
+def _parse_unitary_date(xml):
+    date = xml.text.split('-')
     return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+
+def parse_date(xml):
+    '''Input: date node'''
+
+    # Node of type Date > OnlyDate
+    node = xml.find('OnlyDate')
+    if node is not None:
+        return _parse_segregated_date(node)
+
+    # Node of type Date > StartDate
+    node = xml.find('StartDate')
+    if node is not None:
+        return _parse_segregated_date(node)
+
+    # Node of type Date > Item
+    node = xml.find('Item')
+    if node is not None:
+        return _parse_unitary_date(node)
+
+    return None
+
+
+def parse_end_date(xml):
+    '''Input: date node'''
+    node = xml.find('EndDate')
+    if node is not None:
+        return _parse_segregated_date(node)
+
+    return None

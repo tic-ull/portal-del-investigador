@@ -35,7 +35,7 @@ class UploadCVNForm(forms.ModelForm):
             cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                               ContentFile(self.xml), save=False)
             treeXML = etree.XML(self.xml)
-            cvn.fecha_cvn = parse_date(treeXML)
+            cvn.fecha_cvn = parse_date(treeXML.find('Version/VersionID/Date'))
         if commit:
             if self.user.profile.cvn:
                 self.user.profile.cvn.remove()

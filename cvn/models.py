@@ -593,6 +593,8 @@ class Convenio(models.Model):
 
     fecha_de_inicio = models.DateField(u'Fecha de inicio',
                                        blank=True, null=True)
+    fecha_de_fin = models.DateField(u'Fecha de finalización',
+                                    blank=True, null=True)
     duracion_anyos = models.IntegerField(u'Duración en años',
                                          blank=True, null=True)
     duracion_meses = models.IntegerField(u'Duración en meses',
