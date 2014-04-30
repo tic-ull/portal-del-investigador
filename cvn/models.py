@@ -2,13 +2,13 @@
 
 from cvn import settings as stCVN
 from cvn.utils import noneToZero
+from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.move import file_move_safe
 from django.db import models
 from django.db.models import Q
 from django.db.models.loading import get_model
-from django.conf import settings as st
-from django.core.files.move import file_move_safe
 from lxml import etree
 import base64
 import os
@@ -101,15 +101,33 @@ class FECYT(models.Model):
         managed = False
 
 
+class UserProfile(models.Model):
+    """
+        https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
+    """
+    user = models.OneToOneField(User, related_name='profile')
+    documento = models.CharField(u'Documento', max_length=20,
+                                 blank=True, null=True, unique=True)
+    rrhh_code = models.CharField(u'Código persona', max_length=20,
+                                 blank=True, null=True, unique=True)
+
+    def __unicode__(self):
+        return self.user.username
+
+
 class CVN(models.Model):
     cvn_file = models.FileField(u'PDF', upload_to=stCVN.PDF_ROOT)
     xml_file = models.FileField(u'XML', upload_to=stCVN.XML_ROOT)
     fecha_cvn = models.DateField(u'Fecha del CVN')
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
+    user_profile = models.OneToOneField(UserProfile)
 
     def __unicode__(self):
         return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
+
+    class Meta:
+        verbose_name_plural = u'Currículum Vitae Normalizado'
 
     @staticmethod
     def can_user_upload_cvn(user, xml):
@@ -145,7 +163,7 @@ class CVN(models.Model):
             self.xml_file.delete()
 
     def _backup_pdf(self):
-        cvn_path = os.path.join(st.MEDIA_ROOT, stCVN.PDF_ROOT + self.cvn_file.name)
+        cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
         old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
         new_file_name = self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(
@@ -457,23 +475,6 @@ class CVN(models.Model):
         return dataCVN
 
 
-class UserProfile(models.Model):
-    """
-        https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
-    """
-    user = models.OneToOneField(User, related_name='profile')
-    cvn = models.OneToOneField(CVN, on_delete=models.SET_NULL,
-                               null=True, blank=True,
-                               related_name='user_profile')
-    documento = models.CharField(u'Documento', max_length=20,
-                                 blank=True, null=True, unique=True)
-    rrhh_code = models.CharField(u'Código persona', max_length=20,
-                                 blank=True, null=True, unique=True)
-
-    def __unicode__(self):
-        return self.user.username
-
-
 class Publicacion(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
@@ -700,7 +701,7 @@ class Congreso(models.Model):
         ordering = ['-fecha_realizacion', 'titulo']
 
 
-################### Experiencia científica y tecnológica ####################
+# ################## Experiencia científica y tecnológica ####################
 class Proyecto(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale\
@@ -718,7 +719,7 @@ class Proyecto(models.Model):
         blank=True, null=True
     )
 
-    ### Investigadores responsables ###
+    # Investigadores responsables
     autores = models.TextField(u'Autores', blank=True, null=True)
 
     entidad_de_realizacion = models.CharField(u'Entidad de realización',
@@ -734,8 +735,8 @@ class Proyecto(models.Model):
         u'Autónoma/Reg. del trabajo',
         max_length=500, blank=True, null=True)
 
-    ### Entidades financiadoras ###
-    #FIXME En el editor de la FECYT se pueden añadir múltiples
+    # Entidades financiadoras
+    # FIXME En el editor de la FECYT se pueden añadir múltiples
     # entidades financiadoras
     entidad_financiadora = models.CharField(u'Entidad financiadora',
                                             max_length=500,
@@ -821,8 +822,8 @@ class Proyecto(models.Model):
                                                  max_length=500,
                                                  blank=True, null=True)
 
-    ### Entidades participantes ###
-    #FIXME En el editor de la FECYT se pueden añadir múltiples
+    # Entidades participantes
+    # FIXME En el editor de la FECYT se pueden añadir múltiples
     # entidades participantes
     entidad_participante = models.CharField(u'Entidad participantes',
                                             max_length=500,
@@ -876,11 +877,11 @@ class Convenio(models.Model):
         blank=True, null=True
     )
 
-    ### Investigadores responsables
+    # Investigadores responsables
     autores = models.TextField(u'Autores', blank=True, null=True)
 
     # FIXME: Se permiten multiples instancias
-    ### Entidades financiadoras ###
+    # Entidades financiadoras ###
     entidad_financiadora = models.CharField(u'Entidad financiadora',
                                             max_length=500,
                                             blank=True, null=True)
@@ -903,7 +904,7 @@ class Convenio(models.Model):
                                              max_length=500,
                                              blank=True, null=True)
 
-    ### Entidades participantes ###
+    # Entidades participantes
     entidad_participante = models.CharField(u'Entidad participantes',
                                             max_length=500,
                                             blank=True, null=True)
@@ -1006,7 +1007,7 @@ class Convenio(models.Model):
         ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
 
 
-############################ Actividad Docente ##########################
+# ########################### Actividad Docente ##########################
 class TesisDoctoral(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE

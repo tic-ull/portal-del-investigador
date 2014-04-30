@@ -149,6 +149,7 @@ class Migration(DataMigration):
             'fecha_cvn': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.UserProfile']", 'unique': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})
         },
         u'cvn.fecyt': {
@@ -266,7 +267,6 @@ class Migration(DataMigration):
         },
         u'cvn.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'cvn': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user_profile'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['cvn.CVN']", 'blank': 'True', 'unique': 'True'}),
             'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
