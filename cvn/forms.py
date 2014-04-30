@@ -3,10 +3,12 @@
 from cvn import settings as stCVN
 from cvn.models import FECYT, CVN
 from django import forms
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from lxml import etree
+from parser_helpers import parse_date
 
 
 class UploadCVNForm(forms.ModelForm):
@@ -27,7 +29,7 @@ class UploadCVNForm(forms.ModelForm):
         if not self.xml:
             raise forms.ValidationError(_(stCVN.ERROR_CODES[error]))
         '''
-        if not CVN.can_user_upload_cvn(self.user, self.xml):
+        if not self.user.profile.can_upload_cvn(self.xml):
             raise forms.ValidationError(_(
                 u'El NIF/NIE del CVN no coincide con el de su usuario.'))
         '''
@@ -45,9 +47,10 @@ class UploadCVNForm(forms.ModelForm):
         cvn.user_profile = self.user.profile
         cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                           ContentFile(self.xml), save=False)
-        cvn.fecha_cvn = CVN.getXMLDate(self.xml)
+        treeXML = etree.XML(self.xml)
+        cvn.fecha_cvn = parse_date(treeXML)
         cvn.save()
-        cvn.insertXML(self.user.profile)
+        cvn.insert_xml()
         return cvn
 
     class Meta:
