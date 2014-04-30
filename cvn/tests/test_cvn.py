@@ -133,9 +133,7 @@ class CVNTestCase(TestCase):
                     self.assertEqual(data.fecha_de_fin,
                                      datetime.date(2014, 04, 05))
                 else:
-                    self.assertEqual(data.duracion_anyos, 1)
-                    self.assertEqual(data.duracion_meses, 1)
-                    self.assertEqual(data.duracion_dias, 1)
+                    self.assertEqual(data.duracion, 396)
                 if tipo == 'Proyecto':
                     self.assertEqual(data.autores, u'Firma')
                     self.assertEqual(data.ambito, u'Internacional no UE')
