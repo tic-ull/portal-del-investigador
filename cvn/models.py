@@ -96,6 +96,9 @@ class CVN(models.Model):
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
 
+    class Meta:
+        verbose_name_plural = u'Currículum Vitae Normalizado'
+
     def __unicode__(self):
         return u'%s con fecha %s' % (self.cvn_file, self.fecha_cvn)
 
