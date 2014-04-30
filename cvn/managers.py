@@ -150,7 +150,7 @@ class ProyectoManager(ProduccionManager):
 
         date_node = item.find('Date')
         dataCVN['fecha_de_inicio'] = parse_date(date_node)
-        dataCVN['fecha_de_fin'] = parse_date(date_node)
+        dataCVN['fecha_de_fin'] = parse_end_date(date_node)
 
         # Duración: P <num_years> Y <num_months> M <num_days> D
         if (item.find('Date/Duration') and
