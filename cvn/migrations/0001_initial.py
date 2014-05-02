@@ -8,6 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'UserProfile'
+        db.create_table(u'cvn_userprofile', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
+            ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
+            ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
+        ))
+        db.send_create_signal(u'cvn', ['UserProfile'])
+
         # Adding model 'CVN'
         db.create_table(u'cvn_cvn', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -16,18 +25,9 @@ class Migration(SchemaMigration):
             ('fecha_cvn', self.gf('django.db.models.fields.DateField')()),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('user_profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.UserProfile'], unique=True)),
         ))
         db.send_create_signal(u'cvn', ['CVN'])
-
-        # Adding model 'UserProfile'
-        db.create_table(u'cvn_userprofile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
-            ('cvn', self.gf('django.db.models.fields.related.OneToOneField')(related_name='user_profile', null=True, on_delete=models.SET_NULL, to=orm['cvn.CVN'], blank=True, unique=True)),
-            ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-            ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'cvn', ['UserProfile'])
 
         # Adding model 'Publicacion'
         db.create_table(u'cvn_publicacion', (
@@ -279,11 +279,11 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting model 'CVN'
-        db.delete_table(u'cvn_cvn')
-
         # Deleting model 'UserProfile'
         db.delete_table(u'cvn_userprofile')
+
+        # Deleting model 'CVN'
+        db.delete_table(u'cvn_cvn')
 
         # Deleting model 'Publicacion'
         db.delete_table(u'cvn_publicacion')
@@ -454,6 +454,7 @@ class Migration(SchemaMigration):
             'fecha_cvn': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.UserProfile']", 'unique': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})
         },
         u'cvn.fecyt': {
@@ -569,7 +570,6 @@ class Migration(SchemaMigration):
         },
         u'cvn.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'cvn': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'user_profile'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['cvn.CVN']", 'blank': 'True', 'unique': 'True'}),
             'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),

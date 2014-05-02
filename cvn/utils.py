@@ -2,29 +2,33 @@
 
 from cvn import settings as stCVN
 from dateutil.relativedelta import relativedelta
+from django.core.exceptions import ObjectDoesNotExist
 import datetime
 
 
 def scientific_production_to_context(user, context):
-    if not user:
+    try:
+        user.cvn
+        context['Publicaciones'] = user.publicacion_set.all()
+        context['Congresos'] = user.congreso_set.all()
+        context['Proyectos'] = user.proyecto_set.all()
+        context['Convenios'] = user.convenio_set.all()
+        context['TesisDoctorales'] = user.tesisdoctoral_set.all()
+        return True
+    except ObjectDoesNotExist:
         return False
-    context['Publicaciones'] = user.publicacion_set.all()
-    context['Congresos'] = user.congreso_set.all()
-    context['Proyectos'] = user.proyecto_set.all()
-    context['Convenios'] = user.convenio_set.all()
-    context['TesisDoctorales'] = user.tesisdoctoral_set.all()
-    return True
 
 
-def date_cvn_to_context(cvn, context):
-    if not cvn:
+def date_cvn_to_context(user, context):
+    try:
+        context['fecha_cvn'] = user.cvn.fecha_cvn
+        date = relativedelta(years=stCVN.CVN_CADUCIDAD)
+        if (user.cvn.fecha_cvn + date) < datetime.date.today():
+            context['updateCVN'] = True
+        else:
+            context['fecha_valido'] = user.cvn.fecha_cvn + date
+    except ObjectDoesNotExist:
         return
-    context['fecha_cvn'] = cvn.fecha_cvn
-    date = relativedelta(years=stCVN.CVN_CADUCIDAD)
-    if (cvn.fecha_cvn + date) < datetime.date.today():
-        context['updateCVN'] = True
-    else:
-        context['fecha_valido'] = cvn.fecha_cvn + date
 
 
 def isdigit(obj):
