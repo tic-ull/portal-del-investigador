@@ -166,3 +166,14 @@ def parse_end_date(xml):
         return _parse_segregated_date(node)
 
     return None
+
+
+def parse_produccion_id(id_list, code_type):
+    '''Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
+       different identifiers for produccion nodes. code_type is what
+       type of id you want to get: ISSN, ISBN, etc. (PRODUCCION_ID_CODE)'''
+    for node in id_list:
+        if node.find('Type/Item').text != code_type:
+            continue
+        return node.find('Code/Item').text
+    return None
