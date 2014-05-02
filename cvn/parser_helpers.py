@@ -37,6 +37,8 @@ def parse_duration(duration):
 
 def parse_nif(xml):
     '''Input: root node'''
+    if xml is None:
+        return None
     nif = ''
     id_node = xml.find(
         'Agent/Identification/PersonalIdentification/OfficialId')
@@ -82,6 +84,8 @@ def parse_authors(author_list):
 
 def parse_produccion_type(xml):
     '''Input: CvnItem node'''
+    if xml is None:
+        return ''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
     if not cvn_key in stCVN.FECYT_CODE:
         return ''
@@ -90,6 +94,8 @@ def parse_produccion_type(xml):
 
 def parse_produccion_subtype(xml):
     '''Input: CvnItem node'''
+    if xml is None:
+        return ''
     subtype = xml.find('Subtype/SubType1/Item')
     if subtype is None:
         return ''
@@ -141,6 +147,8 @@ def _parse_unitary_date(xml):
 def parse_date(xml):
     '''Input: date node'''
 
+    if xml is None:
+        return None
     # Node of type Date > OnlyDate
     node = xml.find('OnlyDate')
     if node is not None:
@@ -161,6 +169,8 @@ def parse_date(xml):
 
 def parse_end_date(xml):
     '''Input: date node'''
+    if xml is None:
+        return None
     node = xml.find('EndDate')
     if node is not None:
         return _parse_segregated_date(node)

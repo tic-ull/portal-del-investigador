@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django_extensions',
     #'django.contrib.sites',
     'south',
+    'core',
     'cvn',
     'bootstrap_toolkit',
     'crequest',
