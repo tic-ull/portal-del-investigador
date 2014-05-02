@@ -2,10 +2,10 @@
 
 from core.models import Log
 from django.contrib import admin
-from django.contrib.admin.util import flatten_fieldsets
 
 
 class LogAdmin(admin.ModelAdmin):
+    list_display = ('application', 'entry_type', 'user', 'date')
     list_filter = ('entry_type', 'application')
 
     def has_add_permission(self, request):
@@ -23,6 +23,5 @@ class LogAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return tuple(Log._meta.get_all_field_names())
-
 
 admin.site.register(Log, LogAdmin)

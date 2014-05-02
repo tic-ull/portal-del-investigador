@@ -1,7 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.utils import noneToZero
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.files.move import file_move_safe
@@ -12,9 +11,8 @@ from managers import (PublicacionManager, CongresoManager, ProyectoManager,
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
 import base64
-import datetime
-import logging
 import os
+import logging
 import suds
 import sys
 import time
@@ -287,10 +285,10 @@ class Congreso(models.Model):
 
     # Campos recomendados
     titulo = models.TextField(u'Título', blank=True, null=True)
-    fecha_realizacion = models.DateField(u'Fecha de realización',
-                                         blank=True, null=True)
-    fecha_finalizacion = models.DateField(u'Fecha de finalización',
-                                          blank=True, null=True)
+    fecha_de_inicio = models.DateField(u'Fecha de realización',
+                                       blank=True, null=True)
+    fecha_de_fin = models.DateField(u'Fecha de finalización',
+                                    blank=True, null=True)
 
     nombre_del_congreso = models.TextField(u'Nombre del congreso',
                                            blank=True, null=True)
@@ -380,7 +378,7 @@ class Congreso(models.Model):
 
     class Meta:
         verbose_name_plural = u'Congresos'
-        ordering = ['-fecha_realizacion', 'titulo']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 # ################## Experiencia científica y tecnológica ####################
@@ -447,12 +445,8 @@ class Proyecto(models.Model):
                                         blank=True, null=True)
 
     # Más campos
-    duracion_anyos = models.IntegerField(u'Duración en años',
-                                         blank=True, null=True)
-    duracion_meses = models.IntegerField(u'Duración en meses',
-                                         blank=True, null=True)
-    duracion_dias = models.IntegerField(u'Duración en días',
-                                        blank=True, null=True)
+    duracion = models.IntegerField(u'Duración (en días)',
+                                   blank=True, null=True)
 
     palabras_clave = models.CharField(u'Describir con palabras clave',
                                       max_length=250, blank=True, null=True)
@@ -519,21 +513,6 @@ class Proyecto(models.Model):
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
 
-    def getFechaFin(self):
-        fecha = None
-        if self.fecha_de_fin is not None:
-            fecha = self.fecha_de_fin
-        elif (self.fecha_de_inicio is not None and
-              self.duracion_anyos is not None or
-              self.duracion_meses is not None or
-              self.duracion_dias is not None):
-            years = noneToZero(self.duracion_anyos)
-            months = noneToZero(self.duracion_meses)
-            days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
-            fecha = self.fecha_de_inicio + delta
-        return fecha
-
     def __unicode__(self):
         return u'%s' % (self.denominacion_del_proyecto)
 
@@ -593,14 +572,13 @@ class Convenio(models.Model):
 
     fecha_de_inicio = models.DateField(u'Fecha de inicio',
                                        blank=True, null=True)
+
     fecha_de_fin = models.DateField(u'Fecha de finalización',
                                     blank=True, null=True)
-    duracion_anyos = models.IntegerField(u'Duración en años',
-                                         blank=True, null=True)
-    duracion_meses = models.IntegerField(u'Duración en meses',
-                                         blank=True, null=True)
-    duracion_dias = models.IntegerField(u'Duración en días',
-                                        blank=True, null=True)
+
+    duracion = models.IntegerField(u'Duración (en días)',
+                                   blank=True, null=True)
+
     cuantia_total = models.DecimalField(u'Cuantía',
                                         max_digits=19, decimal_places=2,
                                         blank=True, null=True)
@@ -669,19 +647,6 @@ class Convenio(models.Model):
 
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
-
-    def getFechaFin(self):
-        fecha = None
-        if (self.fecha_de_inicio is not None and
-           self.duracion_anyos is not None or
-           self.duracion_meses is not None or
-           self.duracion_dias is not None):
-            years = noneToZero(self.duracion_anyos)
-            months = noneToZero(self.duracion_meses)
-            days = noneToZero(self.duracion_dias)
-            delta = datetime.timedelta(days=(days + months * 30 + years * 365))
-            fecha = self.fecha_de_inicio + delta
-        return fecha
 
     def __unicode__(self):
         return u'%s' % (self.denominacion_del_proyecto)
