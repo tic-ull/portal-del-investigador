@@ -101,8 +101,8 @@ class Migration(SchemaMigration):
         db.create_table(u'cvn_congreso', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('fecha_realizacion', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('fecha_finalizacion', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('fecha_de_inicio', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('fecha_de_fin', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('nombre_del_congreso', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('ciudad_de_realizacion', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
             ('pais_de_realizacion', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
@@ -371,7 +371,7 @@ class Migration(SchemaMigration):
             u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'cvn.congreso': {
-            'Meta': {'ordering': "['-fecha_realizacion', 'titulo']", 'object_name': 'Congreso'},
+            'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Congreso'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'ciudad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -384,8 +384,8 @@ class Migration(SchemaMigration):
             'editorial': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'entidad_organizadora': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'fecha_finalizacion': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'fecha_realizacion': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'fecha_de_fin': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'fecha_de_inicio': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'intervencion_por': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             'isbn': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),

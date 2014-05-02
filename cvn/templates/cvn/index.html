@@ -153,11 +153,11 @@
                                 <div id="c{{congreso.id}}" class="accordion-body collapse">
                                     <div class="accordion-inner">
                                         <h5>{{ congreso.nombre_del_congreso }}</h5>
-                                        {% if congreso.fecha_realizacion %}
-                                        <strong>Fecha de realización:</strong> {{ congreso.fecha_realizacion }} <br>
+                                        {% if congreso.fecha_de_inicio %}
+                                        <strong>Fecha de realización:</strong> {{ congreso.fecha_de_inicio }} <br>
                                         {% endif %}
-                                        {% if congreso.fecha_finalizacion %}
-                                        <strong>Fecha de finalización:</strong> {{ congreso.fecha_finalizacion }}<br>
+                                        {% if congreso.fecha_de_fin %}
+                                        <strong>Fecha de finalización:</strong> {{ congreso.fecha_de_fin }}<br>
                                         {% endif %}
                                         {% if congreso.ciudad_realizacion %}
                                         <strong>Ciudad realización:</strong> {{ congreso.ciudad_realizacion }}<br>

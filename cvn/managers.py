@@ -99,7 +99,7 @@ class CongresoManager(ProduccionManager):
                 date_node = itemXML.find('Date')
                 #dataCVN['fecha_realizacion'] = parse_date(date_node)
                 #dataCVN['fecha_finalizacion'] = parse_end_date(date_node)
-                (dataCVN['fecha_realizacion'], dataCVN['fecha_finalizacion'],
+                (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
                     duracion) = parse_date_interval(date_node)
 
                 if itemXML.find('Place/City'):
@@ -113,8 +113,8 @@ class CongresoManager(ProduccionManager):
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
             Q(user_profile__in=usuarios) &
-            Q(fecha_realizacion__year=year)
-        ).distinct().order_by('fecha_realizacion')
+            Q(fecha_de_inicio__year=year)
+        ).distinct().order_by('fecha_de_inicio')
 
 
 class TesisDoctoralManager(ProduccionManager):

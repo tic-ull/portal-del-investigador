@@ -285,10 +285,10 @@ class Congreso(models.Model):
 
     # Campos recomendados
     titulo = models.TextField(u'Título', blank=True, null=True)
-    fecha_realizacion = models.DateField(u'Fecha de realización',
-                                         blank=True, null=True)
-    fecha_finalizacion = models.DateField(u'Fecha de finalización',
-                                          blank=True, null=True)
+    fecha_de_inicio = models.DateField(u'Fecha de realización',
+                                       blank=True, null=True)
+    fecha_de_fin = models.DateField(u'Fecha de finalización',
+                                    blank=True, null=True)
 
     nombre_del_congreso = models.TextField(u'Nombre del congreso',
                                            blank=True, null=True)
@@ -378,7 +378,7 @@ class Congreso(models.Model):
 
     class Meta:
         verbose_name_plural = u'Congresos'
-        ordering = ['-fecha_realizacion', 'titulo']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 ################### Experiencia científica y tecnológica ####################

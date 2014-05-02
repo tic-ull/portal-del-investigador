@@ -1,12 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
 from crequest.middleware import CrequestMiddleware
-from cvn.models import UserProfile
+from cvn.models import UserProfile, Proyecto, Convenio
 from django.conf import settings as st
 from django.contrib.auth.models import User  # , Permission
-#from django.db import connection
-from django.db.models.signals import post_save  # , post_syncdb
-#import logging
+from django.db.models.signals import post_save, pre_save  # , post_syncdb
+from django.core.exceptions import ObjectDoesNotExist
+import datetime
 import simplejson as json
 import urllib
 
@@ -29,29 +29,20 @@ def create_profile(sender, instance, created, **kwargs):
 post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 
 
-# Related ticket http://code.djangoproject.com/ticket/4748
-#def alter_django_auth_permissions(sender, **kwargs):
-#    logger = logging.getLogger(__name__)
-#    if not Permission in kwargs['created_models']:
-#        return
-#    SIZE_NAME = 128
-#    cursor = connection.cursor()
-#    cursor.execute("SELECT * FROM auth_permission LIMIT 1")
-#
-#    for desc in cursor.description:
-#        # See http://www.python.org/dev/peps/pep-0249/
-#        (name, type_code, display_size, internal_size, precision,
-#         scale, null_ok) = desc
-#        if not name == 'name':
-#            continue
-#        if internal_size < SIZE_NAME:
-#            logger.info('auth_permission: Column "name" gets altered.\
-#                         Old: %d new: %d' % (internal_size, SIZE_NAME))
-#            cursor.execute('''ALTER TABLE auth_permission ALTER COLUMN\
-#                           "name" type VARCHAR(%s)''',
-#                           [SIZE_NAME])
-#        break
-#    else:
-#        raise Exception('table auth_permission has not column "name"')
-#
-#post_syncdb.connect(alter_django_auth_permissions)
+def save_date(sender, instance, **kwargs):
+    try:
+        db_instance = instance.__class__.objects.get(pk=instance.pk)
+    except ObjectDoesNotExist:
+        return
+    if (not hasattr(db_instance, 'fecha_de_fin') or
+            not hasattr(db_instance, 'duracion')):
+        return
+    if db_instance.fecha_de_fin != instance.fecha_de_fin:
+        duracion = instance.fecha_de_fin - instance.fecha_de_inicio
+        instance.duracion = duracion.days
+    elif db_instance.duracion != instance.duracion:
+        instance.fecha_de_fin = (instance.fecha_de_inicio +
+                                 datetime.timedelta(days=instance.duracion))
+
+pre_save.connect(save_date, sender=Proyecto, dispatch_uid='save-date')
+pre_save.connect(save_date, sender=Convenio, dispatch_uid='save-date')

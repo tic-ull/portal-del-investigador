@@ -75,4 +75,48 @@
         <date_id>5</date_id>
         <Item>2001-01-02</Item>
     </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <date_id>6</date_id>
+    </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <date_id>7</date_id>
+      <StartDate>
+        <DayMonthYear code="030.040.000.140">
+          <Item>2009-01-02</Item>
+        </DayMonthYear>
+      </StartDate>
+      <EndDate>
+        <Year code="050.020.010.410">
+          <Item>2010</Item>
+        </Year>
+      </EndDate>
+    </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <date_id>6</date_id>
+    </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <date_id>8</date_id>
+      <EndDate>
+        <DayMonthYear code="030.040.000.140">
+          <Item>1997-07-04</Item>
+        </DayMonthYear>
+      </EndDate>
+      <Duration code="050.020.010.280">
+        <Item>P1Y1M1D</Item>
+      </Duration>
+      <DurationType>010</DurationType>
+    </Date>
+
 </Dates>

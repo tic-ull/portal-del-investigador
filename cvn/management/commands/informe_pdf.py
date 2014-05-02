@@ -223,17 +223,17 @@ class Informe_pdf:
                 text += u"<b>%s</b><br/>" % (congreso.titulo)
             if congreso.nombre_del_congreso:
                 text += u"%s " % (congreso.nombre_del_congreso)
-            if congreso.ciudad_de_realizacion and congreso.fecha_realizacion:
+            if congreso.ciudad_de_realizacion and congreso.fecha_de_inicio:
                 translation.activate('es')
                 text += "(%s, %s de %s)<br/>" % (
                     congreso.ciudad_de_realizacion,
-                    ugettext(congreso.fecha_realizacion.strftime("%B")),
-                    congreso.fecha_realizacion.strftime("%Y")
+                    ugettext(congreso.fecha_de_inicio.strftime("%B")),
+                    congreso.fecha_de_inicio.strftime("%Y")
                 )
             elif congreso.ciudad_de_realizacion:
                 text += "(%s)<br/>" % congreso.ciudad_de_realizacion
-            elif congreso.fecha_realizacion:
-                text += "(%s)<br/>" % congreso.fecha_realizacion
+            elif congreso.fecha_de_inicio:
+                text += "(%s)<br/>" % congreso.fecha_de_inicio
             if congreso.autores:
                 text += u"%s" % (congreso.autores)
             story.append(Paragraph(text, self.styleN()))
