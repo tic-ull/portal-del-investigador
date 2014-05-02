@@ -1,11 +1,12 @@
 # -*- encoding: UTF-8 -*-
-import datetime
+
+from cvn import settings as stCVN
 from django.db import models
 from django.db.models import Q
-from cvn import settings as stCVN
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
                             parse_produccion_subtype, parse_date_interval)
+import datetime
 
 
 class ProduccionManager(models.Manager):
@@ -19,8 +20,8 @@ class ProduccionManager(models.Manager):
         if not len(search_dict):
             return
         objects = super(ProduccionManager, self).get_query_set()
-        #TODO: Django 1.7 uncomment and delete next 3 lines
-        #reg = objects.update_or_create(defaults=insertion_dict,
+        # TODO: Django 1.7 uncomment and delete next 3 lines
+        # reg = objects.update_or_create(defaults=insertion_dict,
         #                               **search_dict)[0]
         reg = objects.get_or_create(**search_dict)[0]
         objects.filter(pk=reg.id).update(**insertion_dict)
@@ -97,8 +98,6 @@ class CongresoManager(ProduccionManager):
                         'Title/Name/Item').text.strip())
 
                 date_node = itemXML.find('Date')
-                #dataCVN['fecha_realizacion'] = parse_date(date_node)
-                #dataCVN['fecha_finalizacion'] = parse_end_date(date_node)
                 (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
                     duracion) = parse_date_interval(date_node)
 
@@ -151,7 +150,6 @@ class ProyectoManager(ProduccionManager):
                 'Title/Name/Item').text.strip())
 
         date_node = item.find('Date')
-        #dataCVN['fecha_de_inicio'] = parse_date(date_node)
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
 
@@ -200,11 +198,8 @@ class ConvenioManager(ProduccionManager):
                 'Title/Name/Item').text.strip())
 
         date_node = item.find('Date')
-        #dataCVN['fecha_de_inicio'] = parse_date(date_node)
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
-        #dataCVN['fecha_de_fin'] = end_date
-        #dataCVN['duracion'] = duration
 
         # Autores
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
