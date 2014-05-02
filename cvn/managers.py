@@ -2,11 +2,10 @@
 import datetime
 from django.db import models
 from django.db.models import Q
-from django.core.exceptions import ObjectDoesNotExist
 from cvn import settings as stCVN
-from parser_helpers import (parse_scope, parse_duration, parse_authors,
-                            parse_publicacion_location,
-                            parse_produccion_subtype)
+from parser_helpers import (parse_scope, parse_authors,
+                            parse_publicacion_location, parse_date,
+                            parse_produccion_subtype, parse_date_interval)
 
 
 class ProduccionManager(models.Manager):
@@ -66,14 +65,8 @@ class PublicacionManager(ProduccionManager):
         dataCVN[u'autores'] = parse_authors(item.findall(
             'Author'))
         dataCVN.update(parse_publicacion_location(item.find('Location')))
-        # Fecha: Dia/Mes/Año
-        if item.find('Date/OnlyDate/DayMonthYear'):
-            dataCVN[u'fecha'] = unicode(item.find(
-                'Date/OnlyDate/DayMonthYear/Item').text.strip())
-        # Fecha: Año
-        elif item.find('Date/OnlyDate/Year'):
-            dataCVN[u'fecha'] = unicode(item.find(
-                'Date/OnlyDate/Year/Item').text.strip() + '-1-1')
+        dataCVN[u'fecha'] = parse_date(item.find('Date'))
+
         if item.find('ExternalPK'):
             dataCVN[u'issn'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
@@ -102,26 +95,13 @@ class CongresoManager(ProduccionManager):
                    itemXML.find('Title/Name/Item').text):
                     dataCVN[u'nombre_del_congreso'] = unicode(itemXML.find(
                         'Title/Name/Item').text.strip())
-                # Fecha: Dia/Mes/Año
-                if itemXML.find('Date/OnlyDate/DayMonthYear'):
-                    dataCVN[u'fecha_realizacion'] = unicode(itemXML.find(
-                        'Date/OnlyDate/DayMonthYear/Item').text.strip())
-                # Fecha: Año
-                elif itemXML.find('Date/OnlyDate/Year'):
-                    dataCVN[u'fecha_realizacion'] = unicode(
-                        itemXML.find(
-                            'Date/OnlyDate/Year/Item'
-                        ).text.strip() + '-1-1')
-                # Fecha: Dia/Mes/Año
-                if itemXML.find('Date/EndDate/DayMonthYear'):
-                    dataCVN[u'fecha_finalizacion'] = unicode(itemXML.find(
-                        'Date/EndDate/DayMonthYear/Item').text.strip())
-                # Fecha: Año
-                elif itemXML.find('Date/EndDate/Year'):
-                    dataCVN[u'fecha_finalizacion'] = unicode(
-                        itemXML.find(
-                            'Date/EndDate/Year/Item'
-                        ).text.strip() + '-1-1')
+
+                date_node = itemXML.find('Date')
+                #dataCVN['fecha_realizacion'] = parse_date(date_node)
+                #dataCVN['fecha_finalizacion'] = parse_end_date(date_node)
+                (dataCVN['fecha_realizacion'], dataCVN['fecha_finalizacion'],
+                    duracion) = parse_date_interval(date_node)
+
                 if itemXML.find('Place/City'):
                     dataCVN[u'ciudad_de_realizacion'] = unicode(itemXML.find(
                         'Place/City/Item').text.strip())
@@ -149,8 +129,7 @@ class TesisDoctoralManager(ProduccionManager):
             item.findall('Author'))
         dataCVN[u'codirector'] = parse_authors(
             item.findall('Link/Author'))
-        dataCVN[u'fecha_de_lectura'] = unicode(item.find(
-            'Date/OnlyDate/DayMonthYear/Item').text.strip())
+        dataCVN['fecha_de_lectura'] = parse_date(item.find('Date'))
         return super(TesisDoctoralManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
@@ -170,33 +149,12 @@ class ProyectoManager(ProduccionManager):
         if item.find('Title/Name'):
             dataCVN[u'denominacion_del_proyecto'] = unicode(item.find(
                 'Title/Name/Item').text.strip())
-        # Posibles nodos Fecha
-        if item.find('Date/StartDate'):
-            node = 'StartDate'
-        else:
-            node = 'OnlyDate'
-        # Fecha de Inicio: Día/Mes/Año
-        if item.find('Date/' + node + '/DayMonthYear'):
-            dataCVN[u'fecha_de_inicio'] = unicode(item.find(
-                'Date/' + node + '/DayMonthYear/Item').text.strip())
-        # Fecha de Inicio: Año
-        elif item.find('Date/' + node + '/Year'):
-            dataCVN[u'fecha_de_inicio'] = unicode(item.find(
-                'Date/' + node + '/Year/Item').text.strip() + '-1-1')
-        # Fecha de Finalización
-        if (item.find('Date/EndDate/DayMonthYear') and
-           item.find('Date/EndDate/DayMonthYear/Item').text):
-            dataCVN[u'fecha_de_fin'] = unicode(item.find(
-                'Date/EndDate/DayMonthYear/Item').text.strip())
-        elif (item.find('Date/EndDate/Year') and
-              item.find('Date/EndDate/Year/Item').text):
-            dataCVN[u'fecha_de_fin'] = unicode(item.find(
-                'Date/EndDate/Year/Item').text.strip() + '-1-1')
-        # Duración: P <num_years> Y <num_months> M <num_days> D
-        if (item.find('Date/Duration') and
-           item.find('Date/Duration/Item').text):
-            duration = unicode(item.find('Date/Duration/Item').text.strip())
-            dataCVN.update(parse_duration(duration))
+
+        date_node = item.find('Date')
+        #dataCVN['fecha_de_inicio'] = parse_date(date_node)
+        (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
+            dataCVN['duracion']) = parse_date_interval(date_node)
+
         # Autores
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
         # Dimensión Económica
@@ -240,24 +198,14 @@ class ConvenioManager(ProduccionManager):
         if item.find('Title/Name'):
             dataCVN[u'denominacion_del_proyecto'] = unicode(item.find(
                 'Title/Name/Item').text.strip())
-        # Posibles nodos Fecha
-        if item.find('Date/StartDate'):
-            node = 'StartDate'
-        else:
-            node = 'OnlyDate'
-        # Fecha de Inicio: Día/Mes/Año
-        if item.find('Date/' + node + '/DayMonthYear'):
-            dataCVN[u'fecha_de_inicio'] = unicode(item.find(
-                'Date/' + node + '/DayMonthYear/Item').text.strip())
-        # Fecha de Inicio: Año
-        elif item.find('Date/' + node + '/Year'):
-            dataCVN[u'fecha_de_inicio'] = unicode(item.find(
-                'Date/' + node + '/Year/Item').text.strip() + '-1-1')
-        # Duración: P <num_years> Y <num_months> M <num_days> D
-        if (item.find('Date/Duration') and
-           item.find('Date/Duration/Item').text):
-            duration = unicode(item.find('Date/Duration/Item').text.strip())
-            dataCVN.update(parse_duration(duration))
+
+        date_node = item.find('Date')
+        #dataCVN['fecha_de_inicio'] = parse_date(date_node)
+        (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
+            dataCVN['duracion']) = parse_date_interval(date_node)
+        #dataCVN['fecha_de_fin'] = end_date
+        #dataCVN['duracion'] = duration
+
         # Autores
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
         # Dimensión Económica

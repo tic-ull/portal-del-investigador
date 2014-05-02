@@ -228,14 +228,8 @@
                                         {% if fecha_de_inicio %}
                                         <strong>Fecha de incio:</strong>{{ convenio.fecha_de_inicio }}<br>
                                         {% endif %}
-                                        {% if convenio.duracion_anyos %}
-                                        <strong>Duración años:</strong> {{ convenio.duracion_anyos }}<br>
-                                        {% endif %}
-                                        {% if convenio.duracion_meses %}
-                                        <strong>Duración meses:</strong> {{ convenio.duracion_meses }}<br>
-                                        {% endif %}
-                                        {% if convenio.duracion_dias %}
-                                        <strong>Duración dias:</strong> {{ convenio.duracion_dias }}<br>
+                                        {% if fecha_de_fin %}
+                                        <strong>Fecha de fin:</strong>{{ convenio.fecha_de_fin }}<br>
                                         {% endif %}
                                         {% if convenio.cod_segun_financiadora %}
                                         <strong>Código según financiadora:</strong> {{ convenio.cod_segun_financiadora }}<br>
@@ -285,15 +279,6 @@
                                         <strong>Fecha de inicio:</strong>{{ proyecto.fecha_de_inicio }}<br>
                                         {% if proyecto.fecha_de_fin %}
                                         <strong>Fecha de fin:</strong>{{ proyecto.fecha_de_fin }}<br>
-                                        {% endif %}
-                                        {% if proyecto.duracion_anyos %}
-                                        <strong>Duración años:</strong> {{ proyecto.duracion_anyos }}<br>
-                                        {% endif %}
-                                        {% if proyecto.duracion_meses %}
-                                        <strong>Duración meses:</strong> {{ proyecto.duracion_meses }}<br>
-                                        {% endif %}
-                                        {% if proyecto.duracion_dias %}
-                                        <strong>Duración dias:</strong> {{ proyecto.duracion_dias }}<br>
                                         {% endif %}
                                         {% if proyecto.cod_segun_financiadora %}
                                         <strong>Código según financiadora:</strong> {{ proyecto.cod_segun_financiadora }}<br>

@@ -16,24 +16,24 @@ def parse_scope(treeXML):
     return dataCVN
 
 
-def parse_duration(duration):
+def _parse_duration(duration):
     '''Input: Duration/Item node
        Example: CvnItem/Date/Duration/Item
     '''
-    dataCVN = {}
-    dataCVN['duracion'] = 0
+    duration = duration.text
+    duracion = 0
     number = ''
     for item in duration[1:]:
         if item.isdigit():
             number = item
         else:
             if item == 'Y':
-                dataCVN['duracion'] += int(unicode(number)) * 365
+                duracion += int(unicode(number)) * 365
             if item == 'M':
-                dataCVN['duracion'] += int(unicode(number)) * 30
+                duracion += int(unicode(number)) * 30
             if item == 'D':
-                dataCVN['duracion'] += int(unicode(number))
-    return dataCVN
+                duracion += int(unicode(number))
+    return duracion
 
 
 def parse_nif(xml):
@@ -119,8 +119,79 @@ def parse_publicacion_location(treeXML):
     return data
 
 
-def parse_date(xml):
-    '''Input: root node'''
-    date = xml.find(
-        'Version/VersionID/Date/Item').text.strip().split('-')
+def _parse_segregated_date(xml):
+    date = xml.find('DayMonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+    date = xml.find('MonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), 1)
+    date = xml.find('Year/Item')
+    if date is not None:
+        return datetime.date(int(date.text), 1, 1)
+    return None
+
+
+def _parse_unitary_date(xml):
+    date = xml.text.split('-')
     return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+
+def parse_date(xml):
+    '''Input: date node'''
+
+    # Node of type Date > OnlyDate
+    node = xml.find('OnlyDate')
+    if node is not None:
+        return _parse_segregated_date(node)
+
+    # Node of type Date > StartDate
+    node = xml.find('StartDate')
+    if node is not None:
+        return _parse_segregated_date(node)
+
+    # Node of type Date > Item
+    node = xml.find('Item')
+    if node is not None:
+        return _parse_unitary_date(node)
+
+    return None
+
+
+def parse_date_interval(xml):
+    '''Input: date node'''
+
+    # Get start date
+    fecha_inicio = parse_date(xml)
+    fecha_fin_1 = None
+    fecha_fin_2 = None
+    duration_1 = 0
+    duration_2 = 0
+
+    # Get end date
+    node = xml.find('EndDate')
+    if node is not None:
+        fecha_fin_1 = _parse_segregated_date(node)
+        '''If fecha_inicio is None duration is useless. So in the case
+           of being a fecha_fin with no fecha inicio we just return it.'''
+        if fecha_inicio is None:
+            return None, fecha_fin_1, None
+        delta = fecha_fin_1 - fecha_inicio
+        duration_1 = delta.days
+
+    # Get duration
+    node = xml.find('Duration/Item')
+    if node is not None:
+        duration_2 = _parse_duration(node)
+        fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
+
+    # Chose what end date to return. The first if is needed so fecha_fin
+    # is None instead of equal to fecha_inicio in certain conditions.
+    if fecha_fin_1 is None and fecha_fin_2 is None:
+        return fecha_inicio, None, None
+    if duration_1 > duration_2:
+        return fecha_inicio, fecha_fin_1, duration_1
+    else:
+        return fecha_inicio, fecha_fin_2, duration_2

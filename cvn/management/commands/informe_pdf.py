@@ -289,10 +289,8 @@ class Informe_pdf:
                 text += u"Fecha de inicio: %s<br/>" % (
                     conv.fecha_de_inicio.strftime("%d/%m/%Y")
                 )
-            if (conv.duracion_anyos or conv.duracion_meses or
-               conv.duracion_dias):
-                text += u"Fecha de finalización: %s<br/>" % (
-                    conv.getFechaFin().strftime("%d/%m/%Y")
+            text += u"Fecha de finalización: %s<br/>" % (
+                    conv.fecha_de_fin.strftime("%d/%m/%Y")
                 )
             if conv.cuantia_total:
                 text += u"Cuantía: %s<br/>" % (conv.cuantia_total)
