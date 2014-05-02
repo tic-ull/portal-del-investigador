@@ -20,7 +20,7 @@ def create_profile(sender, instance, created, **kwargs):
         cas_info = request.session['attributes']
         if 'NumDocumento' in cas_info:
             profile.documento = cas_info['NumDocumento']
-            WS = st.WS_SERVER_URL + 'get_codpersona?nif=i%s' % (
+            WS = st.WS_SERVER_URL + 'get_codpersona?nif=%s' % (
                 cas_info['NumDocumento'])
             if urllib.urlopen(WS).code == 200:
                 profile.rrhh_code = json.loads(urllib.urlopen(WS).read())

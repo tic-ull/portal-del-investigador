@@ -18,14 +18,14 @@ def index(request):
     if 'attributes' in request.session:
         context['user'] = request.session['attributes']
     user = request.user
-    context['form'] = UploadCVNForm()
+    form = UploadCVNForm()
     if request.method == 'POST':
         form = UploadCVNForm(request.POST, request.FILES, user=user)
         if form.is_valid():
             form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
-        context['form'] = form
-    date_cvn_to_context(user.profile.cvn, context)
+    context['form'] = form
+    date_cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     return render(request, 'index.html', context)
 
