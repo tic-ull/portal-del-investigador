@@ -8,15 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'UserProfile'
-        db.create_table(u'cvn_userprofile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
-            ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-            ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'cvn', ['UserProfile'])
-
         # Adding model 'CVN'
         db.create_table(u'cvn_cvn', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -25,7 +16,7 @@ class Migration(SchemaMigration):
             ('fecha_cvn', self.gf('django.db.models.fields.DateField')()),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('user_profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.UserProfile'], unique=True)),
+            ('user_profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.UserProfile'], unique=True)),
             ('status', self.gf('django.db.models.fields.CharField')(default='0', max_length=100)),
         ))
         db.send_create_signal(u'cvn', ['CVN'])
@@ -76,7 +67,7 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('publicacion', models.ForeignKey(orm[u'cvn.publicacion'], null=False)),
-            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
         db.create_unique(m2m_table_name, ['publicacion_id', 'userprofile_id'])
 
@@ -143,7 +134,7 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('congreso', models.ForeignKey(orm[u'cvn.congreso'], null=False)),
-            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
         db.create_unique(m2m_table_name, ['congreso_id', 'userprofile_id'])
 
@@ -194,7 +185,7 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('proyecto', models.ForeignKey(orm[u'cvn.proyecto'], null=False)),
-            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
         db.create_unique(m2m_table_name, ['proyecto_id', 'userprofile_id'])
 
@@ -242,7 +233,7 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('convenio', models.ForeignKey(orm[u'cvn.convenio'], null=False)),
-            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
         db.create_unique(m2m_table_name, ['convenio_id', 'userprofile_id'])
 
@@ -274,15 +265,12 @@ class Migration(SchemaMigration):
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('tesisdoctoral', models.ForeignKey(orm[u'cvn.tesisdoctoral'], null=False)),
-            ('userprofile', models.ForeignKey(orm[u'cvn.userprofile'], null=False))
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
         db.create_unique(m2m_table_name, ['tesisdoctoral_id', 'userprofile_id'])
 
 
     def backwards(self, orm):
-        # Deleting model 'UserProfile'
-        db.delete_table(u'cvn_userprofile')
-
         # Deleting model 'CVN'
         db.delete_table(u'cvn_cvn')
 
@@ -363,6 +351,13 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
+        u'core.userprofile': {
+            'Meta': {'object_name': 'UserProfile'},
+            'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
+        },
         u'cvn.articulo': {
             'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Articulo', '_ormbases': [u'cvn.Publicacion']},
             u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
@@ -407,7 +402,7 @@ class Migration(SchemaMigration):
             'titulo_publicacion': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.convenio': {
@@ -446,7 +441,7 @@ class Migration(SchemaMigration):
             'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
             'tipo_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.cvn': {
             'Meta': {'object_name': 'CVN'},
@@ -456,7 +451,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '100'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.UserProfile']", 'unique': 'True'}),
+            'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.UserProfile']", 'unique': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})
         },
         u'cvn.fecyt': {
@@ -506,7 +501,7 @@ class Migration(SchemaMigration):
             'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'tipo_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.publicacion': {
             'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Publicacion'},
@@ -545,7 +540,7 @@ class Migration(SchemaMigration):
             'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.tesisdoctoral': {
@@ -568,14 +563,7 @@ class Migration(SchemaMigration):
             'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'universidad_que_titula': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['cvn.UserProfile']", 'null': 'True', 'blank': 'True'})
-        },
-        u'cvn.userprofile': {
-            'Meta': {'object_name': 'UserProfile'},
-            'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         }
     }
 

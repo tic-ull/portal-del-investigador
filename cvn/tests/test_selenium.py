@@ -1,8 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-#from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.support.ui import Select
-from cvn.models import User
+from django.contrib.auth.models import User
 from django import test
 from django.conf import settings as st
 from selenium import webdriver
@@ -85,7 +83,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-        #driver.find_element_by_id("id_cvn_file").clear()
+        # driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
             "id_cvn_file").send_keys(st.BASE_DIR +
                                      "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")

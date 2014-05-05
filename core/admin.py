@@ -1,7 +1,22 @@
 # -*- encoding: UTF-8 -*-
 
-from core.models import Log
+from core.models import UserProfile, Log
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    extra = 0
+
+UserAdmin.list_display = (
+    'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
+)
+
+UserAdmin.inlines = [
+    UserProfileInline,
+]
 
 
 class LogAdmin(admin.ModelAdmin):
@@ -24,4 +39,7 @@ class LogAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         return tuple(Log._meta.get_all_field_names())
 
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(Log, LogAdmin)

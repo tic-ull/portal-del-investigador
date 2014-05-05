@@ -1,26 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.models import (UserProfile, Congreso, Proyecto, Convenio,
-                        TesisDoctoral, Articulo, Libro, CVN, Capitulo)
+from cvn.models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
+                        Libro, CVN, Capitulo)
+from core.models import UserProfile
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-class UserProfileInline(admin.StackedInline):
-    model = UserProfile
-    extra = 0
-
-UserAdmin.list_display = (
-    'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
-)
-UserAdmin.inlines = [
-    UserProfileInline,
-]
 
 
 class CVNAdmin(admin.ModelAdmin):
@@ -73,8 +60,6 @@ class ProyectoConvenioAdmin(admin.ModelAdmin):
                      'usuario__documento',)
     ordering = ('created_at',)
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(CVN, CVNAdmin)
 admin.site.register(Articulo, PublicationAdmin)

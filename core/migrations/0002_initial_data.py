@@ -1,41 +1,18 @@
 # -*- coding: utf-8 -*-
+
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding model 'UserProfile'
-        db.create_table(u'core_userprofile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
-            ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-            ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
-        ))
-        db.send_create_signal(u'core', ['UserProfile'])
-
-        # Adding model 'Log'
-        db.create_table(u'core_log', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.UserProfile'])),
-            ('application', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('entry_type', self.gf('django.db.models.fields.IntegerField')(max_length=50)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('message', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal(u'core', ['Log'])
-
+        user = orm['auth.User'].objects.get_or_create(username='GesInv-ULL')[0]
+        orm.UserProfile.objects.get_or_create(user=user)
 
     def backwards(self, orm):
-        # Deleting model 'UserProfile'
-        db.delete_table(u'core_userprofile')
-
-        # Deleting model 'Log'
-        db.delete_table(u'core_log')
-
+        pass
 
     models = {
         u'auth.group': {
@@ -93,3 +70,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['core']
+    symmetrical = True
