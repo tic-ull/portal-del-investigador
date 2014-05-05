@@ -27,8 +27,9 @@ class CVNAdmin(admin.ModelAdmin):
     model = CVN
     form = UploadCVNForm
     list_display = (
-        'cvn_file', 'user_profile', 'fecha_cvn', 'xml_file',
+        'cvn_file', 'user_profile', 'fecha_cvn', 'status', 'xml_file',
     )
+    list_filter = ('status',)
     search_fields = (
         'user_profile__user__username',
         'user_profile__documento',

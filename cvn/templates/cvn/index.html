@@ -18,12 +18,12 @@
 {% block main %}
 
     <!-- Mensajes de aviso al usuario -->
-    {% if not fecha_cvn and not user.is_anonymous %}
+    {% if not cvn and not user.is_anonymous %}
     <div class="alert alert-error">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
     </div>
-    {% elif updateCVN %}
+    {% elif cvn.status == 'caducado' %}
     <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         Debe actualizar su <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
@@ -40,33 +40,21 @@
                 <tr>
                     <td><strong>Estado</strong></td>
                     <td>
-                    {% if fecha_cvn %}   <!-- Tiene CVN subido -->
-                        {% if updateCVN %}
-                                <strong>Caducado</strong>
-                        {% else %}
-                                <strong>Actualizado</strong>
-                        {% endif %}
+                    {% if cvn %}   <!-- Tiene CVN subido -->
+                        <strong>{{ cvn_status }}</strong>
                     {% else %}
                             <strong>Sin CVN</strong>
                     {% endif %}
                     </td>
                 </tr>
-            {% if fecha_cvn %}
+            {% if cvn %}
                 <tr>
                     <td><strong>Fecha de última actualización</strong></td>
                     <td>
-                        {{ fecha_cvn }}
+                        {{ cvn.fecha_cvn }}
                     </td>
 
                 </tr>
-                {% if not updateCVN %}
-                <tr>
-                    <td><strong>Válido hasta</strong></td>
-                    <td>
-                        {{ fecha_valido }}
-                    </td>
-                </tr>
-                {% endif %}
             {% endif %}
                 </tbody>
             </table>
@@ -78,7 +66,7 @@
         </div>
         <div class="span7">
             <ul class="thumbnails">
-                {% if fecha_cvn %}
+                {% if cvn.fecha_cvn %}
                 <li class="span6">
                     <div class="thumbnail">
                         <div class="center">

@@ -22,3 +22,4 @@ simplejson
 factory-boy
 coverage
 django-coverage
+enum

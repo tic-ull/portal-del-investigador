@@ -1,9 +1,7 @@
 # -*- encondig: UTF-8 -*-
 
-from cvn import settings as stCVN
-from dateutil.relativedelta import relativedelta
 from django.core.exceptions import ObjectDoesNotExist
-import datetime
+from cvn import settings as stCVN
 
 
 def scientific_production_to_context(user, context):
@@ -19,14 +17,10 @@ def scientific_production_to_context(user, context):
         return False
 
 
-def date_cvn_to_context(user, context):
+def cvn_to_context(user, context):
     try:
-        context['fecha_cvn'] = user.cvn.fecha_cvn
-        date = relativedelta(years=stCVN.CVN_CADUCIDAD)
-        if (user.cvn.fecha_cvn + date) < datetime.date.today():
-            context['updateCVN'] = True
-        else:
-            context['fecha_valido'] = user.cvn.fecha_cvn + date
+        context['cvn'] = user.cvn
+        context['cvn_status'] = stCVN.CVN_STATUS[int(user.cvn.status)][1]
     except ObjectDoesNotExist:
         return
 
@@ -39,4 +33,4 @@ def isdigit(obj):
 
 
 def noneToZero(value):
-    return value if not value is None else 0
+    return value if value is not None else 0

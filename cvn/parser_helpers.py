@@ -172,7 +172,7 @@ def parse_date(xml):
 def parse_date_interval(xml):
     '''Input: date node'''
     if xml is None:
-        return None
+        return None, None, None
 
     # Get start date
     fecha_inicio = parse_date(xml)

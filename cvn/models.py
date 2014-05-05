@@ -93,6 +93,8 @@ class CVN(models.Model):
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
+    status = models.CharField(max_length=100, choices=stCVN.CVN_STATUS,
+                              default=stCVN.CVNStatus.UPDATED)
 
     class Meta:
         verbose_name_plural = u'Currículum Vitae Normalizado'
@@ -146,6 +148,18 @@ class CVN(models.Model):
             if produccion is None:
                 continue
             produccion.objects.create(CVNItem, self.user_profile)
+
+    def update_status(self):
+        xml_tree = etree.parse(self.xml_file)
+        self.xml_file.seek(0)
+        nif = parse_nif(xml_tree)
+        if nif is None or nif.upper() != self.user_profile.documento.upper():
+            self.status = stCVN.CVNStatus.INVALID_IDENTITY
+        elif self.fecha_cvn <= stCVN.FECHA_CADUCIDAD:
+            self.status = stCVN.CVNStatus.EXPIRED
+        else:
+            self.status = stCVN.CVNStatus.UPDATED
+        self.save()
 
 
 class Publicacion(models.Model):

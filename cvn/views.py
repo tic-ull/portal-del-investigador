@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.utils import scientific_production_to_context, date_cvn_to_context
+from cvn.utils import scientific_production_to_context, cvn_to_context
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -25,7 +25,7 @@ def index(request):
             form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
     context['form'] = form
-    date_cvn_to_context(user.profile, context)
+    cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     return render(request, 'index.html', context)
 

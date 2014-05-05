@@ -26,6 +26,7 @@ class Migration(SchemaMigration):
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('user_profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.UserProfile'], unique=True)),
+            ('status', self.gf('django.db.models.fields.CharField')(default='0', max_length=100)),
         ))
         db.send_create_signal(u'cvn', ['CVN'])
 
@@ -453,6 +454,7 @@ class Migration(SchemaMigration):
             'cvn_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             'fecha_cvn': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': "'0'", 'max_length': '100'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.UserProfile']", 'unique': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})

@@ -1,7 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
-import os
 from django.conf import settings as st
+from enum import Enum
+import datetime
+import os
 
 # Usuario Administrador de la plantilla de administración de Django
 ADMIN_USERNAME = "admin"
@@ -108,12 +110,12 @@ SCOPE = {
 }
 
 # Fecha de caducidad de un CVN
-CVN_CADUCIDAD = 1   # Año
+FECHA_CADUCIDAD = datetime.date(2013, 12, 31)
 
 # Dato de la página introducido en un formato no reconocible
 INVALID_PAGE = -1
 # Indica que no se ha podido crear un diccionario de búsqueda
-#INVALID_SEARCH = -1
+# INVALID_SEARCH = -1
 
 # Errores FECYT
 ERROR_CODES = {
@@ -132,3 +134,16 @@ ERROR_CODES = {
 }
 
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
+
+
+# CVN Status
+class CVNStatus(Enum):
+    UPDATED = '0'
+    EXPIRED = '1'
+    INVALID_IDENTITY = '2'
+
+CVN_STATUS = (
+    (CVNStatus.UPDATED, u'Actualizado'),
+    (CVNStatus.EXPIRED, u'Caducado'),
+    (CVNStatus.INVALID_IDENTITY, u'NIF/NIE incorrecto'),
+)
