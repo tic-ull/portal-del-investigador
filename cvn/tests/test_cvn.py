@@ -74,9 +74,9 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data.titulo, u'Título')
                 self.assertEqual(data.nombre_del_congreso,
                                  u'Nombre del congreso')
-                self.assertEqual(data.fecha_realizacion,
+                self.assertEqual(data.fecha_de_inicio,
                                  datetime.date(2014, 04, 01))
-                self.assertEqual(data.fecha_finalizacion,
+                self.assertEqual(data.fecha_de_fin,
                                  datetime.date(2014, 04, 05))
                 self.assertEqual(data.ciudad_de_realizacion,
                                  u'Ciudad de realización')
@@ -131,11 +131,9 @@ class CVNTestCase(TestCase):
                                  datetime.date(2014, 04, 01))
                 if tipo == 'Proyecto':
                     self.assertEqual(data.fecha_de_fin,
-                                     datetime.date(2014, 04, 05))
+                                     datetime.date(2015, 05, 02))
                 else:
-                    self.assertEqual(data.duracion_anyos, 1)
-                    self.assertEqual(data.duracion_meses, 1)
-                    self.assertEqual(data.duracion_dias, 1)
+                    self.assertEqual(data.duracion, 396)
                 if tipo == 'Proyecto':
                     self.assertEqual(data.autores, u'Firma')
                     self.assertEqual(data.ambito, u'Internacional no UE')
@@ -199,3 +197,25 @@ class CVNTestCase(TestCase):
         u.profile.documento = '00000000A'
         example_xml = self.xml_test.read()
         self.assertTrue(u.profile.can_upload_cvn(example_xml))
+
+    def test_check_change_date_cvn(self):
+        date_1 = datetime.date(2014, 4, 3)
+        date_2 = datetime.date(2013, 3, 3)
+        date_3 = datetime.date(2014, 4, 3)
+        date_4 = datetime.date(2002, 3, 2)
+        duration_1 = 60
+        duration_2 = 136
+        p = Proyecto(fecha_de_inicio=date_1,
+                     fecha_de_fin=date_2)
+        p.save()
+        p.fecha_de_fin = date_3
+        p.save()
+        c = Convenio(fecha_de_inicio=date_4,
+                     duracion=duration_1)
+        c.save()
+        c.duracion = duration_2
+        c.save()
+        p_duration = date_3 - date_1
+        c_date = date_4 + datetime.timedelta(days=duration_2)
+        self.assertEqual(p.duracion, p_duration.days)
+        self.assertEqual(c.fecha_de_fin, c_date)

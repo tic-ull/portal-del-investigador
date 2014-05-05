@@ -1,4 +1,5 @@
 # -*- encoding: UTF-8 -*-
+
 from cvn import settings as stCVN
 import datetime
 
@@ -16,27 +17,30 @@ def parse_scope(treeXML):
     return dataCVN
 
 
-def parse_duration(duration):
+def _parse_duration(duration):
     '''Input: Duration/Item node
        Example: CvnItem/Date/Duration/Item
     '''
-    dataCVN = {}
+    duration = duration.text
+    duracion = 0
     number = ''
     for item in duration[1:]:
         if item.isdigit():
             number = item
         else:
             if item == 'Y':
-                dataCVN['duracion_anyos'] = unicode(number)
+                duracion += int(unicode(number)) * 365
             if item == 'M':
-                dataCVN['duracion_meses'] = unicode(number)
+                duracion += int(unicode(number)) * 30
             if item == 'D':
-                dataCVN['duracion_dias'] = unicode(number)
-    return dataCVN
+                duracion += int(unicode(number))
+    return duracion
 
 
 def parse_nif(xml):
     '''Input: root node'''
+    if xml is None:
+        return None
     nif = ''
     id_node = xml.find(
         'Agent/Identification/PersonalIdentification/OfficialId')
@@ -82,14 +86,18 @@ def parse_authors(author_list):
 
 def parse_produccion_type(xml):
     '''Input: CvnItem node'''
+    if xml is None:
+        return ''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
-    if not cvn_key in stCVN.FECYT_CODE:
+    if cvn_key not in stCVN.FECYT_CODE:
         return ''
     return stCVN.FECYT_CODE[cvn_key]
 
 
 def parse_produccion_subtype(xml):
     '''Input: CvnItem node'''
+    if xml is None:
+        return ''
     subtype = xml.find('Subtype/SubType1/Item')
     if subtype is None:
         return ''
@@ -141,6 +149,8 @@ def _parse_unitary_date(xml):
 def parse_date(xml):
     '''Input: date node'''
 
+    if xml is None:
+        return None
     # Node of type Date > OnlyDate
     node = xml.find('OnlyDate')
     if node is not None:
@@ -159,13 +169,43 @@ def parse_date(xml):
     return None
 
 
-def parse_end_date(xml):
+def parse_date_interval(xml):
     '''Input: date node'''
+    if xml is None:
+        return None
+
+    # Get start date
+    fecha_inicio = parse_date(xml)
+    fecha_fin_1 = None
+    fecha_fin_2 = None
+    duration_1 = 0
+    duration_2 = 0
+
+    # Get end date
     node = xml.find('EndDate')
     if node is not None:
-        return _parse_segregated_date(node)
+        fecha_fin_1 = _parse_segregated_date(node)
+        '''If fecha_inicio is None duration is useless. So in the case
+           of being a fecha_fin with no fecha inicio we just return it.'''
+        if fecha_inicio is None:
+            return None, fecha_fin_1, None
+        delta = fecha_fin_1 - fecha_inicio
+        duration_1 = delta.days
 
-    return None
+    # Get duration
+    node = xml.find('Duration/Item')
+    if node is not None:
+        duration_2 = _parse_duration(node)
+        fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
+
+    # Chose what end date to return. The first if is needed so fecha_fin
+    # is None instead of equal to fecha_inicio in certain conditions.
+    if fecha_fin_1 is None and fecha_fin_2 is None:
+        return fecha_inicio, None, None
+    if duration_1 > duration_2:
+        return fecha_inicio, fecha_fin_1, duration_1
+    else:
+        return fecha_inicio, fecha_fin_2, duration_2
 
 
 def parse_produccion_id(id_list, code_type):
