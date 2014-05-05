@@ -62,8 +62,7 @@ if DEBUG:
     DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'django_cas.backends.CASBackend',
+    'core.backends.CASBackend',
 )
 
 # Authentication CAS - ULL
