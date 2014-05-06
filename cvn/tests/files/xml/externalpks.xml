@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalPKS>
+    <ExternalPK>
+      <Type code="060.010.010.160">
+        <Item>010</Item>
+      </Type>
+      <Code code="060.010.010.160">
+        <Item>0395-2037</Item>
+      </Code>
+    </ExternalPK>
+    <ExternalPK>
+      <Type code="060.010.010.160">
+        <Item>020</Item>
+      </Type>
+      <Code code="060.010.010.160">
+        <Item>1-56619-909-1</Item>
+      </Code>
+    </ExternalPK>
+    <ExternalPK>
+      <Type code="060.010.010.170">
+        <Item>030</Item>
+      </Type>
+      <Code code="060.010.010.170">
+        <Item>B-15155-1975</Item>
+      </Code>
+    </ExternalPK>
+    <ExternalPK>
+      <Type code="050.020.010.260">
+        <Item>000</Item>
+      </Type>
+      <Code code="050.020.010.260">
+        <Item>Cod. segun financiadora</Item>
+      </Code>
+    </ExternalPK>
+</ExternalPKS>

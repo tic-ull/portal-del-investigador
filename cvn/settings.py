@@ -67,6 +67,13 @@ FECYT_CODE_SUBTYPE = {
     u'100': u'TesisDoctoral',
 }
 
+PRODUCCION_ID_CODE = {
+    'FINANCIADORA': '000',
+    'ISSN': '010',
+    'ISBN': '020',
+    'DEPOSITO_LEGAL': '030',
+}
+
 # Indica que el nodo 'Link' contiene los datos del congreso
 DATA_CONGRESO = u"110"
 
