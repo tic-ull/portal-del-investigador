@@ -10,7 +10,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         user = orm['auth.User'].objects.get_or_create(username='GesInv-ULL')[0]
-        orm.UserProfile.objects.get_or_create(user=user)
+        orm.UserProfile.objects.get_or_create(user=user, documento='00000000A')
 
     def backwards(self, orm):
         pass
@@ -59,11 +59,11 @@ class Migration(DataMigration):
             'entry_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.TextField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
+            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
         },
         u'core.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'documento': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})

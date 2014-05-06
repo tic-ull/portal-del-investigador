@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.create_table(u'core_userprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(related_name='profile', unique=True, to=orm['auth.User'])),
-            ('documento', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
+            ('documento', self.gf('django.db.models.fields.CharField')(unique=True, max_length=20)),
             ('rrhh_code', self.gf('django.db.models.fields.CharField')(max_length=20, unique=True, null=True, blank=True)),
         ))
         db.send_create_signal(u'core', ['UserProfile'])
@@ -20,7 +20,7 @@ class Migration(SchemaMigration):
         # Adding model 'Log'
         db.create_table(u'core_log', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.UserProfile'])),
+            ('user_profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.UserProfile'])),
             ('application', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('entry_type', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('date', self.gf('django.db.models.fields.DateTimeField')()),
@@ -81,11 +81,11 @@ class Migration(SchemaMigration):
             'entry_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.TextField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
+            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
         },
         u'core.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'documento': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'documento': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})

@@ -12,8 +12,7 @@ class UserProfile(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
     """
     user = models.OneToOneField(User, related_name='profile')
-    documento = models.CharField(u'Documento', max_length=20,
-                                 blank=True, null=True, unique=True)
+    documento = models.CharField(u'Documento', max_length=20, unique=True)
     rrhh_code = models.CharField(u'Código persona', max_length=20,
                                  blank=True, null=True, unique=True)
 
@@ -30,7 +29,7 @@ class UserProfile(models.Model):
 
 
 class Log(models.Model):
-    user = models.ForeignKey(UserProfile)
+    user_profile = models.ForeignKey(UserProfile)
     application = models.CharField(u'Aplicación', max_length=20)
     entry_type = models.IntegerField(u'Tipo', max_length=50,
                                      choices=stCore.LOG_TYPE)

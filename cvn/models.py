@@ -141,7 +141,7 @@ class CVN(models.Model):
             self.status = stCVN.CVNStatus.UPDATED
         self.save()
         Log.objects.create(
-            user=self.user_profile,
+            user_profile=self.user_profile,
             application=self._meta.app_label.upper(),
             entry_type=stCore.LogType.CVN_STATUS,
             date=datetime.datetime.now(),

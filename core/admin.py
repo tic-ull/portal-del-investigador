@@ -20,13 +20,13 @@ UserAdmin.inlines = [
 
 
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('application', 'entry_type', 'user', 'date')
+    list_display = ('application', 'entry_type', 'user_profile', 'date')
     list_filter = ('entry_type', 'application')
 
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
+    def has_delete_permission(self, request , obj=None):
         return False
 
     def get_actions(self, request):
