@@ -5,7 +5,8 @@ from django.db import models
 from django.db.models import Q
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
-                            parse_produccion_subtype, parse_date_interval)
+                            parse_produccion_subtype, parse_date_interval,
+                            parse_produccion_id)
 import datetime
 
 
@@ -67,10 +68,10 @@ class PublicacionManager(ProduccionManager):
             'Author'))
         dataCVN.update(parse_publicacion_location(item.find('Location')))
         dataCVN[u'fecha'] = parse_date(item.find('Date'))
-
-        if item.find('ExternalPK'):
-            dataCVN[u'issn'] = unicode(item.find(
-                'ExternalPK/Code/Item').text.strip())
+        dataCVN['issn'] = parse_produccion_id(item.findall('ExternalPK'),
+                                              stCVN.PRODUCCION_ID_CODE['ISSN'])
+        dataCVN['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
+                                              stCVN.PRODUCCION_ID_CODE['ISBN'])
         return super(PublicacionManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYearTipo(self, usuarios, year, tipo):
