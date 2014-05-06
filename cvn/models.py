@@ -135,12 +135,11 @@ class CVN(models.Model):
         nif = parse_nif(xml_tree)
         if nif is None:
             return True
-        elif len(nif) == 8 and nif != self.user_profile.documento[:-1]:
+        if len(nif) == 8 and nif != self.user_profile.documento[:-1]:
             return True
-        elif nif.upper() != self.user_profile.documento.upper():
+        if len(nif) > 8 and nif.upper() != self.user_profile.documento.upper():
             return True
-        else:
-            return False
+        return False
 
     def update_status(self):
         if self._is_invalid_identity():
