@@ -181,23 +181,6 @@ class CVNTestCase(TestCase):
             full_path = os.path.join(stCVN.OLD_PDF_ROOT, relative_path)
             self.assertTrue(os.path.isfile(full_path))
 
-    def test_check_no_permission_to_upload_cvn(self):
-        u = UserFactory.create()
-        u.profile.documento = '12345678A'
-        example_xml = self.xml_test.read()
-        self.assertFalse(u.profile.can_upload_cvn(example_xml))
-
-    def test_admin_permission_to_upload_cvn(self):
-        a = AdminFactory.create()
-        example_xml = self.xml_test.read()
-        self.assertTrue(a.profile.can_upload_cvn(example_xml))
-
-    def test_check_permission_to_upload_cvn(self):
-        u = UserFactory.create()
-        u.profile.documento = '00000000A'
-        example_xml = self.xml_test.read()
-        self.assertTrue(u.profile.can_upload_cvn(example_xml))
-
     def test_check_change_date_cvn(self):
         date_1 = datetime.date(2014, 4, 3)
         date_2 = datetime.date(2013, 3, 3)

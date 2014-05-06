@@ -28,11 +28,6 @@ class UploadCVNForm(forms.ModelForm):
         (self.xml, error) = FECYT.getXML(cvn_file)
         if not self.xml:
             raise forms.ValidationError(_(stCVN.ERROR_CODES[error]))
-        '''
-        if not self.user.profile.can_upload_cvn(self.xml):
-            raise forms.ValidationError(_(
-                u'El NIF/NIE del CVN no coincide con el de su usuario.'))
-        '''
         return cvn_file
 
     def save(self, commit=True):
