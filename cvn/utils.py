@@ -20,7 +20,7 @@ def scientific_production_to_context(user, context):
 def cvn_to_context(user, context):
     try:
         context['cvn'] = user.cvn
-        context['cvn_status'] = stCVN.CVN_STATUS[int(user.cvn.status)][1]
+        context['cvn_status'] = stCVN.CVN_STATUS[user.cvn.status][1]
     except ObjectDoesNotExist:
         return
 

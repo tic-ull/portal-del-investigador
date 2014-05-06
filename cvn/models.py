@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.models import UserProfile
+from core.models import UserProfile, Log
 from cvn import settings as stCVN
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
@@ -10,12 +10,14 @@ from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
+from core import settings as stCore
 import base64
 import logging
 import os
 import suds
 import sys
 import time
+import datetime
 
 
 logger = logging.getLogger(__name__)
@@ -71,8 +73,8 @@ class CVN(models.Model):
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
-    status = models.CharField(max_length=100, choices=stCVN.CVN_STATUS,
-                              default=stCVN.CVNStatus.UPDATED)
+    status = models.IntegerField(u'Estado', choices=stCVN.CVN_STATUS,
+                                 default=0)
 
     class Meta:
         verbose_name_plural = u'Currículum Vitae Normalizado'
@@ -138,6 +140,13 @@ class CVN(models.Model):
         else:
             self.status = stCVN.CVNStatus.UPDATED
         self.save()
+        Log.objects.create(
+            user=self.user_profile,
+            application=self._meta.app_label.upper(),
+            entry_type=stCore.LogType.CVN_STATUS,
+            date=datetime.datetime.now(),
+            message=stCVN.CVN_STATUS[self.status][1]
+        )
 
 
 class Publicacion(models.Model):

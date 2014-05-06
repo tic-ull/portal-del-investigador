@@ -33,13 +33,15 @@ class Log(models.Model):
     user = models.ForeignKey(UserProfile)
     application = models.CharField(u'Aplicación', max_length=20)
     entry_type = models.IntegerField(u'Tipo', max_length=50,
-                                     choices=stCore.TYPE_STATES)
+                                     choices=stCore.LOG_TYPE)
+    entry_type = models.IntegerField(u'Tipo', choices=stCore.LOG_TYPE,
+                                     default=0)
     date = models.DateTimeField(u'Fecha')
     message = models.TextField(u'Mensaje')
 
     def __unicode__(self):
         return u'%s - %s' % (self.application,
-                             stCore.TYPE_STATES[self.entry_type][1])
+                             stCore.LOG_TYPE[self.entry_type][1])
 
     class Meta:
         ordering = ['-date']

@@ -138,9 +138,9 @@ TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 
 # CVN Status
 class CVNStatus(Enum):
-    UPDATED = '0'
-    EXPIRED = '1'
-    INVALID_IDENTITY = '2'
+    UPDATED = 0
+    EXPIRED = 1
+    INVALID_IDENTITY = 2
 
 CVN_STATUS = (
     (CVNStatus.UPDATED, u'Actualizado'),

@@ -1,5 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
-TYPE_STATES = (
-    (0, 'CVN_STATE'),
+from enum import Enum
+
+
+# LOG TYPE
+class LogType(Enum):
+    CVN_STATUS = 0
+
+LOG_TYPE = (
+    (LogType.CVN_STATUS, 'CVN_STATUS'),
 )
