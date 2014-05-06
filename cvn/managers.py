@@ -72,10 +72,6 @@ class PublicacionManager(ProduccionManager):
                                               stCVN.PRODUCCION_ID_CODE['ISSN'])
         dataCVN['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
                                               stCVN.PRODUCCION_ID_CODE['ISBN'])
-        '''if item.find('ExternalPK'):
-            dataCVN[u'issn'] = unicode(item.find(
-                'ExternalPK/Code/Item').text.strip())
-        '''
         return super(PublicacionManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYearTipo(self, usuarios, year, tipo):
