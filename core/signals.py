@@ -20,8 +20,11 @@ def create_profile(sender, instance, created, **kwargs):
             profile.documento = cas_info['NumDocumento']
             WS = st.WS_SERVER_URL + 'get_codpersona?nif=%s' % (
                 cas_info['NumDocumento'])
-            if urllib.urlopen(WS).code == 200:
-                profile.rrhh_code = json.loads(urllib.urlopen(WS).read())
+            rrhh_request = urllib.urlopen(WS)
+            if rrhh_request.code == 200:
+                rrhh_code = rrhh_request.read()
+                if rrhh_code.isdigit():
+                    profile.rrhh_code = json.loads(rrhh_code)
     profile.save()
 
 post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
