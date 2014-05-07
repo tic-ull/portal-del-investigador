@@ -6,7 +6,7 @@ from cvn.models import (CVN, Congreso, Publicacion, Convenio, Proyecto,
 from cvn.parser_helpers import parse_produccion_type
 from django.core.files.base import ContentFile
 from django.test import TestCase
-from factories import UserFactory, AdminFactory
+from core.tests.factories import UserFactory
 from lxml import etree
 import datetime
 import os
