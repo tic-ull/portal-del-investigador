@@ -129,20 +129,18 @@ class CVN(models.Model):
                 continue
             produccion.objects.create(CVNItem, self.user_profile)
 
-    def _is_invalid_identity(self):
+    def _is_valid_identity(self):
         xml_tree = etree.parse(self.xml_file)
         self.xml_file.seek(0)
         nif = parse_nif(xml_tree)
-        if nif is None:
+        if nif.upper() == self.user_profile.documento.upper():
             return True
-        if len(nif) == 8 and nif != self.user_profile.documento[:-1]:
-            return True
-        if len(nif) > 8 and nif.upper() != self.user_profile.documento.upper():
+        if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
             return True
         return False
 
     def update_status(self):
-        if self._is_invalid_identity():
+        if not self._is_valid_identity():
             self.status = stCVN.CVNStatus.INVALID_IDENTITY
         elif self.fecha_cvn <= stCVN.FECHA_CADUCIDAD:
             self.status = stCVN.CVNStatus.EXPIRED
