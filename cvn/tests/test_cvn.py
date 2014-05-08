@@ -216,4 +216,4 @@ class CVNTestCase(TestCase):
         form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
         if form.is_valid():
             cvn = form.save()
-        self.assertNotEqual(cvn.status, 2)
+        self.assertNotEqual(cvn.status, stCVN.CVNStatus.INVALID_IDENTITY)
