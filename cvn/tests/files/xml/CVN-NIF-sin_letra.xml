@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:CVN xsi:schemaLocation="http://cv.normalizado.org/cvn CVN.xsd" xmlns:tns="http://cv.normalizado.org/cvn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Version>
+    <VersionID>
+      <Date code="000.020.000.020">
+        <Item>2014-05-06</Item>
+      </Date>
+      <CodificationVersion code="000.020.000.080">
+        <Item>1.3.0</Item>
+      </CodificationVersion>
+    </VersionID>
+  </Version>
+  <Agent>
+    <Identification>
+      <PersonalIdentification>
+        <GivenName code="000.010.000.020">
+          <Item>Gestión</Item>
+        </GivenName>
+        <FirstFamilyName code="000.010.000.010">
+          <Item>Investigación</Item>
+        </FirstFamilyName>
+        <SecondFamilyName code="000.010.000.010">
+          <Item>ULL</Item>
+        </SecondFamilyName>
+        <OfficialId>
+          <DNI code="000.010.000.100">
+            <Item>00000000</Item>
+          </DNI>
+        </OfficialId>
+      </PersonalIdentification>
+    </Identification>
+    <Contact>
+      <InternetEmailAddress code="000.010.000.230">
+        <Item>stic.investigacion@ull.es</Item>
+      </InternetEmailAddress>
+    </Contact>
+  </Agent>
+</tns:CVN>

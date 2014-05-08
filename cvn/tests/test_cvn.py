@@ -8,6 +8,8 @@ from django.core.files.base import ContentFile
 from django.test import TestCase
 from core.tests.factories import UserFactory
 from lxml import etree
+from django.core.files.uploadedfile import SimpleUploadedFile
+from cvn.forms import UploadCVNForm
 import datetime
 import os
 
@@ -202,3 +204,16 @@ class CVNTestCase(TestCase):
         c_date = date_4 + datetime.timedelta(days=duration_2)
         self.assertEqual(p.duracion, p_duration.days)
         self.assertEqual(c.fecha_de_fin, c_date)
+
+    def test_valid_identity_nif_without_letter(self):
+        user = UserFactory.create()
+        user.profile.documento = '00000000A'
+        user.profile.save()
+        upload_file = open(os.path.join(stCVN.TEST_ROOT,
+                                        'cvn/CVN-NIF-sin_letra.pdf'), 'r')
+        cvn_file = SimpleUploadedFile(
+            upload_file.name, upload_file.read(), content_type=stCVN.PDF)
+        form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
+        if form.is_valid():
+            cvn = form.save()
+        self.assertNotEqual(cvn.status, 2)
