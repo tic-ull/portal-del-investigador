@@ -18,7 +18,10 @@ class UploadCVNForm(forms.ModelForm):
         if 'instance' in kwargs and kwargs['instance'] is not None:
             self.user = kwargs['instance'].user_profile.user
         if 'data' in kwargs and 'user' in kwargs['data']:
-            self.user = User.objects.get(pk=kwargs['data']['user'].pk)
+            try:
+                self.user = User.objects.get(pk=kwargs['data']['user'].pk)
+            except:
+                self.user = User.objects.get(pk=kwargs['data']['user'])
         if 'initial' in kwargs and 'cvn_file' in kwargs['initial']:
             if 'data' not in kwargs:
                 kwargs['data'] = {}
