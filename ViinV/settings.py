@@ -1,4 +1,5 @@
 # -*- encoding: UTF-8 -*-
+
 """
 Django settings for ViinV project.
 """
@@ -20,8 +21,6 @@ ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
 
-OLD_PORTAL_URL = 'http://viinv.ull.es'
-
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = []
@@ -36,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    #'django.contrib.sites',
+    # 'django.contrib.sites',
     'south',
     'core',
     'cvn',
@@ -239,6 +238,8 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates/cvn'),
 )
+
+OLD_PORTAL_URL = 'http://viinv.ull.es'
 
 # ---------------------------------------------------------- #
 
