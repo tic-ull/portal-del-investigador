@@ -18,11 +18,18 @@ class UploadCVNForm(forms.ModelForm):
         if 'instance' in kwargs and kwargs['instance'] is not None:
             self.user = kwargs['instance'].user_profile.user
         if 'data' in kwargs and 'user' in kwargs['data']:
-            self.user = User.objects.get(pk=kwargs['data']['user'])
+            self.user = User.objects.get(pk=kwargs['data']['user'].pk)
+        if 'initial' in kwargs and 'cvn_file' in kwargs['initial']:
+            if 'data' not in kwargs:
+                kwargs['data'] = {}
+            kwargs['data']['cvn_file'] = kwargs['initial']['cvn_file']
         super(UploadCVNForm, self).__init__(*args, **kwargs)
 
     def clean_cvn_file(self):
-        cvn_file = self.cleaned_data['cvn_file']
+        try:
+            cvn_file = self.cleaned_data['cvn_file']
+        except:
+            cvn_file = self.data['cvn_file']
         if cvn_file.content_type != stCVN.PDF:
             raise forms.ValidationError(_("El CVN debe estar en formato PDF."))
         (self.xml, error) = FECYT.getXML(cvn_file)
