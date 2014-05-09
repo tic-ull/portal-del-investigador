@@ -21,12 +21,4 @@ class CASBackend(django_cas.backends.CASBackend):
         except User.DoesNotExist:
             # User will have an "unusable" password
             user = User.objects.create_user(username, '')
-            # Add to User more info
-            if 'first_name' in attributes:
-                user.first_name = attributes['first_name']
-            if 'last_name' in attributes:
-                user.last_name = attributes['last_name']
-            if 'email' in attributes:
-                user.email = attributes['email']
-            user.save()
         return user
