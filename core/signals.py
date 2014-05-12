@@ -32,6 +32,8 @@ def update_profile(user, **kwargs):
             user.last_name = cas_info['last_name']
         if 'email' in cas_info:
             user.email = cas_info['email']
+        if 'username' in cas_info:
+            user.username = cas_info['username']
     user.save()
 
 user_logged_in.connect(update_profile, dispatch_uid='update-profile')
