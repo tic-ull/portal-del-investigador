@@ -33,6 +33,7 @@ class Command(BaseCommand):
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
                     form.save()
+                    print u'%s - %s ... OK' % (line[0], line[2])
                 else:
                     print u'ERROR: CVN No válido (%s - %s)' % (
                         line[0], line[2])
