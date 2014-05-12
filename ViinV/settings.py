@@ -17,6 +17,8 @@ DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
+DEVEL = True
+
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
