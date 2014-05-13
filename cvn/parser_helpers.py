@@ -40,10 +40,12 @@ def _parse_duration(duration):
 def parse_nif(xml):
     '''Input: root node'''
     if xml is None:
-        return None
+        return ''
     nif = ''
     id_node = xml.find(
         'Agent/Identification/PersonalIdentification/OfficialId')
+    if id_node is None:
+        return nif
     nif_node = id_node.find('DNI/Item')
     if nif_node is None:
         nif_node = id_node.find('NIE/Item')
@@ -148,24 +150,20 @@ def _parse_unitary_date(xml):
 
 def parse_date(xml):
     '''Input: date node'''
-
     if xml is None:
         return None
     # Node of type Date > OnlyDate
     node = xml.find('OnlyDate')
     if node is not None:
         return _parse_segregated_date(node)
-
     # Node of type Date > StartDate
     node = xml.find('StartDate')
     if node is not None:
         return _parse_segregated_date(node)
-
     # Node of type Date > Item
     node = xml.find('Item')
     if node is not None:
         return _parse_unitary_date(node)
-
     return None
 
 
@@ -173,14 +171,12 @@ def parse_date_interval(xml):
     '''Input: date node'''
     if xml is None:
         return None, None, None
-
     # Get start date
     fecha_inicio = parse_date(xml)
     fecha_fin_1 = None
     fecha_fin_2 = None
     duration_1 = 0
     duration_2 = 0
-
     # Get end date
     node = xml.find('EndDate')
     if node is not None:
@@ -191,13 +187,12 @@ def parse_date_interval(xml):
             return None, fecha_fin_1, None
         delta = fecha_fin_1 - fecha_inicio
         duration_1 = delta.days
-
     # Get duration
     node = xml.find('Duration/Item')
     if node is not None:
         duration_2 = _parse_duration(node)
-        fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
-
+        if fecha_inicio is not None:
+            fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
     # Chose what end date to return. The first if is needed so fecha_fin
     # is None instead of equal to fecha_inicio in certain conditions.
     if fecha_fin_1 is None and fecha_fin_2 is None:
