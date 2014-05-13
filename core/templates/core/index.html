@@ -79,7 +79,7 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <ol class="breadcrumb">
-                <li class="active" ><a href="#">T&iacute;tulo de la aplicaci&oacute;n o servicio</a></li>
+                <li class="active" ><a href="#">Portal de Investigación</a></li>
             </ol>
         </div>
         <div class="collapse navbar-collapse navbar-app-collapse">
@@ -106,19 +106,11 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="jumbotron">
-                        <h1>Título del servicio</h1>
-                        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in quam accumsan, viverra ligula non, hendrerit mi. Cras tempor arcu a sodales porttitor.</p>
+                        <h1>Portal de Investigación</h1>
+                        <p class="lead">Bienvenido al Portal del Investigador del Vicerrectorado de Investigación y Transferencia de Conocimiento de la Universidad de La Laguna.</p>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="alert alert-warning">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in quam accumsan, viverra ligula non, hendrerit mi. Cras tempor arcu a sodales porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque in quam accumsan, viverra ligula non, hendrerit mi. Cras tempor arcu a sodales porttitor.</p>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
     <hr/>
@@ -133,9 +125,9 @@
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
                                 <div class="col-md-10">
-                                    <h4>Obtención de datos para exportación a CVN</h4>
-                                    <p>Actualice o cree su CVN de forma simple exportando su perfil</p>
-                                    <a class="btn btn-primary btn-sm" href="https://viinv.ull.es/cvninfo"><i class="fa fa-angle-double-right"></i> Acceder</a>
+                                    <h4>Gestión de CVN</h4>
+                                    <p>Actualice y revise la información de su CVN</p>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'cvn' %}"><i class="fa fa-angle-double-right"></i> Acceder</a>
                                 </div>
                             </div>
                         </div>
@@ -170,7 +162,7 @@
                                 <div class="col-md-10">
                                     <h4>Grupos de investigaci&oacute;n</h4>
                                     <p>Informaci&oacute;n sobre los grupos de investigaci&oacute;n registrados de la ULL</p>
-                                    <a class="btn btn-primary btn-sm" href="https://viinv.ull.es/grupos/"><i class="fa fa-angle-double-right"></i> Acceder</a>
+                                    <a class="btn btn-primary btn-sm" href="{{old_portal}}/grupos/"><i class="fa fa-angle-double-right"></i> Acceder</a>
                                 </div>
                             </div>
                         </div>
@@ -186,7 +178,7 @@
                                 <div class="col-md-10">
                                     <h4>CEIBA</h4>
                                     <p>Comit&eacute; de &Eacute;tica de la Investigaci&oacute;n y de Bienestar Animal de la ULL</p>
-                                    <a class="btn btn-primary btn-sm" href="https://viinv.ull.es/ceiba/"><i class="fa fa-angle-double-right"></i> Acceder</a>
+                                    <a class="btn btn-primary btn-sm" href="{{old_portal}}/ceiba/"><i class="fa fa-angle-double-right"></i> Acceder</a>
                                 </div>
                             </div>
                         </div>
