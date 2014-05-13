@@ -169,19 +169,16 @@ class CVNTestCase(TestCase):
                                  datetime.date(2014, 04, 01))
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-            pdf_ull = open(os.path.join(stCVN.TEST_ROOT,
-                           'cvn/CVN-ULL.pdf'), 'r')
-            cvn = CVN()
-            cvn.updated_at = datetime.datetime.now()
-            cvn.cvn_file.save('CVN-ULL.pdf',
-                              ContentFile(pdf_ull.read()),
-                              save=False)
-            relative_path = (
-                cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
-                cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
-            cvn._backup_pdf()
-            full_path = os.path.join(stCVN.OLD_PDF_ROOT, relative_path)
-            self.assertTrue(os.path.isfile(full_path))
+        u = UserFactory.create()
+        cvn = UploadCVNForm.CVN(u, os.path.join(
+            stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
+        relative_path = (
+            cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
+            cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
+        full_path = os.path.join(stCVN.OLD_PDF_ROOT, relative_path)
+        cvn = UploadCVNForm.CVN(u, os.path.join(
+            stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
+        self.assertTrue(os.path.isfile(full_path))
 
     def test_check_change_date_cvn(self):
         date_1 = datetime.date(2014, 4, 3)
@@ -209,11 +206,6 @@ class CVNTestCase(TestCase):
         user = UserFactory.create()
         user.profile.documento = '00000000A'
         user.profile.save()
-        upload_file = open(os.path.join(stCVN.TEST_ROOT,
-                                        'cvn/CVN-NIF-sin_letra.pdf'), 'r')
-        cvn_file = SimpleUploadedFile(
-            upload_file.name, upload_file.read(), content_type=stCVN.PDF)
-        form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
-        if form.is_valid():
-            cvn = form.save()
+        cvn = UploadCVNForm.CVN(user, os.path.join(
+            stCVN.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
         self.assertNotEqual(cvn.status, stCVN.CVNStatus.INVALID_IDENTITY)
