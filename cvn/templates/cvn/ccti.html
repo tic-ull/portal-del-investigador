@@ -112,7 +112,7 @@
                     <div class="span12">
 
                         <ul class="breadcrumb pull-left">
-                             <li><a href="{% url 'index' %}">Portal de Investigación</a></li>
+                             <li><a href="{% url 'cvn' %}">Portal de Investigación</a></li>
                             {% block breadcrumb %}
 
                             {% endblock breadcrumb %}
@@ -148,7 +148,7 @@
             <div class="span3 sidebar">
                 <div class="sidebar-nav widget">
                     {% block menu %}
-                        {% include "snippet/menu.html" with inicio="class='selec'" %}
+                        {% include "cvn/snippet/menu.html" with inicio="class='selec'" %}
                     {% endblock menu %}
                 </div>
             </div>

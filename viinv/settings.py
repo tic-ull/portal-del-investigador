@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 """
-Django settings for ViinV project.
+Django settings for viinv project.
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -98,9 +98,9 @@ CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 # Dirección de login para el decorador login_required
 LOGIN_URL = 'login'
 
-ROOT_URLCONF = 'ViinV.urls'
+ROOT_URLCONF = 'viinv.urls'
 
-WSGI_APPLICATION = 'ViinV.wsgi.application'
+WSGI_APPLICATION = 'viinv.wsgi.application'
 
 # Database
 
@@ -241,7 +241,8 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'cvn/templates/cvn'),
+    os.path.join(BASE_DIR, 'cvn/templates'),
+    os.path.join(BASE_DIR, 'core/templates'),
 )
 
 OLD_PORTAL_URL = 'http://viinv.ull.es'
