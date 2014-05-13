@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
 
-class Migration(DataMigration):
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
         user = orm['auth.User'].objects.get_or_create(username='GesInv-ULL')[0]
@@ -56,10 +55,10 @@ class Migration(DataMigration):
             'Meta': {'ordering': "['-date']", 'object_name': 'Log'},
             'application': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
-            'entry_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'entry_type': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.TextField', [], {}),
-            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
+            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'core.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
@@ -71,4 +70,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['core']
-    symmetrical = True

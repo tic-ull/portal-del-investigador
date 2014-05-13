@@ -20,9 +20,9 @@ class Migration(SchemaMigration):
         # Adding model 'Log'
         db.create_table(u'core_log', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user_profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.UserProfile'])),
+            ('user_profile', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.UserProfile'], null=True, blank=True)),
             ('application', self.gf('django.db.models.fields.CharField')(max_length=20)),
-            ('entry_type', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('entry_type', self.gf('django.db.models.fields.IntegerField')()),
             ('date', self.gf('django.db.models.fields.DateTimeField')()),
             ('message', self.gf('django.db.models.fields.TextField')()),
         ))
@@ -78,10 +78,10 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['-date']", 'object_name': 'Log'},
             'application': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
-            'entry_type': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'entry_type': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'message': ('django.db.models.fields.TextField', [], {}),
-            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']"})
+            'user_profile': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'core.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
