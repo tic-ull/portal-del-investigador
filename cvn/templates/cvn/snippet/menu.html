@@ -21,7 +21,7 @@
         <li class="nav-header"><i class="icon-user icon-white"></i> Menú principal</li>
         {% endif %}
     {% if not user.is_anonymous %}
-        <li><a href='{% url 'index' %}'><i class="icon-tasks"></i>Gestionar CVN</a></li>
+        <li><a href='{% url 'cvn' %}'><i class="icon-tasks"></i>Gestionar CVN</a></li>
         <li><a href="{% url 'logout' %}"><i class="icon-off"></i>Salir</a></li>
     {% else %}
         <li><a href="{% url 'login' %}"><i class="icon-user icon-black"></i> Iniciar sesión</a></li>
@@ -33,7 +33,7 @@
         <li>
         </li>
         <li class="divider"></li>
-        <li><a href="{% url 'index' %}"><i class="icon-home"></i>Inicio</a></li>
+        <li><a href="{% url 'cvn' %}"><i class="icon-home"></i>Inicio</a></li>
         <li><a href="{% url 'ull_report' %}"><i class="icon-home"></i>Informe ULL</a></li>
         <li class="divider"></li>
         <li><a href="http://tematai.ull.es/cvn/" target="_blank"><i class="icon-globe"></i>Acceso a Tematai</a></li>

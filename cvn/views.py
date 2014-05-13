@@ -27,7 +27,7 @@ def index(request):
     context['form'] = form
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
-    return render(request, 'index.html', context)
+    return render(request, 'cvn/index.html', context)
 
 
 @login_required
@@ -45,4 +45,4 @@ def ull_report(request):
     context = {}
     userULL = User.objects.get(username='GesInv-ULL')
     scientific_production_to_context(userULL.profile, context)
-    return render(request, 'ull_report.html', context)
+    return render(request, 'cvn/ull_report.html', context)
