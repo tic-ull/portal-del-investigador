@@ -44,6 +44,11 @@ INSTALLED_APPS = (
     'django_coverage',
 )
 
+COVERAGE_MODULE_EXCLUDES = (
+    'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
+    'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
+    'management$')
+
 INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES = (
