@@ -20,8 +20,9 @@ class Command(BaseCommand):
         with open(csv_file, 'rb') as csvfile:
             lines = csv.reader(csvfile, delimiter=';')
             for line in lines:
-                # print u'Usuario: %s' % (line[0])
-                # print u'CVN: %s' % (line[2])
+                print u'Línea: %s' % (lines.line_num)
+                print u'Usuario: %s' % (line[0])
+                print u'CVN: %s' % (line[2])
                 user = User.objects.get_or_create(
                     username=unicode(line[0]), password='')[0]
                 UserProfile.objects.get_or_create(user=user)[0]
@@ -41,8 +42,8 @@ class Command(BaseCommand):
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
                     form.save()
-                    # print u'OK'
+                    print u'OK'
                 else:
                     print u'ERROR: CVN No válido (%s - %s)' % (
                         line[0], line[2])
-                    print u'----------------------------------------'
+                print u'----------------------------------------'
