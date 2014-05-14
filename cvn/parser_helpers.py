@@ -191,8 +191,9 @@ def parse_date_interval(xml):
     node = xml.find('Duration/Item')
     if node is not None:
         duration_2 = _parse_duration(node)
-        if fecha_inicio is not None:
-            fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
+        if fecha_inicio is None:
+            return None, None, None
+        fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
     # Chose what end date to return. The first if is needed so fecha_fin
     # is None instead of equal to fecha_inicio in certain conditions.
     if fecha_fin_1 is None and fecha_fin_2 is None:
