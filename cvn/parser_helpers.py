@@ -4,19 +4,6 @@ from cvn import settings as stCVN
 import datetime
 
 
-def parse_scope(treeXML):
-    '''Input: Scope node
-       Example: CvnItem/Link/Scope'''
-    dataCVN = {}
-    if treeXML:
-        dataCVN['ambito'] = unicode(stCVN.SCOPE[treeXML.find(
-            'Type/Item').text.strip()])
-        if dataCVN['ambito'] == u'Otros' and treeXML.find('Others/Item'):
-            dataCVN['otro_ambito'] = unicode(treeXML.find(
-                'Others/Item').text.strip())
-    return dataCVN
-
-
 def _parse_duration(duration):
     '''Input: Duration/Item node
        Example: CvnItem/Date/Duration/Item
@@ -35,6 +22,39 @@ def _parse_duration(duration):
             if item == 'D':
                 duracion += int(unicode(number))
     return duracion
+
+
+def _parse_segregated_date(xml):
+    date = xml.find('DayMonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+    date = xml.find('MonthYear/Item')
+    if date is not None:
+        date = date.text.split('-')
+        return datetime.date(int(date[0]), int(date[1]), 1)
+    date = xml.find('Year/Item')
+    if date is not None:
+        return datetime.date(int(date.text), 1, 1)
+    return None
+
+
+def _parse_unitary_date(xml):
+    date = xml.text.split('-')
+    return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+
+def parse_scope(treeXML):
+    '''Input: Scope node
+       Example: CvnItem/Link/Scope'''
+    dataCVN = {}
+    if treeXML:
+        dataCVN['ambito'] = unicode(stCVN.SCOPE[treeXML.find(
+            'Type/Item').text.strip()])
+        if dataCVN['ambito'] == u'Otros' and treeXML.find('Others/Item'):
+            dataCVN['otro_ambito'] = unicode(treeXML.find(
+                'Others/Item').text.strip())
+    return dataCVN
 
 
 def parse_nif(xml):
@@ -128,26 +148,6 @@ def parse_publicacion_location(treeXML):
     return data
 
 
-def _parse_segregated_date(xml):
-    date = xml.find('DayMonthYear/Item')
-    if date is not None:
-        date = date.text.split('-')
-        return datetime.date(int(date[0]), int(date[1]), int(date[2]))
-    date = xml.find('MonthYear/Item')
-    if date is not None:
-        date = date.text.split('-')
-        return datetime.date(int(date[0]), int(date[1]), 1)
-    date = xml.find('Year/Item')
-    if date is not None:
-        return datetime.date(int(date.text), 1, 1)
-    return None
-
-
-def _parse_unitary_date(xml):
-    date = xml.text.split('-')
-    return datetime.date(int(date[0]), int(date[1]), int(date[2]))
-
-
 def parse_date(xml):
     '''Input: date node'''
     if xml is None:
@@ -202,7 +202,6 @@ def parse_date_interval(xml):
         return fecha_inicio, fecha_fin_1, duration_1
     else:
         return fecha_inicio, fecha_fin_2, duration_2
-
 
 def parse_produccion_id(id_list, code_type):
     '''Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
