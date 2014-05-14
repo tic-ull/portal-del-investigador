@@ -8,6 +8,8 @@ def _parse_duration(duration):
     '''Input: Duration/Item node
        Example: CvnItem/Date/Duration/Item
     '''
+    if duration is None:
+        return None
     duration = duration.text
     duracion = 0
     number = ''
@@ -25,6 +27,8 @@ def _parse_duration(duration):
 
 
 def _parse_segregated_date(xml):
+    if xml is None:
+        return None
     date = xml.find('DayMonthYear/Item')
     if date is not None:
         date = date.text.split('-')
@@ -42,6 +46,26 @@ def _parse_segregated_date(xml):
 def _parse_unitary_date(xml):
     date = xml.text.split('-')
     return datetime.date(int(date[0]), int(date[1]), int(date[2]))
+
+
+def _enddate_to_duration(node, fecha_inicio):
+    duration = None
+    fecha_fin = _parse_segregated_date(node)
+    if (fecha_inicio is not None and
+            fecha_fin is not None):
+        delta = fecha_fin - fecha_inicio
+        duration = delta.days
+    return fecha_fin, duration
+
+
+def _duration_to_enddate(node, fecha_inicio):
+    duration = _parse_duration(node)
+    if (fecha_inicio is not None and
+            duration is not None):
+        fecha_fin = (fecha_inicio +
+                     datetime.timedelta(days=duration))
+        return fecha_fin, duration
+    return None, None
 
 
 def parse_scope(treeXML):
@@ -173,35 +197,26 @@ def parse_date_interval(xml):
         return None, None, None
     # Get start date
     fecha_inicio = parse_date(xml)
-    fecha_fin_1 = None
-    fecha_fin_2 = None
-    duration_1 = 0
-    duration_2 = 0
     # Get end date
-    node = xml.find('EndDate')
-    if node is not None:
-        fecha_fin_1 = _parse_segregated_date(node)
-        '''If fecha_inicio is None duration is useless. So in the case
-           of being a fecha_fin with no fecha inicio we just return it.'''
-        if fecha_inicio is None:
-            return None, fecha_fin_1, None
-        delta = fecha_fin_1 - fecha_inicio
-        duration_1 = delta.days
+    fecha_fin_1, duracion_1 = _enddate_to_duration(
+        xml.find('EndDate'), fecha_inicio)
     # Get duration
-    node = xml.find('Duration/Item')
-    if node is not None:
-        duration_2 = _parse_duration(node)
-        if fecha_inicio is None:
-            return None, None, None
-        fecha_fin_2 = fecha_inicio + datetime.timedelta(days=duration_2)
-    # Chose what end date to return. The first if is needed so fecha_fin
-    # is None instead of equal to fecha_inicio in certain conditions.
-    if fecha_fin_1 is None and fecha_fin_2 is None:
-        return fecha_inicio, None, None
-    if duration_1 > duration_2:
-        return fecha_inicio, fecha_fin_1, duration_1
+    fecha_fin_2, duracion_2 = _duration_to_enddate(
+        xml.find('Duration/Item'), fecha_inicio)
+
+    if fecha_fin_2 is None:
+        fecha_fin = fecha_fin_1
+        duracion = duracion_1
+    elif fecha_fin_1 is None:
+        fecha_fin = fecha_fin_2
+        duracion = duracion_2
+    elif fecha_fin_1 > fecha_fin_2:
+        fecha_fin = fecha_fin_1
+        duracion = duracion_1
     else:
-        return fecha_inicio, fecha_fin_2, duration_2
+        fecha_fin = fecha_fin_2
+        duracion = duracion_2
+    return fecha_inicio, fecha_fin, duracion
 
 
 def parse_produccion_id(id_list, code_type):
