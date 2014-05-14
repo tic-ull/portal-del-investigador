@@ -81,6 +81,14 @@ class ParserTestCase(TestCase):
                 self.assertEqual(parsed_end_date, datetime.date(1997, 07, 04))
                 self.assertEqual(parsed_duration, None)
 
+            # Duration (duration is useless here)
+            if date_id == 9:
+                (parsed_date, parsed_end_date,
+                    parsed_duration) = parse_date_interval(date)
+                self.assertEqual(parsed_date, None)
+                self.assertEqual(parsed_end_date, None)
+                self.assertEqual(parsed_duration, None)
+
     def test_parse_publicacion_ids(self):
         ids = etree.parse(self.xml_externalpks).findall('ExternalPK')
         self.xml_dates.seek(0)
