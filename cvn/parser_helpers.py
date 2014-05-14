@@ -203,6 +203,7 @@ def parse_date_interval(xml):
     else:
         return fecha_inicio, fecha_fin_2, duration_2
 
+
 def parse_produccion_id(id_list, code_type):
     '''Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
        different identifiers for produccion nodes. code_type is what
