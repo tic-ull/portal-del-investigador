@@ -48,6 +48,26 @@ def _parse_unitary_date(xml):
     return datetime.date(int(date[0]), int(date[1]), int(date[2]))
 
 
+def _enddate_to_duration(node, fecha_inicio):
+    duration = None
+    fecha_fin = _parse_segregated_date(node)
+    if (fecha_inicio is not None and
+            fecha_fin is not None):
+        delta = fecha_fin - fecha_inicio
+        duration = delta.days
+    return fecha_fin, duration
+
+
+def _duration_to_enddate(node, fecha_inicio):
+    duration = _parse_duration(node)
+    if (fecha_inicio is not None and
+            duration is not None):
+        fecha_fin = (fecha_inicio +
+                     datetime.timedelta(days=duration))
+        return fecha_fin, duration
+    return None, None
+
+
 def parse_scope(treeXML):
     '''Input: Scope node
        Example: CvnItem/Link/Scope'''
@@ -185,35 +205,18 @@ def parse_date_interval(xml):
         xml.find('Duration/Item'), fecha_inicio)
 
     if fecha_fin_2 is None:
-        return fecha_inicio, fecha_fin_1, duracion_1
-
-    if fecha_fin_1 is None:
-        return fecha_inicio, fecha_fin_2, duracion_2
-
-    if fecha_fin_1 > fecha_fin_2:
-        return fecha_inicio, fecha_fin_1, duracion_1
+        fecha_fin = fecha_fin_1
+        duracion = duracion_1
+    elif fecha_fin_1 is None:
+        fecha_fin = fecha_fin_2
+        duracion = duracion_2
+    elif fecha_fin_1 > fecha_fin_2:
+        fecha_fin = fecha_fin_1
+        duracion = duracion_1
     else:
-        return fecha_inicio, fecha_fin_2, duracion_2
-
-
-def _enddate_to_duration(node, fecha_inicio):
-    duration = None
-    fecha_fin = _parse_segregated_date(node)
-    if (fecha_inicio is not None and
-            fecha_fin is not None):
-        delta = fecha_fin - fecha_inicio
-        duration = delta.days
-    return fecha_fin, duration
-
-
-def _duration_to_enddate(node, fecha_inicio):
-    duration = _parse_duration(node)
-    if (fecha_inicio is not None and
-            duration is not None):
-        fecha_fin = (fecha_inicio +
-                     datetime.timedelta(days=duration))
-        return fecha_fin, duration
-    return None, None
+        fecha_fin = fecha_fin_2
+        duracion = duracion_2
+    return fecha_inicio, fecha_fin, duracion
 
 
 def parse_produccion_id(id_list, code_type):
