@@ -28,7 +28,7 @@ class Command(BaseCommand):
                 try:
                     upload_file = open(import_path + line[2], 'r')
                 except IOError:
-                    print u'[%s] \t ERROR: CVN No encontrado (%s - %s)' % (
+                    print u'[%s] \t \t ERROR: CVN No encontrado (%s - %s)' % (
                         lines.line_num, line[0], line[2])
                     continue
                 cvn_file = SimpleUploadedFile(
@@ -38,8 +38,8 @@ class Command(BaseCommand):
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
                     form.save()
-                    print u'[%s] Usuario: %s - CVN: %s \t OK' % (
+                    print u'[%s] Usuario: %s - CVN: %s \t \t OK' % (
                         lines.line_num, line[0], line[2])
                 else:
-                    print u'[%s] \t ERROR: CVN No válido (%s - %s)' % (
+                    print u'[%s] \t \t ERROR: CVN No válido (%s - %s)' % (
                         lines.line_num, line[0], line[2])
