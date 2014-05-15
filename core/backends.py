@@ -20,7 +20,6 @@ class CASBackend(django_cas.backends.CASBackend):
         try:
             user = User.objects.get(profile__documento=documento)
         except User.DoesNotExist:
-            # User will have an "unusable" password
             user, created = User.objects.get_or_create(username=username)
             if not created:
                 Log.objects.create(
