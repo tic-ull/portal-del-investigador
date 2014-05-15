@@ -4,6 +4,7 @@ from cvn import settings as stCVN
 from cvn.models import (CVN, Congreso, Publicacion, Convenio, Proyecto,
                         TesisDoctoral, Articulo)
 from cvn.parser_helpers import parse_produccion_type
+from core.tests.helpers import init, clean
 from django.core.files.base import ContentFile
 from django.test import TestCase
 from core.tests.factories import UserFactory
@@ -15,6 +16,10 @@ import os
 
 
 class CVNTestCase(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        init()
 
     def setUp(self):
         self.xml_ull = open(os.path.join(stCVN.TEST_ROOT,
@@ -209,3 +214,7 @@ class CVNTestCase(TestCase):
         cvn = UploadCVNForm.CVN(user, os.path.join(
             stCVN.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
         self.assertNotEqual(cvn.status, stCVN.CVNStatus.INVALID_IDENTITY)
+
+    @classmethod
+    def tearDownClass(cls):
+        clean()

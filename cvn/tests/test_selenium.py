@@ -1,22 +1,23 @@
 # -*- encoding: UTF-8 -*-
 
-from django.contrib.auth.models import User
+from core.tests.helpers import init, clean
+from cvn import settings as stCVN
 from django import test
 from django.conf import settings as st
+from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
 from selenium.webdriver.common.by import By
-import unittest  # , time, re
 import time
+import unittest  # , time, re
 
 
 class LoginCAS(test.LiveServerTestCase):
 
     def __init__(self, *args, **kwargs):
         super(LoginCAS, self).__init__(*args, **kwargs)
-        if not st.DEBUG:
-            st.DEBUG = True
+        init()
 
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -65,8 +66,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_name("submit").click()
 #        driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
-            "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-Test_2.pdf")
+            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
@@ -111,8 +111,7 @@ class LoginCAS(test.LiveServerTestCase):
         u.save()
 #        driver.find_element_by_id("id_cvn_file").clear()
         driver.find_element_by_id(
-            "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-Test.pdf")
+            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
@@ -132,8 +131,7 @@ class LoginCAS(test.LiveServerTestCase):
         # First upload CVN
         time.sleep(2)
         driver.find_element_by_id(
-            "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-Test_2.pdf")
+            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
         time.sleep(2)
@@ -178,6 +176,10 @@ class LoginCAS(test.LiveServerTestCase):
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
+
+    @classmethod
+    def tearDownClass(cls):
+        clean()
 
 if __name__ == "__main__":
     unittest.main()
