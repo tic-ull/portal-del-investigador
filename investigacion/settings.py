@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 """
-Django settings for viinv project.
+Django settings for investigacion project.
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -100,9 +100,9 @@ CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 # Dirección de login para el decorador login_required
 LOGIN_URL = 'login'
 
-ROOT_URLCONF = 'viinv.urls'
+ROOT_URLCONF = 'investigacion.urls'
 
-WSGI_APPLICATION = 'viinv.wsgi.application'
+WSGI_APPLICATION = 'investigacion.wsgi.application'
 
 # Database
 
