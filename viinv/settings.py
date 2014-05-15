@@ -261,6 +261,6 @@ STATICFILES_FINDERS = (
 # ---------------------------------------------------------- #
 
 try:
-    execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))
-except IOError:
+    from settings_local import *
+except ImportError:
     pass
