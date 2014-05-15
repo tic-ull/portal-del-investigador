@@ -7,7 +7,7 @@ build/
 src/
 static/files/
 media
-ViinV/settings_local.py
+investigacion/settings_local.py
 virtualenv
 collected_static
 backups
