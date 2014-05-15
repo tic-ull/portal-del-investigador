@@ -65,6 +65,7 @@ class UploadCVNForm(forms.ModelForm):
         upload_file = open(pdf_path, 'r')
         cvn_file = SimpleUploadedFile(
             upload_file.name, upload_file.read(), content_type=stCVN.PDF)
+        upload_file.close()
         form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
         if form.is_valid():
             cvn = form.save()
