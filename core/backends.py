@@ -1,6 +1,5 @@
 # -*- encoding: UTF-8 -*-
 
-from django.db import IntegrityError
 from django.contrib.auth.models import User
 from django_cas.backends import _verify
 import django_cas
@@ -18,30 +17,20 @@ class CASBackend(django_cas.backends.CASBackend):
         if attributes and 'NumDocumento' in attributes:
             request.session['attributes'] = attributes
             documento = attributes['NumDocumento']
-        if not documento:
-            Log.objects.create(
-                user_profile=None,
-                application='core',
-                entry_type=stCore.LogType.AUTH_ERROR,
-                date=datetime.datetime.now(),
-                message='NumDocumento key not found at CAS. Username=' +
-                        username)
-            return None
         try:
             user = User.objects.get(profile__documento=documento)
         except User.DoesNotExist:
-            try:
-                # User will have an "unusable" password
-                user = User.objects.create_user(username, '')
-            except IntegrityError:
+            # User will have an "unusable" password
+            user, created = User.objects.get_or_create(username=username)
+            if not created:
                 Log.objects.create(
-                    user_profile=None,
+                    user_profile=user.profile,
                     application='core',
                     entry_type=stCore.LogType.AUTH_ERROR,
                     date=datetime.datetime.now(),
-                    message='Username already exists. Username=' + username +
+                    message='Username already exists. Possibly changed ID.' +
+                            ' Old ID=' + user.profile.documento +
                             ' New ID=' + documento)
-                return None
             # Add to User more info
             if 'first_name' in attributes:
                 user.first_name = attributes['first_name']
