@@ -75,12 +75,14 @@
         <date_id>5</date_id>
         <Item>2001-01-02</Item>
     </Date>
+
     <Date>
       <Moment>
         <Item>OTHERS</Item>
       </Moment>
       <date_id>6</date_id>
     </Date>
+
     <Date>
       <Moment>
         <Item>OTHERS</Item>
@@ -97,12 +99,14 @@
         </Year>
       </EndDate>
     </Date>
+
     <Date>
       <Moment>
         <Item>OTHERS</Item>
       </Moment>
       <date_id>6</date_id>
     </Date>
+
     <Date>
       <Moment>
         <Item>OTHERS</Item>
@@ -115,6 +119,17 @@
       </EndDate>
       <Duration code="050.020.010.280">
         <Item>P1Y1M1D</Item>
+      </Duration>
+      <DurationType>010</DurationType>
+    </Date>
+
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <date_id>9</date_id>
+      <Duration code="050.020.010.280">
+        <Item>P3Y2M4D</Item>
       </Duration>
       <DurationType>010</DurationType>
     </Date>

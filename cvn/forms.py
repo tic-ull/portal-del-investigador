@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.uploadedfile import SimpleUploadedFile
 from lxml import etree
 from parser_helpers import parse_date
 
@@ -57,6 +58,17 @@ class UploadCVNForm(forms.ModelForm):
         cvn.update_status()
         cvn.save()
         cvn.insert_xml()
+        return cvn
+
+    @staticmethod
+    def CVN(user, pdf_path):
+        upload_file = open(pdf_path, 'r')
+        cvn_file = SimpleUploadedFile(
+            upload_file.name, upload_file.read(), content_type=stCVN.PDF)
+        upload_file.close()
+        form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
+        if form.is_valid():
+            cvn = form.save()
         return cvn
 
     class Meta:

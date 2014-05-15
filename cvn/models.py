@@ -32,6 +32,8 @@ class FECYT(models.Model):
         if code == 'TesisDoctoral' and subtype != 'TesisDoctoral':
             return None
         if code == 'Publicacion':
+            if subtype not in [u'Articulo', u'Libro', u'Capitulo']:
+                return None
             code = subtype
         return getattr(sys.modules[__name__], code)
 

@@ -1,4 +1,4 @@
-{% extends 'ccti.html' %}
+{% extends 'cvn/ccti.html' %}
 
 {% load staticfiles %}
 <!-- Bootstrap -->
@@ -8,7 +8,7 @@
 {% block breadcrumb %}
     {% if not user.is_anonymous and not user.is_staff %}
     <li class="divider">&raquo;</li>
-    <li><a href='{% url 'index' %}'>CVN</a></li>
+    <li><a href='{% url 'cvn' %}'>CVN</a></li>
     {% elif user.is_staff %}
     <li class="divider">&raquo;</li>
     <li><a href="">Administración</a></li>

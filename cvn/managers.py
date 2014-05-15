@@ -121,10 +121,12 @@ class TesisDoctoralManager(ProduccionManager):
 
     def create(self, item, user_profile):
         dataCVN = {}
-        dataCVN[u'titulo'] = unicode(item.find(
-            'Title/Name/Item').text.strip())
-        dataCVN[u'universidad_que_titula'] = unicode(item.find(
-            'Entity/EntityName/Item').text.strip())
+        node = item.find('Title/Name/Item')
+        if node is not None:
+            dataCVN[u'titulo'] = unicode(node.text.strip())
+        node = item.find('Entity/EntityName/Item')
+        if node is not None:
+            dataCVN[u'universidad_que_titula'] = unicode(node.text.strip())
         dataCVN[u'autor'] = parse_authors(
             item.findall('Author'))
         dataCVN[u'codirector'] = parse_authors(

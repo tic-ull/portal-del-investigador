@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 """
-Django settings for ViinV project.
+Django settings for investigacion project.
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -16,6 +16,8 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
+
+DEVEL = True
 
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
@@ -43,6 +45,11 @@ INSTALLED_APPS = (
     'crequest',
     'django_coverage',
 )
+
+COVERAGE_MODULE_EXCLUDES = (
+    'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
+    'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
+    'management$')
 
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -93,9 +100,9 @@ CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 # Dirección de login para el decorador login_required
 LOGIN_URL = 'login'
 
-ROOT_URLCONF = 'ViinV.urls'
+ROOT_URLCONF = 'investigacion.urls'
 
-WSGI_APPLICATION = 'ViinV.wsgi.application'
+WSGI_APPLICATION = 'investigacion.wsgi.application'
 
 # Database
 
@@ -236,7 +243,8 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'cvn/templates/cvn'),
+    os.path.join(BASE_DIR, 'cvn/templates'),
+    os.path.join(BASE_DIR, 'core/templates'),
 )
 
 OLD_PORTAL_URL = 'http://viinv.ull.es'
@@ -253,6 +261,6 @@ STATICFILES_FINDERS = (
 # ---------------------------------------------------------- #
 
 try:
-    execfile(os.path.join(PROJECT_ROOT, 'settings_local.py'))
-except IOError:
+    from settings_local import *
+except ImportError:
     pass
