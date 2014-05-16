@@ -247,7 +247,7 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'core/templates'),
 )
 
-OLD_PORTAL_URL = 'http://viinv.ull.es'
+OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
 # ---------------------------------------------------------- #
 
