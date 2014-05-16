@@ -31,12 +31,9 @@ class UserProfile(models.Model):
 
 
 class Log(models.Model):
-    user_profile = models.ForeignKey(UserProfile)
+    user_profile = models.ForeignKey(UserProfile, blank=True, null=True)
     application = models.CharField(u'Aplicación', max_length=20)
-    entry_type = models.IntegerField(u'Tipo', max_length=50,
-                                     choices=stCore.LOG_TYPE)
-    entry_type = models.IntegerField(u'Tipo', choices=stCore.LOG_TYPE,
-                                     default=0)
+    entry_type = models.IntegerField(u'Tipo', choices=stCore.LOG_TYPE)
     date = models.DateTimeField(u'Fecha')
     message = models.TextField(u'Mensaje')
 

@@ -3,6 +3,9 @@
 from django.contrib.auth.models import User
 from django_cas.backends import _verify
 import django_cas
+import datetime
+from core.models import Log
+from core import settings as stCore
 
 
 class CASBackend(django_cas.backends.CASBackend):
@@ -14,11 +17,17 @@ class CASBackend(django_cas.backends.CASBackend):
         if attributes and 'NumDocumento' in attributes:
             request.session['attributes'] = attributes
             documento = attributes['NumDocumento']
-        if not documento:
-            return None
         try:
             user = User.objects.get(profile__documento=documento)
         except User.DoesNotExist:
-            # User will have an "unusable" password
-            user = User.objects.create_user(username, '')
+            user, created = User.objects.get_or_create(username=username)
+            if not created:
+                Log.objects.create(
+                    user_profile=user.profile,
+                    application='core',
+                    entry_type=stCore.LogType.AUTH_ERROR,
+                    date=datetime.datetime.now(),
+                    message='Username already exists. Possibly changed ID.' +
+                            ' Old ID=' + user.profile.documento +
+                            ' New ID=' + documento)
         return user
