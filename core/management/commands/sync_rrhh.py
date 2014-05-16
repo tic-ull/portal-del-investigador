@@ -8,5 +8,8 @@ class Command(BaseCommand):
     help = u'Sync user rrhh code'
 
     def handle(self, *args, **options):
-        for profile in UserProfile.objects.all():
-            profile.update_rrhh_code()
+        try:
+            for profile in UserProfile.objects.all():
+                profile.update_rrhh_code()
+        except Exception as e:
+            print '%s (%s)' % (e.message, type(e))
