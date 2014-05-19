@@ -105,6 +105,8 @@ class CVN(models.Model):
 
     def insert_xml(self):
         try:
+            if self.xml_file.closed:
+                self.xml_file.open()
             self.xml_file.seek(0)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
             self._parse_producciones(CVNItems)
@@ -137,6 +139,7 @@ class CVN(models.Model):
         xml_tree = etree.parse(self.xml_file)
         self.xml_file.seek(0)
         nif = parse_nif(xml_tree)
+        self.xml_file.close()
         if nif.upper() == self.user_profile.documento.upper():
             return True
         if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
