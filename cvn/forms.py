@@ -58,6 +58,7 @@ class UploadCVNForm(forms.ModelForm):
         cvn.update_status()
         cvn.save()
         cvn.insert_xml()
+        cvn.xml_file.close()
         return cvn
 
     @staticmethod
