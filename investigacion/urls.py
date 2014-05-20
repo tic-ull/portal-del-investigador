@@ -4,6 +4,7 @@ from django.conf import settings as st
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 admin.autodiscover()
 
@@ -16,6 +17,10 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
+    url(r'^investigacion2', TemplateView.as_view(
+        template_name='cvn/ccti.html')),
+    url(r'^investigacion3', TemplateView.as_view(
+        template_name='core/base.html')),
 )
 
 if st.DEVEL:
