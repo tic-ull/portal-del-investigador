@@ -148,19 +148,21 @@ class CVN(models.Model):
 
     def update_status(self):
         if not self._is_valid_identity():
-            self.status = stCVN.CVNStatus.INVALID_IDENTITY
+            new_status = stCVN.CVNStatus.INVALID_IDENTITY
         elif self.fecha_cvn <= stCVN.FECHA_CADUCIDAD:
-            self.status = stCVN.CVNStatus.EXPIRED
+            new_status = stCVN.CVNStatus.EXPIRED
         else:
-            self.status = stCVN.CVNStatus.UPDATED
-        self.save()
-        Log.objects.create(
-            user_profile=self.user_profile,
-            application=self._meta.app_label.upper(),
-            entry_type=stCore.LogType.CVN_STATUS,
-            date=datetime.datetime.now(),
-            message=stCVN.CVN_STATUS[self.status][1]
-        )
+            new_status = stCVN.CVNStatus.UPDATED
+        if new_status != self.status:
+            self.status = new_status
+            self.save()
+            Log.objects.create(
+                user_profile=self.user_profile,
+                application=self._meta.app_label.upper(),
+                entry_type=stCore.LogType.CVN_STATUS,
+                date=datetime.datetime.now(),
+                message=stCVN.CVN_STATUS[self.status][1]
+            )
 
 
 class Publicacion(models.Model):
