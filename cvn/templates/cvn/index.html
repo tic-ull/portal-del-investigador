@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'cvn/base.html' %}
 
 {% load staticfiles %}
 
@@ -13,7 +13,6 @@
 {% endblock breadcrumb %}
 
 {% block main %}
-
     <!-- Mensajes de aviso al usuario -->
     {% if not cvn and not user.is_anonymous %}
     <div class="alert alert-error">

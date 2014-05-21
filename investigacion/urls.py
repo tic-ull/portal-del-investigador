@@ -18,7 +18,7 @@ urlpatterns = patterns(
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
     url(r'^investigacion2', TemplateView.as_view(
-        template_name='cvn/ccti.html')),
+        template_name='cvn/ccti.html.bak')),
     url(r'^investigacion3', TemplateView.as_view(
         template_name='core/base.html')),
 )

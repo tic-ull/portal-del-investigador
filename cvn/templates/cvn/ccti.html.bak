@@ -144,7 +144,7 @@
             <div class="span3 sidebar">
                 <div class="sidebar-nav widget">
                     {% block menu %}
-                        {% include "cvn/snippet/menu.html" with inicio="class='selec'" %}
+                        {% include "cvn/snippet/menu.html.bak" with inicio="class='selec'" %}
                     {% endblock menu %}
                 </div>
             </div>
