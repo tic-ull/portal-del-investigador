@@ -1,14 +1,11 @@
-{% extends 'cvn/ccti.html' %}
+{% extends 'cvn/base.html' %}
 
 {% load staticfiles %}
-<!-- Bootstrap -->
-{% load bootstrap_toolkit %}
-
 
 {% block breadcrumb %}
     {% if not user.is_anonymous and not user.is_staff %}
     <li class="divider">&raquo;</li>
-    <li><a href='{% url 'cvn' %}'>CVN</a></li>
+    <li class="active"><a href='{% url 'cvn' %}'>CVN</a></li>
     {% elif user.is_staff %}
     <li class="divider">&raquo;</li>
     <li><a href="">Administración</a></li>
@@ -16,7 +13,6 @@
 {% endblock breadcrumb %}
 
 {% block main %}
-
     <!-- Mensajes de aviso al usuario -->
     {% if not cvn and not user.is_anonymous %}
     <div class="alert alert-error">

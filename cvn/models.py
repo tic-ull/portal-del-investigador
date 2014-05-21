@@ -75,8 +75,7 @@ class CVN(models.Model):
     created_at = models.DateTimeField(u'Creado', auto_now_add=True)
     updated_at = models.DateTimeField(u'Actualizado', auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
-    status = models.IntegerField(u'Estado', choices=stCVN.CVN_STATUS,
-                                 default=0)
+    status = models.IntegerField(u'Estado', choices=stCVN.CVN_STATUS)
 
     class Meta:
         verbose_name_plural = u'Currículum Vitae Normalizado'
@@ -147,14 +146,15 @@ class CVN(models.Model):
         return False
 
     def update_status(self):
+        status = None
         if not self._is_valid_identity():
-            new_status = stCVN.CVNStatus.INVALID_IDENTITY
+            status = stCVN.CVNStatus.INVALID_IDENTITY
         elif self.fecha_cvn <= stCVN.FECHA_CADUCIDAD:
-            new_status = stCVN.CVNStatus.EXPIRED
+            status = stCVN.CVNStatus.EXPIRED
         else:
-            new_status = stCVN.CVNStatus.UPDATED
-        if new_status != self.status:
-            self.status = new_status
+            status = stCVN.CVNStatus.UPDATED
+        if self.status != status:
+            self.status = status
             self.save()
             Log.objects.create(
                 user_profile=self.user_profile,

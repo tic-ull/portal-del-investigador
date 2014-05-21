@@ -4,6 +4,7 @@ from django.conf import settings as st
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.views.generic import TemplateView
 
 admin.autodiscover()
 
@@ -18,6 +19,10 @@ urlpatterns = patterns(
         'django_cas.views.logout', name='logout'),
     url(r'^investigacion/faq/', include('django.contrib.flatpages.urls')),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
+    url(r'^investigacion2', TemplateView.as_view(
+        template_name='cvn/ccti.html.bak')),
+    url(r'^investigacion3', TemplateView.as_view(
+        template_name='core/base.html')),
 )
 
 #

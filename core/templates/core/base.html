@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Universidad de La Laguna">
+        <meta name="keywords" content="Universidad de La Laguna">
+        <meta name="author" content="Universidad de La Laguna">
+
+        <title>Universidad de La Laguna - Título aplicación o servicio</title>
+
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://static.ull.es/v3/dist/img/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://static.ull.es/v3/dist/img/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="http://static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
+        <link rel="shortcut icon" href="http://static.ull.es/v3/dist/img/favicon.ico">
+
+        <link href="http://static.ull.es/v3/dist/css/ull.min.css" rel="stylesheet">
+        <!--[if lt IE 9]><script src="//static.ull.es/v3/dist/js/ullie.min.js"></script><![endif]-->
+        <script src="./base_files/ull.min.js"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-default navbar-ull" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-app-collapse">
+                        <span class="sr-only">Desplegar menú de aplicación</span>
+                        <span class="fa fa-bars fa-stack"></span>
+                    </button>
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                        <span class="sr-only">Desplegar menú de navegación</span>
+                        <span class="fa fa-link fa-stack"></span>
+                    </button>
+                    <a class="navbar-brand" href="http://www.ull.es/" title="Universidad de La Laguna">Universidad de La Laguna</a>
+                </div>
+
+                <div class="collapse navbar-collapse navbar-main-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="http://static.ull.es/v3/docs/examples/form/#" class="dropdown-toggle" data-toggle="dropdown">Servicios telemáticos <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" title="Gestión de perfil de usuario" href="http://usuarios.ull.es/"><i class="fa fa-user"></i> Gestión de perfil de usuario</a></li>
+                                <li><a target="_blank" title="Portal ULL" href="http://portal.ull.es/"><i class="fa fa-folder-open"></i> Portal</a></li>
+                                <li><a target="_blank" title="Sede electrónica" href="http://sede.ull.es/"><i class="fa fa-briefcase"></i> Sede electrónica</a></li>
+                                <li><a target="_blank" title="Campus Virtual" href="http://www.campusvirtual.ull.es/"><i class="fa fa-pencil"></i> Campus virtual</a></li>
+                                <li><a target="_blank" title="Correo electrónico" href="http://ull.edu.es/"><i class="fa fa-envelope"></i> Correo electrónico</a></li>
+                                <li><a target="_blank" title="Disco duro virtual" href="http://ddv.ull.es/"><i class="fa fa-hdd-o"></i> Disco duro virtual</a></li>
+                                <li><a target="_blank" title="Biblioteca digital" href="http://www.bbtk.ull.es/view/institucional/bbtk/Biblioteca_Digital/es"><i class="fa fa-book"></i> Biblioteca digital</a></li>
+                                <li><a target="_blank" title="Eventos" href="http://eventos.ull.es/"><i class="fa fa-calendar"></i> Eventos</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown">
+                            <a href="http://static.ull.es/v3/docs/examples/form/#" class="dropdown-toggle" data-toggle="dropdown">Contacto <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i> Página Web ULL</a></li>
+                                <li><a target="_blank" title="Formulario de contacto" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> Formulario de contacto</a></li>
+                                <li><a target="_blank" title="Teléfonos" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> Directorio telefónico</a></li>
+                                <li class="divider"></li>
+                                <li>
+                                    <ul class="rrss text-muted list-inline">
+                                        <li><a target="_blank" href="http://www.facebook.com/universidaddelalaguna"><i class="fa fa-facebook-square"></i></a></li>
+                                        <li><a target="_blank" href="http://www.tuenti.com/#m=Page&func=index&page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                                        <li><a target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
+                                        <li><a target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar navbar-default navbar-app" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <ol class="breadcrumb">
+                        <li class="active"><a href="{% url 'index'%}">Portal del Investigador</a></li>
+                        {% block breadcrumb %}
+
+                        {% endblock breadcrumb %}
+                    </ol>
+                </div>
+                <div class="collapse navbar-collapse navbar-app-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="http://static.ull.es/v3/docs/examples/form/#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> Ayuda y soporte <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a target="_blank" title="Portal de servicio" href="http://www.stic.ull.es/info/servicios/servicios/index.asp"><i class="fa fa-globe"></i> Portal de servicio</a></li>
+                                <li><a target="_blank" title="Correo electrónico stic@ull.es" href="mailto:stic@ull.es"><i class="fa fa-envelope"></i> stic@ull.es</a></li>
+                                <li><p><i class="fa fa-phone"></i> (+34) 922 31 9180</p></li>
+                                <li><p><i class="fa fa-map-marker"></i> Edificio Central <br> C/ Delgado Barreto s/n. 38207 <br>San Cristóbal de La Laguna</p></li>
+                                <li class="divider"></li>
+                                <li><p>Texto específico que puede incluir <a href="http://static.ull.es/v3/docs/examples/form/#">enlaces</a>, texto en <strong>negrita</strong>, <i>cursiva</i> y otros elementos html.</p></li>
+                            </ul>
+                        </li>
+                        {%  if not user.is_anonymous %}
+                            <li><a href="{% url 'logout' %}" class="btn btn-small btn-danger"><i class="icon-off icon-white"></i> Cerrar sesión</a></li>
+                        {%  else %}
+                            <li><a href="{% url 'login' %}" class="btn btn-small btn-success"><i class="icon-user icon-white"></i> Iniciar sesión</a></li>
+                        {%  endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-9 col-md-push-3" role="main">
+                    {% block main %}
+                        <h1 class="page-header">Título principal</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dictum erat metus, tempor eleifend odio sagittis vitae. Phasellus nunc lectus, pellentesque et tincidunt lacinia, bibendum id ante. Ut suscipit ac tellus eu molestie. Ut non rhoncus sapien. Maecenas lacinia vehicula facilisis. Etiam auctor consequat tortor eget ornare. Suspendisse eros nulla, tincidunt vitae fringilla vel, mattis id ante.</p>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="section">
+                                        <ul class="nav nav-tabs header">
+                                            <li class="active">Elementos básicos</li>
+                                        </ul>
+                                        <div class="content">
+                                            <form class="form-horizontal">
+                                                <div class="section-divider">Formulario horizontal</div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Campo en línea: </label>
+                                                    <div class="col-sm-9">
+                                                        <div class="form-inline">
+                                                            <div class="form-group">
+                                                                <select class="form-control">
+                                                                    <option value="0" selected="selected">Tipo</option>
+                                                                    <option value="1">DNI sin letra</option>
+                                                                    <option value="2">Pasaporte</option>
+                                                                    <option value="4">Nº identificación extranjeros</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="text" disabled="" placeholder="123456789a" class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="text" placeholder="Letra" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Campo de entrada: </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Campo de entrada en línea: </label>
+                                                    <div class="col-md-6">
+                                                        <div class="form-inline">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                        <span class="help-block"> Mensaje de ayuda simple</span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Selección simple: </label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-control">
+                                                            <option value="0" selected="selected">Uno</option>
+                                                            <option value="1">Dos</option>
+                                                            <option value="2">Tres</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Selección múltiple: </label>
+                                                    <div class="col-sm-4">
+                                                        <select multiple="" class="form-control">
+                                                            <option value="0">Uno</option>
+                                                            <option value="1">Dos</option>
+                                                            <option value="2">Tres</option>
+                                                            <option value="3">Cuatro</option>
+                                                            <option value="4">Cinco</option>
+                                                            <option value="5">Seis</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Checkbox simple: </label>
+                                                    <div class="col-md-1">
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" value="" class="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Checkbox múltiple: </label>
+                                                    <div class="col-md-6">
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" value="option1"> 1
+                                                        </label>
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" value="option2"> 2
+                                                        </label>
+                                                        <label class="checkbox-inline">
+                                                            <input type="checkbox" value="option3"> 3
+                                                        </label>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Campo de texto: </label>
+                                                    <div class="col-sm-4">
+                                                        <textarea class="form-control" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Radios: </label>
+                                                    <div class="col-sm-6">
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                                                Opción uno
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                                                Opción dos
+                                                            </label>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <form>
+                                                <div class="section-divider">Formulario vertical</div>
+                                                <div class="form-group">
+                                                    <label class="">Campo de entrada: </label>
+                                                    <input type="text" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="">Campo de texto: </label>
+                                                    <textarea class="form-control" rows="3"></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="section">
+                                        <ul class="nav nav-tabs header">
+                                            <li class="active">Elementos deshabilitados</li>
+                                        </ul>
+                                        <div class="content">
+                                            <form class="" role="form">
+                                                <fieldset disabled="">
+                                                    <div class="form-group">
+                                                        <label for="disabledTextInput">Selector simple deshabilitado</label>
+                                                        <input type="text" id="disabledTextInput" class="form-control" placeholder="123456789a">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="disabledSelect">Selector múltiple deshabilitado</label>
+                                                        <select id="disabledSelect" class="form-control">
+                                                            <option>Uno</option>
+                                                            <option>Dos</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox"> Checkbox deshabilitado
+                                                        </label>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Enviar</button>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="section">
+                                        <ul class="nav nav-tabs header">
+                                            <li class="active">Elementos destacados y mensajes</li>
+                                        </ul>
+                                        <div class="content">
+                                            <div class="alert alert-warning">Ejemplo de mensaje destacado</div>
+                                            <form class="form-horizontal" role="form">
+                                                <div class="section-divider">Formulario horizontal</div>
+                                                <div class="form-group has-success has-feedback">
+                                                    <label class="control-label col-md-4">Campo de texto "success" con icono</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control">
+                                                        <span class="fa fa-check form-control-feedback"></span>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                            <form class="" role="form">
+                                                <div class="section-divider">Formulario vertical</div>
+                                                <div class="row">
+                                                    <div class="col-md-6 col-md-offset-3">
+                                                        <div class="form-group has-success">
+                                                            <label class="control-label">Campo de texto "success"</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="form-group has-warning">
+                                                            <label class="control-label">Campo de texto "warning"</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="form-group has-error">
+                                                            <label class="control-label">Campo de texto "error"</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="section">
+                                        <ul class="nav nav-tabs header">
+                                            <li class="active">Botones</li>
+                                        </ul>
+                                        <div class="content">
+                                            <form class="form-horizontal" role="form">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-3">Campo de entrada: </label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col col-md-9 col-md-offset-3">
+                                                        <input type="submit" value="Guardar" class="btn btn-primary">
+                                                        <button class="btn btn-default" type="button">Cancelar</button>
+                                                    </div>
+                                                </div>
+                                                <div class="section-divider">Colores</div>
+                                                <button type="button" class="btn btn-default">Default</button>
+                                                <button type="button" class="btn btn-primary">Primary</button>
+                                                <button type="button" class="btn btn-success">Success</button>
+                                                <button type="button" class="btn btn-info">Info</button>
+                                                <button type="button" class="btn btn-warning">Warning</button>
+                                                <button type="button" class="btn btn-danger">Danger</button>
+                                                <button type="button" class="btn btn-link">Link</button>
+                                                <div class="section-divider">Tamaños</div>
+                                                    <button type="button" class="btn btn-primary btn-lg">Large button</button>
+                                                    <button type="button" class="btn btn-primary">Default button</button>
+                                                    <button type="button" class="btn btn-primary btn-sm">Small button</button>
+                                                    <button type="button" class="btn btn-primary btn-xs">Extra small button</button>
+                                                <div style="max-width: 400px; margin: 15px auto" class="well">
+                                                    <button class="btn btn-primary btn-lg btn-block" type="button">Block level button</button>
+                                                    <button class="btn btn-default btn-lg btn-block" type="button">Block level button</button>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="section">
+                                                <ul class="nav nav-tabs header">
+                                                    <li class="active">Sección izquierda</li>
+                                                </ul>
+                                                <div class="content">
+                                                    <form class="form-horizontal" role="form">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-4">Campo de entrada: </label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="section">
+                                                <ul class="nav nav-tabs header">
+                                                    <li class="active">Sección derecha</li>
+                                                </ul>
+                                                <div class="content">
+                                                    <form class="form-horizontal" role="form">
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-4">Campo de entrada: </label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% endblock main %}
+                    </div>
+
+                    <div class="col-md-3 col-md-pull-9 sidebar">
+                        <div class="panel panel-default panel-ull color-7A3B7A">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-user"></i> Perfil de usuario</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li>
+                                        <div class="media">
+                                            <a href="http://static.ull.es/v3/docs/examples/form/#" class="pull-left"><img class="media-object" alt="48x48" style="width: 48px; height: 48px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABF0lEQVRoge2UsQ7DIAxE+/+f4o3NCxsbIzufwC/QyYg4rVRC1GulG24gwPmegTxaa/2f9UAHIAA6AAHQAQiADkAAdAACoAMQAB2AAOgABEAH+BpAKaWLSE8pnb6ZSilLxe/w/BgghHAqJiI9xthba11Vu4gsAdzh+RFASml0xIr57tmaWuuYsyAxxlM3Vz0vA9Rah+lKtyy07bN1O56XAFS1q+qh6Dw/31e/993cjucSQM55HKEv5sfW8fm47dvc/V3PJQA7Qi9VHUHsXtv9zTkfxv5vsuN5+RG/6o5/cP6h2h/G9oUQtj1vBZivg8k6ZY/Tj/1dX/HcBvhVEQAtAqBFALQIgBYB0CIAWgRAiwBoEQAtAqD1BBs6m19czwjTAAAAAElFTkSuQmCC"></a>
+                                            <div class="media-body">
+                                                <h4 class="media-heading">{{user.first_name}} {{user.last_name}}</h4>
+                                                {{user.profile.documento}}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="divider"></li>
+                                    {% if not user.is_anonymous %}
+                                    <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> Gestionar CVN</a></li>
+                                    <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Salir</a></li>
+                                    {% else %}
+                                    <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Iniciar sesión</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default panel-ull color-7A3B7A">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-bars"></i> Menú principal</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    {% block internal_links %}
+                                    <li>
+                                        <dl>
+                                            <dt>Información estática</dt>
+                                            <dd>Contenido</dd>
+                                        </dl>
+                                    </li>
+                                    {% endblock internal_links %}
+                                    <li class="divider"> </li>
+                                    {% block external_links %}
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Enlaces del menú principal 1</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Enlaces del menú principal 2</a></li>
+                                    {% endblock external_links %}
+                                </ul>
+                            </div>
+                        </div>
+{% comment %}
+                        <div class="panel panel-default panel-ull color-336699">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-file"></i> Título de bloque</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Ejemplo de enlace 1</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Ejemplo de enlace 2 mucho más largo que el anterior</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Enlace 3</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Ejemplo de separador </a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Ejemplo de separador 2</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Más opciones</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default panel-ull">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><i class="fa fa-comment"></i> Enlaces de interés</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 1</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 2</a></li>
+                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 3</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+{% endcomment %}
+                </div>
+            </div>
+
+
+        <div id="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="address pull-left">
+                            <li><strong>Universidad de La Laguna</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | Teléfono: (+34) 922 31 90 00/01</li>
+                        </ul>
+                        <ul class="list-inline text-muted pull-right">
+                            <li><a title="Facebook" target="_blank" href="http://www.facebook.com/universidaddelalaguna"><span class="fa fa-facebook-square"></span></a></li>
+                            <li><a title="Tuenti" target="_blank" href="http://www.tuenti.com/#m=Page&func=index&page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                            <li><a title="Twitter" target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
+                            <li><a title="LinkedIn" target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
+                            <li><a title="Página web ULL" target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+</body></html>

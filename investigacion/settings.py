@@ -44,7 +44,6 @@ INSTALLED_APPS = (
     'south',
     'core',
     'cvn',
-    'bootstrap_toolkit',
     'crequest',
     'django_coverage',
 )
