@@ -3,13 +3,8 @@
 {% load staticfiles %}
 
 {% block breadcrumb %}	
-	{% if not user.is_anonymous and not user.is_staff %}	
 	<li class="divider">&raquo;</li>
 	<li><a href='{% url 'ull_report'%}'>Informe ULL</a></li>
-	{% elif user.is_staff %}
-	<li class="divider">&raquo;</li>
-	<li><a href="">Informe ULL</a></li>
-	{% endif %}
 {% endblock breadcrumb %}
 
 {% block main %}

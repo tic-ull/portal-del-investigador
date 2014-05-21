@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.admin.views.decorators import staff_member_required
 import logging
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,7 @@ def download_cvn(request):
 
 
 @login_required
+@staff_member_required
 def ull_report(request):
     context = {}
     userULL = User.objects.get(username='GesInv-ULL')
