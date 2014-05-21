@@ -3,13 +3,20 @@
 <div class="tabbable">
       <ul class="nav nav-tabs">
             <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
-            <li><a href="#publicacion" data-toggle="tab">Publicaciones</a></li>
+            <li class="dropdown">
+                <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown">Publicaciones<b class="caret"></b></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                    <li><a href="#articulo" tabindex="-1" data-toggle="tab">Artículos</a></li>
+                    <li><a href="#capitulo" tabindex="-1" data-toggle="tab">Capítulos de libro</a></li>
+                    <li><a href="#libro" tabindex="-1" data-toggle="tab">Libros</a></li>
+                </ul>
+            </li>
             <li><a href="#convenio" data-toggle="tab">Convenios</a></li>
             <li><a href="#proyecto" data-toggle="tab">Proyectos</a></li>
             <li><a href="#tesis" data-toggle="tab">Tesis</a></li>
       </ul>
       <div class="tab-content">
-            <div id="congreso" class="tab-pane">
+            <div id="congreso" class="tab-pane active">
                 <div class="panel-group" id="congresos">
                 {% if Congresos %}
                     {% for congreso in Congresos %}
@@ -47,16 +54,93 @@
                 {% endif %}
                 </div>
             </div>
-            <div id="publicacion" class="tab-pane">
-                <div class="accordion" id="publicaciones">
-                {% if Publicaciones %}
-                    {% for publicacion in Publicaciones %}
-                        <div class="accordion-group" >
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
-                                    <span class="label">{{ publicacion.tipo_de_produccion }}</span>
+            <div id="articulo" class="tab-pane">
+                <div class="panel-group" id="articulos">
+                {% if Articulos %}
+                    {% for publicacion in Articulos %}
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
                                     {{ publicacion.titulo }}
                                 </a>
+                                </h4>
+                            </div>
+                            <div id="pub{{publicacion.id}}" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    {% if publicacion.nombre_publicacion %}
+                                    <h5>{{ publicacion.nombre_publicacion }} </h5>
+                                    {% endif %}
+                                    {% if publicacion.fecha %}
+                                    <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
+                                    {% endif %}
+                                    {% if publicacion.autores %}
+                                    <strong>Autores:</strong> {{ publicacion.autores }} <br>
+                                    {% endif %}
+                                    {% if publicacion.issn %}
+                                    <strong>ISSN:</strong> {{ publicacion.issn }}<br>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>No dispone de publicaciones</strong>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+            <div id="capitulo" class="tab-pane">
+                <div class="panel-group" id="capitulos">
+                {% if Capitulos %}
+                    {% for publicacion in Capitulos %}
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
+                                    {{ publicacion.titulo }}
+                                </a>
+                                </h4>
+                            </div>
+                            <div id="pub{{publicacion.id}}" class="accordion-body collapse">
+                                <div class="accordion-inner">
+                                    {% if publicacion.nombre_publicacion %}
+                                    <h5>{{ publicacion.nombre_publicacion }} </h5>
+                                    {% endif %}
+                                    {% if publicacion.fecha %}
+                                    <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
+                                    {% endif %}
+                                    {% if publicacion.autores %}
+                                    <strong>Autores:</strong> {{ publicacion.autores }} <br>
+                                    {% endif %}
+                                    {% if publicacion.issn %}
+                                    <strong>ISSN:</strong> {{ publicacion.issn }}<br>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>No dispone de publicaciones</strong>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+            <div id="libro" class="tab-pane">
+                <div class="panel-group" id="libros">
+                {% if Libros %}
+                    {% for publicacion in Libros %}
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
+                                    {{ publicacion.titulo }}
+                                </a>
+                                </h4>
                             </div>
                             <div id="pub{{publicacion.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
@@ -85,13 +169,15 @@
                 </div>
             </div>
             <div id="convenio" class="tab-pane">
-                <div class="accordion" id="convenios">
+                <div class="panel-group" id="convenios">
                 {% if Convenios %}
                     {% for convenio in Convenios %}
-                        <div class="accordion-group" >
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a class=data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
                                 {{ convenio.denominacion_del_proyecto }}</a>
+                                </h4>
                             </div>
                             <div id="conv{{convenio.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
@@ -135,14 +221,15 @@
                 </div>
             </div>
             <div id="proyecto" class="tab-pane">
-                <div class="accordion" id="proyectos">
+                <div class="panel-group" id="proyectos">
                 {% if Proyectos %}
                     {% for proyecto in Proyectos %}
-                        <div class="accordion-group" >
-                            <div class="accordion-heading">
-
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pro{{proyecto.id}}">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a  data-toggle="collapse" data-parent="#accordion2" href="#pro{{proyecto.id}}">
                                 {{ proyecto.denominacion_del_proyecto  }}</a>
+                                </h4>
                             </div>
                             <div id="pro{{proyecto.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
@@ -184,13 +271,15 @@
                 </div>
             </div>
             <div id="tesis" class="tab-pane">
-                <div class="accordion" id="tesisDocs">
+                <div class="panel-group" id="tesisDocs">
                 {% if TesisDoctorales %}
                     {% for tesis in TesisDoctorales %}
-                        <div class="accordion-group" >
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#tes{{tesis.id}}">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#tes{{tesis.id}}">
                                 {{ tesis.titulo  }}</a>
+                                </h4>
                             </div>
                             <div id="tes{{tesis.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
