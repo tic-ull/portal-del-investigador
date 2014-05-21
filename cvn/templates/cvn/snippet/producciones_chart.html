@@ -9,14 +9,16 @@
             <li><a href="#tesis" data-toggle="tab">Tesis</a></li>
       </ul>
       <div class="tab-content">
-            <div id="congreso" class="tab-pane active">
-                <div class="accordion" id="congresos">
+            <div id="congreso" class="tab-pane">
+                <div class="panel-group" id="congresos">
                 {% if Congresos %}
                     {% for congreso in Congresos %}
-                        <div class="accordion-group in" >
-                            <div class="accordion-heading">
-                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#c{{congreso.id}}">
+                        <div class="panel panel-default" >
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#c{{congreso.id}}">
                                 {{ congreso.titulo  }}</a>
+                                </h4>
                             </div>
                             <div id="c{{congreso.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
