@@ -96,6 +96,11 @@
                                 <li><p>Texto específico que puede incluir <a href="http://static.ull.es/v3/docs/examples/form/#">enlaces</a>, texto en <strong>negrita</strong>, <i>cursiva</i> y otros elementos html.</p></li>
                             </ul>
                         </li>
+                        {%  if not user.is_anonymous %}
+                            <li><a href="{% url 'logout' %}" class="btn btn-small btn-danger"><i class="icon-off icon-white"></i> Cerrar sesión</a></li>
+                        {%  else %}
+                            <li><a href="{% url 'login' %}" class="btn btn-small btn-success"><i class="icon-user icon-white"></i> Iniciar sesión</a></li>
+                        {%  endif %}
                     </ul>
                 </div>
             </div>
