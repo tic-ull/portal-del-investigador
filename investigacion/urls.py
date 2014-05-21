@@ -16,7 +16,10 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
+    url(r'^investigacion/faq/', include('django.contrib.flatpages.urls')),
+    url(r'^investigacion/tinymce/', include('tinymce.urls')),
 )
 
+#
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)

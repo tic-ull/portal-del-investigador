@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.models import (Publicacion, Congreso, Proyecto, Convenio,
-                        TesisDoctoral, Usuario)
+                        TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
@@ -111,7 +111,7 @@ class Command(BaseCommand):
             inves.append(dataInv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
             k['apellido1'], k['apellido2']))
-        usuarios = Usuario.objects.filter(rrhh_code__in=invesRRHH)
+        usuarios = UserProfile.objects.filter(rrhh_code__in=invesRRHH)
         return investigadores, usuarios
 
     def checkInves(self, inv):

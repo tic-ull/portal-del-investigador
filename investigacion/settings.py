@@ -37,7 +37,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    # 'django.contrib.sites',
+    'django.contrib.sites',  # Flatpages
+    'django.contrib.flatpages',
+    'tinymce',  # Flatpages tinymce
+    #'flatpages_tinymce',
     'south',
     'core',
     'cvn',
@@ -62,6 +65,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'crequest.middleware.CrequestMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 if DEBUG:
@@ -72,6 +76,11 @@ if DEBUG:
 AUTHENTICATION_BACKENDS = (
     'core.backends.CASBackend',
 )
+
+
+# Set ID for flatpages
+SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
+
 
 # Authentication CAS - ULL
 
