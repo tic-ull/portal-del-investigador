@@ -5,7 +5,6 @@ psycopg2
 ipython
 Pillow
 south							                        # DB migrations
-mysql-python						                    # MySQL
 suds							                        # Web Services
 lxml							                        # Parsing XML
 dateutils						                        # Fecha de caducidad
