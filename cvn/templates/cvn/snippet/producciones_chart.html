@@ -21,12 +21,12 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#c{{congreso.id}}">
+                                <a data-toggle="collapse" data-parent="#congresos" href="#c{{congreso.id}}">
                                 {{ congreso.titulo  }}</a>
                                 </h4>
                             </div>
-                            <div id="c{{congreso.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="c{{congreso.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if congreso.titulo %}
                                     {{ congreso.titulo }} <br>
                                     {% endif %}
@@ -61,13 +61,13 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
+                                <a data-toggle="collapse" data-parent="#articulos" href="#pub{{publicacion.id}}">
                                     {{ publicacion.titulo }}
                                 </a>
                                 </h4>
                             </div>
-                            <div id="pub{{publicacion.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
@@ -110,13 +110,13 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
+                                <a data-toggle="collapse" data-parent="#capitulos" href="#pub{{publicacion.id}}">
                                     {{ publicacion.titulo }}
                                 </a>
                                 </h4>
                             </div>
-                            <div id="pub{{publicacion.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
@@ -153,13 +153,13 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
+                                <a data-toggle="collapse" data-parent="#libros" href="#pub{{publicacion.id}}">
                                     {{ publicacion.titulo }}
                                 </a>
                                 </h4>
                             </div>
-                            <div id="pub{{publicacion.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
@@ -193,12 +193,12 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
+                                <a data-toggle="collapse" data-parent="#convenios" href="#conv{{convenio.id}}">
                                 {{ convenio.denominacion_del_proyecto }}</a>
                                 </h4>
                             </div>
-                            <div id="conv{{convenio.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="conv{{convenio.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if convenio.denominacion_del_proyecto %}
                                     <strong>{{ convenio.denominacion_del_proyecto }}</strong><br>
                                     {% endif %}
@@ -232,12 +232,12 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a  data-toggle="collapse" data-parent="#accordion2" href="#pro{{proyecto.id}}">
+                                <a  data-toggle="collapse" data-parent="#proyectos" href="#pro{{proyecto.id}}">
                                 {{ proyecto.denominacion_del_proyecto  }}</a>
                                 </h4>
                             </div>
-                            <div id="pro{{proyecto.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="pro{{proyecto.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if proyecto.denominacion_del_proyecto %}
                                     <strong>{{ proyecto.denominacion_del_proyecto }}</strong><br>
                                     {% endif %}
@@ -271,12 +271,12 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion2" href="#tes{{tesis.id}}">
+                                <a data-toggle="collapse" data-parent="#tesisDocs" href="#tes{{tesis.id}}">
                                 {{ tesis.titulo  }}</a>
                                 </h4>
                             </div>
-                            <div id="tes{{tesis.id}}" class="accordion-body collapse">
-                                <div class="accordion-inner">
+                            <div id="tes{{tesis.id}}" class="panel-collapse collapse">
+                                <div class="panel-body">
                                     {% if tesis.titulo %}
                                     {{ tesis.titulo }}<br>
                                     {% endif %}
