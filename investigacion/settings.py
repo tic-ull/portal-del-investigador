@@ -249,6 +249,8 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'core/templates'),
 )
 
+BASE_URL = 'http://www.ull.es/investigacion'
+
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
 # ---------------------------------------------------------- #
