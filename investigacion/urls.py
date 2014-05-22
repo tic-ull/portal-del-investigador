@@ -24,6 +24,10 @@ urlpatterns = patterns(
     url(r'^investigacion3', TemplateView.as_view(
         template_name='core/base.html')),
 )
-
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)
+    if 'rosetta' in st.INSTALLED_APPS:
+        urlpatterns += patterns(
+            '',
+            url(r'^rosetta/', include('rosetta.urls')),
+        )

@@ -1,3 +1,4 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -78,7 +79,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <ol class="breadcrumb">
-                        <li class="active"><a href="{% url 'index'%}">Portal del Investigador</a></li>
+                        <li class="active"><a href="{% url 'index'%}">{% trans "Portal del Investigador" %}</a></li>
                         {% block breadcrumb %}
 
                         {% endblock breadcrumb %}
@@ -92,7 +93,7 @@
                                 <!--
                                 <li><a target="_blank" title="Portal de servicio" href="http://www.stic.ull.es/info/servicios/servicios/index.asp"><i class="fa fa-globe"></i> Portal de servicio</a></li>
                                 -->
-                                <li><a target="_blank" title="Correo electrónico sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
+                                <li><a target="_blank" title="{% trans "Correo electrónico" %} sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
                                 <li><p><i class="fa fa-phone"></i> (+34) 922 31 9558</p></li>
                                 <li><p><i class="fa fa-map-marker"></i> Pabellón de Gobierno <br/>C/ Molinos de Agua, s/n. 38207 <br/>San Cristóbal de La Laguna</p></li>
                                 <!--
