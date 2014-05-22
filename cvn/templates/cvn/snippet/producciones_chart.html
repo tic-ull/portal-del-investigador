@@ -1,5 +1,3 @@
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <div class="tabbable">
       <ul class="nav nav-tabs">
             <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
@@ -51,7 +49,6 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>No dispone de congresos</strong>
                     </div>
                 {% endif %}
@@ -101,8 +98,7 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>No dispone de publicaciones</strong>
+                        <strong>No dispone de artículos</strong>
                     </div>
                 {% endif %}
                 </div>
@@ -145,8 +141,7 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>No dispone de publicaciones</strong>
+                        <strong>No dispone de capítulos</strong>
                     </div>
                 {% endif %}
                 </div>
@@ -186,8 +181,7 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>No dispone de publicaciones</strong>
+                        <strong>No dispone de libros</strong>
                     </div>
                 {% endif %}
                 </div>
@@ -226,7 +220,6 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>No dispone de convenios</strong>
                     </div>
                 {% endif %}
@@ -266,7 +259,6 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>No dispone de proyectos</strong>
                     </div>
                 {% endif %}
@@ -286,19 +278,23 @@
                             <div id="tes{{tesis.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
                                     {% if tesis.titulo %}
-                                    {{ tesis.titulo }}
-                                    {% endif %}
-                                    {% if tesis.fecha_de_lectura %}
-                                    {{ tesis.fecha_de_lectura }}
+                                    {{ tesis.titulo }}<br>
                                     {% endif %}
                                     {% if tesis.autor %}
-                                    <strong>Autor:</strong> {{ tesis.autor }} <br>
-                                    {% endif %}
-                                    {% if tesis.codirector %}
-                                    <strong>Codirector:</strong> {{ tesis.codirector }}<br>
+                                    Doctorando: {{ tesis.autor }}<br>
                                     {% endif %}
                                     {% if tesis.universidad_que_titula %}
-                                    <strong>Universidad:</strong> {{ tesis.universidad_que_titula }}<br>
+                                    Universidad: {{ tesis.universidad_que_titula }}<br>
+                                    {% endif %}
+                                    Director:
+                                    {% for user_profile in tesis.user_profile.all %}
+                                    {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}
+                                    {% endfor %}
+                                    {% if tesis.codirector %}
+                                    Codirector: {{ tesis.codirector }}
+                                    {% endif %}
+                                    {% if tesis.fecha_de_lectura %}
+                                    Fecha de lectura: {{ tesis.fecha_de_lectura }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -306,7 +302,6 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>No dispone de tesis doctorales</strong>
                     </div>
                 {% endif %}
