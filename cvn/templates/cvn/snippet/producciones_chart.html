@@ -29,18 +29,21 @@
                             </div>
                             <div id="c{{congreso.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    <h5>{{ congreso.nombre_del_congreso }}</h5>
-                                    {% if congreso.fecha_de_inicio %}
-                                    <strong>Fecha de realización:</strong> {{ congreso.fecha_de_inicio }} <br>
+                                    {% if congreso.titulo %}
+                                    {{ congreso.titulo }} <br>
                                     {% endif %}
-                                    {% if congreso.fecha_de_fin %}
-                                    <strong>Fecha de finalización:</strong> {{ congreso.fecha_de_fin }}<br>
+                                    {% if congreso.nombre_del_congreso %}
+                                    {{ congreso.nombre_del_congreso }}
                                     {% endif %}
-                                    {% if congreso.ciudad_realizacion %}
-                                    <strong>Ciudad realización:</strong> {{ congreso.ciudad_realizacion }}<br>
+                                    {% if congreso.ciudad_realizacion and congreso.fecha_de_inicio %}
+                                    ({{congreso.ciudad_realizacion}}, {{ congreso.fecha_de_inicio }})<br>
+                                    {% elif congreso.ciudad_realizacion %}
+                                    ({{ congreso.ciudad_realizacion }})<br>
+                                    {% elif congreso.fecha_de_inicio %}
+                                    ({{ congreso.fecha_de_inicio }})<br>
                                     {% endif %}
                                     {% if congreso.autores %}
-                                    <strong>Autores:</strong> {{ congreso.autores }} <br>
+                                    {{ congreso.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -68,17 +71,29 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    {% if publicacion.nombre_publicacion %}
-                                    <h5>{{ publicacion.nombre_publicacion }} </h5>
-                                    {% endif %}
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
+                                    {% if publicacion.titulo %}
+                                    <strong>{{ publicacion.titulo }}</strong><br>
+                                    {% endif %}
                                     {% if publicacion.autores %}
-                                    <strong>Autores:</strong> {{ publicacion.autores }} <br>
+                                    {{ publicacion.autores }} <br>
+                                    {% endif %}
+                                    {% if publicacion.nombre_publicacion %}
+                                    {{ publicacion.nombre_publicacion }}<br>
+                                    {% endif %}
+                                    {% if publicacion.volumen %}
+                                    Vol. {{publicacion.volumen}}
+                                    {% endif %}
+                                    {% if publicacion.numero %}
+                                    Núm. {{publicacion.numero}}
+                                    {% endif %}
+                                    {% if publicacion.pagina_inicial and publicacion.pagina_final %}
+                                    Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
                                     {% endif %}
                                     {% if publicacion.issn %}
-                                    <strong>ISSN:</strong> {{ publicacion.issn }}<br>
+                                    ISSN: {{ publicacion.issn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -106,17 +121,23 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    {% if publicacion.nombre_publicacion %}
-                                    <h5>{{ publicacion.nombre_publicacion }} </h5>
-                                    {% endif %}
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
-                                    {% if publicacion.autores %}
-                                    <strong>Autores:</strong> {{ publicacion.autores }} <br>
+                                    {% if publicacion.titulo %}
+                                    <strong>{{ publicacion.titulo }}</strong><br>
                                     {% endif %}
-                                    {% if publicacion.issn %}
-                                    <strong>ISSN:</strong> {{ publicacion.issn }}<br>
+                                    {% if publicacion.autores %}
+                                    {{ publicacion.autores }} <br>
+                                    {% endif %}
+                                    {% if publicacion.nombre_publicacion %}
+                                    {{ publicacion.nombre_publicacion }}<br>
+                                    {% endif %}
+                                    {% if publicacion.pagina_inicial and publicacion.pagina_final %}
+                                    Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
+                                    {% endif %}
+                                    {% if publicacion.isbn %}
+                                    ISBN: {{ publicacion.isbn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -144,17 +165,20 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    {% if publicacion.nombre_publicacion %}
-                                    <h5>{{ publicacion.nombre_publicacion }} </h5>
-                                    {% endif %}
                                     {% if publicacion.fecha %}
                                     <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
-                                    {% if publicacion.autores %}
-                                    <strong>Autores:</strong> {{ publicacion.autores }} <br>
+                                    {% if publicacion.titulo %}
+                                    <strong>{{ publicacion.titulo }}</strong><br>
                                     {% endif %}
-                                    {% if publicacion.issn %}
-                                    <strong>ISSN:</strong> {{ publicacion.issn }}<br>
+                                    {% if publicacion.autores %}
+                                    {{ publicacion.autores }} <br>
+                                    {% endif %}
+                                    {% if publicacion.nombre_publicacion %}
+                                    {{ publicacion.nombre_publicacion }}<br>
+                                    {% endif %}
+                                    {% if publicacion.isbn %}
+                                    ISBN: {{ publicacion.isbn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -175,38 +199,26 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a class=data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
+                                <a data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
                                 {{ convenio.denominacion_del_proyecto }}</a>
                                 </h4>
                             </div>
                             <div id="conv{{convenio.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
+                                    {% if convenio.denominacion_del_proyecto %}
+                                    <strong>{{ convenio.denominacion_del_proyecto }}</strong><br>
+                                    {% endif %}
                                     {% if fecha_de_inicio %}
-                                    <strong>Fecha de incio:</strong>{{ convenio.fecha_de_inicio }}<br>
+                                    Fecha de incio: {{ convenio.fecha_de_inicio }}<br>
                                     {% endif %}
                                     {% if fecha_de_fin %}
-                                    <strong>Fecha de fin:</strong>{{ convenio.fecha_de_fin }}<br>
-                                    {% endif %}
-                                    {% if convenio.cod_segun_financiadora %}
-                                    <strong>Código según financiadora:</strong> {{ convenio.cod_segun_financiadora }}<br>
+                                    Fecha de finalización: {{ convenio.fecha_de_fin }}<br>
                                     {% endif %}
                                     {% if convenio.cuantia_total %}
-                                    <strong>Cuantía Total:</strong> {{ convenio.cuantia_total }} <br>
-                                    {% endif %}
-                                    {% if convenio.cuantia_subproyecto %}
-                                    <strong>Cuantía Subproyecto:</strong> {{ convenio.cuantia_subproyecto }} <br>
-                                    {% endif %}
-                                    {% if convenio.porcentaje_en_subvencion %}
-                                    <strong>Porcentaje en subvención:</strong> {{ convenio.porcentaje_en_subvencion }}% <br>
-                                    {% endif %}
-                                    {% if convenio.porcentaje_en_credito %}
-                                    <strong>Porcentaje en crédito:</strong> {{ convenio.porcentaje_en_credito }}%<br>
-                                    {% endif %}
-                                    {% if convenio.porcentaje_mixto %}
-                                    <strong>Porcentaje mixto:</strong> {{ convenio.porcentaje_mixto }}%<br>
+                                    Cuantía: {{ convenio.cuantia_total }}<br>
                                     {% endif %}
                                     {% if convenio.autores %}
-                                    <strong>Autores:</strong> {{ convenio.autores }} <br>
+                                    Investigadores: {{ convenio.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -233,30 +245,20 @@
                             </div>
                             <div id="pro{{proyecto.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    <strong>Fecha de inicio:</strong>{{ proyecto.fecha_de_inicio }}<br>
-                                    {% if proyecto.fecha_de_fin %}
-                                    <strong>Fecha de fin:</strong>{{ proyecto.fecha_de_fin }}<br>
+                                    {% if proyecto.denominacion_del_proyecto %}
+                                    <strong>{{ proyecto.denominacion_del_proyecto }}</strong><br>
                                     {% endif %}
-                                    {% if proyecto.cod_segun_financiadora %}
-                                    <strong>Código según financiadora:</strong> {{ proyecto.cod_segun_financiadora }}<br>
+                                    {% if proyecto.fecha_de_inicio %}
+                                    Fecha de inicio:{{ proyecto.fecha_de_inicio }}<br>
+                                    {% endif %}
+                                    {% if proyecto.fecha_de_fin %}
+                                    Fecha de finalización:{{ proyecto.fecha_de_fin }}<br>
                                     {% endif %}
                                     {% if proyecto.cuantia_total %}
-                                    <strong>Cuantía Total:</strong> {{ proyecto.cuantia_total }} <br>
-                                    {% endif %}
-                                    {% if proyecto.cuantia_subproyecto %}
-                                    <strong>Cuantía Subproyecto:</strong> {{ proyecto.cuantia_subproyecto }} <br>
-                                    {% endif %}
-                                    {% if proyecto.porcentaje_en_subvencion %}
-                                    <strong>Porcentaje en subvención:</strong> {{ proyecto.porcentaje_en_subvencion }}% <br>
-                                    {% endif %}
-                                    {% if proyecto.porcentaje_en_credito %}
-                                    <strong>Porcentaje en crédito:</strong> {{ proyecto.porcentaje_en_credito }}%<br>
-                                    {% endif %}
-                                    {% if proyecto.porcentaje_mixto %}
-                                    <strong>Porcentaje mixto:</strong> {{ proyecto.porcentaje_mixto }}%<br>
+                                    Cuantía: {{ proyecto.cuantia_total }}<br>
                                     {% endif %}
                                     {% if proyecto.autores %}
-                                    <strong>Autores:</strong> {{ proyecto.autores }} <br>
+                                    Investigadores: {{ proyecto.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -283,7 +285,12 @@
                             </div>
                             <div id="tes{{tesis.id}}" class="accordion-body collapse">
                                 <div class="accordion-inner">
-                                    <h5>{{ tesis.fecha_de_lectura }}</h5>
+                                    {% if tesis.titulo %}
+                                    {{ tesis.titulo }}
+                                    {% endif %}
+                                    {% if tesis.fecha_de_lectura %}
+                                    {{ tesis.fecha_de_lectura }}
+                                    {% endif %}
                                     {% if tesis.autor %}
                                     <strong>Autor:</strong> {{ tesis.autor }} <br>
                                     {% endif %}
