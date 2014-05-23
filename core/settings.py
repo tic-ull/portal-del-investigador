@@ -12,3 +12,5 @@ LOG_TYPE = (
     (LogType.CVN_STATUS, 'CVN_STATUS'),
     (LogType.AUTH_ERROR, 'AUTH_ERROR'),
 )
+
+BASE_URL_FLATPAGES = '/investigacion/faq/'
