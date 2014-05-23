@@ -88,7 +88,7 @@
                 <div class="collapse navbar-collapse navbar-app-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> Ayuda y soporte <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> {% trans "Ayuda y soporte" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <!--
                                 <li><a target="_blank" title="Portal de servicio" href="http://www.stic.ull.es/info/servicios/servicios/index.asp"><i class="fa fa-globe"></i> Portal de servicio</a></li>
@@ -103,9 +103,9 @@
                             </ul>
                         </li>
                         {%  if not user.is_anonymous %}
-                            <li class="dropdown"><a href="{% url 'logout' %}" class="btn btn-danger btn-signout"><i class="fa fa-sign-out"></i> Cerrar sesión</a></li>
+                            <li class="dropdown"><a href="{% url 'logout' %}" class="btn btn-danger btn-signout"><i class="fa fa-sign-out"></i> {% trans "Cerrar sesión" %}</a></li>
                         {%  else %}
-                            <li class="dropdown"><a href="{% url 'login' %}" class="btn btn-success btn-signin"><i class="fa fa-sign-in"></i> Iniciar sesión</a></li>
+                            <li class="dropdown"><a href="{% url 'login' %}" class="btn btn-success btn-signin"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
                         {%  endif %}
                     </ul>
                 </div>
@@ -410,7 +410,7 @@
                     <div class="col-md-3 col-md-pull-9 sidebar">
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-user"></i> Perfil de usuario</h3>
+                                <h3 class="panel-title"><i class="fa fa-user"></i> {% trans "Perfil de usuario" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
@@ -425,10 +425,10 @@
                                     </li>
                                     <li class="divider"></li>
                                     {% if not user.is_anonymous %}
-                                    <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> Gestionar CVN</a></li>
-                                    <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Salir</a></li>
+                                    <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Gestionar CVN" %}</a></li>
+                                    <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Salir" %}</a></li>
                                     {% else %}
-                                    <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> Iniciar sesión</a></li>
+                                    <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -436,7 +436,7 @@
 
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bars"></i> Menú principal</h3>
+                                <h3 class="panel-title"><i class="fa fa-bars"></i> {% trans "Menú principal" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
@@ -497,7 +497,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <ul class="address pull-left">
-                            <li><strong>Universidad de La Laguna</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | Teléfono: (+34) 922 31 90 00/01</li>
+                            <li><strong>Universidad de La Laguna</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | {% trans "Teléfono" %}: (+34) 922 31 90 00/01</li>
                         </ul>
                         <ul class="list-inline text-muted pull-right">
                             <li><a title="Facebook" target="_blank" href="http://www.facebook.com/universidaddelalaguna"><span class="fa fa-facebook-square"></span></a></li>
