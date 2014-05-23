@@ -2,16 +2,6 @@
 
 {% load staticfiles %}
 
-{% block breadcrumb %}
-    {% if not user.is_anonymous and not user.is_staff %}
-    <li class="divider">&raquo;</li>
-    <li class="active"><a href='{% url 'cvn' %}'>CVN</a></li>
-    {% elif user.is_staff %}
-    <li class="divider">&raquo;</li>
-    <li><a href="">Administración</a></li>
-    {% endif %}
-{% endblock breadcrumb %}
-
 {% block main %}
     <!-- Mensajes de aviso al usuario -->
     {% if not cvn and not user.is_anonymous %}
