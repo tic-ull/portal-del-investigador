@@ -3,18 +3,10 @@
 {% load staticfiles %}
 
 {% block breadcrumb %}	
-	{% if not user.is_anonymous and not user.is_staff %}	
-	<li class="divider">&raquo;</li>
-	<li><a href='{% url 'ull_report'%}'>Informe ULL</a></li>
-	{% elif user.is_staff %}
-	<li class="divider">&raquo;</li>
-	<li><a href="">Informe ULL</a></li>
-	{% endif %}
+    <li><a href=''>Informe ULL</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
-
-	<h1 class="main-title">Datos de actividad científica en la Universidad de La Laguna [2012] </h1>
-
-    {% include "cvn/snippet/producciones_chart.html" %}
+	<h1 class="page-header">Actividad Científica en la Universidad de La Laguna [2012]</h1>
+    {% include 'cvn/partials/producciones_chart.html' %}
 {% endblock main %}
