@@ -18,7 +18,8 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
-    url(r'^investigacion/faq/', include('django.contrib.flatpages.urls')),
+    url(r'^investigacion/faq/', TemplateView.as_view(
+        template_name='core/faq.html')),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
     # BORRAR:
     url(r'^investigacion2', TemplateView.as_view(

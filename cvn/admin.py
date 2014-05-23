@@ -7,7 +7,9 @@ from core.models import UserProfile
 from django.contrib import admin
 # Flatpages TinyMCE
 from django.contrib.flatpages.admin import FlatpageForm, FlatPageAdmin
-from django.contrib.flatpages.models import FlatPage
+from django.contrib.flatpages.models import FlatPage, Site
+from django.forms.widgets import HiddenInput, MultipleHiddenInput
+from django import forms
 from tinymce.widgets import TinyMCE
 #
 import logging
@@ -66,7 +68,41 @@ class ProyectoConvenioAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
+#class FlatPageAdmin(admin.ModelAdmin):
+#    fields = ('title', 'content')
+
+
 class PageForm(FlatpageForm):
+    base_url = '/investigacion/faq/' # SETTINGS
+
+    url = forms.CharField(label='', max_length=100, required=False)
+    enable_comments = forms.BooleanField(label='', required=False)
+    template_name = forms.CharField(label='', max_length=70, required=False)
+    registration_required = forms.BooleanField(label='', required=False)
+    sites = forms.ModelMultipleChoiceField(queryset=Site.objects.all(),
+                                           required=False, label='')
+
+    def __init__(self, *args, **kwargs):
+        '''
+            Fields: url, title, content, sites, enable_comments,
+                    registration_required, template_name
+        '''
+        super(FlatpageForm, self).__init__(*args, **kwargs)
+#        self.fields['url'].required = False
+        self.fields['url'].initial = self.base_url
+        self.fields['url'].widget = HiddenInput()
+#        self.fields['sites'].required = False
+        self.fields['sites'].widget = MultipleHiddenInput()
+#        self.fields['enable_comments'].widget = HiddenInput()
+#        self.fields['registration_required'].widget = HiddenInput()
+#        self.fields['template_name'].widget = HiddenInput()
+
+    def save(self, commit=True):
+        flatpage = super(PageForm, self).save(commit=False)
+        flatpage.save()
+        flatpage.url = self.base_url + str(flatpage.id) + '/'
+        flatpage.sites.add(Site.objects.all()[0])
+        return flatpage
 
     class Meta:
         model = FlatPage
@@ -77,6 +113,9 @@ class PageForm(FlatpageForm):
 
 class PageAdmin(FlatPageAdmin):
     form = PageForm
+    fieldsets = (
+        (None, {'fields': ('url', 'title', 'content', 'sites')}),
+    )
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
