@@ -26,7 +26,6 @@ def index(request):
             context['message'] = _(u'CVN actualizado con éxito.')
     context['form'] = form
     cvn_to_context(user.profile, context)
-    context['user'] = user
     context['CVN'] = scientific_production_to_context(user.profile, context)
     return render(request, 'cvn/index.html', context)
 

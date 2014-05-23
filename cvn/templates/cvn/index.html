@@ -3,113 +3,78 @@
 {% load staticfiles %}
 
 {% block breadcrumb %}
-    {% if not user.is_anonymous and not user.is_staff %}
-    <li class="divider">&raquo;</li>
     <li class="active"><a href='{% url 'cvn' %}'>CVN</a></li>
-    {% elif user.is_staff %}
-    <li class="divider">&raquo;</li>
-    <li><a href="">Administración</a></li>
-    {% endif %}
 {% endblock breadcrumb %}
 
 {% block main %}
-    <!-- Mensajes de aviso al usuario -->
-    {% if not cvn and not user.is_anonymous %}
-    <div class="alert alert-error">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
-    </div>
-    {% elif cvn.status == 'caducado' %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Debe actualizar su <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
-    </div>
-    {% endif %}
-
-
-    <h1 class="main-title">Currículum Vítae Normalizado (CVN) </h1>
-    <!-- Tabla de estado del CVN -->
-    <div class="row-fluid">
-        <div class="span5">
-            <table class="table table-striped table-bordered">
-                <tbody>
-                <tr>
-                    <td><strong>Estado</strong></td>
-                    <td>
-                    {% if cvn %}   <!-- Tiene CVN subido -->
-                        <strong>{{ cvn_status }}</strong>
-                    {% else %}
-                            <strong>Sin CVN</strong>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% if cvn %}
-                <tr>
-                    <td><strong>Fecha de última actualización</strong></td>
-                    <td>
-                        {{ cvn.fecha_cvn }}
-                    </td>
-
-                </tr>
-            {% endif %}
-                </tbody>
-            </table>
-            Para más información de como obtener su <i>Curriculum Vitae Normalizado</i>:
-            <ul>
-                <li>Acceder a <a href="http://tematai.ull.es/cvn/" target="_blank">Tematai</a></li>
-                <li>Ver <a href="http://ullmedia.udv.ull.es/watch_video.php?v=HW4WG49GNWO8" target="_blank">vídeo</a> explicativo</li>
-            </ul>
+    <h1 class="page-header">Currículum Vítae Normalizado (CVN) </h1>
+    {% if not cvn or cvn.status == CVNStatus.EXPIRED %}
+        <div class="alert alert-danger">
+            Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
         </div>
-        <div class="span7">
-            <ul class="thumbnails">
-                {% if cvn.fecha_cvn %}
-                <li class="span6">
-                    <div class="thumbnail">
-                        <div class="center">
-                            <a href="{% url 'download_cvn' %}" target="_blank">
-                                <img data-src="holder.js/200x150" alt="Descargar CVN" title="Descargar CVN"
-                                    src='{% static "images/cvn.jpg" %}'>
-                            </a>
-                            <div class="alert alert-info">
-                                Descargue su CVN
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                {% endif %}
-                <li class="span6">
-                    <div class="thumbnail">
-                        <div class="center">
-                        {% if message %}
-                            <div class="alert alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong></strong> {{ message }}
-                            </div>
-                        {% endif %}
-                        {% if form.errors %}
-                            <div class="alert  alert-error">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong></strong>
-                                {% for field in form %}
-                                    {{ field.errors }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                            <div class="form-actions">
-                                <form action="#" method='post' enctype="multipart/form-data" >{% csrf_token %}
-                                    <input id="id_cvn_file" type="file" name="cvn_file">
-                                    <br /><br />
-                                    <button type="submit" class="btn btn-success btn-block btn-large">Actualizar</button>
-                                </form>
-                            </div>
-                            <div class="alert alert-info">
-                                    Actualice su CVN
-                            </div>
-                        </div>
+    {% endif %}
+    <!-- Tabla de estado del CVN -->
+    <div class="row">
+        {% if cvn %}
+            <div class="col-md-6">
+                <table class="table table-striped table-bordered">
+                    <tbody>
+                    <tr>
+                        <td><strong>Estado</strong></td>
+                        <td>
+                            {% if cvn %}   <!-- Tiene CVN subido -->
+                                <strong>{{ cvn_status }}</strong>
+                            {% else %}
+                                <strong>Sin CVN</strong>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if cvn %}
+                        <tr>
+                            <td><strong>Fecha de última actualización</strong></td>
+                            <td>
+                                {{ cvn.fecha_cvn }}
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
 
+        <div class="col-md-6">
+            <div class="thumbnail" align="center">
+                <div style="background-color: #F5F5F5; padding: 20px 20px 20px; margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #E5E5E5;" class="form-group">
+                    {% if message %}
+                        <div class="alert alert-success">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    {% if form.errors %}
+                        <div class="alert  alert-danger">
+                            {% for field in form %}
+                                {{ field.errors }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <form action="" method='post'
+                            {% if form.is_multipart %} 
+                                enctype="multipart/form-data"
+                            {% endif %}>{% csrf_token %}
+                            {% for field in form.visible_fields %}
+                                {{ field }}
+                            {% endfor %}
+                            <br>
+                            <button type="submit" class="btn btn-success btn-block btn-ms">Subir</button>
+                        </form>
                     </div>
-                </li>
-            </ul>
+                </div>
+                <br>
+                <div class="alert alert-info">
+                    Actualice su CVN
+                </div>
+            </div>
         </div>
     </div>
 
@@ -126,16 +91,16 @@
           </ul>
           <div class="tab-content">
                 <div id="congreso" class="tab-pane active">
-                    <div class="accordion" id="congresos">
+                    <div class="panel-group" id="congresos">
                     {% if Congresos %}
                         {% for congreso in Congresos %}
-                            <div class="accordion-group in" >
-                                <div class="accordion-heading">
+                            <div class="panel panel-default in" >
+                                <div class="panel-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#c{{congreso.id}}">
                                     {{ congreso.titulo  }}</a>
                                 </div>
-                                <div id="c{{congreso.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
+                                <div id="c{{congreso.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
                                         <h5>{{ congreso.nombre_del_congreso }}</h5>
                                         {% if congreso.fecha_de_inicio %}
                                         <strong>Fecha de realización:</strong> {{ congreso.fecha_de_inicio }} <br>
@@ -162,18 +127,18 @@
                     </div>
                 </div>
                 <div id="publicacion" class="tab-pane">
-                    <div class="accordion" id="publicaciones">
+                    <div class="panel-group" id="publicaciones">
                     {% if Publicaciones %}
                         {% for publicacion in Publicaciones %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
-                                        <span class="label">{{ publicacion.tipo_de_produccion }}</span>
+                                        <span class="label label-default">{{ publicacion.tipo_de_produccion }}</span>
                                         {{ publicacion.titulo }}
                                     </a>
                                 </div>
-                                <div id="pub{{publicacion.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
+                                <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
                                         {% if publicacion.nombre_publicacion %}
                                         <h5>{{ publicacion.nombre_publicacion }} </h5>
                                         {% endif %}
@@ -199,16 +164,16 @@
                     </div>
                 </div>
                 <div id="convenio" class="tab-pane">
-                    <div class="accordion" id="convenios">
+                    <div class="panel-group" id="convenios">
                     {% if Convenios %}
                         {% for convenio in Convenios %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
                                     {{ convenio.denominacion_del_proyecto }}</a>
                                 </div>
-                                <div id="conv{{convenio.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
+                                <div id="conv{{convenio.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
                                         {% if fecha_de_inicio %}
                                         <strong>Fecha de incio:</strong>{{ convenio.fecha_de_inicio }}<br>
                                         {% endif %}
@@ -249,17 +214,17 @@
                     </div>
                 </div>
                 <div id="proyecto" class="tab-pane">
-                    <div class="accordion" id="proyectos">
+                    <div class="panel-group" id="proyectos">
                     {% if Proyectos %}
                         {% for proyecto in Proyectos %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
 
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pro{{proyecto.id}}">
                                     {{ proyecto.denominacion_del_proyecto  }}</a>
                                 </div>
-                                <div id="pro{{proyecto.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
+                                <div id="pro{{proyecto.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
                                         <strong>Fecha de inicio:</strong>{{ proyecto.fecha_de_inicio }}<br>
                                         {% if proyecto.fecha_de_fin %}
                                         <strong>Fecha de fin:</strong>{{ proyecto.fecha_de_fin }}<br>
@@ -298,16 +263,16 @@
                     </div>
                 </div>
                 <div id="tesis" class="tab-pane">
-                    <div class="accordion" id="tesisDocs">
+                    <div class="panel-group" id="tesisDocs">
                     {% if TesisDoctorales %}
                         {% for tesis in TesisDoctorales %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
+                            <div class="panel panel-default" >
+                                <div class="panel-heading">
                                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#tes{{tesis.id}}">
                                     {{ tesis.titulo  }}</a>
                                 </div>
-                                <div id="tes{{tesis.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
+                                <div id="tes{{tesis.id}}" class="panel-collapse collapse">
+                                    <div class="panel-body">
                                         <h5>{{ tesis.fecha_de_lectura }}</h5>
                                         {% if tesis.autor %}
                                         <strong>Autor:</strong> {{ tesis.autor }} <br>
