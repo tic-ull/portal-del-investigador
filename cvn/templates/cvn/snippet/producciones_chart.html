@@ -1,47 +1,47 @@
 <div class="tabbable">
-      <ul class="nav nav-tabs">
-            <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
-            <li class="dropdown">
-                <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown">Publicaciones<b class="caret"></b></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
-                    <li><a href="#articulo" tabindex="-1" data-toggle="tab">Artículos</a></li>
-                    <li><a href="#capitulo" tabindex="-1" data-toggle="tab">Capítulos de libro</a></li>
-                    <li><a href="#libro" tabindex="-1" data-toggle="tab">Libros</a></li>
-                </ul>
-            </li>
-            <li><a href="#convenio" data-toggle="tab">Convenios</a></li>
-            <li><a href="#proyecto" data-toggle="tab">Proyectos</a></li>
-            <li><a href="#tesis" data-toggle="tab">Tesis</a></li>
-      </ul>
-      <div class="tab-content">
-            <div id="congreso" class="tab-pane active">
-                <div class="panel-group" id="congresos">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
+        <li class="dropdown">
+            <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown">Publicaciones<b class="caret"></b></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                <li><a href="#articulo" tabindex="-1" data-toggle="tab">Artículos</a></li>
+                <li><a href="#capitulo" tabindex="-1" data-toggle="tab">Capítulos de Libros</a></li>
+                <li><a href="#libro" tabindex="-1" data-toggle="tab">Libros</a></li>
+            </ul>
+        </li>
+        <li><a href="#convenio" data-toggle="tab">Convenios</a></li>
+        <li><a href="#proyecto" data-toggle="tab">Proyectos</a></li>
+        <li><a href="#tesis" data-toggle="tab">Tesis</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="congreso" class="tab-pane active">
+            <div class="panel-group" id="congresos">
                 {% if Congresos %}
                     {% for congreso in Congresos %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#congresos" href="#c{{congreso.id}}">
-                                {{ congreso.titulo  }}</a>
+                                    <a data-toggle="collapse" data-parent="#congresos" href="#c{{congreso.id}}">
+                                    {{ congreso.titulo  }}</a>
                                 </h4>
                             </div>
                             <div id="c{{congreso.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if congreso.titulo %}
-                                    {{ congreso.titulo }} <br>
+                                        {{ congreso.titulo }} <br>
                                     {% endif %}
                                     {% if congreso.nombre_del_congreso %}
-                                    {{ congreso.nombre_del_congreso }}
+                                        {{ congreso.nombre_del_congreso }}
                                     {% endif %}
                                     {% if congreso.ciudad_realizacion and congreso.fecha_de_inicio %}
-                                    ({{congreso.ciudad_realizacion}}, {{ congreso.fecha_de_inicio }})<br>
+                                        ({{congreso.ciudad_realizacion}}, {{ congreso.fecha_de_inicio }})<br>
                                     {% elif congreso.ciudad_realizacion %}
-                                    ({{ congreso.ciudad_realizacion }})<br>
+                                        ({{ congreso.ciudad_realizacion }})<br>
                                     {% elif congreso.fecha_de_inicio %}
-                                    ({{ congreso.fecha_de_inicio }})<br>
+                                        ({{ congreso.fecha_de_inicio }})<br>
                                     {% endif %}
                                     {% if congreso.autores %}
-                                    {{ congreso.autores }} <br>
+                                        {{ congreso.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -49,48 +49,47 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de congresos</strong>
+                        <strong>No dispone de Congresos</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="articulo" class="tab-pane">
-                <div class="panel-group" id="articulos">
+        </div>
+        <div id="articulo" class="tab-pane">
+            <div class="panel-group" id="articulos">
                 {% if Articulos %}
                     {% for publicacion in Articulos %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#articulos" href="#pub{{publicacion.id}}">
-                                    {{ publicacion.titulo }}
-                                </a>
+                                    <a data-toggle="collapse" data-parent="#articulos" href="#pub{{publicacion.id}}">
+                                    {{ publicacion.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if publicacion.fecha %}
-                                    <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.titulo %}
-                                    <strong>{{ publicacion.titulo }}</strong><br>
+                                        <strong>{{ publicacion.titulo }}</strong><br>
                                     {% endif %}
                                     {% if publicacion.autores %}
-                                    {{ publicacion.autores }} <br>
+                                        {{ publicacion.autores }} <br>
                                     {% endif %}
                                     {% if publicacion.nombre_publicacion %}
-                                    {{ publicacion.nombre_publicacion }}<br>
+                                        {{ publicacion.nombre_publicacion }}<br>
                                     {% endif %}
                                     {% if publicacion.volumen %}
-                                    Vol. {{publicacion.volumen}}
+                                        Vol. {{publicacion.volumen}}
                                     {% endif %}
                                     {% if publicacion.numero %}
-                                    Núm. {{publicacion.numero}}
+                                        Núm. {{publicacion.numero}}
                                     {% endif %}
                                     {% if publicacion.pagina_inicial and publicacion.pagina_final %}
-                                    Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
+                                        Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
                                     {% endif %}
                                     {% if publicacion.issn %}
-                                    ISSN: {{ publicacion.issn }}<br>
+                                        ISSN: {{ publicacion.issn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -98,42 +97,41 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de artículos</strong>
+                        <strong>No dispone de Artículos</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="capitulo" class="tab-pane">
-                <div class="panel-group" id="capitulos">
+        </div>
+        <div id="capitulo" class="tab-pane">
+            <div class="panel-group" id="capitulos">
                 {% if Capitulos %}
                     {% for publicacion in Capitulos %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#capitulos" href="#pub{{publicacion.id}}">
-                                    {{ publicacion.titulo }}
-                                </a>
+                                    <a data-toggle="collapse" data-parent="#capitulos" href="#pub{{publicacion.id}}">
+                                    {{ publicacion.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if publicacion.fecha %}
-                                    <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.titulo %}
-                                    <strong>{{ publicacion.titulo }}</strong><br>
+                                        <strong>{{ publicacion.titulo }}</strong><br>
                                     {% endif %}
                                     {% if publicacion.autores %}
-                                    {{ publicacion.autores }} <br>
+                                        {{ publicacion.autores }} <br>
                                     {% endif %}
                                     {% if publicacion.nombre_publicacion %}
-                                    {{ publicacion.nombre_publicacion }}<br>
+                                        {{ publicacion.nombre_publicacion }}<br>
                                     {% endif %}
                                     {% if publicacion.pagina_inicial and publicacion.pagina_final %}
-                                    Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
+                                        Pág. {{publicacion.pagina_inicial}}-{{publicacion.pagina_final}}
                                     {% endif %}
                                     {% if publicacion.isbn %}
-                                    ISBN: {{ publicacion.isbn }}<br>
+                                        ISBN: {{ publicacion.isbn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -141,39 +139,38 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de capítulos</strong>
+                        <strong>No dispone de Capítulos de Libros</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="libro" class="tab-pane">
-                <div class="panel-group" id="libros">
+        </div>
+        <div id="libro" class="tab-pane">
+            <div class="panel-group" id="libros">
                 {% if Libros %}
                     {% for publicacion in Libros %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#libros" href="#pub{{publicacion.id}}">
-                                    {{ publicacion.titulo }}
-                                </a>
+                                   <a data-toggle="collapse" data-parent="#libros" href="#pub{{publicacion.id}}">
+                                    {{ publicacion.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if publicacion.fecha %}
-                                    <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.titulo %}
-                                    <strong>{{ publicacion.titulo }}</strong><br>
+                                        <strong>{{ publicacion.titulo }}</strong><br>
                                     {% endif %}
                                     {% if publicacion.autores %}
-                                    {{ publicacion.autores }} <br>
+                                        {{ publicacion.autores }} <br>
                                     {% endif %}
                                     {% if publicacion.nombre_publicacion %}
-                                    {{ publicacion.nombre_publicacion }}<br>
+                                        {{ publicacion.nombre_publicacion }}<br>
                                     {% endif %}
                                     {% if publicacion.isbn %}
-                                    ISBN: {{ publicacion.isbn }}<br>
+                                        ISBN: {{ publicacion.isbn }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -181,38 +178,38 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de libros</strong>
+                        <strong>No dispone de Libros</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="convenio" class="tab-pane">
-                <div class="panel-group" id="convenios">
+        </div>
+        <div id="convenio" class="tab-pane">
+            <div class="panel-group" id="convenios">
                 {% if Convenios %}
                     {% for convenio in Convenios %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#convenios" href="#conv{{convenio.id}}">
-                                {{ convenio.denominacion_del_proyecto }}</a>
+                                    <a data-toggle="collapse" data-parent="#convenios" href="#conv{{convenio.id}}">
+                                    {{ convenio.denominacion_del_proyecto }}</a>
                                 </h4>
                             </div>
                             <div id="conv{{convenio.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if convenio.denominacion_del_proyecto %}
-                                    <strong>{{ convenio.denominacion_del_proyecto }}</strong><br>
+                                        <strong>{{ convenio.denominacion_del_proyecto }}</strong><br>
                                     {% endif %}
                                     {% if fecha_de_inicio %}
-                                    Fecha de incio: {{ convenio.fecha_de_inicio }}<br>
+                                        Fecha de incio: {{ convenio.fecha_de_inicio }}<br>
                                     {% endif %}
                                     {% if fecha_de_fin %}
-                                    Fecha de finalización: {{ convenio.fecha_de_fin }}<br>
+                                        Fecha de finalización: {{ convenio.fecha_de_fin }}<br>
                                     {% endif %}
                                     {% if convenio.cuantia_total %}
-                                    Cuantía: {{ convenio.cuantia_total }}<br>
+                                        Cuantía: {{ convenio.cuantia_total }}<br>
                                     {% endif %}
                                     {% if convenio.autores %}
-                                    Investigadores: {{ convenio.autores }} <br>
+                                        Investigadores: {{ convenio.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -220,38 +217,38 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de convenios</strong>
+                        <strong>No dispone de Convenios</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="proyecto" class="tab-pane">
-                <div class="panel-group" id="proyectos">
+        </div>
+        <div id="proyecto" class="tab-pane">
+            <div class="panel-group" id="proyectos">
                 {% if Proyectos %}
                     {% for proyecto in Proyectos %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a  data-toggle="collapse" data-parent="#proyectos" href="#pro{{proyecto.id}}">
-                                {{ proyecto.denominacion_del_proyecto  }}</a>
+                                    <a  data-toggle="collapse" data-parent="#proyectos" href="#pro{{proyecto.id}}">
+                                    {{ proyecto.denominacion_del_proyecto  }}</a>
                                 </h4>
                             </div>
                             <div id="pro{{proyecto.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if proyecto.denominacion_del_proyecto %}
-                                    <strong>{{ proyecto.denominacion_del_proyecto }}</strong><br>
+                                        <strong>{{ proyecto.denominacion_del_proyecto }}</strong><br>
                                     {% endif %}
                                     {% if proyecto.fecha_de_inicio %}
-                                    Fecha de inicio:{{ proyecto.fecha_de_inicio }}<br>
+                                        Fecha de inicio: {{ proyecto.fecha_de_inicio }}<br>
                                     {% endif %}
                                     {% if proyecto.fecha_de_fin %}
-                                    Fecha de finalización:{{ proyecto.fecha_de_fin }}<br>
+                                        Fecha de finalización: {{ proyecto.fecha_de_fin }}<br>
                                     {% endif %}
                                     {% if proyecto.cuantia_total %}
-                                    Cuantía: {{ proyecto.cuantia_total }}<br>
+                                        Cuantía: {{ proyecto.cuantia_total }}<br>
                                     {% endif %}
                                     {% if proyecto.autores %}
-                                    Investigadores: {{ proyecto.autores }} <br>
+                                        Investigadores: {{ proyecto.autores }} <br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -259,42 +256,42 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de proyectos</strong>
+                        <strong>No dispone de Proyectos</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-            <div id="tesis" class="tab-pane">
-                <div class="panel-group" id="tesisDocs">
+        </div>
+        <div id="tesis" class="tab-pane">
+            <div class="panel-group" id="tesisDocs">
                 {% if TesisDoctorales %}
                     {% for tesis in TesisDoctorales %}
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#tesisDocs" href="#tes{{tesis.id}}">
-                                {{ tesis.titulo  }}</a>
+                                    <a data-toggle="collapse" data-parent="#tesisDocs" href="#tes{{tesis.id}}">
+                                    {{ tesis.titulo  }}</a>
                                 </h4>
                             </div>
                             <div id="tes{{tesis.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if tesis.titulo %}
-                                    {{ tesis.titulo }}<br>
+                                        {{ tesis.titulo }}<br>
                                     {% endif %}
                                     {% if tesis.autor %}
-                                    Doctorando: {{ tesis.autor }}<br>
+                                        Doctorando: {{ tesis.autor }}<br>
                                     {% endif %}
                                     {% if tesis.universidad_que_titula %}
-                                    Universidad: {{ tesis.universidad_que_titula }}<br>
+                                        Universidad: {{ tesis.universidad_que_titula }}<br>
                                     {% endif %}
                                     Director:
                                     {% for user_profile in tesis.user_profile.all %}
-                                    {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}
+                                        {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}
                                     {% endfor %}
                                     {% if tesis.codirector %}
-                                    Codirector: {{ tesis.codirector }}
+                                        Codirector: {{ tesis.codirector }}
                                     {% endif %}
                                     {% if tesis.fecha_de_lectura %}
-                                    Fecha de lectura: {{ tesis.fecha_de_lectura }}<br>
+                                        Fecha de lectura: {{ tesis.fecha_de_lectura }}<br>
                                     {% endif %}
                                 </div>
                             </div>
@@ -302,10 +299,10 @@
                     {% endfor %}
                 {% else %}
                     <div class="alert alert-warning">
-                        <strong>No dispone de tesis doctorales</strong>
+                        <strong>No dispone de Tesis Doctorales</strong>
                     </div>
                 {% endif %}
-                </div>
             </div>
-      </div>
+        </div>
+    </div>
 </div>
