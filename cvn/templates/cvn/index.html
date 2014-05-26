@@ -2,335 +2,86 @@
 
 {% load staticfiles %}
 
-{% block breadcrumb %}
-    {% if not user.is_anonymous and not user.is_staff %}
-    <li class="divider">&raquo;</li>
-    <li class="active"><a href='{% url 'cvn' %}'>CVN</a></li>
-    {% elif user.is_staff %}
-    <li class="divider">&raquo;</li>
-    <li><a href="">Administración</a></li>
-    {% endif %}
-{% endblock breadcrumb %}
-
 {% block main %}
-    <!-- Mensajes de aviso al usuario -->
-    {% if not cvn and not user.is_anonymous %}
-    <div class="alert alert-error">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
+    <h1 class="page-header">Currículum Vítae Normalizado (CVN) </h1>
+    {% if not cvn or cvn.status == CVNStatus.EXPIRED %}
+        <div class="alert alert-danger">
+            Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
+        </div>
+    {% endif %}
+    <!-- Tabla de estado del CVN -->
+    <div class="row">
+        {% if cvn %}
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th><strong>Estado</strong></th>
+                        {% if cvn_status == "Actualizado" %}
+                            <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
+                        {% else %}
+                            <td class="alert alert-danger align-center"><b>{{ cvn_status }}</b></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th><strong>Fecha del Documento</strong></th>
+                        <td align='center'>{{ cvn.fecha_cvn }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2' align='center'>
+                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        <div class="col-md-6">
+            <div class="well" align="center">
+                {% if message %}
+                    <div class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endif %}
+                {% if form.errors %}
+                    <div class="alert  alert-danger">
+                        {% for field in form %}
+                            {{ field.errors }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div>
+                    <form action="" method='post'
+                        {% if form.is_multipart %} 
+                            enctype="multipart/form-data"
+                        {% endif %}>{% csrf_token %}
+                        {% for field in form.visible_fields %}
+                            {{ field }}
+                        {% endfor %}
+                        <br>
+                        <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
+                        <script>
+                            $('#loading-btn').click(function () {
+                                var btn = $(this)
+                                btn.button('loading')
+                            });
+                        </script>
+                    </form>
+                 </div>
+            </div>
+        </div>
     </div>
-    {% elif cvn.status == 'caducado' %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        Debe actualizar su <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
-    </div>
+
+    {% if CVN %}
+        {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
 
+    <script>
+        $('#loading-btn').click(function () {
+            var btn = $(this)
+            btn.button('loading')
+        });
+    </script>
 
-    <h1 class="main-title">Currículum Vítae Normalizado (CVN) </h1>
-    <!-- Tabla de estado del CVN -->
-    <div class="row-fluid">
-        <div class="span5">
-            <table class="table table-striped table-bordered">
-                <tbody>
-                <tr>
-                    <td><strong>Estado</strong></td>
-                    <td>
-                    {% if cvn %}   <!-- Tiene CVN subido -->
-                        <strong>{{ cvn_status }}</strong>
-                    {% else %}
-                            <strong>Sin CVN</strong>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% if cvn %}
-                <tr>
-                    <td><strong>Fecha de última actualización</strong></td>
-                    <td>
-                        {{ cvn.fecha_cvn }}
-                    </td>
-
-                </tr>
-            {% endif %}
-                </tbody>
-            </table>
-            Para más información de como obtener su <i>Curriculum Vitae Normalizado</i>:
-            <ul>
-                <li>Acceder a <a href="http://tematai.ull.es/cvn/" target="_blank">Tematai</a></li>
-                <li>Ver <a href="http://ullmedia.udv.ull.es/watch_video.php?v=HW4WG49GNWO8" target="_blank">vídeo</a> explicativo</li>
-            </ul>
-        </div>
-        <div class="span7">
-            <ul class="thumbnails">
-                {% if cvn.fecha_cvn %}
-                <li class="span6">
-                    <div class="thumbnail">
-                        <div class="center">
-                            <a href="{% url 'download_cvn' %}" target="_blank">
-                                <img data-src="holder.js/200x150" alt="Descargar CVN" title="Descargar CVN"
-                                    src='{% static "images/cvn.jpg" %}'>
-                            </a>
-                            <div class="alert alert-info">
-                                Descargue su CVN
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                {% endif %}
-                <li class="span6">
-                    <div class="thumbnail">
-                        <div class="center">
-                        {% if message %}
-                            <div class="alert alert-success">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong></strong> {{ message }}
-                            </div>
-                        {% endif %}
-                        {% if form.errors %}
-                            <div class="alert  alert-error">
-                                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                <strong></strong>
-                                {% for field in form %}
-                                    {{ field.errors }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                            <div class="form-actions">
-                                <form action="#" method='post' enctype="multipart/form-data" >{% csrf_token %}
-                                    <input id="id_cvn_file" type="file" name="cvn_file">
-                                    <br /><br />
-                                    <button type="submit" class="btn btn-success btn-block btn-large">Actualizar</button>
-                                </form>
-                            </div>
-                            <div class="alert alert-info">
-                                    Actualice su CVN
-                            </div>
-                        </div>
-
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-<!-- Datos de los cvn Subidos -->
-{% if CVN %}
-    <hr>
-    <div class="tabbable">
-          <ul class="nav nav-tabs">
-                <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
-                <li><a href="#publicacion" data-toggle="tab">Publicaciones</a></li>
-                <li><a href="#convenio" data-toggle="tab">Convenios</a></li>
-                <li><a href="#proyecto" data-toggle="tab">Proyectos</a></li>
-                <li><a href="#tesis" data-toggle="tab">Tesis</a></li>
-          </ul>
-          <div class="tab-content">
-                <div id="congreso" class="tab-pane active">
-                    <div class="accordion" id="congresos">
-                    {% if Congresos %}
-                        {% for congreso in Congresos %}
-                            <div class="accordion-group in" >
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#c{{congreso.id}}">
-                                    {{ congreso.titulo  }}</a>
-                                </div>
-                                <div id="c{{congreso.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        <h5>{{ congreso.nombre_del_congreso }}</h5>
-                                        {% if congreso.fecha_de_inicio %}
-                                        <strong>Fecha de realización:</strong> {{ congreso.fecha_de_inicio }} <br>
-                                        {% endif %}
-                                        {% if congreso.fecha_de_fin %}
-                                        <strong>Fecha de finalización:</strong> {{ congreso.fecha_de_fin }}<br>
-                                        {% endif %}
-                                        {% if congreso.ciudad_realizacion %}
-                                        <strong>Ciudad realización:</strong> {{ congreso.ciudad_realizacion }}<br>
-                                        {% endif %}
-                                        {% if congreso.autores %}
-                                        <strong>Autores:</strong> {{ congreso.autores }} <br>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>No dispone de congresos</strong>
-                        </div>
-                    {% endif %}
-                    </div>
-                </div>
-                <div id="publicacion" class="tab-pane">
-                    <div class="accordion" id="publicaciones">
-                    {% if Publicaciones %}
-                        {% for publicacion in Publicaciones %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pub{{publicacion.id}}">
-                                        <span class="label">{{ publicacion.tipo_de_produccion }}</span>
-                                        {{ publicacion.titulo }}
-                                    </a>
-                                </div>
-                                <div id="pub{{publicacion.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        {% if publicacion.nombre_publicacion %}
-                                        <h5>{{ publicacion.nombre_publicacion }} </h5>
-                                        {% endif %}
-                                        {% if publicacion.fecha %}
-                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
-                                        {% endif %}
-                                        {% if publicacion.autores %}
-                                        <strong>Autores:</strong> {{ publicacion.autores }} <br>
-                                        {% endif %}
-                                        {% if publicacion.issn %}
-                                        <strong>ISSN:</strong> {{ publicacion.issn }}<br>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>No dispone de publicaciones</strong>
-                        </div>
-                    {% endif %}
-                    </div>
-                </div>
-                <div id="convenio" class="tab-pane">
-                    <div class="accordion" id="convenios">
-                    {% if Convenios %}
-                        {% for convenio in Convenios %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#conv{{convenio.id}}">
-                                    {{ convenio.denominacion_del_proyecto }}</a>
-                                </div>
-                                <div id="conv{{convenio.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        {% if fecha_de_inicio %}
-                                        <strong>Fecha de incio:</strong>{{ convenio.fecha_de_inicio }}<br>
-                                        {% endif %}
-                                        {% if fecha_de_fin %}
-                                        <strong>Fecha de fin:</strong>{{ convenio.fecha_de_fin }}<br>
-                                        {% endif %}
-                                        {% if convenio.cod_segun_financiadora %}
-                                        <strong>Código según financiadora:</strong> {{ convenio.cod_segun_financiadora }}<br>
-                                        {% endif %}
-                                        {% if convenio.cuantia_total %}
-                                        <strong>Cuantía Total:</strong> {{ convenio.cuantia_total }} <br>
-                                        {% endif %}
-                                        {% if convenio.cuantia_subproyecto %}
-                                        <strong>Cuantía Subproyecto:</strong> {{ convenio.cuantia_subproyecto }} <br>
-                                        {% endif %}
-                                        {% if convenio.porcentaje_en_subvencion %}
-                                        <strong>Porcentaje en subvención:</strong> {{ convenio.porcentaje_en_subvencion }}% <br>
-                                        {% endif %}
-                                        {% if convenio.porcentaje_en_credito %}
-                                        <strong>Porcentaje en crédito:</strong> {{ convenio.porcentaje_en_credito }}%<br>
-                                        {% endif %}
-                                        {% if convenio.porcentaje_mixto %}
-                                        <strong>Porcentaje mixto:</strong> {{ convenio.porcentaje_mixto }}%<br>
-                                        {% endif %}
-                                        {% if convenio.autores %}
-                                        <strong>Autores:</strong> {{ convenio.autores }} <br>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>No dispone de convenios</strong>
-                        </div>
-                    {% endif %}
-                    </div>
-                </div>
-                <div id="proyecto" class="tab-pane">
-                    <div class="accordion" id="proyectos">
-                    {% if Proyectos %}
-                        {% for proyecto in Proyectos %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
-
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#pro{{proyecto.id}}">
-                                    {{ proyecto.denominacion_del_proyecto  }}</a>
-                                </div>
-                                <div id="pro{{proyecto.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        <strong>Fecha de inicio:</strong>{{ proyecto.fecha_de_inicio }}<br>
-                                        {% if proyecto.fecha_de_fin %}
-                                        <strong>Fecha de fin:</strong>{{ proyecto.fecha_de_fin }}<br>
-                                        {% endif %}
-                                        {% if proyecto.cod_segun_financiadora %}
-                                        <strong>Código según financiadora:</strong> {{ proyecto.cod_segun_financiadora }}<br>
-                                        {% endif %}
-                                        {% if proyecto.cuantia_total %}
-                                        <strong>Cuantía Total:</strong> {{ proyecto.cuantia_total }} <br>
-                                        {% endif %}
-                                        {% if proyecto.cuantia_subproyecto %}
-                                        <strong>Cuantía Subproyecto:</strong> {{ proyecto.cuantia_subproyecto }} <br>
-                                        {% endif %}
-                                        {% if proyecto.porcentaje_en_subvencion %}
-                                        <strong>Porcentaje en subvención:</strong> {{ proyecto.porcentaje_en_subvencion }}% <br>
-                                        {% endif %}
-                                        {% if proyecto.porcentaje_en_credito %}
-                                        <strong>Porcentaje en crédito:</strong> {{ proyecto.porcentaje_en_credito }}%<br>
-                                        {% endif %}
-                                        {% if proyecto.porcentaje_mixto %}
-                                        <strong>Porcentaje mixto:</strong> {{ proyecto.porcentaje_mixto }}%<br>
-                                        {% endif %}
-                                        {% if proyecto.autores %}
-                                        <strong>Autores:</strong> {{ proyecto.autores }} <br>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>No dispone de proyectos</strong>
-                        </div>
-                    {% endif %}
-                    </div>
-                </div>
-                <div id="tesis" class="tab-pane">
-                    <div class="accordion" id="tesisDocs">
-                    {% if TesisDoctorales %}
-                        {% for tesis in TesisDoctorales %}
-                            <div class="accordion-group" >
-                                <div class="accordion-heading">
-                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#tes{{tesis.id}}">
-                                    {{ tesis.titulo  }}</a>
-                                </div>
-                                <div id="tes{{tesis.id}}" class="accordion-body collapse">
-                                    <div class="accordion-inner">
-                                        <h5>{{ tesis.fecha_de_lectura }}</h5>
-                                        {% if tesis.autor %}
-                                        <strong>Autor:</strong> {{ tesis.autor }} <br>
-                                        {% endif %}
-                                        {% if tesis.codirector %}
-                                        <strong>Codirector:</strong> {{ tesis.codirector }}<br>
-                                        {% endif %}
-                                        {% if tesis.universidad_que_titula %}
-                                        <strong>Universidad:</strong> {{ tesis.universidad_que_titula }}<br>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="alert alert-warning">
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>No dispone de tesis doctorales</strong>
-                        </div>
-                    {% endif %}
-                    </div>
-                </div>
-          </div>
-    </div>
-{% endif %}
 {% endblock main %}

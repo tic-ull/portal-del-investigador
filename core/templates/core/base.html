@@ -80,9 +80,9 @@
                 <div class="navbar-header">
                     <ol class="breadcrumb">
                         <li class="active"><a href="{% url 'index'%}">{% trans "Portal del Investigador" %}</a></li>
-                        {% block breadcrumb %}
+                        {% block breadcrumb_app %}
 
-                        {% endblock breadcrumb %}
+                        {% endblock breadcrumb_app %}
                     </ol>
                 </div>
                 <div class="collapse navbar-collapse navbar-app-collapse">
@@ -419,7 +419,7 @@
                                             <a href="http://static.ull.es/v3/docs/examples/form/#" class="pull-left"><img class="media-object" alt="48x48" style="width: 48px; height: 48px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABF0lEQVRoge2UsQ7DIAxE+/+f4o3NCxsbIzufwC/QyYg4rVRC1GulG24gwPmegTxaa/2f9UAHIAA6AAHQAQiADkAAdAACoAMQAB2AAOgABEAH+BpAKaWLSE8pnb6ZSilLxe/w/BgghHAqJiI9xthba11Vu4gsAdzh+RFASml0xIr57tmaWuuYsyAxxlM3Vz0vA9Rah+lKtyy07bN1O56XAFS1q+qh6Dw/31e/993cjucSQM55HKEv5sfW8fm47dvc/V3PJQA7Qi9VHUHsXtv9zTkfxv5vsuN5+RG/6o5/cP6h2h/G9oUQtj1vBZivg8k6ZY/Tj/1dX/HcBvhVEQAtAqBFALQIgBYB0CIAWgRAiwBoEQAtAqD1BBs6m19czwjTAAAAAElFTkSuQmCC"></a>
                                             <div class="media-body">
                                                 <h4 class="media-heading">{{user.first_name}} {{user.last_name}}</h4>
-                                                {{user.profile.documento}}
+                                                {{ user.profile.documento }}
                                             </div>
                                         </div>
                                     </li>
@@ -473,21 +473,22 @@
                                 </ul>
                             </div>
                         </div>
-
+{% endcomment %}
+                        {% if user.is_staff %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-comment"></i> Enlaces de interés</h3>
+                                <h3 class="panel-title"><i class="fa fa-lock"></i> Administración</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 1</a></li>
-                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 2</a></li>
-                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Link 3</a></li>
+                                    <li><a href="{% url 'admin:index' %}">Panel de administración</a></li>
+                                    <li><a href="#">Estadísticas</a></li>
+                                    <li><a href="{% url 'ull_report' %}"> Informe ULL</a></li>
                                 </ul>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
-{% endcomment %}
                 </div>
             </div>
 
