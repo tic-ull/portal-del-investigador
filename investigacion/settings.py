@@ -236,7 +236,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "core.context_processors.external_urls",
+    "core.context_processors.extra_info",
 )
 
 TEMPLATE_LOADERS = (
@@ -248,6 +248,8 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates'),
     os.path.join(BASE_DIR, 'core/templates'),
 )
+
+BASE_URL = 'http://www.ull.es/investigacion'
 
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
