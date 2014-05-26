@@ -13,6 +13,7 @@ from django.contrib.flatpages.models import FlatPage, Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
 from tinymce.widgets import TinyMCE
 
+
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     extra = 0
@@ -59,13 +60,14 @@ class PageForm(FlatpageForm):
         self.fields['url'].widget = HiddenInput()
         self.fields['sites'].widget = MultipleHiddenInput()
 
-    def clean_sites(self):
-        return [Site.objects.get(id=st.SITE_ID)]
+    def clean_url(self):
+        return True
 
     def save(self, commit=True):
         flatpage = super(PageForm, self).save(commit=False)
         flatpage.save()
         flatpage.url = stCore.BASE_URL_FLATPAGES + str(flatpage.id) + '/'
+        flatpage.sites.add(Site.objects.get(id=st.SITE_ID))
         return flatpage
 
     class Meta:
@@ -77,9 +79,9 @@ class PageForm(FlatpageForm):
 
 class PageAdmin(FlatPageAdmin):
     form = PageForm
-#    fieldsets = (
-#        (None, {'fields': ('title', 'content')}),
-#    )
+    fieldsets = (
+        (None, {'fields': ('title', 'content')}),
+    )
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

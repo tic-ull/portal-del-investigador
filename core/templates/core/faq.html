@@ -10,10 +10,16 @@
     <ul>
         {% for page in flatpages %}
             <li>
-                <strong><a href='#'>{{page.title}}</a></strong>
+                <strong><a href='#{{page.id}}'>{{page.title}}</a></strong>
+                <br>
+            </li>
+        {% endfor %}
+        <hr>
+        {% for page in flatpages %}
+                <a name="{{page.id}}">{{ page.title }}</a>
                 <br>
                 {{ page.content|safe }}
-            </li>
+                <hr>
         {% endfor %}
     </ul>
 {% endblock %}
