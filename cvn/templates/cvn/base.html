@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block breadcrumb_app %}
     <li><a href="{% url 'cvn'%}">CVN</a></li>
@@ -7,10 +8,10 @@
 {% endblock breadcrumb_app %}
 
 {% block internal_links %}
-    <li><a href="{% url 'cvn' %}"><i class="fa fa-home"></i> Inicio</a></li>
+    <li><a href="{% url 'cvn' %}"><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
 {% endblock internal_links %}
 
 {% block external_links %}
-    <li><a href="http://tematai.ull.es/cvn/" target="_blank"><i class="fa fa-globe"></i> Acceso a Tematai</a></li>
-    <li><a href="https://cvn.fecyt.es/editor/#HOME" target="_blank"><i class="fa fa-globe"></i> Acceso al editor del FECYT</a></li>
+    <li><a href="http://tematai.ull.es/cvn/" target="_blank"><i class="fa fa-globe"></i> {% trans "Acceso a Tematai" %}</a></li>
+    <li><a href="https://cvn.fecyt.es/editor/#HOME" target="_blank"><i class="fa fa-globe"></i> {% trans "Acceso al editor del FECYT" %}</a></li>
 {% endblock external_links %}

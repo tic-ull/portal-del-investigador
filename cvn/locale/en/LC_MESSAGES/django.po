@@ -1,9 +1,10 @@
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-26 09:08+0100\n"
-"PO-Revision-Date: 2014-05-26 09:11-0102\n"
+"POT-Creation-Date: 2014-05-26 11:17+0100\n"
+"PO-Revision-Date: 2014-05-26 11:18-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +17,172 @@ msgstr ""
 msgid "El CVN debe estar en formato PDF."
 msgstr "CVN must be a PDF file."
 
-#: views.py:26
+#: views.py:27
 msgid "CVN actualizado con éxito."
 msgstr "CVN updated successfully."
+
+#: templates/cvn/base.html:11
+msgid "Inicio"
+msgstr "Home"
+
+#: templates/cvn/base.html:15
+msgid "Acceso a Tematai"
+msgstr "Access Tematai"
+
+#: templates/cvn/base.html:16
+msgid "Acceso al editor del FECYT"
+msgstr "Access FECYT's editor"
+
+#: templates/cvn/index.html:10
+msgid "Debe introducir un Currículum Vítae Normalizado con formato FECYT"
+msgstr "You must upload a CVN in FECYT format"
+
+#: templates/cvn/index.html:20
+msgid "Estado"
+msgstr "Status"
+
+#: templates/cvn/index.html:28
+msgid "Fecha del Documento"
+msgstr "Document date"
+
+#: templates/cvn/index.html:33
+msgid "Descargar CVN"
+msgstr "Download CVN"
+
+#: templates/cvn/index.html:64
+msgid "Cargando"
+msgstr "Loading"
+
+#: templates/cvn/index.html:64
+msgid "Subir"
+msgstr "Upload"
+
+#: templates/cvn/ull_report.html:7
+msgid "Informe ULL"
+msgstr "ULL report"
+
+#: templates/cvn/ull_report.html:11
+msgid "Actividad Científica en la Universidad de La Laguna"
+msgstr "Scientific activity at Universidad de la Laguna"
+
+#: templates/cvn/partials/producciones_chart.html:4
+msgid "Congresos"
+msgstr "Congresses"
+
+#: templates/cvn/partials/producciones_chart.html:6
+msgid "Publicaciones"
+msgstr "Publications"
+
+#: templates/cvn/partials/producciones_chart.html:8
+msgid "Artículos"
+msgstr "Articles"
+
+#: templates/cvn/partials/producciones_chart.html:9
+msgid "Capítulos de Libros"
+msgstr "Book Chapters"
+
+#: templates/cvn/partials/producciones_chart.html:10
+msgid "Libros"
+msgstr "Books"
+
+#: templates/cvn/partials/producciones_chart.html:13
+msgid "Convenios"
+msgstr ""
+
+#: templates/cvn/partials/producciones_chart.html:14
+msgid "Proyectos"
+msgstr "Projects"
+
+#: templates/cvn/partials/producciones_chart.html:15
+msgid "Tesis"
+msgstr ""
+
+#: templates/cvn/partials/producciones_chart.html:54
+msgid "No dispone de Congresos"
+msgstr "You don't have any Congress"
+
+#: templates/cvn/partials/producciones_chart.html:74
+#: templates/cvn/partials/producciones_chart.html:123
+#: templates/cvn/partials/producciones_chart.html:166
+msgid "Fecha"
+msgstr "Date"
+
+#: templates/cvn/partials/producciones_chart.html:86
+msgid "Vol."
+msgstr "Vol."
+
+#: templates/cvn/partials/producciones_chart.html:89
+msgid "Núm."
+msgstr "Num."
+
+#: templates/cvn/partials/producciones_chart.html:92
+#: templates/cvn/partials/producciones_chart.html:135
+msgid "Pág."
+msgstr "Pag."
+
+#: templates/cvn/partials/producciones_chart.html:103
+msgid "No dispone de Artículos"
+msgstr "You don't have any Article"
+
+#: templates/cvn/partials/producciones_chart.html:146
+msgid "No dispone de Capítulos de Libros"
+msgstr "You don't have any Book Chapter"
+
+#: templates/cvn/partials/producciones_chart.html:186
+msgid "No dispone de Libros"
+msgstr "You don't have any book"
+
+#: templates/cvn/partials/producciones_chart.html:209
+msgid "Fecha de incio"
+msgstr "Start date"
+
+#: templates/cvn/partials/producciones_chart.html:212
+#: templates/cvn/partials/producciones_chart.html:252
+msgid "Fecha de finalización"
+msgstr "End date"
+
+#: templates/cvn/partials/producciones_chart.html:215
+#: templates/cvn/partials/producciones_chart.html:255
+msgid "Cuantía"
+msgstr "Amount"
+
+#: templates/cvn/partials/producciones_chart.html:218
+#: templates/cvn/partials/producciones_chart.html:258
+msgid "Investigadores"
+msgstr "Researchers"
+
+#: templates/cvn/partials/producciones_chart.html:226
+msgid "No dispone de Convenios"
+msgstr ""
+
+#: templates/cvn/partials/producciones_chart.html:249
+msgid "Fecha de inicio"
+msgstr "Start date"
+
+#: templates/cvn/partials/producciones_chart.html:266
+msgid "No dispone de Proyectos"
+msgstr "You don't have any project"
+
+#: templates/cvn/partials/producciones_chart.html:289
+msgid "Doctorando"
+msgstr ""
+
+#: templates/cvn/partials/producciones_chart.html:292
+msgid "Universidad"
+msgstr "University"
+
+#: templates/cvn/partials/producciones_chart.html:294
+msgid "Director"
+msgstr "Director"
+
+#: templates/cvn/partials/producciones_chart.html:299
+msgid "Codirector"
+msgstr "Co-director"
+
+#: templates/cvn/partials/producciones_chart.html:302
+msgid "Fecha de lectura"
+msgstr ""
+
+#: templates/cvn/partials/producciones_chart.html:310
+msgid "No dispone de Tesis Doctorales"
+msgstr ""

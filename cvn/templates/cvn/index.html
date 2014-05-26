@@ -1,4 +1,5 @@
 {% extends 'cvn/base.html' %}
+{% load i18n %}
 
 {% load staticfiles %}
 
@@ -6,7 +7,7 @@
     <h1 class="page-header">Currículum Vítae Normalizado (CVN) </h1>
     {% if not cvn or cvn.status == CVNStatus.EXPIRED %}
         <div class="alert alert-danger">
-            Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
+            {% trans "Debe introducir un Currículum Vítae Normalizado con formato FECYT" %}
         </div>
     {% endif %}
     <!-- Tabla de estado del CVN -->
@@ -16,7 +17,7 @@
                 <table class="table table-bordered">
                     <tbody>
                     <tr>
-                        <th><strong>Estado</strong></th>
+                        <th><strong>{% trans "Estado" %}</strong></th>
                         {% if cvn_status == "Actualizado" %}
                             <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
                         {% else %}
@@ -24,12 +25,12 @@
                         {% endif %}
                     </tr>
                     <tr>
-                        <th><strong>Fecha del Documento</strong></th>
+                        <th><strong>{% trans "Fecha del Documento" %}</strong></th>
                         <td align='center'>{{ cvn.fecha_cvn }}</td>
                     </tr>
                     <tr>
                         <td colspan='2' align='center'>
-                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
+                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> {% trans "Descargar CVN" %}</a>
                         </td>
                     </tr>
                     </tbody>
@@ -60,7 +61,7 @@
                             {{ field }}
                         {% endfor %}
                         <br>
-                        <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
+                        <button type="submit" id='loading-btn' data-loading-text=' {% trans "Cargando" %}...' class='fa fa-upload btn btn-primary btn-ms'> {% trans "Subir" %}</button>
                         <script>
                             $('#loading-btn').click(function () {
                                 var btn = $(this)

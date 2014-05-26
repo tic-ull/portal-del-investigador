@@ -1,9 +1,10 @@
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-26 09:08+0100\n"
-"PO-Revision-Date: 2014-05-26 09:10-0102\n"
+"POT-Creation-Date: 2014-05-26 11:05+0100\n"
+"PO-Revision-Date: 2014-05-26 11:07-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +73,22 @@ msgstr "Exit"
 msgid "Menú principal"
 msgstr "Main menu"
 
-#: templates/core/base.html:500
+#: templates/core/base.html:480
+msgid "Administración"
+msgstr "Administration"
+
+#: templates/core/base.html:484
+msgid "Panel de administración"
+msgstr "Admin panel"
+
+#: templates/core/base.html:485
+msgid "Estadísticas"
+msgstr "Statistics"
+
+#: templates/core/base.html:486
+msgid "Informe ULL"
+msgstr "ULL report"
+
+#: templates/core/base.html:501
 msgid "Teléfono"
 msgstr "Phone number"

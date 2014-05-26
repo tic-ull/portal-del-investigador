@@ -477,13 +477,13 @@
                         {% if user.is_staff %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-lock"></i> Administración</h3>
+                                <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administración" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{% url 'admin:index' %}">Panel de administración</a></li>
-                                    <li><a href="#">Estadísticas</a></li>
-                                    <li><a href="{% url 'ull_report' %}"> Informe ULL</a></li>
+                                    <li><a href="{% url 'admin:index' %}">{% trans "Panel de administración" %}</a></li>
+                                    <li><a href="#">{% trans "Estadísticas" %}</a></li>
+                                    <li><a href="{% url 'ull_report' %}">{% trans "Informe ULL" %}</a></li>
                                 </ul>
                             </div>
                         </div>
