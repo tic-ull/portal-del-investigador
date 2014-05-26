@@ -16,8 +16,6 @@ logger = logging.getLogger(__name__)
 @login_required
 def index(request):
     context = {}
-    if 'attributes' in request.session:
-        context['user'] = request.session['attributes']
     user = request.user
     form = UploadCVNForm()
     if request.method == 'POST':
