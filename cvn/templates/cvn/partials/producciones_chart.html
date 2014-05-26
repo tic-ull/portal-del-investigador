@@ -1,11 +1,11 @@
 <script>
     $(document).ready(function(){    
         $('.collapse').on('show.bs.collapse', function (e) {
-           $(event.target).removeClass("fa-plus").addClass("fa-minus");
+           $(e.target).parent().find("a").removeClass("fa-plus").addClass("fa-minus");
         });
 
         $('.collapse').on('hide.bs.collapse', function (e) {
-           $(event.target).removeClass("fa-minus").addClass("fa-plus");
+           $(e.target).parent().find("a").removeClass("fa-minus").addClass("fa-plus");
         });
     });
 </script>
