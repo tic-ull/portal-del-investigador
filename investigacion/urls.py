@@ -19,7 +19,7 @@ urlpatterns = patterns(
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
     url(r'^investigacion/faq/', TemplateView.as_view(
-        template_name='core/faq.html')),
+        template_name='core/faq.html'), name='faq'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
     # BORRAR:
     url(r'^investigacion2', TemplateView.as_view(

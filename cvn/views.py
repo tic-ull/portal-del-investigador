@@ -2,11 +2,12 @@
 
 from cvn.forms import UploadCVNForm
 from cvn.utils import scientific_production_to_context, cvn_to_context
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
 import logging
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,6 @@ logger = logging.getLogger(__name__)
 @login_required
 def index(request):
     context = {}
-    if 'attributes' in request.session:
-        context['user'] = request.session['attributes']
     user = request.user
     form = UploadCVNForm()
     if request.method == 'POST':
@@ -26,7 +25,6 @@ def index(request):
             context['message'] = _(u'CVN actualizado con éxito.')
     context['form'] = form
     cvn_to_context(user.profile, context)
-    context['user'] = user
     context['CVN'] = scientific_production_to_context(user.profile, context)
     return render(request, 'cvn/index.html', context)
 
@@ -42,6 +40,7 @@ def download_cvn(request):
 
 
 @login_required
+@staff_member_required
 def ull_report(request):
     context = {}
     userULL = User.objects.get(username='GesInv-ULL')
