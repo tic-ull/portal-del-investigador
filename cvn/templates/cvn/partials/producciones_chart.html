@@ -41,7 +41,7 @@
                             <div id="c{{congreso.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if congreso.titulo %}
-                                        {{ congreso.titulo }} <br>
+                                        <strong>{{ congreso.titulo }}</strong> <br>
                                     {% endif %}
                                     {% if congreso.nombre_del_congreso %}
                                         {{ congreso.nombre_del_congreso }}
@@ -81,11 +81,11 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if publicacion.fecha %}
-                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
-                                    {% endif %}
                                     {% if publicacion.titulo %}
                                         <strong>{{ publicacion.titulo }}</strong><br>
+                                    {% endif %}
+                                    {% if publicacion.fecha %}
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.autores %}
                                         {{ publicacion.autores }} <br>
@@ -130,11 +130,11 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if publicacion.fecha %}
-                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
-                                    {% endif %}
                                     {% if publicacion.titulo %}
                                         <strong>{{ publicacion.titulo }}</strong><br>
+                                    {% endif %}
+                                    {% if publicacion.fecha %}
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.autores %}
                                         {{ publicacion.autores }} <br>
@@ -173,11 +173,11 @@
                             </div>
                             <div id="pub{{publicacion.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if publicacion.fecha %}
-                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
-                                    {% endif %}
                                     {% if publicacion.titulo %}
                                         <strong>{{ publicacion.titulo }}</strong><br>
+                                    {% endif %}
+                                    {% if publicacion.fecha %}
+                                        <strong>Fecha:</strong> {{ publicacion.fecha }}<br>
                                     {% endif %}
                                     {% if publicacion.autores %}
                                         {{ publicacion.autores }} <br>
@@ -294,7 +294,7 @@
                             <div id="tes{{tesis.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% if tesis.titulo %}
-                                        {{ tesis.titulo }}<br>
+                                        <strong>{{ tesis.titulo }}</strong><br>
                                     {% endif %}
                                     {% if tesis.autor %}
                                         Doctorando: {{ tesis.autor }}<br>
