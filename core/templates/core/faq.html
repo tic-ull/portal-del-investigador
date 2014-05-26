@@ -1,0 +1,19 @@
+{% extends 'cvn/base.html' %}
+
+{% load staticfiles %}
+
+{% block main %}
+
+    <strong> FAQ </strong>
+    {% load flatpages %}
+    {% get_flatpages as flatpages %}
+    <ul>
+        {% for page in flatpages %}
+            <li>
+                <strong><a href='#'>{{page.title}}</a></strong>
+                <br>
+                {{ page.content|safe }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
