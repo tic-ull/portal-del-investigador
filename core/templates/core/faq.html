@@ -3,8 +3,7 @@
 {% load staticfiles %}
 
 {% block main %}
-
-    <strong> FAQ </strong>
+    <h1 class='page-header'><a name='start'></a> FAQ</h1>
     {% load flatpages %}
     {% get_flatpages as flatpages %}
     <ul>
@@ -14,12 +13,12 @@
                 <br>
             </li>
         {% endfor %}
-        <hr>
+        <br>
         {% for page in flatpages %}
-                <a name="{{page.id}}">{{ page.title }}</a>
-                <br>
+                <h1 class='page-header'><a name="{{page.id}}">{{ page.title }}</a></h1>
                 {{ page.content|safe }}
-                <hr>
+                <p align="right">
+                <a href="#start">[<i class="fa fa-chevron-up">]</i></a></p>
         {% endfor %}
     </ul>
 {% endblock %}
