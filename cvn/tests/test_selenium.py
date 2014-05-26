@@ -37,7 +37,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-        self.assertTrue(self.is_element_present(By.CLASS_NAME, "main-title"))
+        self.assertTrue(self.is_element_present(By.CLASS_NAME, "page-header"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def test_login_no_cas(self):
@@ -135,9 +135,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
         time.sleep(2)
-        self.assertTrue(self.is_element_present(By.CLASS_NAME, "alert-info"))
-        driver.find_element_by_css_selector(
-            "img[alt=\"Descargar CVN\"]").click()
+        driver.find_element_by_link_text(u'Descargar CVN').click()
         time.sleep(2)
         # Check if CVN window is open
         self.assertEqual(len(driver.window_handles), 2)
