@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',  # Flatpages
     'django.contrib.flatpages',
     'tinymce',  # Flatpages tinymce
-    #'flatpages_tinymce',
     'south',
     'core',
     'cvn',
