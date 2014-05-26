@@ -1,3 +1,15 @@
+<script>
+    $(document).ready(function(){    
+        $('.collapse').on('show.bs.collapse', function (e) {
+           $(event.target).removeClass("fa-plus").addClass("fa-minus");
+        });
+
+        $('.collapse').on('hide.bs.collapse', function (e) {
+           $(event.target).removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
+</script>
+
 <div class="tabbable">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
@@ -22,7 +34,7 @@
                         <div class="panel panel-default" >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#congresos" href="#c{{congreso.id}}">
+                                    <a class="fa fa-plus" data-toggle="collapse" data-parent="#congresos" href="#c{{congreso.id}}">
                                     {{ congreso.titulo  }}</a>
                                 </h4>
                             </div>
