@@ -21,15 +21,19 @@
                     <tbody>
                     <tr>
                         <th><strong>Estado</strong></th>
-                        <td>{{ cvn_status }}</td>
+                        {% if cvn_status == "Actualizado" %}
+                            <td align='center' class="alert alert-success"><p align='center'><b>{{ cvn_status }}</b></p></td>
+                        {% else %}
+                            <td align='center' class="alert alert-danger"><p align='center'><b>{{ cvn_status }}</b></p></td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <th><strong>Fecha del Documento</strong></th>
-                        <td>{{ cvn.fecha_cvn }}</td>
+                        <td align='center'>{{ cvn.fecha_cvn }}</td>
                     </tr>
                     <tr>
                         <td colspan='2' align='center'>
-                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-success btn-block btn-ms' role='button'> Descargar CVN</a>
+                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
                         </td>
                     </tr>
                     </tbody>
@@ -38,45 +42,37 @@
         {% endif %}
 
         <div class="col-md-6">
-            <div class="thumbnail" align="center">
-                <div style="background-color: #F5F5F5; padding: 30px 20px 10px; margin-top: 0px; margin-bottom: 0px; border-top: 1px solid #E5E5E5;" class="form-group">
-                    {% if message %}
-                        <div class="alert alert-success">
-                            {{ message }}
-                        </div>
-                    {% endif %}
-                    {% if form.errors %}
-                        <div class="alert  alert-danger">
-                            {% for field in form %}
-                                {{ field.errors }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <div>
-                        <form action="" method='post'
-                            {% if form.is_multipart %} 
-                                enctype="multipart/form-data"
-                            {% endif %}>{% csrf_token %}
-                            {% for field in form.visible_fields %}
-                                {{ field }}
-                            {% endfor %}
-                            <br>
-                            <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-success btn-block btn-ms'> Subir</button>
-                            <script>
-                                $('#loading-btn').click(function () {
-                                    var btn = $(this)
-                                    btn.button('loading')
-                                });
-                            </script>
-                        </form>
+            <div class="well" align="center">
+                {% if message %}
+                    <div class="alert alert-success">
+                        {{ message }}
                     </div>
-                </div>
-
-                <br>
-                <div class="alert alert-info">
-                    Actualice su CVN
-                </div>
-
+                {% endif %}
+                {% if form.errors %}
+                    <div class="alert  alert-danger">
+                        {% for field in form %}
+                            {{ field.errors }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div>
+                    <form action="" method='post'
+                        {% if form.is_multipart %} 
+                            enctype="multipart/form-data"
+                        {% endif %}>{% csrf_token %}
+                        {% for field in form.visible_fields %}
+                            {{ field }}
+                        {% endfor %}
+                        <br>
+                        <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
+                        <script>
+                            $('#loading-btn').click(function () {
+                                var btn = $(this)
+                                btn.button('loading')
+                            });
+                        </script>
+                    </form>
+                 </div>
             </div>
         </div>
     </div>
