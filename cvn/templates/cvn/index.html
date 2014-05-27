@@ -56,11 +56,8 @@
                         {% if form.is_multipart %} 
                             enctype="multipart/form-data"
                         {% endif %}>{% csrf_token %}
-                        {% for field in form.visible_fields %}
-                            {{ field }}
-                        {% endfor %}
-                        <br>
-                        <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
+                        <input id="id_cvn_file" style="display:none;" onchange="this.form.submit()" name="cvn_file" type="file" />
+                        <button type="button" id="send_file" onclick="$('#id_cvn_file').click()" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
                     </form>
                  </div>
             </div>
@@ -72,9 +69,9 @@
     {% endif %}
 
     <script>
-        $('#loading-btn').click(function () {
-            var btn = $(this)
-            btn.button('loading')
+        $('#id_cvn_file').change(function () {
+            var btn = $('#send_file');
+            btn.button('loading');
         });
     </script>
 
