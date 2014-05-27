@@ -261,8 +261,6 @@ BASE_URL = 'http://www.ull.es/investigacion'
 
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
-# ---------------------------------------------------------- #
-
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
@@ -270,16 +268,16 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# ---------------------------------------------------------- #
 TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table,spellchecker,paste,searchreplace",
+    'plugins': "table, spellchecker, paste, searchreplace",
     'theme': "advanced",
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 10,
 }
+
 TINYMCE_SPELLCHECKER = True
+
 TINYMCE_COMPRESSOR = True
-# ---------------------------------------------------------- #
 
 try:
     from settings_local import *

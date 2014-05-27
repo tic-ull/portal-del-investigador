@@ -21,13 +21,7 @@ urlpatterns = patterns(
     url(r'^investigacion/faq/', TemplateView.as_view(
         template_name='core/faq.html'), name='faq'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
-    # BORRAR:
-    url(r'^investigacion2', TemplateView.as_view(
-        template_name='cvn/ccti.html.bak')),
-    url(r'^investigacion3', TemplateView.as_view(
-        template_name='core/base.html')),
 )
 
-#
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)
