@@ -114,7 +114,14 @@ def parse_authors(author_list):
         author_sfname = author.find("SecondFamilyName/Item")
         if author_sfname is not None:
             authorItem += ' ' + unicode(author_sfname.text.strip())
-        if authorItem:
+        signature = author.find("Signature/Item")
+        if signature is not None and signature.text:
+            if authorItem:
+                authors += unicode(
+                    authorItem + ' (' + signature.text.strip() + '); ')
+            else:
+                authors += unicode(signature.text.strip() + '; ')
+        elif authorItem:
             authors += authorItem + '; '
     return authors[:-2] if authors else authors
 
