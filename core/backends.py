@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
+from core import settings as stCore
+from core.models import Log
 from django.contrib.auth.models import User
 from django_cas.backends import _verify
-import django_cas
 import datetime
-from core.models import Log
-from core import settings as stCore
+import django_cas
 
 
 class CASBackend(django_cas.backends.CASBackend):

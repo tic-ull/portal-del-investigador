@@ -3,7 +3,6 @@
 from enum import Enum
 
 
-# LOG TYPE
 class LogType(Enum):
     CVN_STATUS = 0
     AUTH_ERROR = 1

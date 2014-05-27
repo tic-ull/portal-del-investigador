@@ -1,10 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as stCore
+from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
 import simplejson as json
-from django.conf import settings as st
 import urllib
 
 
@@ -24,7 +24,7 @@ class UserProfile(models.Model):
             rrhh_code = rrhh_request.read()
             if rrhh_code.isdigit():
                 self.rrhh_code = json.loads(rrhh_code)
-        self.save()
+                self.save()
 
     def __unicode__(self):
         return self.user.username
