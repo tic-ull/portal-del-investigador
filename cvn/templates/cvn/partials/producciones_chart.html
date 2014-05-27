@@ -1,15 +1,3 @@
-<script>
-    $(document).ready(function(){    
-        $('.collapse').on('show.bs.collapse', function (e) {
-           $(e.target).parent().find("a").removeClass("fa-plus").addClass("fa-minus");
-        });
-
-        $('.collapse').on('hide.bs.collapse', function (e) {
-           $(e.target).parent().find("a").removeClass("fa-minus").addClass("fa-plus");
-        });
-    });
-</script>
-
 <div class="tabbable">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#congreso" data-toggle="tab">Congresos</a></li>
@@ -304,13 +292,13 @@
                                     {% endif %}
                                     Director:
                                     {% for user_profile in tesis.user_profile.all %}
-                                        {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}
+                                        {{ user_profile.user.first_name }} {{ user_profile.user.last_name }}<br>
                                     {% endfor %}
                                     {% if tesis.codirector %}
-                                        Codirector: {{ tesis.codirector }}
+                                        Codirector: {{ tesis.codirector }}<br>
                                     {% endif %}
                                     {% if tesis.fecha_de_lectura %}
-                                        Fecha de lectura: {{ tesis.fecha_de_lectura }}<br>
+                                        Fecha de lectura: {{ tesis.fecha_de_lectura }}
                                     {% endif %}
                                 </div>
                             </div>
@@ -325,3 +313,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){    
+        $('.collapse').on('show.bs.collapse', function (e) {
+           $(e.target).parent().find("a").removeClass("fa-plus").addClass("fa-minus");
+        });
+
+        $('.collapse').on('hide.bs.collapse', function (e) {
+           $(e.target).parent().find("a").removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
+</script>
