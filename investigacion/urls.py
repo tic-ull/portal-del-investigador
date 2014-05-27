@@ -18,8 +18,10 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
-    url(r'^investigacion/faq/', TemplateView.as_view(
+    url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq.html'), name='faq'),
+    url(r'^investigacion/faq/(?P<id>\d+)/$', TemplateView.as_view(
+        template_name='core/question_faq.html'), name='question_faq'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
 )
 
