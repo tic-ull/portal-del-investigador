@@ -10,31 +10,7 @@
         </div>
     {% endif %}
     <div class="row">
-        {% if cvn %}
-            <div class="col-md-6">
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <th><strong>Estado</strong></th>
-                        {% if cvn_status == "Actualizado" %}
-                            <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
-                        {% else %}
-                            <td class="alert alert-danger align-center"><b>{{ cvn_status }}</b></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th><strong>Fecha del Documento</strong></th>
-                        <td align='center'>{{ cvn.fecha_cvn }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan='2' align='center'>
-                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+
         <div class="col-md-6">
             <div class="well" align="center">
                 {% if message %}
@@ -63,6 +39,33 @@
                  </div>
             </div>
         </div>
+
+        {% if cvn %}
+            <div class="col-md-6">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th><strong>Estado</strong></th>
+                        {% if cvn_status == "Actualizado" %}
+                            <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
+                        {% else %}
+                            <td class="alert alert-danger align-center"><b>{{ cvn_status }}</b></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th><strong>Fecha del Documento</strong></th>
+                        <td align='center'>{{ cvn.fecha_cvn }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan='2' align='center'>
+                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
     </div>
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
