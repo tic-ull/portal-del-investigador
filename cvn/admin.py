@@ -44,20 +44,24 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    search_fields = ('titulo',
-                     'usuario__nombre',
-                     'usuario__primer_apellido',
-                     'usuario__segundo_apellido',
-                     'usuario__documento',)
+    search_fields = (
+        'titulo',
+        'user_profile__user__username',
+        'user_profile__documento',
+        'user_profile__user__first_name',
+        'user_profile__user__last_name'
+    )
     ordering = ('created_at',)
 
 
 class ProyectoConvenioAdmin(admin.ModelAdmin):
-    search_fields = ('denominacion_del_proyecto',
-                     'usuario__nombre',
-                     'usuario__primer_apellido',
-                     'usuario__segundo_apellido',
-                     'usuario__documento',)
+    search_fields = (
+        'denominacion_del_proyecto',
+        'user_profile__user__username',
+        'user_profile__documento',
+        'user_profile__user__first_name',
+        'user_profile__user__last_name'
+    )
     ordering = ('created_at',)
 
 

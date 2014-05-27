@@ -6,11 +6,7 @@
     {% endblock breadcrumb %}
 {% endblock breadcrumb_app %}
 
-{% block internal_links %}
-    <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> Inicio</a></li>
-    <li><a href="{% url 'faq' %}"><i class="fa fa-question"></i> FAQ</a></li>
-{% endblock internal_links %}
+{% block navbar_links %}
+    <li><a href="https://cvn.fecyt.es/editor/" target="_blank"><i class="fa fa-external-link"></i> Editor de CVN de la FECYT</a></li>
+{% endblock navbar_links %}
 
-{% block external_links %}
-    <li><a href="https://cvn.fecyt.es/editor/#HOME" target="_blank"><i class="fa fa-globe"></i> Editor de CVN de la FECYT</a></li>
-{% endblock external_links %}
