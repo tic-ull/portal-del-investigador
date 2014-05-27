@@ -86,6 +86,9 @@
                 </div>
                 <div class="collapse navbar-collapse navbar-app-collapse">
                     <ul class="nav navbar-nav navbar-right">
+                        {% block navbar_links %}
+                        
+                        {% endblock navbar_links %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> Ayuda y soporte <b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -424,6 +427,7 @@
                                     </li>
                                     <li class="divider"></li>
                                     {% if not user.is_anonymous %}
+                                        <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> Inicio</a></li>
                                         <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> Gestionar CVN</a></li>
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Salir</a></li>
                                     {% else %}
@@ -432,7 +436,7 @@
                                 </ul>
                             </div>
                         </div>
-
+                        {% comment %}
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-bars"></i> Menú principal</h3>
@@ -455,7 +459,8 @@
                                 </ul>
                             </div>
                         </div>
-{% comment %}
+                        {% endcomment %}
+                        {% comment %}
                         <div class="panel panel-default panel-ull color-336699">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-file"></i> Título de bloque</h3>
@@ -472,7 +477,7 @@
                                 </ul>
                             </div>
                         </div>
-{% endcomment %}
+                        {% endcomment %}
                         {% if user.is_staff %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
@@ -480,9 +485,9 @@
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{% url 'admin:index' %}">Panel de administración</a></li>
-                                    <li><a href="{{ old_portal }}/cvnstats/">Estadísticas</a></li>
-                                    <li><a href="{% url 'ull_report' %}"> Informe ULL</a></li>
+                                    <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> Panel de administración</a></li>
+                                    <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> Estadísticas</a></li>
+                                    <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> Informe ULL</a></li>
                                 </ul>
                             </div>
                         </div>
