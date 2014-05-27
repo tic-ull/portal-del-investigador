@@ -9,7 +9,6 @@
             Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
         </div>
     {% endif %}
-    <!-- Tabla de estado del CVN -->
     <div class="row">
         {% if cvn %}
             <div class="col-md-6">
@@ -36,16 +35,15 @@
                 </table>
             </div>
         {% endif %}
-
         <div class="col-md-6">
             <div class="well" align="center">
                 {% if message %}
-                    <div class="alert alert-success">
+                    <div id="hideme" class="alert alert-success">
                         {{ message }}
                     </div>
                 {% endif %}
                 {% if form.errors %}
-                    <div class="alert  alert-danger">
+                    <div id='hideme' class="alert  alert-danger">
                         {% for field in form %}
                             {{ field.errors }}
                         {% endfor %}
@@ -66,16 +64,14 @@
             </div>
         </div>
     </div>
-
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
-
     <script>
         $('#loading-btn').click(function () {
+            document.getElementById('hideme').style.display = 'none'
             var btn = $(this)
             btn.button('loading')
         });
     </script>
-
 {% endblock main %}
