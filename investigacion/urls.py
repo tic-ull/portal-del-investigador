@@ -18,12 +18,11 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
-    # BORRAR:
-    url(r'^investigacion2', TemplateView.as_view(
-        template_name='cvn/ccti.html.bak')),
-    url(r'^investigacion3', TemplateView.as_view(
-        template_name='core/base.html')),
 )
-
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)
+    if 'rosetta' in st.INSTALLED_APPS:
+        urlpatterns += patterns(
+            '',
+            url(r'^rosetta/', include('rosetta.urls')),
+        )

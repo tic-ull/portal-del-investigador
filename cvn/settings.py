@@ -152,5 +152,7 @@ class CVNStatus(Enum):
 CVN_STATUS = (
     (CVNStatus.UPDATED, u'Actualizado'),
     (CVNStatus.EXPIRED, u'Caducado'),
-    (CVNStatus.INVALID_IDENTITY, u'NIF/NIE incorrecto'),
+    (CVNStatus.INVALID_IDENTITY, u'NIF/NIE Incorrecto'),
 )
+
+EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'

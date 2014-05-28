@@ -23,6 +23,18 @@ ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
 
+LANGUAGES = (
+    ('en', 'English'),
+)
+
+USE_I18N = True
+USE_L10N = True
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'cvn/locale'),
+)
+
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = []
@@ -37,7 +49,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    # 'django.contrib.sites',
+    'django.contrib.sites',  # Flatpages
+    'django.contrib.flatpages',
+    'tinymce',  # Flatpages tinymce
     'south',
     'core',
     'cvn',
@@ -61,16 +75,22 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'crequest.middleware.CrequestMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', )
+    INSTALLED_APPS += ('debug_toolbar', 'rosetta')
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
 AUTHENTICATION_BACKENDS = (
     'core.backends.CASBackend',
 )
+
+
+# Set ID for flatpages
+SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
+
 
 # Authentication CAS - ULL
 
@@ -237,6 +257,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     "core.context_processors.extra_info",
+    "cvn.context_processors.extra_info",
 )
 
 TEMPLATE_LOADERS = (
@@ -253,8 +274,6 @@ BASE_URL = 'http://www.ull.es/investigacion'
 
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
-# ---------------------------------------------------------- #
-
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
@@ -262,7 +281,16 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# ---------------------------------------------------------- #
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table, spellchecker, paste, searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+}
+
+TINYMCE_SPELLCHECKER = True
+
+TINYMCE_COMPRESSOR = True
 
 try:
     from settings_local import *

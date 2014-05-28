@@ -21,3 +21,5 @@ factory-boy
 coverage
 django-coverage
 enum
+django-rosetta
+django-tinymce

@@ -1,0 +1,25 @@
+{% extends 'cvn/base.html' %}
+
+{% load staticfiles %}
+
+{% block main %}
+    <h1 class='page-header'><a name='start'></a> FAQ</h1>
+    {% load flatpages %}
+    {% get_flatpages as flatpages %}
+    <ul>
+        {% for page in flatpages %}
+            <li>
+                <strong><a href='#{{page.id}}'>{{page.title}}</a></strong>
+                <br>
+            </li>
+        {% endfor %}
+        <br>
+        {% for page in flatpages %}
+                <h1 class='page-header'><a name="{{page.id}}">{{ page.title }}</a></h1>
+                {{ page.content|safe }}
+                <p align="right">
+                    <a href="#start">[<i class="fa fa-chevron-up">]</i></a>
+                </p>
+        {% endfor %}
+    </ul>
+{% endblock %}

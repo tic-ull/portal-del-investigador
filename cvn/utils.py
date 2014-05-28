@@ -1,8 +1,11 @@
 # -*- encondig: UTF-8 -*-
 
-from django.core.exceptions import ObjectDoesNotExist
 from cvn import settings as stCVN
 from cvn.models import Articulo, Capitulo, Libro
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
+from lxml import etree
+from parser_helpers import parse_nif
 
 
 def scientific_production_to_context(user_profile, context):
@@ -27,6 +30,17 @@ def cvn_to_context(user, context):
     try:
         context['cvn'] = user.cvn
         context['cvn_status'] = stCVN.CVN_STATUS[user.cvn.status][1]
+        if user.cvn.status == stCVN.CVNStatus.INVALID_IDENTITY:
+            if user.cvn.xml_file.closed:
+                user.cvn.xml_file.open()
+            xml_tree = etree.parse(user.cvn.xml_file)
+            user.cvn.xml_file.seek(0)
+            nif = parse_nif(xml_tree)
+            user.cvn.xml_file.close()
+            if nif is not '':
+                context['nif_invalid'] = nif
+            else:
+                context['nif_invalid'] = _(u'Desconocido')
     except ObjectDoesNotExist:
         return
 
