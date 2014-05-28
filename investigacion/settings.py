@@ -25,6 +25,7 @@ ADMINS = (
 
 LANGUAGES = (
     ('en', 'English'),
+    ('es', 'Español'),
 )
 
 USE_I18N = True
@@ -74,6 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
@@ -137,7 +139,7 @@ DATABASES = {
 }
 
 # Internationalization
-LANGUAGE_CODE = 'es-ES'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'Atlantic/Canary'
 

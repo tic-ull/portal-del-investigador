@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-28 09:50+0100\n"
-"PO-Revision-Date: 2014-05-28 09:50-0102\n"
+"POT-Creation-Date: 2014-05-28 14:10+0100\n"
+"PO-Revision-Date: 2014-05-28 14:11-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -42,54 +42,58 @@ msgid "Portal del Investigador"
 msgstr "Researcher Portal"
 
 #: templates/core/base.html:94
+msgid "Seleccionar idioma"
+msgstr "Select language"
+
+#: templates/core/base.html:102
 msgid "Ayuda y soporte"
 msgstr "Help and support"
 
-#: templates/core/base.html:99
+#: templates/core/base.html:107
 msgid "Correo electrónico"
 msgstr "e-mail"
 
-#: templates/core/base.html:109
+#: templates/core/base.html:117
 msgid "Cerrar sesión"
 msgstr "Logout"
 
-#: templates/core/base.html:111 templates/core/base.html.py:435
+#: templates/core/base.html:119 templates/core/base.html.py:443
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/core/base.html:416
+#: templates/core/base.html:424
 msgid "Perfil de usuario"
 msgstr "User profile"
 
-#: templates/core/base.html:431
+#: templates/core/base.html:439
 msgid "Inicio"
 msgstr "Home"
 
-#: templates/core/base.html:432
+#: templates/core/base.html:440
 msgid "Gestionar CVN"
 msgstr "Manage CVN"
 
-#: templates/core/base.html:433
+#: templates/core/base.html:441
 msgid "Salir"
 msgstr "Exit"
 
-#: templates/core/base.html:487
+#: templates/core/base.html:495
 msgid "Administración"
 msgstr "Administration"
 
-#: templates/core/base.html:491
+#: templates/core/base.html:499
 msgid "Panel de administración"
 msgstr "Admin panel"
 
-#: templates/core/base.html:492
+#: templates/core/base.html:500
 msgid "Estadísticas"
 msgstr "Statistics"
 
-#: templates/core/base.html:493
+#: templates/core/base.html:501
 msgid "Informe ULL"
 msgstr "ULL report"
 
-#: templates/core/base.html:508
+#: templates/core/base.html:516
 msgid "Teléfono"
 msgstr "Phone number"
 
