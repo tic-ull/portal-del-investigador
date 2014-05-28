@@ -52,5 +52,5 @@ def isdigit(obj):
         return False
 
 
- def noneToZero(value):
+def noneToZero(value):
     return value if value is not None else 0
