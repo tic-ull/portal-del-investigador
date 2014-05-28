@@ -4,75 +4,94 @@
 
 {% block main %}
     <h1 class="page-header">Currículum Vítae Normalizado (CVN) </h1>
-    {% if not cvn or cvn.status == CVNStatus.EXPIRED %}
-        <div class="alert alert-danger">
-            Debe introducir un <i>Currículum Vítae Normalizado</i> con formato <i>FECYT</i>
-        </div>
-    {% endif %}
     <div class="row">
 
         <div class="col-md-6">
-            <div class="well" align="center">
-                {% if message %}
-                    <div id="hideme" class="alert alert-success">
-                        {{ message }}
+            <div class="section">
+                <ul class="nav nav-tabs header">
+                    <li class="active">Actualización del CVN</li>
+                </ul>
+                <div class="content">
+                    <div class="well">
+                        {% if message %}
+                            <div id="hideme" class="alert alert-success">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                        {% if form.errors %}
+                            <div id='hideme' class="alert  alert-danger">
+                                {% for field in form %}
+                                    {{ field.errors }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div>
+                            <form action="" method='post'
+                                {% if form.is_multipart %} 
+                                    enctype="multipart/form-data"
+                                {% endif %}>{% csrf_token %}
+                                {% for field in form.visible_fields %}
+                                    {{ field }}
+                                {% endfor %}
+                                <br>
+                                <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-block btn-ms'> Subir un nuevo CVN</button>
+                            </form>
+                        </div>
                     </div>
-                {% endif %}
-                {% if form.errors %}
-                    <div id='hideme' class="alert  alert-danger">
-                        {% for field in form %}
-                            {{ field.errors }}
-                        {% endfor %}
+                    <div class="alert alert-info">
+                        Puede crear su CVN desde el <a href={{ EDITOR_FECYT }} class="alert-link" target="_blank">Editor de la FECYT</a>
                     </div>
-                {% endif %}
-                <div>
-                    <form action="" method='post'
-                        {% if form.is_multipart %} 
-                            enctype="multipart/form-data"
-                        {% endif %}>{% csrf_token %}
-                        {% for field in form.visible_fields %}
-                            {{ field }}
-                        {% endfor %}
-                        <br>
-                        <button type="submit" id='loading-btn' data-loading-text=' Cargando...' class='fa fa-upload btn btn-primary btn-ms'> Subir</button>
-                    </form>
-                 </div>
+                </div>
             </div>
         </div>
 
         {% if cvn %}
             <div class="col-md-6">
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <th><strong>Estado</strong></th>
-                        {% if cvn_status == "Actualizado" %}
-                            <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
-                        {% else %}
-                            <td class="alert alert-danger align-center"><b>{{ cvn_status }}</b></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th><strong>Fecha del Documento</strong></th>
-                        <td align='center'>{{ cvn.fecha_cvn }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan='2' align='center'>
-                            <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-ms' role='button'> Descargar CVN</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="section">
+                    <ul class="nav nav-tabs header">
+                        <li class="active">Información del CVN</li>
+                    </ul>
+                    <div class="content">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th style="vertical-align: middle;"><strong>Estado</strong></th>
+                                {% if cvn_status == "Actualizado" %}
+                                    <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
+                                {% else %}
+                                    <td class="alert alert-danger align-center">
+                                        <b>{{ cvn_status }}</b>
+                                        {% if cvn_status == "NIF/NIE Incorrecto" %}
+                                            <br>
+                                            {{ user.profile.documento }} - {{ nif_invalid }}
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            <tr>
+                                <th><strong>Fecha del Documento</strong></th>
+                                <td align='center'>{{ cvn.fecha_cvn }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan='2' align='center'>
+                                    <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-block btn-ms' role='button'> Descargar una copia de mi CVN</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         {% endif %}
-
     </div>
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
     <script>
         $('#loading-btn').click(function () {
-            document.getElementById('hideme').style.display = 'none'
+            if (document.getElementById('hideme')) {
+                document.getElementById('hideme').style.display = 'none'
+            }
             var btn = $(this)
             btn.button('loading')
         });
