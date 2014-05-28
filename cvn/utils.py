@@ -3,6 +3,7 @@
 from cvn import settings as stCVN
 from cvn.models import Articulo, Capitulo, Libro
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
 from lxml import etree
 from parser_helpers import parse_nif
 
@@ -39,7 +40,7 @@ def cvn_to_context(user, context):
             if nif is not '':
                 context['nif_invalid'] = nif
             else:
-                context['nif_invalid'] = u'Desconocido'
+                context['nif_invalid'] = _(u'Desconocido')
     except ObjectDoesNotExist:
         return
 
@@ -51,5 +52,5 @@ def isdigit(obj):
         return False
 
 
-def noneToZero(value):
+ def noneToZero(value):
     return value if value is not None else 0
