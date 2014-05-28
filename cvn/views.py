@@ -46,3 +46,24 @@ def ull_report(request):
     userULL = User.objects.get(username='GesInv-ULL')
     scientific_production_to_context(userULL.profile, context)
     return render(request, 'cvn/ull_report.html', context)
+
+
+@login_required
+@staff_member_required
+def stats_report(request):
+    # Access to data in memory, cache...
+    context = {}
+    context['departmentStats'] = [{'numCVNupdate': 0,
+                                   'cvnPercentUpdated': 35,
+                                   'numMembers': 27,
+                                   'departamento': u'ANATOMIA, ANAT.\
+                                   PATOLÓGICA E HISTOLOGÍA'},
+                                  {'numCVNupdate': 0,
+                                   'cvnPercentUpdated': 80,
+                                   'numMembers': 20,
+                                   'departamento': 'ANÁLISIS ECONÓMICO'},
+                                  {'numCVNupdate': 0,
+                                   'cvnPercentUpdated': 10,
+                                   'numMembers': 43,
+                                   'departamento': 'ANÁLISIS MATEMÁTICO'}]
+    return render(request, 'cvn/stats_report.html', context)
