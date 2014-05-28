@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-26 11:17+0100\n"
-"PO-Revision-Date: 2014-05-26 11:18-0102\n"
+"POT-Creation-Date: 2014-05-28 09:50+0100\n"
+"PO-Revision-Date: 2014-05-28 09:51-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,40 +22,36 @@ msgid "CVN actualizado con éxito."
 msgstr "CVN updated successfully."
 
 #: templates/cvn/base.html:11
-msgid "Inicio"
-msgstr "Home"
+msgid "Editor de CVN de la FECYT"
+msgstr "FECYT's CVN Editor"
 
-#: templates/cvn/base.html:15
-msgid "Acceso a Tematai"
-msgstr "Access Tematai"
-
-#: templates/cvn/base.html:16
-msgid "Acceso al editor del FECYT"
-msgstr "Access FECYT's editor"
+#: templates/cvn/index.html:7
+msgid "Currículum Vítae Normalizado (CVN)"
+msgstr ""
 
 #: templates/cvn/index.html:10
 msgid "Debe introducir un Currículum Vítae Normalizado con formato FECYT"
 msgstr "You must upload a CVN in FECYT format"
 
-#: templates/cvn/index.html:20
-msgid "Estado"
-msgstr "Status"
-
-#: templates/cvn/index.html:28
-msgid "Fecha del Documento"
-msgstr "Document date"
-
-#: templates/cvn/index.html:33
-msgid "Descargar CVN"
-msgstr "Download CVN"
-
-#: templates/cvn/index.html:64
+#: templates/cvn/index.html:38
 msgid "Cargando"
 msgstr "Loading"
 
-#: templates/cvn/index.html:64
+#: templates/cvn/index.html:38
 msgid "Subir"
 msgstr "Upload"
+
+#: templates/cvn/index.html:49
+msgid "Estado"
+msgstr "Status"
+
+#: templates/cvn/index.html:57
+msgid "Fecha del Documento"
+msgstr "Document date"
+
+#: templates/cvn/index.html:62
+msgid "Descargar CVN"
+msgstr "Download CVN"
 
 #: templates/cvn/ull_report.html:7
 msgid "Informe ULL"
@@ -101,9 +97,9 @@ msgstr ""
 msgid "No dispone de Congresos"
 msgstr "You don't have any Congress"
 
-#: templates/cvn/partials/producciones_chart.html:74
-#: templates/cvn/partials/producciones_chart.html:123
-#: templates/cvn/partials/producciones_chart.html:166
+#: templates/cvn/partials/producciones_chart.html:77
+#: templates/cvn/partials/producciones_chart.html:126
+#: templates/cvn/partials/producciones_chart.html:169
 msgid "Fecha"
 msgstr "Date"
 
@@ -186,3 +182,12 @@ msgstr ""
 #: templates/cvn/partials/producciones_chart.html:310
 msgid "No dispone de Tesis Doctorales"
 msgstr ""
+
+#~ msgid "Inicio"
+#~ msgstr "Home"
+
+#~ msgid "Acceso a Tematai"
+#~ msgstr "Access Tematai"
+
+#~ msgid "Acceso al editor del FECYT"
+#~ msgstr "Access FECYT's editor"

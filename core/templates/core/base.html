@@ -486,15 +486,9 @@
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-<<<<<<< HEAD
-                                    <li><a href="{% url 'admin:index' %}">{% trans "Panel de administración" %}</a></li>
-                                    <li><a href="#">{% trans "Estadísticas" %}</a></li>
-                                    <li><a href="{% url 'ull_report' %}">{% trans "Informe ULL" %}</a></li>
-=======
-                                    <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> Panel de administración</a></li>
-                                    <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> Estadísticas</a></li>
-                                    <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> Informe ULL</a></li>
->>>>>>> develop
+                                    <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas" %}</a></li>
+                                    <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
                                 </ul>
                             </div>
                         </div>

@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-26 11:05+0100\n"
-"PO-Revision-Date: 2014-05-26 11:07-0102\n"
+"POT-Creation-Date: 2014-05-28 09:50+0100\n"
+"PO-Revision-Date: 2014-05-28 09:50-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,54 +41,57 @@ msgstr "Message"
 msgid "Portal del Investigador"
 msgstr "Researcher Portal"
 
-#: templates/core/base.html:91
+#: templates/core/base.html:94
 msgid "Ayuda y soporte"
 msgstr "Help and support"
 
-#: templates/core/base.html:96
+#: templates/core/base.html:99
 msgid "Correo electrónico"
 msgstr "e-mail"
 
-#: templates/core/base.html:106
+#: templates/core/base.html:109
 msgid "Cerrar sesión"
 msgstr "Logout"
 
-#: templates/core/base.html:108 templates/core/base.html.py:431
+#: templates/core/base.html:111 templates/core/base.html.py:435
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/core/base.html:413
+#: templates/core/base.html:416
 msgid "Perfil de usuario"
 msgstr "User profile"
 
-#: templates/core/base.html:428
+#: templates/core/base.html:431
+msgid "Inicio"
+msgstr "Home"
+
+#: templates/core/base.html:432
 msgid "Gestionar CVN"
 msgstr "Manage CVN"
 
-#: templates/core/base.html:429
+#: templates/core/base.html:433
 msgid "Salir"
 msgstr "Exit"
 
-#: templates/core/base.html:439
-msgid "Menú principal"
-msgstr "Main menu"
-
-#: templates/core/base.html:480
+#: templates/core/base.html:487
 msgid "Administración"
 msgstr "Administration"
 
-#: templates/core/base.html:484
+#: templates/core/base.html:491
 msgid "Panel de administración"
 msgstr "Admin panel"
 
-#: templates/core/base.html:485
+#: templates/core/base.html:492
 msgid "Estadísticas"
 msgstr "Statistics"
 
-#: templates/core/base.html:486
+#: templates/core/base.html:493
 msgid "Informe ULL"
 msgstr "ULL report"
 
-#: templates/core/base.html:501
+#: templates/core/base.html:508
 msgid "Teléfono"
 msgstr "Phone number"
+
+#~ msgid "Menú principal"
+#~ msgstr "Main menu"
