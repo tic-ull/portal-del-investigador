@@ -1,17 +1,46 @@
 {% extends 'cvn/base.html' %}
-{% load i18n %}
 
+{% load i18n %}
 {% load staticfiles %}
 
 {% block main %}
-    <h1 class="page-header">Currículum Vítae Normalizado (CVN) </h1>
+    <h1 class="page-header">{%trans "Currículum Vítae Normalizado (CVN)" %}</h1>
     {% if not cvn or cvn.status == CVNStatus.EXPIRED %}
         <div class="alert alert-danger">
             {% trans "Debe introducir un Currículum Vítae Normalizado con formato FECYT" %}
         </div>
     {% endif %}
-    <!-- Tabla de estado del CVN -->
     <div class="row">
+
+        <div class="col-md-6">
+            <div class="well" align="center">
+                {% if message %}
+                    <div id="hideme" class="alert alert-success">
+                        {{ message }}
+                    </div>
+                {% endif %}
+                {% if form.errors %}
+                    <div id='hideme' class="alert  alert-danger">
+                        {% for field in form %}
+                            {{ field.errors }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <div>
+                    <form action="" method='post'
+                        {% if form.is_multipart %} 
+                            enctype="multipart/form-data"
+                        {% endif %}>{% csrf_token %}
+                        {% for field in form.visible_fields %}
+                            {{ field }}
+                        {% endfor %}
+                        <br>
+                        <button type="submit" id='loading-btn' data-loading-text=' {% trans "Cargando" %}...' class='fa fa-upload btn btn-primary btn-ms'> {% trans "Subir" %}</button>
+                    </form>
+                 </div>
+            </div>
+        </div>
+
         {% if cvn %}
             <div class="col-md-6">
                 <table class="table table-bordered">
@@ -38,51 +67,15 @@
             </div>
         {% endif %}
 
-        <div class="col-md-6">
-            <div class="well" align="center">
-                {% if message %}
-                    <div class="alert alert-success">
-                        {{ message }}
-                    </div>
-                {% endif %}
-                {% if form.errors %}
-                    <div class="alert  alert-danger">
-                        {% for field in form %}
-                            {{ field.errors }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                <div>
-                    <form action="" method='post'
-                        {% if form.is_multipart %} 
-                            enctype="multipart/form-data"
-                        {% endif %}>{% csrf_token %}
-                        {% for field in form.visible_fields %}
-                            {{ field }}
-                        {% endfor %}
-                        <br>
-                        <button type="submit" id='loading-btn' data-loading-text=' {% trans "Cargando" %}...' class='fa fa-upload btn btn-primary btn-ms'> {% trans "Subir" %}</button>
-                        <script>
-                            $('#loading-btn').click(function () {
-                                var btn = $(this)
-                                btn.button('loading')
-                            });
-                        </script>
-                    </form>
-                 </div>
-            </div>
-        </div>
     </div>
-
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
-
     <script>
         $('#loading-btn').click(function () {
+            document.getElementById('hideme').style.display = 'none'
             var btn = $(this)
             btn.button('loading')
         });
     </script>
-
 {% endblock main %}

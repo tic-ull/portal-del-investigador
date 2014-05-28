@@ -5,11 +5,9 @@ from cvn.models import (CVN, Congreso, Publicacion, Convenio, Proyecto,
                         TesisDoctoral, Articulo)
 from cvn.parser_helpers import parse_produccion_type
 from core.tests.helpers import init, clean
-from django.core.files.base import ContentFile
 from django.test import TestCase
 from core.tests.factories import UserFactory
 from lxml import etree
-from django.core.files.uploadedfile import SimpleUploadedFile
 from cvn.forms import UploadCVNForm
 import datetime
 import os
@@ -87,7 +85,9 @@ class CVNTestCase(TestCase):
                                  datetime.date(2014, 04, 05))
                 self.assertEqual(data.ciudad_de_realizacion,
                                  u'Ciudad de realización')
-                self.assertEqual(data.autores, u'STIC')
+                self.assertEqual(data.autores,
+                                 u'Nombre Primer Apellido '
+                                 'Segundo Apellido (STIC)')
                 self.assertEqual(data.ambito, u'Autonómica')
 
     def test_check_read_data_publication(self):
@@ -102,15 +102,21 @@ class CVNTestCase(TestCase):
                 if data.tipo_de_produccion == 'Articulo':
                     self.assertEqual(data.titulo, u'TÍTULO')
                     self.assertEqual(data.nombre_publicacion, u'NOMBRE')
-                    self.assertEqual(data.autores, u'STIC; STIC2')
+                    self.assertEqual(data.autores,
+                                     u'NOMBRE APELLIDO1 APELLIDO2 (STIC); '
+                                     'NOMBRE2 APELLIDO12 APELLIDO22 (STIC2)')
                 else:
                     self.assertEqual(data.titulo, u'Título de la publicación')
                     self.assertEqual(data.nombre_publicacion,
                                      u'Nombre de la publicación')
                     if data.tipo_de_produccion == 'Libro':
-                        self.assertEqual(data.autores, u'STIC')
+                        self.assertEqual(data.autores,
+                                         u'Nombre Primer Apellido '
+                                         'Segundo Apellido (STIC)')
                     else:
-                        self.assertEqual(data.autores, u'Firma')
+                        self.assertEqual(data.autores,
+                                         u'Nombre Primer Apellido '
+                                         'Segundo Apellido (Firma)')
                 self.assertEqual(data.volumen, u'1')
                 self.assertEqual(data.numero, u'1')
                 self.assertEqual(data.pagina_inicial, u'1')
@@ -142,10 +148,14 @@ class CVNTestCase(TestCase):
                 else:
                     self.assertEqual(data.duracion, 396)
                 if tipo == 'Proyecto':
-                    self.assertEqual(data.autores, u'Firma')
+                    self.assertEqual(data.autores,
+                                     u'Nombre Primer Apellido '
+                                     'Segundo Apellido (Firma)')
                     self.assertEqual(data.ambito, u'Internacional no UE')
                 else:
-                    self.assertEqual(data.autores, u'STIC')
+                    self.assertEqual(data.autores,
+                                     u'Nombre Primer Apellido '
+                                     'Segundo Apellido (STIC)')
                     self.assertEqual(data.ambito, u'Autonómica')
                 self.assertEqual(data.cod_segun_financiadora,
                                  u'Cód. según financiadora')
@@ -168,8 +178,12 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data.titulo, u'Título del trabajo')
                 self.assertEqual(data.universidad_que_titula,
                                  u'Universidad que titula')
-                self.assertEqual(data.autor, u'Firma')
-                self.assertEqual(data.codirector, u'Firma')
+                self.assertEqual(data.autor,
+                                 u'Nombre Primer Apellido '
+                                 'Segundo Apellido (Firma)')
+                self.assertEqual(data.codirector,
+                                 u'Nombre Primer Apellido '
+                                 'Segundo Apellido (Firma)')
                 self.assertEqual(data.fecha_de_lectura,
                                  datetime.date(2014, 04, 01))
 

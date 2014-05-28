@@ -105,29 +105,25 @@ def parse_authors(author_list):
     authors = ''
     for author in author_list:
         authorItem = ''
-        if (author.find("GivenName/Item") and
-           author.find("GivenName/Item").text):
-            authorItem = unicode(author.find(
-                "GivenName/Item").text.strip())
-        if (author.find("FirstFamilyName/Item") and
-           author.find("FirstFamilyName/Item").text):
-            authorItem += u' ' + unicode(author.find(
-                "FirstFamilyName/Item").text.strip())
-        if (author.find("SecondFamilyName/Item") and
-           author.find("SecondFamilyName/Item").text):
-            authorItem += u' ' + unicode(
-                author.find("SecondFamilyName/Item").text.strip())
-        if author.find("Signature/Item").text:
+        author_name = author.find("GivenName/Item")
+        if author_name is not None:
+            authorItem = unicode(author_name.text.strip())
+        author_ffname = author.find("FirstFamilyName/Item")
+        if author_ffname is not None:
+            authorItem += ' ' + unicode(author_ffname.text.strip())
+        author_sfname = author.find("SecondFamilyName/Item")
+        if author_sfname is not None:
+            authorItem += ' ' + unicode(author_sfname.text.strip())
+        signature = author.find("Signature/Item")
+        if signature is not None and signature.text:
             if authorItem:
                 authors += unicode(
-                    authorItem + ' (' + author.find(
-                        "Signature/Item").text.strip() + '); ')
+                    authorItem + ' (' + signature.text.strip() + '); ')
             else:
-                authors += unicode(author.find(
-                    "Signature/Item").text.strip() + '; ')
-        else:
+                authors += unicode(signature.text.strip() + '; ')
+        elif authorItem:
             authors += authorItem + '; '
-    return authors[:-2]
+    return authors[:-2] if authors else authors
 
 
 def parse_produccion_type(xml):

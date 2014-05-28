@@ -1,14 +1,18 @@
 # -*- encoding: UTF-8 -*-
 
+from core.forms import PageForm
 from core.models import UserProfile, Log
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.contrib.flatpages.admin import FlatPageAdmin
+from django.contrib.flatpages.models import FlatPage
 
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     extra = 0
+
 
 UserAdmin.list_display = (
     'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
@@ -26,7 +30,7 @@ class LogAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request , obj=None):
+    def has_delete_permission(self, request, obj=None):
         return False
 
     def get_actions(self, request):
@@ -40,6 +44,15 @@ class LogAdmin(admin.ModelAdmin):
         return tuple(Log._meta.get_all_field_names())
 
 
+class PageAdmin(FlatPageAdmin):
+    form = PageForm
+    fieldsets = (
+        (None, {'fields': ('title', 'content')}),
+    )
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Log, LogAdmin)
+admin.site.unregister(FlatPage)
+admin.site.register(FlatPage, PageAdmin)

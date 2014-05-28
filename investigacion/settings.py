@@ -49,7 +49,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    # 'django.contrib.sites',
+    'django.contrib.sites',  # Flatpages
+    'django.contrib.flatpages',
+    'tinymce',  # Flatpages tinymce
     'south',
     'core',
     'cvn',
@@ -73,6 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.doc.XViewMiddleware',
     'crequest.middleware.CrequestMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 if DEBUG:
@@ -83,6 +86,11 @@ if DEBUG:
 AUTHENTICATION_BACKENDS = (
     'core.backends.CASBackend',
 )
+
+
+# Set ID for flatpages
+SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
+
 
 # Authentication CAS - ULL
 
@@ -265,8 +273,6 @@ BASE_URL = 'http://www.ull.es/investigacion'
 
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
-# ---------------------------------------------------------- #
-
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
@@ -274,7 +280,16 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# ---------------------------------------------------------- #
+TINYMCE_DEFAULT_CONFIG = {
+    'plugins': "table, spellchecker, paste, searchreplace",
+    'theme': "advanced",
+    'cleanup_on_startup': True,
+    'custom_undo_redo_levels': 10,
+}
+
+TINYMCE_SPELLCHECKER = True
+
+TINYMCE_COMPRESSOR = True
 
 try:
     from settings_local import *
