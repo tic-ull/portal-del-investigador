@@ -23,6 +23,18 @@ ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
 
+LANGUAGES = (
+    ('en', 'English'),
+)
+
+USE_I18N = True
+USE_L10N = True
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'cvn/locale'),
+)
+
 MANAGERS = ADMINS
 
 ALLOWED_HOSTS = []
@@ -67,7 +79,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', )
+    INSTALLED_APPS += ('debug_toolbar', 'rosetta')
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 

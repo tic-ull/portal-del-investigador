@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load i18n %}
 
 {% block breadcrumb_app %}
     <li><a href="{% url 'cvn'%}">CVN</a></li>
@@ -7,5 +8,5 @@
 {% endblock breadcrumb_app %}
 
 {% block navbar_links %}
-    <li><a href={{ EDITOR_FECYT }} target="_blank"><i class="fa fa-external-link"></i> Editor de CVN de la FECYT</a></li>
+    <li><a href={{ EDITOR_FECYT }} target="_blank"><i class="fa fa-external-link"></i> {% trans 'Editor de CVN de la FECYT' %}</a></li>
 {% endblock navbar_links %}
