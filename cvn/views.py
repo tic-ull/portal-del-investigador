@@ -8,7 +8,6 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-#from django.utils import translation
 import logging
 
 logger = logging.getLogger(__name__)
@@ -16,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def index(request):
-    #translation.activate('en')
     context = {}
     user = request.user
     form = UploadCVNForm()
