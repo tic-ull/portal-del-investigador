@@ -1,9 +1,9 @@
 {% extends 'cvn/base.html' %}
-
+{% load i18n %}
 {% load staticfiles %}
 
 {% block main %}
-    <h1 class='page-header'><a name='start'></a> FAQ</h1>
+    <h1 class='page-header'><a name='start'></a> {% trans 'FAQ' %}</h1>
     {% load flatpages %}
     {% get_flatpages as flatpages %}
     <ul>
