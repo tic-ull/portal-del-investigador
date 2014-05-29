@@ -135,7 +135,8 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
         time.sleep(2)
-        driver.find_element_by_link_text(u'Descargar CVN').click()
+        driver.find_element_by_link_text(
+            u'Descargar una copia de mi CVN').click()
         time.sleep(2)
         # Check if CVN window is open
         self.assertEqual(len(driver.window_handles), 2)
