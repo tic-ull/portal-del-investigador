@@ -35,7 +35,8 @@ class UploadCVNForm(forms.ModelForm):
         except:
             cvn_file = self.data['cvn_file']
         if cvn_file.content_type != stCVN.PDF:
-            raise forms.ValidationError(_("El CVN debe estar en formato PDF."))
+            raise forms.ValidationError(
+                _(u'El CVN debe estar en formato PDF.'))
         (self.xml, error) = FECYT.getXML(cvn_file)
         if not self.xml:
             raise forms.ValidationError(_(stCVN.ERROR_CODES[error]))
