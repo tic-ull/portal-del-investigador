@@ -9,7 +9,7 @@
         <meta name="author" content="Universidad de La Laguna">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-        <title>Universidad de La Laguna - Portal del Investigador</title>
+        <title>{% trans 'Universidad de La Laguna - Portal del Investigador' %}</title>
 
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://static.ull.es/v3/dist/img/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://static.ull.es/v3/dist/img/apple-touch-icon-114-precomposed.png">
@@ -34,31 +34,31 @@
                         <span class="sr-only">Desplegar menú de navegación</span>
                         <span class="fa fa-link fa-stack"></span>
                     </button>
-                    <a class="navbar-brand" href="http://www.ull.es/" title="Universidad de La Laguna">Universidad de La Laguna</a>
+                    <a class="navbar-brand" href="http://www.ull.es/" title="Universidad de La Laguna">{% trans 'Universidad de La Laguna' %}</a>
                 </div>
 
                 <div class="collapse navbar-collapse navbar-main-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Servicios telemáticos <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Servicios telemáticos' %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a target="_blank" title="Gestión de perfil de usuario" href="http://usuarios.ull.es"><i class="fa fa-user"></i> Gestión de perfil de usuario</a></li>
-                                <li><a target="_blank" title="Portal ULL" href="http://portal.ull.es"><i class="fa fa-folder-open"></i> Portal</a></li>
-                                <li><a target="_blank" title="Sede Electrónica" href="http://sede.ull.es"><i class="fa fa-briefcase"></i> Sede electrónica</a></li>
-                                <li><a target="_blank" title="Campus Virtual" href="http://www.campusvirtual.ull.es"><i class="fa fa-pencil"></i> Campus virtual</a></li>
-                                <li><a target="_blank" title="Correo electrónico" href="http://ull.edu.es"><i class="fa fa-envelope"></i> Correo electrónico</a></li>
-                                <li><a target="_blank" title="Disco Duro Virtual" href="http://ddv.ull.es/"><i class="fa fa-hdd-o"></i> Disco duro virtual</a></li>
-                                <li><a target="_blank" title="Biblioteca Digital" href="http://www.bbtk.ull.es/view/institucional/bbtk/Biblioteca_Digital/es"><i class="fa fa-book"></i> Biblioteca digital</a></li>
-                                <li><a target="_blank" title="Eventos" href="http://eventos.ull.es"><i class="fa fa-calendar"></i> Eventos</a></li> 
+                                <li><a target="_blank" title="Gestión de perfil de usuario" href="http://usuarios.ull.es"><i class="fa fa-user"></i> {% trans 'Gestión de perfil de usuario' %}</a></li>
+                                <li><a target="_blank" title="Portal ULL" href="http://portal.ull.es"><i class="fa fa-folder-open"></i> {% trans 'Portal' %}</a></li>
+                                <li><a target="_blank" title="Sede Electrónica" href="http://sede.ull.es"><i class="fa fa-briefcase"></i> {% trans 'Sede electrónica' %}</a></li>
+                                <li><a target="_blank" title="Campus Virtual" href="http://www.campusvirtual.ull.es"><i class="fa fa-pencil"></i> {% trans 'Campus virtual' %}</a></li>
+                                <li><a target="_blank" title="Correo electrónico" href="http://ull.edu.es"><i class="fa fa-envelope"></i> {% trans 'Correo electrónico' </a></li>
+                                <li><a target="_blank" title="Disco Duro Virtual" href="http://ddv.ull.es/"><i class="fa fa-hdd-o"></i> {% trans 'Disco duro virtual' %}</a></li>
+                                <li><a target="_blank" title="Biblioteca Digital" href="http://www.bbtk.ull.es/view/institucional/bbtk/Biblioteca_Digital/es"><i class="fa fa-book"></i> {% trans 'Biblioteca digital' %}</a></li>
+                                <li><a target="_blank" title="Eventos" href="http://eventos.ull.es"><i class="fa fa-calendar"></i> {% trans 'Eventos' %}</a></li> 
                             </ul>
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contacto <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Contacto' %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i> Página Web ULL</a></li>
-                                <li><a target="_blank" title="Formulario de contacto" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> Formulario de contacto</a></li>
-                                <li><a target="_blank" title="Teléfonos" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> Directorio telefónico</a></li>
+                                <li><a target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i> {% trans 'Página Web ULL' %}</a></li>
+                                <li><a target="_blank" title="Formulario de contacto" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> {% trans 'Formulario de contacto' %}</a></li>
+                                <li><a target="_blank" title="Teléfonos" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> {% trans 'Directorio telefónico' %}</a></li>
                                 <li class="divider"></li>
                                 <li>
                                     <ul class="rrss text-muted list-inline">
@@ -104,6 +104,8 @@
                                 <!--
                                 <li><a target="_blank" title="Portal de servicio" href="http://www.stic.ull.es/info/servicios/servicios/index.asp"><i class="fa fa-globe"></i> Portal de servicio</a></li>
                                 -->
+                                <li><a title="{% trans "FAQ" %}" href="{% url 'faq' %}"><i class="fa fa-question-circle"></i> {% trans 'Preguntas Frecuentes' %}</a></li>
+                                <li class="divider"></li>
                                 <li><a target="_blank" title="{% trans "Correo electrónico" %} sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
                                 <li><p><i class="fa fa-phone"></i> (+34) 922 31 9558</p></li>
                                 <li><p><i class="fa fa-map-marker"></i> Pabellón de Gobierno <br/>C/ Molinos de Agua, s/n. 38207 <br/>San Cristóbal de La Laguna</p></li>
@@ -511,7 +513,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <ul class="address pull-left">
-                            <li><strong>Universidad de La Laguna</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | {% trans "Teléfono" %}: (+34) 922 31 90 00/01</li>
+                            <li><strong>{% trans 'Universidad de La Laguna' %}</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | {% trans "Teléfono" %}: (+34) 922 31 90 00/01</li>
                         </ul>
                         <ul class="list-inline text-muted pull-right">
                             <li><a title="Facebook" target="_blank" href="http://www.facebook.com/universidaddelalaguna"><span class="fa fa-facebook-square"></span></a></li>

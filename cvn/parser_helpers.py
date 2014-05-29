@@ -106,13 +106,13 @@ def parse_authors(author_list):
     for author in author_list:
         authorItem = ''
         author_name = author.find("GivenName/Item")
-        if author_name is not None:
+        if author_name is not None and author_name.text:
             authorItem = unicode(author_name.text.strip())
         author_ffname = author.find("FirstFamilyName/Item")
-        if author_ffname is not None:
+        if author_ffname is not None and author_ffname.text:
             authorItem += ' ' + unicode(author_ffname.text.strip())
         author_sfname = author.find("SecondFamilyName/Item")
-        if author_sfname is not None:
+        if author_sfname is not None and author_sfname.text:
             authorItem += ' ' + unicode(author_sfname.text.strip())
         signature = author.find("Signature/Item")
         if signature is not None and signature.text:
