@@ -4,9 +4,9 @@ from django.conf import settings as st
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages.models import FlatPage
 from django.views.generic import TemplateView, RedirectView
 from django.views.generic.detail import DetailView
-from django.contrib.flatpages.models import FlatPage
 
 
 admin.autodiscover()
@@ -28,6 +28,7 @@ urlpatterns = patterns(
         name='question_faq'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
 )
+
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)
     if 'rosetta' in st.INSTALLED_APPS:
