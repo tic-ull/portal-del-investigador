@@ -91,7 +91,7 @@
                         
                         {% endblock navbar_links %}
                         <li class="dropdown">
-                            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">{% trans "Seleccionar idioma" %} <b class="caret"></b></a>
+                            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">{% trans "Cambiar Idioma" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {% for language in cp_languages %}
                                 <li><a href="{{language.url}}">{{language.name}} ({{language.code}})</a></li>
