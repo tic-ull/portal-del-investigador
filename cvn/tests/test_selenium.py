@@ -65,9 +65,11 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
 #        driver.find_element_by_id("id_cvn_file").clear()
+        driver.execute_script(
+            'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id(
             "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
-        driver.find_element_by_xpath("//button[@type='submit']").click()
+        #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
@@ -84,10 +86,11 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
         # driver.find_element_by_id("id_cvn_file").clear()
-        driver.find_element_by_id(
-            "id_cvn_file").send_keys(st.BASE_DIR +
-                                     "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")
-        driver.find_element_by_xpath("//button[@type='submit']").click()
+        driver.execute_script(
+            'document.getElementById("id_cvn_file").removeAttribute("style")')
+        driver.find_element_by_id("id_cvn_file").send_keys(
+            st.BASE_DIR + "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")
+        #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "errorlist"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
@@ -110,9 +113,11 @@ class LoginCAS(test.LiveServerTestCase):
         u.is_superuser = True
         u.save()
 #        driver.find_element_by_id("id_cvn_file").clear()
-        driver.find_element_by_id(
-            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test.pdf")
-        driver.find_element_by_xpath("//button[@type='submit']").click()
+        driver.execute_script(
+            'document.getElementById("id_cvn_file").removeAttribute("style")')
+        driver.find_element_by_id("id_cvn_file").send_keys(
+            stCVN.TEST_ROOT + "cvn/CVN-Test.pdf")
+        #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
@@ -130,9 +135,11 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_name("submit").click()
         # First upload CVN
         time.sleep(2)
-        driver.find_element_by_id(
-            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
-        driver.find_element_by_xpath("//button[@type='submit']").click()
+        driver.execute_script(
+            'document.getElementById("id_cvn_file").removeAttribute("style")')
+        driver.find_element_by_id("id_cvn_file").send_keys(
+            stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
+        #driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
         time.sleep(2)
         driver.find_element_by_link_text(
