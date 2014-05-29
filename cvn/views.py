@@ -5,6 +5,9 @@ from cvn.utils import scientific_production_to_context, cvn_to_context
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+#
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+#
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -53,17 +56,40 @@ def ull_report(request):
 def stats_report(request):
     # Access to data in memory, cache...
     context = {}
-    context['departmentStats'] = [{'numCVNupdate': 0,
-                                   'cvnPercentUpdated': 35,
-                                   'numMembers': 27,
-                                   'departamento': u'ANATOMIA, ANAT.\
-                                   PATOLÓGICA E HISTOLOGÍA'},
-                                  {'numCVNupdate': 0,
-                                   'cvnPercentUpdated': 80,
-                                   'numMembers': 20,
-                                   'departamento': 'ANÁLISIS ECONÓMICO'},
-                                  {'numCVNupdate': 0,
-                                   'cvnPercentUpdated': 10,
-                                   'numMembers': 43,
-                                   'departamento': 'ANÁLISIS MATEMÁTICO'}]
+#    context['departmentStats'] = [{'numCVNupdate': 0,
+#                                   'cvnPercentUpdated': 35,
+#                                   'numMembers': 27,
+#                                   'departamento': u'ANATOMIA, ANAT.\
+#                                   PATOLÓGICA E HISTOLOGÍA'},
+#                                  {'numCVNupdate': 0,
+#                                   'cvnPercentUpdated': 80,
+#                                   'numMembers': 20,
+#                                   'departamento': 'ANÁLISIS ECONÓMICO'},
+#                                  {'numCVNupdate': 0,
+#                                   'cvnPercentUpdated': 10,
+#                                   'numMembers': 43,
+#                                   'departamento': 'ANÁLISIS MATEMÁTICO'}]
+    departmentStats = [{'numCVNupdate': 0,
+                        'cvnPercentUpdated': 35,
+                        'numMembers': 27,
+                        'departamento': u'ANATOMIA, ANAT.\
+                        PATOLÓGICA E HISTOLOGÍA'},
+                       {'numCVNupdate': 0,
+                        'cvnPercentUpdated': 80,
+                        'numMembers': 20,
+                        'departamento': 'ANÁLISIS ECONÓMICO'},
+                       {'numCVNupdate': 0,
+                        'cvnPercentUpdated': 10,
+                        'numMembers': 43,
+                        'departamento': 'ANÁLISIS MATEMÁTICO'}]
+    # Paginator- Show 2 department per page
+    paginator = Paginator(departmentStats, 2)
+    page = request.GET.get('page')
+    try:
+        department_list = paginator.page(page)
+    except PageNotAnInteger:
+        department_list = paginator.page(1)
+    except EmptyPage:
+        department_list = paginator.page(paginator.num_pages)
+    context['departmentStats'] = department_list
     return render(request, 'cvn/stats_report.html', context)
