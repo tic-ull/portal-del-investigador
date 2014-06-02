@@ -42,7 +42,7 @@ def noneToZero(value):
     return value if value is not None else 0
 
 
-def calc_stats_department(self, members_list):
+def calc_stats_department(members_list):
     dict_department = {}
     num_cvn_update = 0
     for member in members_list:
