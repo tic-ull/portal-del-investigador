@@ -278,7 +278,7 @@ BASE_URL = 'http://www.ull.es/investigacion'
 
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
