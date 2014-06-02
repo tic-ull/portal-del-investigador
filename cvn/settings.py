@@ -154,3 +154,6 @@ CVN_STATUS = (
     (CVNStatus.EXPIRED, u'Caducado'),
     (CVNStatus.INVALID_IDENTITY, u'NIF/NIE incorrecto'),
 )
+
+# Valid percent for CVN
+PERCENT_VALID_DEPT_CVN = 80

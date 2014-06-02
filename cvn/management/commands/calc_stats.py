@@ -1,9 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.models import UserProfile
-from django.conf import settings as st
-from django.core.exceptions import ObjectDoesNotExist
+from cvn.utils import calc_stats_department
 from django.core.management.base import BaseCommand
 #import json
 import logging
@@ -29,21 +27,7 @@ class Command(BaseCommand):
             data = {}
             data['departamento'] = department['departamento']['nombre']
             data['num_members'] = len(department['members'])
-            data.update(self.calc_stats_department(department['members']))
+            data.update(calc_stats_department(department['members']))
             department_stats.append(data)
+        # Update data shared in memory
         print department_stats
-
-    def calc_stats_department(self, members_list):
-        dict_department = {}
-        num_cvn_update = 0
-        for member in members_list:
-            try:
-                user = UserProfile.objects.get(rrhh_code=member)
-                if stCVN.CVN_STATUS[user.cvn.status][0] == 0:
-                    num_cvn_update += 1
-            except ObjectDoesNotExist:
-                pass
-        dict_department['num_cvn_update'] = num_cvn_update
-        dict_department['cvn_percent_updated'] = ((num_cvn_update * 100.0) /
-                                                  len(members_list))
-        return dict_department

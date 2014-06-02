@@ -2,7 +2,7 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from cvn import settings as stCVN
-from cvn.models import Articulo, Capitulo, Libro
+from cvn.models import Articulo, Capitulo, Libro, UserProfile
 
 
 def scientific_production_to_context(user_profile, context):
@@ -40,3 +40,19 @@ def isdigit(obj):
 
 def noneToZero(value):
     return value if value is not None else 0
+
+
+def calc_stats_department(self, members_list):
+    dict_department = {}
+    num_cvn_update = 0
+    for member in members_list:
+        try:
+            user = UserProfile.objects.get(rrhh_code=member)
+            if stCVN.CVN_STATUS[user.cvn.status][0] == 0:
+                num_cvn_update += 1
+        except ObjectDoesNotExist:
+            pass
+    dict_department['num_cvn_update'] = num_cvn_update
+    dict_department['cvn_percent_updated'] = ((num_cvn_update * 100.0) /
+                                              len(members_list))
+    return dict_department

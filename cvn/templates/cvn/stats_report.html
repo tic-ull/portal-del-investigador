@@ -1,60 +1,66 @@
 {% extends 'cvn/base.html' %}
 
+{% load i18n %}
+
 {% load staticfiles %}
 
  {%block breadcrumb %}	
-    <li><a href='{% url 'stats_report' %}'>Estadísticas</a></li>
+    <li><a href='{% url 'stats_report' %}'>{% trans 'Estadísticas' %}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
 	<h1 class="page-header">Estadísticas CVN por Departamentos</h1>
-    <table class="table table-bordered table-striped">
+
+    <table class="table table-striped table-condensed">
         <thead>
-            <tr align="center">
-                <th>Departamento</th>
-                <th>Número de miembros</th>
-                <th>CVN actualizados</th>
-                <th>Porcentaje</th>
-                <th>Gráfica</th>
+            <tr>
+                <th>{% trans 'Departamento' %} </th>
+                <th>{% trans 'Número de miembros' %}</th>
+                <th>{% trans 'CVN actualizados' %}</th>
+                <th>{% trans 'Gráfica' %}</th>
             </tr>
         </thead>
-    {% for department in departmentStats %}
         <tbody>
-            <tr align="center">
+    {% for department in departmentStats %}
+            <tr>
                 <td>{{ department.departamento }}</td>
                 <td>{{ department.numMembers }}</td>
                 <td>{{ department.numCVNupdate }}</td>
-                <td>{{ department.cvnPercentUpdated }}%</td>
                 <td>
-                    <div class="progress">
-                        {% if department.cvnPercentUpdated >= 80 %}
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" style="width: {{ department.cvnPercentUpdated }}%;">
-                        {% else %}
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" style="width: {{ department.cvnPercentUpdated }}%;"> <!-- min-width:25px;"  -->
-                        {% endif %}
+                    <div class="progress text-center">
+                        <div class="progress-bar 
+                        {% if department.cvnPercentUpdated >= validPercenCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
+                            role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" 
+                            style="width: {{ department.cvnPercentUpdated }}%;">
                         </div>
-                        
+                        {{ department.cvnPercentUpdated }}% 
                     </div>
                 </td>
             </tr>
-        </tbody>
     {% endfor %}
+        </tbody>
     </table>
-
+{% comment %}
 <div class="pagination">
     <span class="step-links">
+{% endcomment %}
+<!-- STYLE 1 -->
+<ul class="pager">
         {% if departmentStats.has_previous %}
-            <a href="?page={{ departmentStats.previous_page_number }}">previous</a>
+            <li><a href="?page={{ departmentStats.previous_page_number }}">{% trans 'Anterior' %}</a></li>
         {% endif %}
 
         <span class="current">
-            Page {{ departmentStats.number }} of {{ departmentStats.paginator.num_pages }}.
+            {% trans 'Página' %} {{ departmentStats.number }} {% trans 'de' %} {{ departmentStats.paginator.num_pages }}.
         </span>
 
         {% if departmentStats.has_next %}
-            <a href="?page={{ departmentStats.next_page_number }}">next</a>
+            <li><a href="?page={{ departmentStats.next_page_number }}">{% trans 'Siguiente' %}</a></li>
         {% endif %}
+</ul>
+{% comment %}
     </span>
 </div>
+{% endcomment %}
 
 {% endblock main %}
