@@ -1,16 +1,16 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-02 10:42+0100\n"
-"PO-Revision-Date: 2014-06-02 10:34-0102\n"
+"POT-Creation-Date: 2014-06-02 10:56+0100\n"
+"PO-Revision-Date: 2014-06-02 11:05-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: forms.py:39
@@ -49,7 +49,7 @@ msgid "Creado"
 msgstr "Created"
 
 #: models.py:78 models.py:268 models.py:399 models.py:537 models.py:671
-#: models.py:738
+#: models.py:738 settings.py:155
 msgid "Actualizado"
 msgstr "Updated"
 
@@ -491,6 +491,68 @@ msgstr "Keywords of title"
 #: models.py:741
 msgid "Tesis Doctorales"
 msgstr "Doctoral Thesis"
+
+#: settings.py:131
+msgid "Error general no determinado en el servidor de la FECYT."
+msgstr "General error not determined in FECYT server."
+
+#: settings.py:132
+msgid "El PDF no tiene XML asociado."
+msgstr "The PDF has no associated XML."
+
+#: settings.py:133
+msgid ""
+"El usuario con el que se pretende hacer la importación no existe en la base "
+"de datos de la FECYT."
+msgstr ""
+"The user that is intended to import does not exist in the database FECYT."
+
+#: settings.py:134
+msgid "Contraseña incorrecta."
+msgstr "Incorrect password."
+
+#: settings.py:135
+msgid ""
+"El Servicio Web no puede conectarse a la base de datos de instituciones de "
+"la FECYT."
+msgstr "The Web Service can not connect to the database FECYT institutions."
+
+#: settings.py:136
+msgid ""
+"Error no determinado durante el proceso de autentificación con la FECYT."
+msgstr "Error not determined during the authentication process with FECYT."
+
+#: settings.py:137
+msgid "No se permite realizar importaciones para esta institución."
+msgstr "Imports are not permitted for this institution."
+
+#: settings.py:138
+msgid "El CvnRootBean obtenido del XML o del PDF no es válido."
+msgstr "The CvnRootBean obtained from XML or PDF is invalid."
+
+#: settings.py:139
+msgid "El CVN-XML no es válido."
+msgstr "The CVN-XML is invalid."
+
+#: settings.py:140
+msgid "Fallo en la extracción del CvnRootBean desde el XML."
+msgstr "Failure CvnRootBean extraction from XML."
+
+#: settings.py:141
+msgid "El XML está vacío."
+msgstr "The XML is empty."
+
+#: settings.py:142
+msgid "El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado."
+msgstr "The conversion process from 1.2.5 to 1.3.0 CvnRootBean failed."
+
+#: settings.py:156
+msgid "Caducado"
+msgstr "Expired"
+
+#: settings.py:157
+msgid "NIF/NIE Incorrecto"
+msgstr "Invalid Identity"
 
 #: utils.py:43
 msgid "Desconocido"
