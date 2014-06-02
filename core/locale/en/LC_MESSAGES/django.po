@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-02 10:32+0100\n"
+"POT-Creation-Date: 2014-06-02 10:42+0100\n"
 "PO-Revision-Date: 2014-06-02 08:39-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,6 +65,10 @@ msgstr "Electronic office"
 msgid "Campus virtual"
 msgstr "Campus Virtual"
 
+#: templates/core/base.html:49 templates/core/base.html.py:109
+msgid "Correo electrónico"
+msgstr "e-mail"
+
 #: templates/core/base.html:50
 msgid "Disco duro virtual"
 msgstr "Virtual Hard Drive"
@@ -113,10 +117,6 @@ msgstr "FAQ"
 #: templates/core/base.html:107
 msgid "Preguntas Frecuentes"
 msgstr "Frequently Asked Questions"
-
-#: templates/core/base.html:109
-msgid "Correo electrónico"
-msgstr "e-mail"
 
 #: templates/core/base.html:119
 msgid "Cerrar sesión"
