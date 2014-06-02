@@ -12,6 +12,8 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
+_ = lambda s: s
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 

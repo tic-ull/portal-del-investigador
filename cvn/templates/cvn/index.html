@@ -55,10 +55,10 @@
                             <tr>
                                 <th style="vertical-align: middle;"><strong>{% trans 'Estado' %}</strong></th>
                                 {% if cvn_status == "Actualizado" %}
-                                    <td class="alert alert-success align-center"><b>{{ cvn_status }}</b></td>
+                                    <td class="alert alert-success align-center"><b>{% trans cvn_status %}</b></td>
                                 {% else %}
                                     <td class="alert alert-danger align-center">
-                                        <b>{{ cvn_status }}</b>
+                                        <b>{% trans cvn_status %}</b>
                                         {% if cvn_status == "NIF/NIE Incorrecto" %}
                                             <br>
                                             {{ user.profile.documento }} - {{ nif_invalid }}

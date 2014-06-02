@@ -5,6 +5,8 @@ from enum import Enum
 import datetime
 import os
 
+_ = lambda s: s
+
 # Usuario Administrador de la plantilla de administración de Django
 ADMIN_USERNAME = "admin"
 
@@ -126,18 +128,18 @@ INVALID_PAGE = -1
 
 # Errores FECYT
 ERROR_CODES = {
-    1: u'Error general no determinado en el servidor de la FECYT.',
-    2: u'El PDF no tiene XML asociado.',
-    3: u'El usuario con el que se pretende hacer la importación no existe en la base de datos de la FECYT.',
-    4: u'Contraseña incorrecta.',
-    5: u'El Servicio Web no puede conectarse a la base de datos de instituciones de la FECYT.',
-    6: u'Error no determinado durante el proceso de autentificación con la FECYT.',
-    8: u'No se permite realizar importaciones para esta institución.',
-    10: u'El CvnRootBean obtenido del XML o del PDF no es válido.',
-    13: u'El CVN-XML no es válido.',
-    14: u'Fallo en la extracción del CvnRootBean desde el XML.',
-    16: u'El XML está vacío.',
-    17: u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado.'
+    1: _(u'Error general no determinado en el servidor de la FECYT.'),
+    2: _(u'El PDF no tiene XML asociado.'),
+    3: _(u'El usuario con el que se pretende hacer la importación no existe en la base de datos de la FECYT.'),
+    4: _(u'Contraseña incorrecta.'),
+    5: _(u'El Servicio Web no puede conectarse a la base de datos de instituciones de la FECYT.'),
+    6: _(u'Error no determinado durante el proceso de autentificación con la FECYT.'),
+    8: _(u'No se permite realizar importaciones para esta institución.'),
+    10: _(u'El CvnRootBean obtenido del XML o del PDF no es válido.'),
+    13: _(u'El CVN-XML no es válido.'),
+    14: _(u'Fallo en la extracción del CvnRootBean desde el XML.'),
+    16: _(u'El XML está vacío.'),
+    17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado.')
 }
 
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
@@ -150,9 +152,9 @@ class CVNStatus(Enum):
     INVALID_IDENTITY = 2
 
 CVN_STATUS = (
-    (CVNStatus.UPDATED, u'Actualizado'),
-    (CVNStatus.EXPIRED, u'Caducado'),
-    (CVNStatus.INVALID_IDENTITY, u'NIF/NIE Incorrecto'),
+    (CVNStatus.UPDATED, _(u'Actualizado')),
+    (CVNStatus.EXPIRED, _(u'Caducado')),
+    (CVNStatus.INVALID_IDENTITY, _(u'NIF/NIE Incorrecto')),
 )
 
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
