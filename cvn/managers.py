@@ -8,6 +8,7 @@ from parser_helpers import (parse_scope, parse_authors,
                             parse_produccion_subtype, parse_date_interval,
                             parse_produccion_id)
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class ProduccionManager(models.Manager):
@@ -24,9 +25,13 @@ class ProduccionManager(models.Manager):
         # TODO: Django 1.7 uncomment and delete next 3 lines
         # reg = objects.update_or_create(defaults=insertion_dict,
         #                               **search_dict)[0]
-        reg = objects.get_or_create(**search_dict)[0]
-        objects.filter(pk=reg.id).update(**insertion_dict)
-        reg = objects.get(pk=reg.id)
+        try:
+            reg = objects.get(**search_dict)
+        except ObjectDoesNotExist:
+            reg = objects.create(**insertion_dict)
+            return reg
+        for key, value in insertion_dict.items():
+            setattr(reg, key, value)
         reg.user_profile.add(user_profile)
         reg.save()
         return reg
