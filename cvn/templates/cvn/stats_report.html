@@ -15,26 +15,32 @@
         <thead>
             <tr>
                 <th>{% trans 'Departamento' %} </th>
-                <th>{% trans 'Número de miembros' %}</th>
                 <th>{% trans 'CVN actualizados' %}</th>
+                <th>{% trans 'Nº de miembros' %}</th>
                 <th>{% trans 'Gráfica' %}</th>
             </tr>
         </thead>
         <tbody>
     {% for department in departmentStats %}
             <tr>
-                <td>{{ department.departamento }}</td>
-                <td>{{ department.numMembers }}</td>
-                <td>{{ department.numCVNupdate }}</td>
+                <td width='50%'>{{ department.departamento }}</td>
+                <td width='15%'>{{ department.numCVNupdate }}</td>
+                <td width='15%'>{{ department.numMembers }}</td>
                 <td>
-                    <div class="progress text-center">
+                    <div class="progress">
                         <div class="progress-bar 
                         {% if department.cvnPercentUpdated >= validPercenCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
                             role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" 
-                            style="width: {{ department.cvnPercentUpdated }}%;">
+                            style="width: {{ department.cvnPercentUpdated }}%">
+                            <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">{{ department.cvnPercentUpdated }}%</span> 
+                            {% comment %}
+                            <span class="num_pcnt" style="display:block;position:absolute;color: black;text-shadow: 0px 0px 2px rgba(255, 255, 255, 1);vertical-align:middle; margin: auto;">{{ department.cvnPercentUpdated }}%</span> 
+                            {% endcomment %}
                         </div>
-                        {{ department.cvnPercentUpdated }}% 
                     </div>
+                    <script>
+                        $(".num_pcnt").css("width", $(".progress").width());
+                    </script>
                 </td>
             </tr>
     {% endfor %}
