@@ -22,18 +22,19 @@ class ProduccionManager(models.Manager):
         if not len(search_dict):
             return
         objects = super(ProduccionManager, self).get_query_set()
-        # TODO: Django 1.7 uncomment and delete next 3 lines
+        # Django 1.7 could use bellow code, if user_profile.add
+        # can be added to the query it is a possibility:
         # reg = objects.update_or_create(defaults=insertion_dict,
         #                               **search_dict)[0]
         try:
             reg = objects.get(**search_dict)
         except ObjectDoesNotExist:
-            reg = objects.create(**insertion_dict)
-            return reg
-        for key, value in insertion_dict.items():
-            setattr(reg, key, value)
-        reg.user_profile.add(user_profile)
+            reg = self.model(**insertion_dict)
+        else:
+            for key, value in insertion_dict.items():
+                setattr(reg, key, value)
         reg.save()
+        reg.user_profile.add(user_profile)
         return reg
 
     # Creates a slice of dictionary with keys used to search
