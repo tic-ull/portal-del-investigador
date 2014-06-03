@@ -18,6 +18,7 @@
                             <div id="hideme" class="alert alert-success">
                                 {{ message }}
                             </div>
+                            <br>
                         {% endif %}
                         {% if form.errors %}
                             <div id='hideme' class="alert  alert-danger">
@@ -25,6 +26,7 @@
                                     {{ field.errors }}
                                 {% endfor %}
                             </div>
+                            <br>
                         {% endif %}
                         <div>
                             <form action="" method='post'
@@ -36,6 +38,7 @@
                             </form>
                         </div>
                     </div>
+                    <br>
                     <div class="alert alert-info">
                         {% trans 'Puede crear su CVN desde el ' %} <a href={{ EDITOR_FECYT }} class="alert-link" target="_blank">{% trans 'Editor de la FECYT' %}</a>
                     </div>
@@ -70,13 +73,10 @@
                                 <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
                                 <td align='center'>{{ cvn.fecha_cvn }}</td>
                             </tr>
-                            <tr>
-                                <td colspan='2' align='center'>
-                                    <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-block btn-ms' role='button'> {% trans 'Descargar una copia de mi CVN' %}</a>
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
+                        <br>
+                        <a href='/investigacion/cvn/download/' target='_blank' class='fa fa-download btn btn-primary btn-block btn-ms' role='button'> {% trans 'Descargar una copia de mi CVN' %}</a>
                     </div>
                 </div>
             </div>
