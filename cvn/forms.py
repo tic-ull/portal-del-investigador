@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import SimpleUploadedFile
 from lxml import etree
 from parser_helpers import parse_date
+from django.db import transaction
 
 
 class UploadCVNForm(forms.ModelForm):
@@ -35,12 +36,14 @@ class UploadCVNForm(forms.ModelForm):
         except:
             cvn_file = self.data['cvn_file']
         if cvn_file.content_type != stCVN.PDF:
-            raise forms.ValidationError(_("El CVN debe estar en formato PDF."))
+            raise forms.ValidationError(
+                _(u'El CVN debe estar en formato PDF.'))
         (self.xml, error) = FECYT.getXML(cvn_file)
         if not self.xml:
             raise forms.ValidationError(_(stCVN.ERROR_CODES[error]))
         return cvn_file
 
+    @transaction.commit_manually
     def save(self, commit=True):
         cvn = super(UploadCVNForm, self).save(commit=False)
         try:
@@ -59,6 +62,7 @@ class UploadCVNForm(forms.ModelForm):
         cvn.save()
         cvn.insert_xml()
         cvn.xml_file.close()
+        transaction.commit()
         return cvn
 
     @staticmethod

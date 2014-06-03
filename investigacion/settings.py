@@ -12,6 +12,8 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
+_ = lambda s: s
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -21,6 +23,19 @@ DEVEL = True
 
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
+)
+
+LANGUAGES = (
+    ('en', 'English'),
+    ('es', 'Español'),
+)
+
+USE_I18N = True
+USE_L10N = True
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'cvn/locale'),
 )
 
 MANAGERS = ADMINS
@@ -62,12 +77,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.doc.XViewMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
 if DEBUG:
-    INSTALLED_APPS += ('debug_toolbar', )
+    INSTALLED_APPS += ('debug_toolbar', 'rosetta')
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
@@ -125,7 +141,7 @@ DATABASES = {
 }
 
 # Internationalization
-LANGUAGE_CODE = 'es-ES'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'Atlantic/Canary'
 
@@ -245,6 +261,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     "core.context_processors.extra_info",
+    "cvn.context_processors.extra_info",
 )
 
 TEMPLATE_LOADERS = (
