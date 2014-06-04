@@ -52,9 +52,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'django.contrib.sites',  # Flatpages
+    'django.contrib.sites',
     'django.contrib.flatpages',
-    'tinymce',  # Flatpages tinymce
+    'tinymce',
     'south',
     'core',
     'cvn',
@@ -153,10 +153,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_URL = '/static/'
+STATIC_URL = '/investigacion/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/investigacion/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_TEST_URL = '/media_tests/'
@@ -285,16 +285,8 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-TINYMCE_DEFAULT_CONFIG = {
-    'plugins': "table, spellchecker, paste, searchreplace",
-    'theme': "advanced",
-    'cleanup_on_startup': True,
-    'custom_undo_redo_levels': 10,
-}
-
-TINYMCE_SPELLCHECKER = True
-
-TINYMCE_COMPRESSOR = True
+TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
+TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
 
 try:
     from settings_local import *
