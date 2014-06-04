@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 #
 from django.conf import settings as st
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from cvn.settings import PERCENT_VALID_DEPT_CVN
 #
 from django.http import HttpResponse
@@ -63,49 +62,3 @@ def ull_report(request):
     return render(request, 'cvn/ull_report.html', context)
 
 
-@ login_required
-@staff_member_required
-def stats_report(request):
-    # Access to data in memory, cache...
-    context = {}
-    departmentStats = [{'numCVNupdate': 0,
-                        'cvnPercentUpdated': 5,
-                        'numMembers': 27,
-                        'departamento': u'ANATOMIA, ANAT.\
-                        PATOLÓGICA E HISTOLOGÍA'},
-                       {'numCVNupdate': 0,
-                        'cvnPercentUpdated': 80,
-                        'numMembers': 20,
-                        'departamento': 'ANÁLISIS ECONÓMICO'},
-                       {'numCVNupdate': 15,
-                        'cvnPercentUpdated': 71,
-                        'numMembers': 20,
-                        'departamento': 'BECARIOS'},
-                       {'numCVNupdate': 15,
-                        'cvnPercentUpdated': 71,
-                        'numMembers': 20,
-                        'departamento': 'DEPT1'},
-                       {'numCVNupdate': 15,
-                        'cvnPercentUpdated': 91,
-                        'numMembers': 27,
-                        'departamento': 'DEPT2'},
-                       {'numCVNupdate': 35,
-                        'cvnPercentUpdated': 75,
-                        'numMembers': 89,
-                        'departamento': 'DEPT3'},
-                       {'numCVNupdate': 0,
-                        'cvnPercentUpdated': 100,
-                        'numMembers': 43,
-                        'departamento': 'ANÁLISIS MATEMÁTICO'}]
-    # Paginator- Show X department per page
-    paginator = Paginator(departmentStats, 3)
-    page = request.GET.get('page')
-    try:
-        department_list = paginator.page(page)
-    except PageNotAnInteger:
-        department_list = paginator.page(1)
-    except EmptyPage:
-        department_list = paginator.page(paginator.num_pages)
-    context['departmentStats'] = department_list
-    context['validPercenCVN'] = PERCENT_VALID_DEPT_CVN
-    return render(request, 'cvn/stats_report.html', context)

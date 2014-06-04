@@ -26,6 +26,7 @@ urlpatterns = patterns(
 urlpatterns += i18n_patterns(
     '',
     url(r'^investigacion/cvn/', include('cvn.urls')),
+    url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq.html'), name='faq'),
     url(r'^investigacion/faq/(?P<pk>\d+)/$', DetailView.as_view(

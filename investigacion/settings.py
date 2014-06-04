@@ -36,6 +36,7 @@ USE_L10N = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
     os.path.join(BASE_DIR, 'cvn/locale'),
+    os.path.join(BASE_DIR, 'statistics/locale'),
 )
 
 MANAGERS = ADMINS
@@ -59,6 +60,7 @@ INSTALLED_APPS = (
     'core',
     'cvn',
     'crequest',
+    'statistics',
     'django_coverage',
 )
 
@@ -272,6 +274,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates'),
     os.path.join(BASE_DIR, 'core/templates'),
+    os.path.join(BASE_DIR, 'statistics/templates'),
 )
 
 BASE_URL = 'http://www.ull.es/investigacion'
