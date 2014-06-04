@@ -1,7 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.utils import scientific_production_to_context, cvn_to_context, calc_stats_department
+from cvn.utils import (scientific_production_to_context,
+                       cvn_to_context,
+                       calc_stats_department,)
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -33,12 +35,12 @@ def index(request):
     context['form'] = form
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
-    WS = '%sget_departamento_y_miembros?cod_persona=%s' % (st.WS_SERVER_URL, user.profile.rrhh_code)
+    WS = '%sget_departamento_y_miembros?cod_persona=%s'\
+         % (st.WS_SERVER_URL, user.profile.rrhh_code)
     department = json.loads(urllib.urlopen(WS).read())
     context['stats'] = {'department': department['departamento']['nombre']}
     context['stats'].update(calc_stats_department(department['miembros']))
-    context['stats']['cvn_percent_updated'] = str("{0:.1f}".format(context['stats']['cvn_percent_updated']))
-    print context['stats']
+    context['validPercenCVN'] = PERCENT_VALID_DEPT_CVN
     return render(request, 'cvn/index.html', context)
 
 

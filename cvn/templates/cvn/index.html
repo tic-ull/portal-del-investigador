@@ -1,6 +1,7 @@
 {% extends 'cvn/base.html' %}
 
 {% load i18n %}
+{% load l10n %}
 {% load staticfiles %}
 
 {% block main %}
@@ -77,17 +78,18 @@
                                 <th><strong>{{ stats.department }}</strong></th>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" aria-valuenow={{ stats.cvn_percent_updated }} aria-valuemin="0" 
-                                            aria-valuemax="100" style="width: {{ stats.cvn_percent_updated }}%">
+                                        <div class="progress-bar {% if department.cvnPercentUpdated >= validPercenCVN %} progress-bar-success 
+                                            {% else %} progress-bar-danger {% endif %} "
+                                            role="progressbar" aria-valuenow={{ stats.cvn_percent_updated }} aria-valuemin="0" 
+                                            aria-valuemax="100" style="width: {{ stats.cvn_percent_updated|unlocalize }}%">
                                             <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">
-                                                {{ stats.cvn_percent_updated }}%
+                                                {{ stats.cvn_percent_updated|floatformat:1 }}%
                                             </span> 
                                         </div>
                                     </div>
                                     <script>
                                         $(".num_pcnt").css("width", $(".progress").width());
                                     </script>
-
                                 </td>
                             </tr>
                             </tbody>
