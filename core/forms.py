@@ -6,7 +6,6 @@ from django.conf import settings as st
 from django.contrib.flatpages.admin import FlatpageForm
 from django.contrib.flatpages.models import Site, FlatPage
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
-from tinymce.widgets import TinyMCE
 
 
 class PageForm(FlatpageForm):
@@ -34,5 +33,8 @@ class PageForm(FlatpageForm):
     class Meta:
         model = FlatPage
         widgets = {
-            'content': TinyMCE(attrs={'cols': 100, 'rows': 15}),
+            'content': forms.widgets.Textarea(),
         }
+
+    class Media:
+        js = (st.TINYMCE_JS_URL, st.TINYMCE_JS_TEXTAREA)
