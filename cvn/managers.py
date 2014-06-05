@@ -49,13 +49,7 @@ class ProduccionManager(models.Manager):
         pass
 
     def removeByUserProfile(self, user_profile):
-        produccion_list = super(ProduccionManager, self).get_query_set()\
-            .filter(user_profile=user_profile)
-        for prod in produccion_list:
-            if prod.user_profile.count() > 1:
-                prod.user_profile.remove(user_profile)
-            else:
-                prod.delete()
+        pass
 
 
 class PublicacionManager(ProduccionManager):
@@ -86,6 +80,11 @@ class PublicacionManager(ProduccionManager):
             Q(fecha__year=year) &
             Q(tipo_de_produccion=tipo)
         ).distinct().order_by('fecha')
+
+    def removeByUserProfile(self, user_profile):
+        user_profile.publicacion_set.remove(
+            *user_profile.publicacion_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
 
 
 class CongresoManager(ProduccionManager):
@@ -122,6 +121,11 @@ class CongresoManager(ProduccionManager):
             Q(fecha_de_inicio__year=year)
         ).distinct().order_by('fecha_de_inicio')
 
+    def removeByUserProfile(self, user_profile):
+        user_profile.congreso_set.remove(
+            *user_profile.congreso_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
+
 
 class TesisDoctoralManager(ProduccionManager):
 
@@ -145,6 +149,11 @@ class TesisDoctoralManager(ProduccionManager):
             Q(user_profile__in=usuarios) &
             Q(fecha_de_lectura__year=year)
         ).distinct().order_by('fecha_de_lectura')
+
+    def removeByUserProfile(self, user_profile):
+        user_profile.tesisdoctoral_set.remove(
+            *user_profile.tesisdoctoral_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
 
 
 class ProyectoManager(ProduccionManager):
@@ -193,6 +202,11 @@ class ProyectoManager(ProduccionManager):
                 elements_list.append(element)
         return elements_list
 
+    def removeByUserProfile(self, user_profile):
+        user_profile.proyecto_set.remove(
+            *user_profile.proyecto_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
+
 
 class ConvenioManager(ProduccionManager):
 
@@ -240,3 +254,8 @@ class ConvenioManager(ProduccionManager):
             if fechaFin >= fechaFinMin:
                 elements_list.append(element)
         return elements_list
+
+    def removeByUserProfile(self, user_profile):
+        user_profile.convenio_set.remove(
+            *user_profile.convenio_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
