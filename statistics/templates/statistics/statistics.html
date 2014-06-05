@@ -1,6 +1,7 @@
 {% extends 'statistics/base.html' %}
 
 {% load i18n %}
+{% load l10n %}
 
 {% load staticfiles %}
 {% comment %}
@@ -13,7 +14,7 @@
 	<h1 class="page-header">{% trans 'Estadísticas del CVN' %}</h1>
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">{% trans 'Deparatmentos' %}</li>
+        <li class="active">{% trans 'Departamentos' %}</li>
     </ul>
 	<div class="content">
 	    <table class="table table-striped table-condensed">
@@ -28,16 +29,16 @@
 	        <tbody>
 	    {% for department in departmentStats %}
 	            <tr>
-	                <td width='50%'><a href=''>{{ department.departamento }}</a></td>
-	                <td width='15%'>{{ department.numCVNupdate }}</td>
-	                <td width='15%'>{{ department.numMembers }}</td>
+	                <td width='50%'><a href=''>{{ department.nombre }}</a></td>
+	                <td width='15%'>{{ department.num_cvn_update }}</td>
+	                <td width='15%'>{{ department.num_members }}</td>
 	                <td>
 	                    <div class="progress">
 	                        <div class="progress-bar 
-	                        {% if department.cvnPercentUpdated >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
-	                            role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" 
-	                            style="width: {{ department.cvnPercentUpdated }}%">
-	                            <span class="num_pcnt">{{ department.cvnPercentUpdated }}%</span> 
+	                        {% if department.cvn_percent_updated >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
+	                            role="progressbar" aria-valuenow={{ department.cvn_percent_updated }} aria-valuemin="0" aria-valuemax="100" 
+	                            style="width: {{ department.cvn_percent_updated|unlocalize }}%">
+	                            <span class="num_pcnt">{{ department.cvn_percent_updated|floatformat:1 }}%</span> 
 	                        </div>
 	                    </div>
 	                    <script>
@@ -55,6 +56,7 @@
     <span class="step-links">
 {% endcomment %}
 <!-- STYLE 1 -->
+{% comment %}
 <ul class="pager">
         {% if departmentStats.has_previous %}
             <li><a href="?page={{ departmentStats.previous_page_number }}">{% trans 'Anterior' %}</a></li>
@@ -68,6 +70,8 @@
             <li><a href="?page={{ departmentStats.next_page_number }}">{% trans 'Siguiente' %}</a></li>
         {% endif %}
 </ul>
+</div>
+{% endcomment %}
 {% comment %}
     </span>
 </div>

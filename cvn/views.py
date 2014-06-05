@@ -37,9 +37,12 @@ def index(request):
     WS = '%sget_departamento_y_miembros?cod_persona=%s'\
          % (st.WS_SERVER_URL, user.profile.rrhh_code)
     department = json.loads(urllib.urlopen(WS).read())
-    context['stats'] = {'department': department['departamento']['nombre']}
-    context['stats'].update(calc_stats_department(department['miembros']))
-    context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
+    try:
+        context['stats'] = {'department': department['departamento']['nombre']}
+        context['stats'].update(calc_stats_department(department['miembros']))
+        context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
+    except KeyError:
+        pass
     return render(request, 'cvn/index.html', context)
 
 
@@ -60,5 +63,3 @@ def ull_report(request):
     userULL = User.objects.get(username='GesInv-ULL')
     scientific_production_to_context(userULL.profile, context)
     return render(request, 'cvn/ull_report.html', context)
-
-

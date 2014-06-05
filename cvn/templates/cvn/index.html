@@ -74,11 +74,10 @@
                                 <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
                                 <td align='center'>{{ cvn.fecha_cvn }}</td>
                             </tr>
-                            <tr>
-                                <td align="center" colspan=2><strong>{{ stats.department }}</strong></td>
-                            </tr>
+                            {% if stats %}
                             <tr>
                                 <td colspan=2>
+                                    <center><strong>{{ stats.department }}</strong></center>
                                     <div class="progress">
                                         <div class="progress-bar {% if department.cvnPercentUpdated >= validPercentCVN %} progress-bar-success 
                                             {% else %} progress-bar-danger {% endif %} "
@@ -94,6 +93,7 @@
                                     </script>
                                 </td>
                             </tr>
+                            {% endif %}
                             </tbody>
                         </table>
                         <br>
