@@ -34,7 +34,7 @@
 	                <td>
 	                    <div class="progress">
 	                        <div class="progress-bar 
-	                        {% if department.cvnPercentUpdated >= validPercenCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
+	                        {% if department.cvnPercentUpdated >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
 	                            role="progressbar" aria-valuenow={{ department.cvnPercentUpdated }} aria-valuemin="0" aria-valuemax="100" 
 	                            style="width: {{ department.cvnPercentUpdated }}%">
 	                            <span class="num_pcnt">{{ department.cvnPercentUpdated }}%</span> 

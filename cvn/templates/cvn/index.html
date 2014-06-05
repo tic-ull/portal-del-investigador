@@ -75,10 +75,12 @@
                                 <td align='center'>{{ cvn.fecha_cvn }}</td>
                             </tr>
                             <tr>
-                                <th><strong>{{ stats.department }}</strong></th>
-                                <td>
+                                <td align="center" colspan=2><strong>{{ stats.department }}</strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2>
                                     <div class="progress">
-                                        <div class="progress-bar {% if department.cvnPercentUpdated >= validPercenCVN %} progress-bar-success 
+                                        <div class="progress-bar {% if department.cvnPercentUpdated >= validPercentCVN %} progress-bar-success 
                                             {% else %} progress-bar-danger {% endif %} "
                                             role="progressbar" aria-valuenow={{ stats.cvn_percent_updated }} aria-valuemin="0" 
                                             aria-valuemax="100" style="width: {{ stats.cvn_percent_updated|unlocalize }}%">

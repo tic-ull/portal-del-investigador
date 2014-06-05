@@ -157,7 +157,4 @@ CVN_STATUS = (
     (CVNStatus.INVALID_IDENTITY, _(u'NIF/NIE Incorrecto')),
 )
 
-# Valid percent for CVN
-PERCENT_VALID_DEPT_CVN = 80
-
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'

@@ -16,7 +16,7 @@ def statistics(request):
     # Access to data in memory, cache...
     context = {}
     departmentStats = [{'numCVNupdate': 0,
-                        'cvnPercentUpdated': 5,
+                        'cvnPercentUpdated': 0,
                         'numMembers': 27,
                         'departamento': u'ANATOMIA, ANAT.\
                         PATOLÓGICA E HISTOLOGÍA'},
@@ -45,7 +45,7 @@ def statistics(request):
                         'numMembers': 43,
                         'departamento': 'ANÁLISIS MATEMÁTICO'}]
     # Paginator- Show X department per page
-    paginator = Paginator(departmentStats, 3)
+    paginator = Paginator(departmentStats, 5)
     page = request.GET.get('page')
     try:
         department_list = paginator.page(page)
@@ -54,5 +54,5 @@ def statistics(request):
     except EmptyPage:
         department_list = paginator.page(paginator.num_pages)
     context['departmentStats'] = department_list
-    context['validPercenCVN'] = PERCENT_VALID_DEPT_CVN
+    context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
     return render(request, 'statistics/statistics.html', context)

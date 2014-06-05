@@ -497,7 +497,10 @@
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
                                     <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% comment %}
                                     <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas" %}</a></li>
+                                    {% endcomment %}
+                                    <li><a href="{% url 'statistics' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas" %}</a></li>
                                     <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
                                 </ul>
                             </div>

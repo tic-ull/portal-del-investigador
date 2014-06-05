@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 #from cvn import settings as stCVN
-from cvn.utils import calc_stats_department
 from django.conf import settings as st
 from django.core.management.base import BaseCommand
+from statistics.utils import calc_stats_department
 import json
 import logging
 import urllib
@@ -19,7 +19,8 @@ class Command(BaseCommand):
         department_list = json.loads(urllib.urlopen(WS).read())
         for department in department_list:
             data = {}
-            data['departamento'] = department['departamento']['nombre']
+            data['nombre'] = department['departamento']['nombre']
+            data['nombre_corto'] = department['departamento']['nombre_corto']
             data.update(calc_stats_department(department['miembros']))
             department_stats.append(data)
         # Update data shared in memory
