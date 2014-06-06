@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.models import (CVN, Congreso, Publicacion, Convenio, Proyecto,
-                        TesisDoctoral, Articulo)
-from cvn.parser_helpers import parse_produccion_type
+from cvn.models import (CVN, Congreso, Convenio, Proyecto,
+                        TesisDoctoral, Articulo, Libro, Capitulo)
+from cvn.parser_helpers import parse_produccion_type, parse_produccion_subtype
 from core.tests.helpers import init, clean
 from django.test import TestCase
 from core.tests.factories import UserFactory
@@ -35,12 +35,9 @@ class CVNTestCase(TestCase):
             user = UserFactory.create()
             user.profile.cvn = cvn
             cvn.insert_xml()
-            self.assertEqual(user.profile.publicacion_set.filter(
-                tipo_de_produccion='Articulo').count(), 1135)
-            self.assertEqual(user.profile.publicacion_set.filter(
-                tipo_de_produccion='Libro').count(), 6)
-            self.assertEqual(user.profile.publicacion_set.filter(
-                tipo_de_produccion='Capitulo').count(), 32)
+            self.assertEqual(user.profile.articulo_set.count(), 1135)
+            self.assertEqual(user.profile.libro_set.count(), 6)
+            self.assertEqual(user.profile.capitulo_set.count(), 32)
             self.assertEqual(user.profile.congreso_set.count(), 55)
             self.assertEqual(user.profile.convenio_set.count(), 38)
             self.assertEqual(user.profile.proyecto_set.count(), 11)
@@ -97,26 +94,35 @@ class CVNTestCase(TestCase):
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
             tipo = parse_produccion_type(item)
+            data = None
             if tipo == 'Publicacion':
-                data = Publicacion.objects.create(item, u.profile)
-                if data.tipo_de_produccion == 'Articulo':
+
+                if parse_produccion_subtype(item) == u'Articulo':
+                    data = Articulo.objects.create(item, u.profile)
                     self.assertEqual(data.titulo, u'TÍTULO')
                     self.assertEqual(data.nombre_publicacion, u'NOMBRE')
                     self.assertEqual(data.autores,
                                      u'NOMBRE APELLIDO1 APELLIDO2 (STIC); '
                                      'NOMBRE2 APELLIDO12 APELLIDO22 (STIC2)')
-                else:
+
+                if parse_produccion_subtype(item) == u'Libro':
+                    data = Libro.objects.create(item, u.profile)
                     self.assertEqual(data.titulo, u'Título de la publicación')
                     self.assertEqual(data.nombre_publicacion,
                                      u'Nombre de la publicación')
-                    if data.tipo_de_produccion == 'Libro':
-                        self.assertEqual(data.autores,
-                                         u'Nombre Primer Apellido '
-                                         'Segundo Apellido (STIC)')
-                    else:
-                        self.assertEqual(data.autores,
-                                         u'Nombre Primer Apellido '
-                                         'Segundo Apellido (Firma)')
+                    self.assertEqual(data.autores,
+                                     u'Nombre Primer Apellido '
+                                     'Segundo Apellido (STIC)')
+
+                if parse_produccion_subtype(item) == u'Capitulo':
+                    data = Capitulo.objects.create(item, u.profile)
+                    self.assertEqual(data.titulo, u'Título de la publicación')
+                    self.assertEqual(data.nombre_publicacion,
+                                     u'Nombre de la publicación')
+                    self.assertEqual(data.autores,
+                                     u'Nombre Primer Apellido '
+                                     'Segundo Apellido (Firma)')
+
                 self.assertEqual(data.volumen, u'1')
                 self.assertEqual(data.numero, u'1')
                 self.assertEqual(data.pagina_inicial, u'1')
@@ -159,11 +165,11 @@ class CVNTestCase(TestCase):
                     self.assertEqual(data.ambito, u'Autonómica')
                 self.assertEqual(data.cod_segun_financiadora,
                                  u'Cód. según financiadora')
-                #self.assertEqual(data.cuantia_total, 1)
-                #self.assertEqual(data.cuantia_subproyecto, 1)
-                #self.assertEqual(data.porcentaje_en_subvencion, 1)
-                #self.assertEqual(data.porcentaje_en_credito, 1)
-                #self.assertEqual(data.porcentaje_mixto, 1)
+                # self.assertEqual(data.cuantia_total, 1)
+                # self.assertEqual(data.cuantia_subproyecto, 1)
+                # self.assertEqual(data.porcentaje_en_subvencion, 1)
+                # self.assertEqual(data.porcentaje_en_credito, 1)
+                # self.assertEqual(data.porcentaje_mixto, 1)
 
     def test_check_read_data_tesis(self):
         cvn = CVN(xml_file=self.xml_test)

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
         user = orm['auth.User'].objects.get_or_create(username='GesInv-ULL')[0]
@@ -70,3 +69,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['core']
+    symmetrical = True

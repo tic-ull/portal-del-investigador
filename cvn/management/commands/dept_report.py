@@ -1,13 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import (Publicacion, Congreso, Proyecto, Convenio,
-                        TesisDoctoral, UserProfile)
+from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
+                        Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from optparse import make_option
-#from viinvDB.models import GrupoinvestDepartamento, GrupoinvestInvestigador
 import simplejson as json
 import urllib
 
@@ -45,7 +44,6 @@ class Command(BaseCommand):
 
     def createReports(self, year, dept=None):
         if dept is None:
-            #WS = '%sodin/core/rest/get_departamentos' % (st.WS_SERVER_URL)
             WS = '%sget_departamentos' % (st.WS_SERVER_URL)
             departamentos = urllib.urlopen(WS).read()
             departamentos = departamentos.replace('[', '')\
@@ -81,13 +79,13 @@ class Command(BaseCommand):
         investigadores, usuarios = self.getInvestigadores(
             year, departamento
         )
-        articulos = Publicacion.objects.byUsuariosYearTipo(
+        articulos = Articulo.objects.byUsuariosYearTipo(
             usuarios, year, 'Articulo'
         )
-        libros = Publicacion.objects.byUsuariosYearTipo(
+        libros = Libro.objects.byUsuariosYearTipo(
             usuarios, year, 'Libro'
         )
-        capitulosLibro = Publicacion.objects.byUsuariosYearTipo(
+        capitulosLibro = Capitulo.objects.byUsuariosYearTipo(
             usuarios, year, 'Capitulo de Libro'
         )
         congresos = Congreso.objects.byUsuariosYear(usuarios, year)
@@ -115,12 +113,12 @@ class Command(BaseCommand):
         return investigadores, usuarios
 
     def checkInves(self, inv):
-        if not 'nombre' in inv:
+        if 'nombre' not in inv:
             inv['nombre'] = ''
-        if not 'apellido1' in inv:
+        if 'apellido1' not in inv:
             inv['apellido1'] = ''
-        if not 'apellido2' in inv:
+        if 'apellido2' not in inv:
             inv['apellido2'] = ''
-        if not 'categoria' in inv:
+        if 'categoria' not in inv:
             inv['categoria'] = ''
         return inv

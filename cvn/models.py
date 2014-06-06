@@ -7,7 +7,8 @@ from django.core.files.move import file_move_safe
 from django.db import models
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager)
+                      ConvenioManager, TesisDoctoralManager, ArticuloManager,
+                      LibroManager, CapituloManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
 from core import settings as stCore
@@ -120,7 +121,9 @@ class CVN(models.Model):
                     _(u'WARNING: Se requiere de un fichero CVN-XML'))
 
     def _remove_producciones(self):
-        Publicacion.objects.removeByUserProfile(self.user_profile)
+        Articulo.objects.removeByUserProfile(self.user_profile)
+        Libro.objects.removeByUserProfile(self.user_profile)
+        Capitulo.objects.removeByUserProfile(self.user_profile)
         Congreso.objects.removeByUserProfile(self.user_profile)
         Proyecto.objects.removeByUserProfile(self.user_profile)
         Convenio.objects.removeByUserProfile(self.user_profile)
@@ -273,11 +276,12 @@ class Publicacion(models.Model):
     class Meta:
         verbose_name_plural = _(u'Publicaciones')
         ordering = ['-fecha', 'titulo']
+        abstract = True
 
 
 class Articulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = ArticuloManager()
 
     class Meta:
         verbose_name_plural = _(u'Artículos')
@@ -285,7 +289,7 @@ class Articulo(Publicacion):
 
 class Libro(Publicacion):
 
-    objects = PublicacionManager()
+    objects = LibroManager()
 
     class Meta:
         verbose_name_plural = _(u'Libros')
@@ -293,7 +297,7 @@ class Libro(Publicacion):
 
 class Capitulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CapituloManager()
 
     class Meta:
         verbose_name_plural = _(u'Capítulos de Libros')
