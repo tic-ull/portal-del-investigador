@@ -50,7 +50,3 @@ def isdigit(obj):
         return True
     else:
         return False
-
-
-def noneToZero(value):
-    return value if value is not None else 0
