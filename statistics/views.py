@@ -29,7 +29,10 @@ def statistics(request):
         data.update(calc_stats_department(department['miembros']))
         departmentStats.append(data)
     #
-    context['departmentStats'] = departmentStats
+#    context['departmentStats'] = departmentStats
+    context['departmentStats'] = sorted(departmentStats,
+                                        key=lambda departmentStats:
+                                        departmentStats['nombre'])
     context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
     return render(request, 'statistics/statistics.html', context)
 
