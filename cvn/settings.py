@@ -5,65 +5,47 @@ from enum import Enum
 import datetime
 import os
 
+# Enable translations in this file
 _ = lambda s: s
 
-# Usuario Administrador de la plantilla de administración de Django
-ADMIN_USERNAME = "admin"
-
-# Datos para la comunicación con el Web Service del FECYT
+# FECYT webservice configuration
 USER_WS = "cvnPdfULL01"
 PASSWD_WS = "MXz8T9Py7Xhr"
 URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 
-# Rutas de los XML y PDF
+# Paths
 PDF_ROOT = "cvn/pdf"
 XML_ROOT = "cvn/xml"
 OLD_PDF_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/old_cvn/")  # CVN antiguos
 PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/pdf_departamento')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
+TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 
+# URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
 URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)
 URL_OLD_CVN = os.path.join(st.MEDIA_URL, OLD_PDF_ROOT)  # CVN antiguos
+EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
 
-# Tipo de ficheros de subida
+# content-type for pdfs
 PDF = "application/pdf"
 
-# Ficheros con los resultados de las diferentes operaciones
-# Fichero con los errores al obtener el XML utilizando el WS del FECYT
+# Log configuration
+# XML fetching from FECYT
 FILE_LOG_IMPORT = os.path.join(st.PROJECT_ROOT, 'errorCVN.log')
-# Fichero con los CVN con datos insertados en la BBDD de la aplicación
+# CVN inserted in database app
 FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log')
-# Fichero que almacena los CVN duplicados.
+# Duplicated CVN
 FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log')
 
-# Equivalencias entre los tags de los nodos XML y los campos de la BBDD
-DIC_PERSONAL_DATA_XML = {
-    u'GivenName': u'nombre',
-    u'FirstFamilyName': u'primer_apellido',
-    u'SecondFamilyName': u'segundo_apellido',
-    u'Nacionality': u'nacionalidad',
-    u'BirthDate': u'fecha_nacimiento',
-    u'BirthCountry': u'pais_de_nacimiento',
-    u'BirthRegion': u'comunidad_nacimiento',
-    u'BirthCity': u'ciudad_de_nacimiento',
-    u'Gender': u'sexo',
-    u'City': u'ciudad_de_contacto',
-    u'Streets': u'direccion',
-    u'OtherInformation': u'resto_direccion',
-    u'PostalCode': u'codigo_postal',
-    u'Region':  u'comunidad',
-    u'CountryCode': u'pais_de_contacto',
-    u'Province': u'provincia',
-    u'Telephone': u'telefono_',
-    u'Fax': u'telefono_fax_',
-    u'PersonalWeb': u'pagina_web_personal',
-    u'InternetEmailAddress': u'correo_electronico',
-    u'Photo': u'imagen',
+# Production unique identifier type
+PRODUCCION_ID_CODE = {
+    'FINANCIADORA': '000',
+    'ISSN': '010',
+    'ISBN': '020',
+    'DEPOSITO_LEGAL': '030',
 }
-
-# Codigo de tipo de produccion en rama Subtype/SubType1/Item
-# del xml FECYT
+# Production subtype code in xml fecyt branch Subtype/SubType1/Item
 FECYT_CODE_SUBTYPE = {
     u'035': u'Articulo',
     u'148': u'Capitulo',
@@ -71,17 +53,10 @@ FECYT_CODE_SUBTYPE = {
     u'100': u'TesisDoctoral',
 }
 
-PRODUCCION_ID_CODE = {
-    'FINANCIADORA': '000',
-    'ISSN': '010',
-    'ISBN': '020',
-    'DEPOSITO_LEGAL': '030',
-}
-
-# Indica que el nodo 'Link' contiene los datos del congreso
+# Indicates 'Link' node contains Congreso data
 DATA_CONGRESO = u"110"
 
-# Devuelve las tabla correspondiente donde almacenar los datos
+# Code of production -- database name of production
 FECYT_CODE = {
     # Actividad científica y tecnológica
     u"060.010.010.000": u'Publicacion',
@@ -93,7 +68,7 @@ FECYT_CODE = {
     u"030.040.000.000": u'TesisDoctoral',
 }
 
-# Diccionario para las cuantías de las financiaciones
+# FECYT codes for economic information of Proyecto
 ECONOMIC_DIMENSION = {
     # Proyectos
     u"050.020.010.290": u'cuantia_total',
@@ -109,7 +84,7 @@ ECONOMIC_DIMENSION = {
     u"050.020.020.240": u'porcentaje_mixto',
 }
 
-# Ámbito de Congresos, Proyectos y Convenios
+# Scope for Congresos, Proyectos, Convenios
 SCOPE = {
     u"000": u"Autonómica",
     u"010": u"Nacional",
@@ -118,34 +93,30 @@ SCOPE = {
     u"OTHERS": u"Otros",
 }
 
-# Fecha de caducidad de un CVN
+# Expiration date for cvn
 FECHA_CADUCIDAD = datetime.date(2013, 12, 31)
 
-# Dato de la página introducido en un formato no reconocible
-INVALID_PAGE = -1
-# Indica que no se ha podido crear un diccionario de búsqueda
-# INVALID_SEARCH = -1
-
-# Errores FECYT
+# FECYT error codes and description
 ERROR_CODES = {
     1: _(u'Error general no determinado en el servidor de la FECYT.'),
     2: _(u'El PDF no tiene XML asociado.'),
-    3: _(u'El usuario con el que se pretende hacer la importación no existe en la base de datos de la FECYT.'),
+    3: _(u'El usuario con el que se pretende hacer la importación no existe '
+         'en la base de datos de la FECYT.'),
     4: _(u'Contraseña incorrecta.'),
-    5: _(u'El Servicio Web no puede conectarse a la base de datos de instituciones de la FECYT.'),
-    6: _(u'Error no determinado durante el proceso de autentificación con la FECYT.'),
+    5: _(u'El Servicio Web no puede conectarse a la base de datos de '
+         'instituciones de la FECYT.'),
+    6: _(u'Error no determinado durante el proceso de autentificación '
+         'con la FECYT.'),
     8: _(u'No se permite realizar importaciones para esta institución.'),
     10: _(u'El CvnRootBean obtenido del XML o del PDF no es válido.'),
     13: _(u'El CVN-XML no es válido.'),
     14: _(u'Fallo en la extracción del CvnRootBean desde el XML.'),
     16: _(u'El XML está vacío.'),
-    17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha fallado.')
+    17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha '
+          'fallado.')
 }
 
-TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 
-
-# CVN Status
 class CVNStatus(Enum):
     UPDATED = 0
     EXPIRED = 1
@@ -156,5 +127,3 @@ CVN_STATUS = (
     (CVNStatus.EXPIRED, _(u'Caducado')),
     (CVNStatus.INVALID_IDENTITY, _(u'NIF/NIE Incorrecto')),
 )
-
-EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'

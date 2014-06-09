@@ -1,49 +1,53 @@
 # -*- encoding: UTF-8 -*-
 
-"""
-Django settings for investigacion project.
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
+# Paths -- Build paths like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
+BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
+
+# URLs
+STATIC_URL = '/investigacion/static/'
+MEDIA_URL = '/investigacion/media/'
+MEDIA_TEST_URL = '/media_tests/'
+WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+LOGIN_URL = 'login'  # Login address for login_required decorator
+BASE_URL = 'http://www.ull.es/investigacion'
+OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
+TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
+TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
+# Enable translation of strings in this file
 _ = lambda s: s
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = DEBUG
-
-DEVEL = True
 
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
+MANAGERS = ADMINS
 
+# Internationalization
 LANGUAGES = (
     ('en', 'English'),
     ('es', 'Español'),
 )
-
 USE_I18N = True
 USE_L10N = True
-
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'Atlantic/Canary'
+USE_TZ = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
     os.path.join(BASE_DIR, 'cvn/locale'),
     os.path.join(BASE_DIR, 'statistics/locale'),
 )
-
-MANAGERS = ADMINS
-
-ALLOWED_HOSTS = []
-
-# Application definition
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -84,36 +88,34 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'core.backends.CASBackend',
+)
+
+# Development and debugging configuration
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+DEVEL = True
 if DEBUG:
     INSTALLED_APPS += ('debug_toolbar', 'rosetta')
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
     DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
-AUTHENTICATION_BACKENDS = (
-    'core.backends.CASBackend',
-)
-
-
 # Set ID for flatpages
 SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
 
-
 # Authentication CAS - ULL
-
 CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
-# The URL prefix of the Django administration site.
-CAS_ADMIN_PREFIX = 'admin'
-# Extra URL parameters to add to the login URL when redirecting the user
-CAS_EXTRA_LOGIN_PARAMS = ''
+CAS_ADMIN_PREFIX = 'admin'  # The URL prefix of the Django administration site.
+CAS_EXTRA_LOGIN_PARAMS = ''  # Extra parameters for login URL when redirecting
 # If `True`, logging out of the application will always send the user
 # to the URL specified by `CAS_REDIRECT_URL`.
 CAS_IGNORE_REFERER = False
 # If `False`, logging out of the application won't log the user out
 # of CAS as well.
 CAS_LOGOUT_COMPLETELY = True
-# Where to send a user after logging in or out if there is no referrer
-# and no next page set. Default is `/`.
-CAS_REDIRECT_URL = '/investigacion/'
+CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 # If `True` and an unknown or invalid ticket is received,
 # the user is redirected back to the login page.
 CAS_RETRY_LOGIN = True
@@ -122,14 +124,10 @@ CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
 
-# Dirección de login para el decorador login_required
-LOGIN_URL = 'login'
 
 ROOT_URLCONF = 'investigacion.urls'
 
 WSGI_APPLICATION = 'investigacion.wsgi.application'
-
-# Database
 
 DATABASES = {
     'default': {
@@ -142,37 +140,11 @@ DATABASES = {
     },
 }
 
-# Internationalization
-LANGUAGE_CODE = 'es'
-
-TIME_ZONE = 'Atlantic/Canary'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-
-STATIC_URL = '/investigacion/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
-
-MEDIA_URL = '/investigacion/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-MEDIA_TEST_URL = '/media_tests/'
-MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
 
-BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
-
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
-
 LOG_FILENAME = os.path.join(PROJECT_ROOT, 'cvn.log')
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -277,9 +249,6 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'statistics/templates'),
 )
 
-BASE_URL = 'http://www.ull.es/investigacion'
-
-OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -287,9 +256,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
-TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
-TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
 
 try:
     from settings_local import *

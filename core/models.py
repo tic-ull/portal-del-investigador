@@ -10,9 +10,6 @@ import urllib
 
 
 class UserProfile(models.Model):
-    """
-        https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION
-    """
     user = models.OneToOneField(User, related_name='profile')
     documento = models.CharField(_('Documento'), max_length=20, unique=True)
     rrhh_code = models.CharField(_(u'Código persona'), max_length=20,
