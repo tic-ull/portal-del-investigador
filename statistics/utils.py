@@ -5,9 +5,6 @@ from cvn.models import UserProfile
 from django.core.exceptions import ObjectDoesNotExist
 # PROFESSIONAL CATEGORY
 from statistics.settings import PROFESSIONAL_CATEGORY
-from django.conf import settings as st
-import json
-import urllib
 
 
 def calc_stats_department(members_list):
@@ -16,10 +13,8 @@ def calc_stats_department(members_list):
     num_computable_members = 0
     for member in members_list:
         try:
-            user = UserProfile.objects.get(rrhh_code=member)
-            WS = '%sget_info_pdi?cod_persona=%s' % (st.WS_SERVER_URL, member)
-            info_pdi = json.loads(urllib.urlopen(WS).read())
-            if (info_pdi['cod_categoria'] in PROFESSIONAL_CATEGORY):
+            user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
+            if (member['cod_cce'] in PROFESSIONAL_CATEGORY):
                 num_computable_members += 1
                 if user.cvn.status == stCVN.CVNStatus.UPDATED:
                     num_cvn_update += 1

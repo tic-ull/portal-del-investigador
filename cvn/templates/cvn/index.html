@@ -79,7 +79,7 @@
                                 <td colspan=2>
                                     <center><strong>{{ stats.department }}</strong></center>
                                     <div class="progress">
-                                        <div class="progress-bar {% if department.cvnPercentUpdated >= validPercentCVN %} progress-bar-success 
+                                        <div class="progress-bar {% if stats.cvn_percent_updated >= validPercentCVN %} progress-bar-success 
                                             {% else %} progress-bar-danger {% endif %} "
                                             role="progressbar" aria-valuenow={{ stats.cvn_percent_updated }} aria-valuemin="0" 
                                             aria-valuemax="100" style="width: {{ stats.cvn_percent_updated|unlocalize }}%">
