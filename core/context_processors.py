@@ -2,10 +2,11 @@
 
 from django.conf import settings as st
 
-'''
-List of languages for the language picker
-'''
+
 def _get_langs_info(languages, current_url):
+    '''
+    List of languages for the language picker
+    '''
     # Remove possible lang prefixes from current url
     base_url = current_url
     for language in languages:
