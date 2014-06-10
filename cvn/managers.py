@@ -20,19 +20,15 @@ class ProduccionManager(models.Manager):
     def _create(self, insertion_dict, user_profile):
         search_dict = self._get_search_dict(insertion_dict)
         if not len(search_dict):
-            return
-        objects = super(ProduccionManager, self).get_query_set()
-        # Django 1.7 could use bellow code, if user_profile.add
-        # can be added to the query it is a possibility:
-        # reg = objects.update_or_create(defaults=insertion_dict,
-        #                               **search_dict)[0]
-        try:
-            reg = objects.get(**search_dict)
-        except ObjectDoesNotExist:
             reg = self.model(**insertion_dict)
         else:
-            for key, value in insertion_dict.items():
-                setattr(reg, key, value)
+            try:
+                reg = self.model.objects.get(**search_dict)
+            except ObjectDoesNotExist:
+                reg = self.model(**insertion_dict)
+            else:
+                for key, value in insertion_dict.items():
+                    setattr(reg, key, value)
         reg.save()
         reg.user_profile.add(user_profile)
         return reg
