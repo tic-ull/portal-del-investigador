@@ -21,7 +21,9 @@ class Command(BaseCommand):
             data = {}
             data['nombre'] = department['departamento']['nombre']
             data['nombre_corto'] = department['departamento']['nombre_corto']
+            data['codigo'] = department['departamento']['cod_departamento']
             data.update(calc_stats_department(department['miembros']))
             department_stats.append(data)
         # Update data shared in memory
-        print department_stats
+        #print department_stats
+        return department_stats  # Remove

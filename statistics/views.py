@@ -10,7 +10,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from statistics.settings import PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY
-from statistics.utils import calc_stats_department
+#from statistics.utils import calc_stats_department
+#
+from statistics.management.commands.calc_stats import Command
+#
 import json
 import urllib
 
@@ -20,20 +23,10 @@ import urllib
 def statistics(request):
     # Access to data in memory, cache...
     context = {}
-    # This part is calculate in admincommand 'calc_stats'
+    # This part is calculate by admincommand 'calc_stats'
     # and save in shared memory
-    departmentStats = []
-    WS = '%sget_departamentos_y_miembros' % (st.WS_SERVER_URL)
-    department_list = json.loads(urllib.urlopen(WS).read())
-    for department in department_list:
-        data = {}
-        data['nombre'] = department['departamento']['nombre']
-        data['nombre_corto'] = department['departamento']['nombre_corto']
-        data.update(calc_stats_department(department['miembros']))
-        # Codigo departamenteo para mostrar los detalles
-        data['codigo'] = department['departamento']['cod_departamento']
-        departmentStats.append(data)
-    #
+    command = Command()
+    departmentStats = command.handle()
 #    context['departmentStats'] = departmentStats
     context['departmentStats'] = sorted(departmentStats,
                                         key=lambda departmentStats:
