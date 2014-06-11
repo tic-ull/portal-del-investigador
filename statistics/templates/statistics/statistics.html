@@ -4,11 +4,9 @@
 {% load l10n %}
 
 {% load staticfiles %}
-{% comment %}
 {%block breadcrumb %}	
-    <li><a href='{% url 'statistics' %}'>{% trans 'Estadísticas' %}</a></li>
+    <li><a href='{% url 'statistics' %}'>{% trans 'Departamentos' %}</a></li>
 {% endblock breadcrumb %}
-{% endcomment %}
 
 {% block main %}
 	<h1 class="page-header">{% trans 'Estadísticas del CVN' %}</h1>
@@ -29,7 +27,7 @@
 	        <tbody>
 	    {% for department in departmentStats %}
 	            <tr>
-	                <td width='50%'><a href=''>{{ department.nombre }}</a></td>
+	                <td width='50%'><a href='{% url 'stats_detail' department.codigo %}'>{{ department.nombre }}</a></td>
 	                <td width='15%'>{{ department.num_cvn_update }}</td>
 	                <td width='15%'>{{ department.num_computable_members }}</td>
 	                <td>
