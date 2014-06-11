@@ -113,12 +113,12 @@ class Command(BaseCommand):
               'Convenio': Convenio,
               'Tesis': TesisDoctoral}
 
-    NAME_FIELDS = {'Proyecto': 'denominacion_del_proyecto',
+    NAME_FIELDS = {'Proyecto': 'titulo',
                    'Articulo': 'titulo',
                    'Libro': 'titulo',
                    'Capitulo': 'titulo',
                    'Congreso': 'titulo',
-                   'Convenio': 'denominacion_del_proyecto',
+                   'Convenio': 'titulo',
                    'Tesis': 'titulo'}
 
     TIMESTAMP_FIELDS = ['updated_at', 'created_at', ]

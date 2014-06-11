@@ -2,6 +2,7 @@
 
 from cvn import settings as stCVN
 import datetime
+import string
 
 
 def _parse_duration(duration):
@@ -79,6 +80,15 @@ def parse_scope(treeXML):
             dataCVN['otro_ambito'] = unicode(treeXML.find(
                 'Others/Item').text.strip())
     return dataCVN
+
+
+def parse_title(xml):
+    '''Input: CvnItem node'''
+    title = None
+    node = xml.find('Title/Name/Item')
+    if node is not None:
+        title = unicode(node.text.strip(string.whitespace + '.,;"\''))
+    return title
 
 
 def parse_nif(xml):

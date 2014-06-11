@@ -30,7 +30,8 @@ class Informe_pdf:
     VIOLET_ULL = colors.HexColor('#7A3B7A')
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
-                 capitulosLibro, congresos, proyectos, convenios, tesis):
+                 capitulosLibro, congresos, proyectos, convenios, tesis,
+                 model_type=None):
         self.year = str(year)
         self.departamento = departamento
         self.investigadores = investigadores
@@ -61,8 +62,8 @@ class Informe_pdf:
         pathFile = "%s/%s/" % (stCVN.PDF_DEPT_ROOT, self.year)
         if not os.path.isdir(pathFile):
             os.makedirs(pathFile)
-        fileName = slugify(self.year + "-" + self.departamento['nombre'])\
-            + ".pdf"
+        fileName = slugify(
+            self.year + "-" + self.departamento['nombre']) + ".pdf"
         doc = SimpleDocTemplate(pathFile + fileName)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
@@ -253,8 +254,8 @@ class Informe_pdf:
     def listProyectos(self, story):
         for proy in self.proyectos:
             text = ""
-            if proy.denominacion_del_proyecto:
-                text += u"<b>%s</b><br/>" % (proy.denominacion_del_proyecto)
+            if proy.titulo:
+                text += u"<b>%s</b><br/>" % (proy.titulo)
             if proy.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     proy.fecha_de_inicio.strftime("%d/%m/%Y")
@@ -283,8 +284,8 @@ class Informe_pdf:
     def listConvenios(self, story):
         for conv in self.convenios:
             text = ""
-            if conv.denominacion_del_proyecto:
-                text += u"<b>%s</b><br/>" % (conv.denominacion_del_proyecto)
+            if conv.titulo:
+                text += u"<b>%s</b><br/>" % (conv.titulo)
             if conv.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     conv.fecha_de_inicio.strftime("%d/%m/%Y")

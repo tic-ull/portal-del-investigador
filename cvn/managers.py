@@ -6,7 +6,7 @@ from django.db.models import Q
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
                             parse_produccion_subtype, parse_date_interval,
-                            parse_produccion_id)
+                            parse_produccion_id, parse_title)
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -20,19 +20,15 @@ class ProduccionManager(models.Manager):
     def _create(self, insertion_dict, user_profile):
         search_dict = self._get_search_dict(insertion_dict)
         if not len(search_dict):
-            return
-        objects = super(ProduccionManager, self).get_query_set()
-        # Django 1.7 could use bellow code, if user_profile.add
-        # can be added to the query it is a possibility:
-        # reg = objects.update_or_create(defaults=insertion_dict,
-        #                               **search_dict)[0]
-        try:
-            reg = objects.get(**search_dict)
-        except ObjectDoesNotExist:
             reg = self.model(**insertion_dict)
         else:
-            for key, value in insertion_dict.items():
-                setattr(reg, key, value)
+            try:
+                reg = self.model.objects.get(**search_dict)
+            except ObjectDoesNotExist:
+                reg = self.model(**insertion_dict)
+            else:
+                for key, value in insertion_dict.items():
+                    setattr(reg, key, value)
         reg.save()
         reg.user_profile.add(user_profile)
         return reg
@@ -41,7 +37,7 @@ class ProduccionManager(models.Manager):
     def _get_search_dict(self, dictionary):
         out_dict = {}
         for item in self.search_items:
-            if item in dictionary:
+            if item in dictionary and dictionary[item] is not None:
                 out_dict[item + '__iexact'] = dictionary[item]
         return out_dict
 
@@ -57,9 +53,7 @@ class PublicacionManager(ProduccionManager):
     def create(self, item, user_profile):
         dataCVN = {}
         dataCVN[u'tipo_de_produccion'] = parse_produccion_subtype(item)
-        if item.find('Title/Name'):
-            dataCVN[u'titulo'] = unicode(item.find(
-                'Title/Name/Item').text.strip())
+        dataCVN['titulo'] = parse_title(item)
         if (item.find('Link/Title/Name') and
            item.find('Link/Title/Name/Item').text):
             dataCVN[u'nombre_publicacion'] = unicode(item.find(
@@ -110,9 +104,7 @@ class CongresoManager(ProduccionManager):
 
     def create(self, item, user_profile):
         dataCVN = {}
-        if item.find('Title/Name'):
-            dataCVN[u'titulo'] = unicode(item.find(
-                'Title/Name/Item').text.strip())
+        dataCVN['titulo'] = parse_title(item)
         for itemXML in item.findall('Link'):
             if itemXML.find(
                 'CvnItemID/CodeCVNItem/Item'
@@ -150,9 +142,7 @@ class TesisDoctoralManager(ProduccionManager):
 
     def create(self, item, user_profile):
         dataCVN = {}
-        node = item.find('Title/Name/Item')
-        if node is not None:
-            dataCVN[u'titulo'] = unicode(node.text.strip())
+        dataCVN['titulo'] = parse_title(item)
         node = item.find('Entity/EntityName/Item')
         if node is not None:
             dataCVN[u'universidad_que_titula'] = unicode(node.text.strip())
@@ -177,15 +167,11 @@ class TesisDoctoralManager(ProduccionManager):
 
 class ProyectoManager(ProduccionManager):
 
-    search_items = ['denominacion_del_proyecto']
+    search_items = ['titulo']
 
     def create(self, item, user_profile):
         dataCVN = {}
-        # Demonicación del Proyecto
-        if item.find('Title/Name'):
-            dataCVN[u'denominacion_del_proyecto'] = unicode(item.find(
-                'Title/Name/Item').text.strip())
-
+        dataCVN['titulo'] = parse_title(item)
         date_node = item.find('Date')
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
@@ -229,16 +215,12 @@ class ProyectoManager(ProduccionManager):
 
 class ConvenioManager(ProduccionManager):
 
-    search_items = ['denominacion_del_proyecto']
+    search_items = ['titulo']
 
     def create(self, item, user_profile):
 
         dataCVN = {}
-        # Demonicación del Proyecto
-        if item.find('Title/Name'):
-            dataCVN[u'denominacion_del_proyecto'] = unicode(item.find(
-                'Title/Name/Item').text.strip())
-
+        dataCVN['titulo'] = parse_title(item)
         date_node = item.find('Date')
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)

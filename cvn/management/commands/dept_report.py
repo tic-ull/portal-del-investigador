@@ -6,13 +6,14 @@ from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
+from informe_csv import Informe_csv
 from optparse import make_option
 import simplejson as json
 import urllib
 
 
 class Command(BaseCommand):
-    help = u'Genera un PDF con los datos de un Departamento'
+    help = u'Genera un PDF/CSV con los datos de un Departamento/Area'
     option_list = BaseCommand.option_list + (
         make_option(
             "-y",
@@ -24,60 +25,96 @@ class Command(BaseCommand):
             "-i",
             "--id",
             dest="id",
-            help="Specify the ID of the Department",
+            help="Specify the ID of the Department/Area",
+        ),
+        make_option(
+            "-t",
+            "--type",
+            dest="type",
+            default='d',
+            help="Specify the type of filtering: d (department) or a (area)",
+        ),
+        make_option(
+            "-f",
+            "--format",
+            dest="format",
+            default='pdf',
+            help="Specify the output format",
         ),
     )
 
     def handle(self, *args, **options):
         self.checkArgs(options)
         year = int(options['year'])
-        dept = [int(options['id'])] if type(options['id']) is str else None
-        self.createReports(year, dept)
+        type_id = [int(options['id'])] if type(options['id']) is str else None
+        model = None
+        if options['type'] == 'a':
+            # model = GrupoinvestAreaconocimiento
+            self.model_type = 'area'
+        else:
+            self.model_type = 'departamento'
+            self.codigo = 'cod_departamento'
+        if options['format'] == 'pdf':
+            self.generator = Informe_pdf
+        else:
+            self.generator = Informe_csv
+        self.createReports(year, type_id, model)
 
     def checkArgs(self, options):
         if not isdigit(options['year']):
             raise CommandError(
-                "Option `--year=YYYY` must exist and be a number"
-            )
+                "Option `--year=YYYY` must exist and be a number")
         if (not isdigit(options['id'])) and options['id'] is not None:
             raise CommandError("Option `--id=X` must be a number")
+        if not options['type'] == 'a' and not options['type'] == 'd':
+            raise CommandError("Option `--type=X` must be a (area) "
+                               "or d (department)")
+        if not options['format'] == 'pdf' and not options['format'] == 'csv':
+            raise CommandError("Option `--format=X` must be pdf or csv")
 
-    def createReports(self, year, dept=None):
-        if dept is None:
-            WS = '%sget_departamentos' % (st.WS_SERVER_URL)
-            departamentos = urllib.urlopen(WS).read()
-            departamentos = departamentos.replace('[', '')\
-                                         .replace(']', '')\
-                                         .split(', ')
+    def createReports(self, year, element_id, model):
+        if element_id is None:
+            if self.model_type == 'departamento':
+                WS = '%sget_departamentos?ano=%s' % (
+                    st.WS_SERVER_URL, year)
+                elements = urllib.urlopen(WS).read()
+                elements = elements.replace(
+                    '[', '').replace(']', '').split(', ')
+            else:
+                elements = model.objects.all()
         else:
-            departamentos = dept
+            elements = element_id
 
-        for cod_dept in departamentos:
-            if not cod_dept == 'INVES':
-                WS = '%sget_info_departamento?cod_departamento=%s'\
-                    % (st.WS_SERVER_URL, cod_dept)
-                departamento = json.loads(urllib.urlopen(WS).read())
-                if departamento:  # Diccionario con datos
-                    self.createReport(year, departamento)
+        for element in elements:
+            if not element == 'INVES':
+                if self.model_type == 'departamento':
+                    WS = '%sget_info_departamento?cod_departamento=%s' % (
+                        st.WS_SERVER_URL, element)
+                    departamento = json.loads(urllib.urlopen(WS).read())
+                    if departamento:
+                        self.createReport(year, departamento)
+                else:
+                    self.createReport(year, element)
 
-    def createReport(self, year, departamento):
+    def createReport(self, year, element):
         (investigadores, articulos,
          libros, capitulosLibro, congresos, proyectos,
-         convenios, tesis) = self.getData(year, departamento)
-        print 'Generando PDF para [%s] %s ... ' % (
-            departamento['cod_departamento'], departamento['nombre'])
+         convenios, tesis) = self.getData(year, element)
+        print 'Generando Informe para [%s] %s ... ' % (
+            element[self.codigo], element['nombre'])
         if investigadores:
-            informe = Informe_pdf(year, departamento, investigadores,
-                                  articulos, libros, capitulosLibro,
-                                  congresos, proyectos, convenios, tesis)
+            informe = self.generator(year, element, investigadores,
+                                     articulos, libros, capitulosLibro,
+                                     congresos, proyectos, convenios, tesis,
+                                     self.model_type)
             informe.go()
             print 'OK\n'
         else:
             print 'ERROR: No hay Investigadores\n'
 
-    def getData(self, year, departamento):
+    def getData(self, year, element):
         investigadores, usuarios = self.getInvestigadores(
-            year, departamento
+            year, element
         )
         articulos = Articulo.objects.byUsuariosYearTipo(
             usuarios, year, 'Articulo'
@@ -96,9 +133,10 @@ class Command(BaseCommand):
                 libros, capitulosLibro, congresos, proyectos,
                 convenios, tesis)
 
-    def getInvestigadores(self, year, dept):
-        WS = '%sget_pdi_vigente?cod_departamento=%s&ano=%s'\
-            % (st.WS_SERVER_URL, dept['cod_departamento'], year)
+    def getInvestigadores(self, year, element):
+        WS = '%sget_pdi_vigente?cod_%s=%s&ano=%s' % (
+            st.WS_SERVER_URL, self.model_type,
+            element[self.codigo], year)
         invesRRHH = json.loads(urllib.urlopen(WS).read())
         inves = list()
         for inv in invesRRHH:

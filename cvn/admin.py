@@ -56,7 +56,7 @@ class PublicationAdmin(admin.ModelAdmin):
 
 class ProyectoConvenioAdmin(admin.ModelAdmin):
     search_fields = (
-        'denominacion_del_proyecto',
+        'titulo',
         'user_profile__user__username',
         'user_profile__documento',
         'user_profile__user__first_name',

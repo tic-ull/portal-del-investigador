@@ -35,7 +35,7 @@ class CVNTestCase(TestCase):
             user = UserFactory.create()
             user.profile.cvn = cvn
             cvn.insert_xml()
-            self.assertEqual(user.profile.articulo_set.count(), 1135)
+            self.assertEqual(user.profile.articulo_set.count(), 1074)
             self.assertEqual(user.profile.libro_set.count(), 6)
             self.assertEqual(user.profile.capitulo_set.count(), 32)
             self.assertEqual(user.profile.congreso_set.count(), 55)
@@ -61,7 +61,7 @@ class CVNTestCase(TestCase):
                 count = count + 1
                 Articulo.objects.create(item, u.profile)
         self.assertEqual(count, 1214)
-        self.assertEqual(Articulo.objects.all().count(), 1135)
+        self.assertEqual(Articulo.objects.all().count(), 1074)
 
     def test_check_read_data_congress(self):
         cvn = CVN(xml_file=self.xml_test)
@@ -144,7 +144,7 @@ class CVNTestCase(TestCase):
                     data = Proyecto.objects.create(item, u.profile)
                 elif tipo == 'Convenio':
                     data = Convenio.objects.create(item, u.profile)
-                self.assertEqual(data.denominacion_del_proyecto,
+                self.assertEqual(data.titulo,
                                  u'Denominación del proyecto')
                 self.assertEqual(data.fecha_de_inicio,
                                  datetime.date(2014, 04, 01))
@@ -204,6 +204,13 @@ class CVNTestCase(TestCase):
         cvn = UploadCVNForm.CVN(u, os.path.join(
             stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
         self.assertTrue(os.path.isfile(full_path))
+
+    def test_productions_no_title(self):
+        u = UserFactory.create()
+        UploadCVNForm.CVN(u, os.path.join(
+            stCVN.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
+        self.assertEqual(len(u.profile.proyecto_set.all()), 3)
+        self.assertEqual(len(Articulo.objects.filter(user_profile__user=u)), 3)
 
     def test_check_change_date_cvn(self):
         date_1 = datetime.date(2014, 4, 3)

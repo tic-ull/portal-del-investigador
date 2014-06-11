@@ -419,7 +419,7 @@ class Proyecto(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     # Campos recomendados
-    denominacion_del_proyecto = models.CharField(
+    titulo = models.CharField(
         _('Denominación del proyecto'), max_length=1000,
         blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
@@ -541,11 +541,11 @@ class Proyecto(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % (self.denominacion_del_proyecto)
+        return u'%s' % (self.titulo)
 
     class Meta:
         verbose_name_plural = _(u'Proyectos')
-        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 class Convenio(models.Model):
@@ -557,7 +557,7 @@ class Convenio(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     # Campos recomendados
-    denominacion_del_proyecto = models.CharField(
+    titulo = models.CharField(
         _(u'Denominación del proyecto'), max_length=1000,
         blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
@@ -675,11 +675,11 @@ class Convenio(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % (self.denominacion_del_proyecto)
+        return u'%s' % (self.titulo)
 
     class Meta:
         verbose_name_plural = _(u'Convenios')
-        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 class TesisDoctoral(models.Model):
