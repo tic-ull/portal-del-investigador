@@ -36,7 +36,7 @@ class CVNTestCase(TestCase):
             user.profile.cvn = cvn
             cvn.insert_xml()
             self.assertEqual(user.profile.publicacion_set.filter(
-                tipo_de_produccion='Articulo').count(), 1135)
+                tipo_de_produccion='Articulo').count(), 1074)
             self.assertEqual(user.profile.publicacion_set.filter(
                 tipo_de_produccion='Libro').count(), 6)
             self.assertEqual(user.profile.publicacion_set.filter(
@@ -64,7 +64,7 @@ class CVNTestCase(TestCase):
                 count = count + 1
                 Articulo.objects.create(item, u.profile)
         self.assertEqual(count, 1214)
-        self.assertEqual(Articulo.objects.all().count(), 1135)
+        self.assertEqual(Articulo.objects.all().count(), 1074)
 
     def test_check_read_data_congress(self):
         cvn = CVN(xml_file=self.xml_test)
