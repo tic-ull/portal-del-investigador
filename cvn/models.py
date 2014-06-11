@@ -691,8 +691,8 @@ class TesisDoctoral(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     titulo = models.TextField(_(u'Título del trabajo'), blank=True, null=True)
-    fecha_de_lectura = models.DateField(_(u'Fecha de lectura'),
-                                        blank=True, null=True)
+    fecha = models.DateField(_(u'Fecha de lectura'),
+                             blank=True, null=True)
 
     # Doctorando-a/alumno-a
     autor = models.CharField(_(u'Autor'), max_length=256,
@@ -743,4 +743,4 @@ class TesisDoctoral(models.Model):
 
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')
-        ordering = ['-fecha_de_lectura', 'titulo']
+        ordering = ['-fecha', 'titulo']

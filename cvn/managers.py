@@ -160,14 +160,14 @@ class TesisDoctoralManager(ProduccionManager):
             item.findall('Author'))
         dataCVN[u'codirector'] = parse_authors(
             item.findall('Link/Author'))
-        dataCVN['fecha_de_lectura'] = parse_date(item.find('Date'))
+        dataCVN['fecha'] = parse_date(item.find('Date'))
         return super(TesisDoctoralManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
             Q(user_profile__in=usuarios) &
-            Q(fecha_de_lectura__year=year)
-        ).distinct().order_by('fecha_de_lectura')
+            Q(fecha__year=year)
+        ).distinct().order_by('fecha')
 
     def removeByUserProfile(self, user_profile):
         user_profile.tesisdoctoral_set.remove(

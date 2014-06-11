@@ -209,7 +209,7 @@ class Command(BaseCommand):
 
             elif TABLE == TesisDoctoral:
                 registros = TABLE.objects.filter(
-                    fecha_de_lectura__year=self.YEAR
+                    fecha__year=self.YEAR
                 ).exclude(usuario=None)
 
             elif TABLE == Convenio:

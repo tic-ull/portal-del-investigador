@@ -324,9 +324,9 @@ class Informe_pdf:
                 text += u"Director: %s" % (t.usuario)
             if t.codirector:
                 text += u"Codirector: %s" % (t.codirector)
-            if t.fecha_de_lectura:
+            if t.fecha:
                 text += u"Fecha de lectura: %s<br/>" % (
-                    t.fecha_de_lectura.strftime("%d/%m/%Y")
+                    t.fecha.strftime("%d/%m/%Y")
                 )
             story.append(Paragraph(text, self.styleN()))
 

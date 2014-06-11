@@ -190,7 +190,7 @@ class CVNTestCase(TestCase):
                 self.assertEqual(data.codirector,
                                  u'Nombre Primer Apellido '
                                  'Segundo Apellido (Firma)')
-                self.assertEqual(data.fecha_de_lectura,
+                self.assertEqual(data.fecha,
                                  datetime.date(2014, 04, 01))
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
