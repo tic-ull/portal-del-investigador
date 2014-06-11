@@ -199,6 +199,13 @@ class CVNTestCase(TestCase):
             stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
         self.assertTrue(os.path.isfile(full_path))
 
+    def test_productions_no_title(self):
+        u = UserFactory.create()
+        UploadCVNForm.CVN(u, os.path.join(
+            stCVN.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
+        self.assertEqual(len(u.profile.proyecto_set.all()), 3)
+        self.assertEqual(len(Articulo.objects.filter(user_profile__user=u)), 3)
+
     def test_check_change_date_cvn(self):
         date_1 = datetime.date(2014, 4, 3)
         date_2 = datetime.date(2013, 3, 3)

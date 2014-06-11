@@ -8,7 +8,7 @@ tinyMCE.init({
     theme_advanced_toolbar_align : "center",
     theme_advanced_resize_horizontal : true,
     paste_auto_cleanup_on_paste : true,
-    theme_advanced_buttons1 : "bold, italic, underline, separator, justifyleft, justifycenter, justifyright, justifyfull, separator, undo, redo, separator, cleanup, separator, bullist, numlisti,separator,link,unlink",
+    theme_advanced_buttons1 : "bold, italic, underline, separator, justifyleft, justifycenter, justifyright, justifyfull, separator, outdent, indent, separator, cut, copy, paste, separator, undo, redo, separator, cleanup, separator, bullist, numlist,separator,image, link,unlink",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     plugins : "table, spellchecker, paste, searchreplace, contextmenu",
