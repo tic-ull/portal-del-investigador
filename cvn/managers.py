@@ -201,11 +201,7 @@ class ConvenioManager(ProduccionManager):
     def create(self, item, user_profile):
 
         dataCVN = {}
-        # Demonicación del Proyecto
-        if item.find('Title/Name'):
-            dataCVN[u'denominacion_del_proyecto'] = unicode(item.find(
-                'Title/Name/Item').text.strip())
-
+        dataCVN['denominacion_del_proyecto'] = parse_title(item)
         date_node = item.find('Date')
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
