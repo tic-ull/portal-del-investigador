@@ -16,7 +16,8 @@ def calc_stats_department(members_list):
             user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
             if (member['cod_cce'] in PROFESSIONAL_CATEGORY):
                 num_computable_members += 1
-                if user.cvn.status == stCVN.CVNStatus.UPDATED:
+                if (user.cvn.status == stCVN.CVNStatus.UPDATED or
+                        user.cvn.status == stCVN.CVNStatus.INVALID_IDENTITY):
                     num_cvn_update += 1
         except ObjectDoesNotExist:
             pass

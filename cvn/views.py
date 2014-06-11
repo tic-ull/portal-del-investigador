@@ -36,12 +36,12 @@ def index(request):
     # STATS
     WS = '%sget_departamento_y_miembros?cod_persona=%s'\
          % (st.WS_SERVER_URL, user.profile.rrhh_code)
-    department = json.loads(urllib.urlopen(WS).read())
     try:
+        department = json.loads(urllib.urlopen(WS).read())
         context['stats'] = {'department': department['departamento']['nombre']}
         context['stats'].update(calc_stats_department(department['miembros']))
         context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
-    except KeyError:
+    except IOError:
         pass
     return render(request, 'cvn/index.html', context)
 
