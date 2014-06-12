@@ -21,6 +21,7 @@ def calc_stats_department(members_list):
                     num_cvn_update += 1
         except ObjectDoesNotExist:
             pass
+    dict_department['total_members'] = len(members_list)
     dict_department['num_computable_members'] = num_computable_members
     dict_department['num_cvn_update'] = num_cvn_update
     try:

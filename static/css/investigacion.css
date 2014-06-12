@@ -26,3 +26,13 @@
     vertical-align:middle; 
     margin: auto;
 }
+
+table td.alert-success {
+    background-color: #DFF0D8 !important;
+    border-color: transparent;
+}
+
+table td.alert-danger {
+    background-color: #F2DEDE !important;
+    border-color: transparent;
+}

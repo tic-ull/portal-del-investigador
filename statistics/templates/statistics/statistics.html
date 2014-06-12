@@ -19,17 +19,19 @@
 	        <thead>
 	            <tr>
 	                <th>{% trans 'Nombre' %} </th>
-	                <th>{% trans 'CVN actualizados' %}</th>
-	                <th>{% trans 'Nº de miembros computables' %}</th>
+	                <th>{% trans 'CVN válidos' %}</th>
+	                <th>{% trans 'Miembros computables' %}</th>
+	                <th>{% trans 'Miembros totales' %}</th>
 	                <th>{% trans 'Porcentaje de CVN válidos' %}</th>
 	            </tr>
 	        </thead>
 	        <tbody>
 	    {% for department in departmentStats %}
 	            <tr>
-	                <td width='50%'><a href='{% url 'stats_detail' department.codigo %}'>{{ department.nombre }}</a></td>
-	                <td width='15%'>{{ department.num_cvn_update }}</td>
-	                <td width='15%'>{{ department.num_computable_members }}</td>
+	                <td width='40%'><a href='{% url 'stats_detail' department.codigo %}'>{{ department.nombre }}</a></td>
+	                <td width='12%'>{{ department.num_cvn_update }}</td>
+	                <td width='12%'>{{ department.num_computable_members }}</td>
+	                <td width='12%'>{{ department.total_members }}</td>
 	                <td>
 	                    <div class="progress">
 	                        <div class="progress-bar 
