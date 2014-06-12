@@ -20,6 +20,7 @@ class CVNAdmin(admin.ModelAdmin):
     search_fields = (
         'user_profile__user__username',
         'user_profile__documento',
+        'user_profile__rrhh_code',
         'user_profile__user__first_name',
         'user_profile__user__last_name'
     )
@@ -35,6 +36,8 @@ class CVNInline(admin.StackedInline):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'documento', 'rrhh_code', )
+    search_fields = ['user__username', 'documento', 'rrhh_code', ]
     inlines = [
         CVNInline,
     ]
@@ -43,34 +46,24 @@ class UserProfileAdmin(admin.ModelAdmin):
         return False
 
 
-class PublicationAdmin(admin.ModelAdmin):
+class ProductionAdmin(admin.ModelAdmin):
     search_fields = (
         'titulo',
         'user_profile__user__username',
         'user_profile__documento',
         'user_profile__user__first_name',
-        'user_profile__user__last_name'
-    )
-    ordering = ('created_at',)
-
-
-class ProyectoConvenioAdmin(admin.ModelAdmin):
-    search_fields = (
-        'titulo',
-        'user_profile__user__username',
-        'user_profile__documento',
-        'user_profile__user__first_name',
-        'user_profile__user__last_name'
+        'user_profile__user__last_name',
+        'user_profile__rrhh_code',
     )
     ordering = ('created_at',)
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(CVN, CVNAdmin)
-admin.site.register(Articulo, PublicationAdmin)
-admin.site.register(Libro, PublicationAdmin)
-admin.site.register(Capitulo, PublicationAdmin)
-admin.site.register(TesisDoctoral, PublicationAdmin)
-admin.site.register(Congreso, PublicationAdmin)
-admin.site.register(Proyecto, ProyectoConvenioAdmin)
-admin.site.register(Convenio, ProyectoConvenioAdmin)
+admin.site.register(Articulo, ProductionAdmin)
+admin.site.register(Libro, ProductionAdmin)
+admin.site.register(Capitulo, ProductionAdmin)
+admin.site.register(TesisDoctoral, ProductionAdmin)
+admin.site.register(Congreso, ProductionAdmin)
+admin.site.register(Proyecto, ProductionAdmin)
+admin.site.register(Convenio, ProductionAdmin)
