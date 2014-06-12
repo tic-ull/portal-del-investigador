@@ -30,7 +30,8 @@ class Informe_pdf:
     VIOLET_ULL = colors.HexColor('#7A3B7A')
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
-                 capitulosLibro, congresos, proyectos, convenios, tesis):
+                 capitulosLibro, congresos, proyectos, convenios, tesis,
+                 model_type=None):
         self.year = str(year)
         self.departamento = departamento
         self.investigadores = investigadores
@@ -61,8 +62,8 @@ class Informe_pdf:
         pathFile = "%s/%s/" % (stCVN.PDF_DEPT_ROOT, self.year)
         if not os.path.isdir(pathFile):
             os.makedirs(pathFile)
-        fileName = slugify(self.year + "-" + self.departamento['nombre'])\
-            + ".pdf"
+        fileName = slugify(
+            self.year + "-" + self.departamento['nombre']) + ".pdf"
         doc = SimpleDocTemplate(pathFile + fileName)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
