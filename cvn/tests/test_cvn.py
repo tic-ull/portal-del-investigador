@@ -94,18 +94,20 @@ class CVNTestCase(TestCase):
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
             tipo = parse_produccion_type(item)
+            subtipo = parse_produccion_subtype(item)
             data = None
             if tipo == 'Publicacion':
 
-                if parse_produccion_subtype(item) == u'Articulo':
+                if subtipo == u'Articulo':
                     data = Articulo.objects.create(item, u.profile)
                     self.assertEqual(data.titulo, u'TÍTULO')
                     self.assertEqual(data.nombre_publicacion, u'NOMBRE')
                     self.assertEqual(data.autores,
                                      u'NOMBRE APELLIDO1 APELLIDO2 (STIC); '
                                      'NOMBRE2 APELLIDO12 APELLIDO22 (STIC2)')
+                    self.assertEqual(data.issn, u'0395-2037')
 
-                if parse_produccion_subtype(item) == u'Libro':
+                if subtipo == u'Libro':
                     data = Libro.objects.create(item, u.profile)
                     self.assertEqual(data.titulo, u'Título de la publicación')
                     self.assertEqual(data.nombre_publicacion,
@@ -114,7 +116,7 @@ class CVNTestCase(TestCase):
                                      u'Nombre Primer Apellido '
                                      'Segundo Apellido (STIC)')
 
-                if parse_produccion_subtype(item) == u'Capitulo':
+                if subtipo == u'Capitulo':
                     data = Capitulo.objects.create(item, u.profile)
                     self.assertEqual(data.titulo, u'Título de la publicación')
                     self.assertEqual(data.nombre_publicacion,
@@ -122,14 +124,13 @@ class CVNTestCase(TestCase):
                     self.assertEqual(data.autores,
                                      u'Nombre Primer Apellido '
                                      'Segundo Apellido (Firma)')
+                    self.assertEqual(data.issn, u'0395-2037')
 
                 self.assertEqual(data.volumen, u'1')
                 self.assertEqual(data.numero, u'1')
                 self.assertEqual(data.pagina_inicial, u'1')
                 self.assertEqual(data.pagina_final, u'100')
                 self.assertEqual(data.fecha, datetime.date(2014, 04, 01))
-                if data.tipo_de_produccion != 'Libro':
-                    self.assertEqual(data.issn, u'0395-2037')
 
     def test_check_read_data_project(self):
         cvn = CVN(xml_file=self.xml_test)

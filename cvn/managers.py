@@ -4,7 +4,7 @@ from cvn import settings as stCVN
 from django.db import models
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
-                            parse_produccion_subtype, parse_date_interval,
+                            parse_date_interval,
                             parse_produccion_id, parse_title)
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -51,7 +51,6 @@ class PublicacionManager(ProduccionManager):
 
     def create(self, item, user_profile):
         dataCVN = {}
-        dataCVN[u'tipo_de_produccion'] = parse_produccion_subtype(item)
         dataCVN['titulo'] = parse_title(item)
         if (item.find('Link/Title/Name') and
            item.find('Link/Title/Name/Item').text):
@@ -60,18 +59,17 @@ class PublicacionManager(ProduccionManager):
         dataCVN[u'autores'] = parse_authors(item.findall(
             'Author'))
         dataCVN.update(parse_publicacion_location(item.find('Location')))
-        dataCVN[u'fecha'] = parse_date(item.find('Date'))
+        dataCVN['fecha'] = parse_date(item.find('Date'))
         dataCVN['issn'] = parse_produccion_id(item.findall('ExternalPK'),
                                               stCVN.PRODUCCION_ID_CODE['ISSN'])
         dataCVN['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
                                               stCVN.PRODUCCION_ID_CODE['ISBN'])
         return super(PublicacionManager, self)._create(dataCVN, user_profile)
 
-    def byUsuariosYearTipo(self, usuarios, year, tipo):
-        return super(PublicacionManager, self).get_query_set().filter(
+    def byUsuariosYear(self, usuarios, year):
+        return self.model.objects.filter(
             user_profile__in=usuarios,
-            fecha__year=year,
-            tipo_de_produccion=tipo
+            fecha__year=year
         ).distinct().order_by('fecha')
 
 

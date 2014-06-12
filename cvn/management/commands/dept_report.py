@@ -116,15 +116,9 @@ class Command(BaseCommand):
         investigadores, usuarios = self.getInvestigadores(
             year, element
         )
-        articulos = Articulo.objects.byUsuariosYearTipo(
-            usuarios, year, 'Articulo'
-        )
-        libros = Libro.objects.byUsuariosYearTipo(
-            usuarios, year, 'Libro'
-        )
-        capitulosLibro = Capitulo.objects.byUsuariosYearTipo(
-            usuarios, year, 'Capitulo de Libro'
-        )
+        articulos = Articulo.objects.byUsuariosYear(usuarios, year)
+        libros = Libro.objects.byUsuariosYear(usuarios, year)
+        capitulosLibro = Capitulo.objects.byUsuariosYear(usuarios, year)
         congresos = Congreso.objects.byUsuariosYear(usuarios, year)
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
         convenios = Convenio.objects.byUsuariosYear(usuarios, year)

@@ -22,6 +22,7 @@ class LoginCAS(test.LiveServerTestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
+        #self.driver.set_page_load_timeout(30)
         self.base_url = "https://loginpruebas.ull.es/"
         self.verificationErrors = []
         self.accept_next_alert = True
