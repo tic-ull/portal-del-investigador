@@ -2,7 +2,6 @@
 
 from cvn import settings as stCVN
 from django.db import models
-from django.db.models import Q
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
                             parse_produccion_subtype, parse_date_interval,
@@ -70,9 +69,9 @@ class PublicacionManager(ProduccionManager):
 
     def byUsuariosYearTipo(self, usuarios, year, tipo):
         return super(PublicacionManager, self).get_query_set().filter(
-            Q(user_profile__in=usuarios) &
-            Q(fecha__year=year) &
-            Q(tipo_de_produccion=tipo)
+            user_profile__in=usuarios,
+            fecha__year=year,
+            tipo_de_produccion=tipo
         ).distinct().order_by('fecha')
 
 
@@ -128,8 +127,8 @@ class CongresoManager(ProduccionManager):
 
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
-            Q(user_profile__in=usuarios) &
-            Q(fecha_de_inicio__year=year)
+            user_profile__in=usuarios,
+            fecha_de_inicio__year=year
         ).distinct().order_by('fecha_de_inicio')
 
     def removeByUserProfile(self, user_profile):
@@ -155,8 +154,8 @@ class TesisDoctoralManager(ProduccionManager):
 
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
-            Q(user_profile__in=usuarios) &
-            Q(fecha__year=year)
+            user_profile__in=usuarios,
+            fecha__year=year
         ).distinct().order_by('fecha')
 
     def removeByUserProfile(self, user_profile):
@@ -194,9 +193,9 @@ class ProyectoManager(ProduccionManager):
         fechaInicioMax = datetime.date(year, 12, 31)
         fechaFinMin = datetime.date(year, 1, 1)
         elements = super(ProyectoManager, self).get_query_set().filter(
-            Q(user_profile__in=usuarios) &
-            Q(fecha_de_inicio__isnull=False) &
-            Q(fecha_de_inicio__lte=fechaInicioMax)
+            user_profile__in=usuarios,
+            fecha_de_inicio__isnull=False,
+            fecha_de_inicio__lte=fechaInicioMax
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
@@ -218,7 +217,6 @@ class ConvenioManager(ProduccionManager):
     search_items = ['titulo']
 
     def create(self, item, user_profile):
-
         dataCVN = {}
         dataCVN['titulo'] = parse_title(item)
         date_node = item.find('Date')
@@ -243,9 +241,9 @@ class ConvenioManager(ProduccionManager):
         fechaInicioMax = datetime.date(year, 12, 31)
         fechaFinMin = datetime.date(year, 1, 1)
         elements = super(ConvenioManager, self).get_query_set().filter(
-            Q(user_profile__in=usuarios) &
-            Q(fecha_de_inicio__isnull=False) &
-            Q(fecha_de_inicio__lte=fechaInicioMax)
+            user_profile__in=usuarios,
+            fecha_de_inicio__isnull=False,
+            fecha_de_inicio__lte=fechaInicioMax
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
