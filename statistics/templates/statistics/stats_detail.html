@@ -30,9 +30,11 @@
 	                <td>{{ member.miembro }}</td>
 	                <td>{{ member.categoria }}</td>
 	                <td>{{ member.obligatorio }}</td>
-                    {% if member.ColorStatus == 0 or member.ColorStatus == 2 %}
+                    {% if member.CVNStatus == 'Válido' %}
 	                <td class="alert alert-success">
                     {% comment %}
+                    <td>
+                        <font color="#3C763D">{{ member.CVNStatus }}</font>
                         <i class="fa fa-check"></i>
                     {% endcomment %}
                         {{ member.CVNStatus }}
@@ -40,6 +42,8 @@
                     {% else %}
 	                <td class="alert alert-danger">
                     {% comment %}
+                    <td>
+                        <font color="#A94442">{{ member.CVNStatus }}</font>
                         <i class="fa fa-warning"></i>
                     {% endcomment %}
                         {{ member.CVNStatus }}

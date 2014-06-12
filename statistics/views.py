@@ -71,8 +71,9 @@ def stats_detail(request, codigo):
                 data['obligatorio'] = _(u'Sí')
             try:
                 user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
-                data['CVNStatus'] = stCVN.CVN_STATUS[user.cvn.status][1]
-                data['ColorStatus'] = user.cvn.status
+                data['CVNStatus'] = _(u'Válido')
+                if user.cvn.status == stCVN.CVNStatus.EXPIRED:
+                    data['CVNStatus'] = _(u'Inválido')
             except ObjectDoesNotExist:
                 data['CVNStatus'] = _(u'No dispone de CVN')
             members_list.append(data)
