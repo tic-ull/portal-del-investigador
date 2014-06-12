@@ -7,8 +7,7 @@ from django.core.files.move import file_move_safe
 from django.db import models
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager, ArticuloManager,
-                      LibroManager, CapituloManager)
+                      ConvenioManager, TesisDoctoralManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
 from core import settings as stCore
@@ -121,9 +120,9 @@ class CVN(models.Model):
                     _(u'WARNING: Se requiere de un fichero CVN-XML'))
 
     def _remove_producciones(self):
-        Articulo.objects.removeByUserProfile(self.user_profile)
-        Libro.objects.removeByUserProfile(self.user_profile)
-        Capitulo.objects.removeByUserProfile(self.user_profile)
+        Articulo.removeByUserProfile(self.user_profile)
+        Libro.removeByUserProfile(self.user_profile)
+        Capitulo.removeByUserProfile(self.user_profile)
         Congreso.objects.removeByUserProfile(self.user_profile)
         Proyecto.objects.removeByUserProfile(self.user_profile)
         Convenio.objects.removeByUserProfile(self.user_profile)
@@ -278,7 +277,13 @@ class Publicacion(models.Model):
 
 class Articulo(Publicacion):
 
-    objects = ArticuloManager()
+    objects = PublicacionManager()
+
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.articulo_set.remove(
+            *user_profile.articulo_set.all())
+        Articulo.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Artículos')
@@ -286,7 +291,13 @@ class Articulo(Publicacion):
 
 class Libro(Publicacion):
 
-    objects = LibroManager()
+    objects = PublicacionManager()
+
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.libro_set.remove(
+            *user_profile.libro_set.all())
+        Libro.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Libros')
@@ -294,7 +305,13 @@ class Libro(Publicacion):
 
 class Capitulo(Publicacion):
 
-    objects = CapituloManager()
+    objects = PublicacionManager()
+
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.capitulo_set.remove(
+            *user_profile.capitulo_set.all())
+        Capitulo.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Capítulos de Libros')

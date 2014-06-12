@@ -73,30 +73,6 @@ class PublicacionManager(ProduccionManager):
         ).distinct().order_by('fecha')
 
 
-class ArticuloManager(PublicacionManager):
-
-    def removeByUserProfile(self, user_profile):
-        user_profile.articulo_set.remove(
-            *user_profile.articulo_set.all())
-        self.model.objects.filter(user_profile__isnull=True).delete()
-
-
-class LibroManager(PublicacionManager):
-
-    def removeByUserProfile(self, user_profile):
-        user_profile.libro_set.remove(
-            *user_profile.libro_set.all())
-        self.model.objects.filter(user_profile__isnull=True).delete()
-
-
-class CapituloManager(PublicacionManager):
-
-    def removeByUserProfile(self, user_profile):
-        user_profile.capitulo_set.remove(
-            *user_profile.capitulo_set.all())
-        self.model.objects.filter(user_profile__isnull=True).delete()
-
-
 class CongresoManager(ProduccionManager):
 
     def create(self, item, user_profile):
