@@ -82,6 +82,9 @@
             </div>
         {% endif %}
     </div>
+    {% if cvn and not cvn.is_inserted %}
+        <p class="alert alert-warning"><b>{% trans 'Próximamente podrá visualizar el contenido de su CVN' %}</b><p>
+    {% endif %}
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}

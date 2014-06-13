@@ -78,6 +78,7 @@ class CVN(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
     status = models.IntegerField(_(u'Estado'), choices=stCVN.CVN_STATUS)
+    is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
     class Meta:
         verbose_name_plural = _(u'Currículum Vitae Normalizado')
@@ -90,7 +91,6 @@ class CVN(models.Model):
         self._backup_pdf()
         if self.xml_file:
             self.xml_file.delete()      # Remove xml file
-        self._remove_producciones()     # Removed info related to cvn
 
     def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
@@ -111,6 +111,8 @@ class CVN(models.Model):
             self.xml_file.seek(0)
             CVNItems = etree.parse(self.xml_file).findall('CvnItem')
             self._parse_producciones(CVNItems)
+            self.is_inserted = True
+            self.save()
         except IOError:
             if self.xml_file:
                 logger.error(_(u'ERROR: No existe el fichero %s') % (
@@ -119,7 +121,7 @@ class CVN(models.Model):
                 logger.warning(
                     _(u'WARNING: Se requiere de un fichero CVN-XML'))
 
-    def _remove_producciones(self):
+    def remove_producciones(self):
         Articulo.removeByUserProfile(self.user_profile)
         Libro.removeByUserProfile(self.user_profile)
         Capitulo.removeByUserProfile(self.user_profile)
