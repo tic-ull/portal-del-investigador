@@ -4,7 +4,7 @@ from cvn import settings as stCVN
 from django.db import models
 from parser_helpers import (parse_scope, parse_authors,
                             parse_publicacion_location, parse_date,
-                            parse_date_interval,
+                            parse_date_interval, parse_economic,
                             parse_produccion_id, parse_title)
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -64,6 +64,8 @@ class PublicacionManager(ProduccionManager):
                                               stCVN.PRODUCCION_ID_CODE['ISSN'])
         dataCVN['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
                                               stCVN.PRODUCCION_ID_CODE['ISBN'])
+        dataCVN['deposito_legal'] = parse_produccion_id(item.findall(
+            'ExternalPK'), stCVN.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
         return super(PublicacionManager, self)._create(dataCVN, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
@@ -172,14 +174,9 @@ class ProyectoManager(ProduccionManager):
         date_node = item.find('Date')
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
-
         # Autores
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        # Dimensión Económica
-        for itemXML in item.findall('EconomicDimension'):
-            economic = itemXML.find('Value').attrib['code']
-            dataCVN[stCVN.ECONOMIC_DIMENSION[economic]] = unicode(itemXML.find(
-                'Value/Item').text.strip())
+        dataCVN.update(parse_economic(item.findall('EconomicDimension')))
         if item.find('ExternalPK/Code'):
             dataCVN[u'cod_segun_financiadora'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
@@ -220,14 +217,9 @@ class ConvenioManager(ProduccionManager):
         date_node = item.find('Date')
         (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
             dataCVN['duracion']) = parse_date_interval(date_node)
-
         # Autores
         dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        # Dimensión Económica
-        for itemXML in item.findall('EconomicDimension'):
-            economic = itemXML.find('Value').attrib['code']
-            dataCVN[stCVN.ECONOMIC_DIMENSION[economic]] = unicode(itemXML.find(
-                'Value/Item').text.strip())
+        dataCVN.update(parse_economic(item.findall('EconomicDimension')))
         if item.find('ExternalPK/Code'):
             dataCVN[u'cod_segun_financiadora'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
