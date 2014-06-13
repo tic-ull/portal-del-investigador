@@ -18,6 +18,8 @@ UserAdmin.list_display = (
     'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
 )
 
+UserAdmin.search_fields += ('profile__documento', 'profile__rrhh_code', )
+
 UserAdmin.inlines = [
     UserProfileInline,
 ]

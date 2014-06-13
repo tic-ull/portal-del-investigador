@@ -13,19 +13,18 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('cvn_file', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
             ('xml_file', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
-            ('fecha_cvn', self.gf('django.db.models.fields.DateField')()),
+            ('fecha', self.gf('django.db.models.fields.DateField')()),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('user_profile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.UserProfile'], unique=True)),
-            ('status', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('status', self.gf('django.db.models.fields.IntegerField')()),
         ))
         db.send_create_signal(u'cvn', ['CVN'])
 
-        # Adding model 'Publicacion'
-        db.create_table(u'cvn_publicacion', (
+        # Adding model 'Articulo'
+        db.create_table(u'cvn_articulo', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('tipo_de_produccion', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
             ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('tipo_de_soporte', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
             ('nombre_publicacion', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
@@ -60,34 +59,114 @@ class Migration(SchemaMigration):
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
-        db.send_create_signal(u'cvn', ['Publicacion'])
+        db.send_create_signal(u'cvn', ['Articulo'])
 
-        # Adding M2M table for field user_profile on 'Publicacion'
-        m2m_table_name = db.shorten_name(u'cvn_publicacion_user_profile')
+        # Adding M2M table for field user_profile on 'Articulo'
+        m2m_table_name = db.shorten_name(u'cvn_articulo_user_profile')
         db.create_table(m2m_table_name, (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('publicacion', models.ForeignKey(orm[u'cvn.publicacion'], null=False)),
+            ('articulo', models.ForeignKey(orm[u'cvn.articulo'], null=False)),
             ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['publicacion_id', 'userprofile_id'])
-
-        # Adding model 'Articulo'
-        db.create_table(u'cvn_articulo', (
-            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
-        ))
-        db.send_create_signal(u'cvn', ['Articulo'])
+        db.create_unique(m2m_table_name, ['articulo_id', 'userprofile_id'])
 
         # Adding model 'Libro'
         db.create_table(u'cvn_libro', (
-            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('tipo_de_soporte', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+            ('nombre_publicacion', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('editorial', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('volumen', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('numero', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('pagina_inicial', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('pagina_final', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('autores', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('posicion_sobre_total', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('en_calidad_de', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('isbn', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('issn', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('deposito_legal', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('url', self.gf('django.db.models.fields.URLField')(max_length=500, null=True, blank=True)),
+            ('coleccion', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('ciudad', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('pais', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('comunidad_or_region', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('fuente_de_impacto', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('categoria', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('indice_de_impacto', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('posicion', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('num_revistas', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('revista_25', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+            ('fuente_de_citas', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('citas', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('publicacion_relevante', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+            ('resenyas_en_revista', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('filtro', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('resultados_destacados', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
         db.send_create_signal(u'cvn', ['Libro'])
 
+        # Adding M2M table for field user_profile on 'Libro'
+        m2m_table_name = db.shorten_name(u'cvn_libro_user_profile')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('libro', models.ForeignKey(orm[u'cvn.libro'], null=False)),
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['libro_id', 'userprofile_id'])
+
         # Adding model 'Capitulo'
         db.create_table(u'cvn_capitulo', (
-            (u'publicacion_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['cvn.Publicacion'], unique=True, primary_key=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('tipo_de_soporte', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+            ('nombre_publicacion', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('editorial', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('volumen', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('numero', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('pagina_inicial', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('pagina_final', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('autores', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('posicion_sobre_total', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('en_calidad_de', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('isbn', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('issn', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('deposito_legal', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('url', self.gf('django.db.models.fields.URLField')(max_length=500, null=True, blank=True)),
+            ('coleccion', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('ciudad', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('pais', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('comunidad_or_region', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('fuente_de_impacto', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('categoria', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('indice_de_impacto', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('posicion', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('num_revistas', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('revista_25', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+            ('fuente_de_citas', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('citas', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('publicacion_relevante', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+            ('resenyas_en_revista', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('filtro', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
+            ('resultados_destacados', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
         db.send_create_signal(u'cvn', ['Capitulo'])
+
+        # Adding M2M table for field user_profile on 'Capitulo'
+        m2m_table_name = db.shorten_name(u'cvn_capitulo_user_profile')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('capitulo', models.ForeignKey(orm[u'cvn.capitulo'], null=False)),
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['capitulo_id', 'userprofile_id'])
 
         # Adding model 'Congreso'
         db.create_table(u'cvn_congreso', (
@@ -141,7 +220,7 @@ class Migration(SchemaMigration):
         # Adding model 'Proyecto'
         db.create_table(u'cvn_proyecto', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('denominacion_del_proyecto', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+            ('titulo', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
             ('numero_de_investigadores', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('autores', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('entidad_de_realizacion', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
@@ -192,7 +271,7 @@ class Migration(SchemaMigration):
         # Adding model 'Convenio'
         db.create_table(u'cvn_convenio', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('denominacion_del_proyecto', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+            ('titulo', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
             ('numero_de_investigadores', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('autores', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('entidad_financiadora', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
@@ -241,7 +320,7 @@ class Migration(SchemaMigration):
         db.create_table(u'cvn_tesisdoctoral', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('titulo', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('fecha_de_lectura', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('fecha', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('autor', self.gf('django.db.models.fields.CharField')(max_length=256, null=True, blank=True)),
             ('universidad_que_titula', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
             ('ciudad_del_trabajo', self.gf('django.db.models.fields.CharField')(max_length=500, null=True, blank=True)),
@@ -274,20 +353,23 @@ class Migration(SchemaMigration):
         # Deleting model 'CVN'
         db.delete_table(u'cvn_cvn')
 
-        # Deleting model 'Publicacion'
-        db.delete_table(u'cvn_publicacion')
-
-        # Removing M2M table for field user_profile on 'Publicacion'
-        db.delete_table(db.shorten_name(u'cvn_publicacion_user_profile'))
-
         # Deleting model 'Articulo'
         db.delete_table(u'cvn_articulo')
+
+        # Removing M2M table for field user_profile on 'Articulo'
+        db.delete_table(db.shorten_name(u'cvn_articulo_user_profile'))
 
         # Deleting model 'Libro'
         db.delete_table(u'cvn_libro')
 
+        # Removing M2M table for field user_profile on 'Libro'
+        db.delete_table(db.shorten_name(u'cvn_libro_user_profile'))
+
         # Deleting model 'Capitulo'
         db.delete_table(u'cvn_capitulo')
+
+        # Removing M2M table for field user_profile on 'Capitulo'
+        db.delete_table(db.shorten_name(u'cvn_capitulo_user_profile'))
 
         # Deleting model 'Congreso'
         db.delete_table(u'cvn_congreso')
@@ -359,12 +441,82 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'profile'", 'unique': 'True', 'to': u"orm['auth.User']"})
         },
         u'cvn.articulo': {
-            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Articulo', '_ormbases': [u'cvn.Publicacion']},
-            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'Articulo'},
+            'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'categoria': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'ciudad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'coleccion': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'comunidad_or_region': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'deposito_legal': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'editorial': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'en_calidad_de': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'filtro': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fuente_de_citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fuente_de_impacto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'indice_de_impacto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'isbn': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'issn': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'nombre_publicacion': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'num_revistas': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'numero': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pagina_final': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pagina_inicial': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pais': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'posicion': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'posicion_sobre_total': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'publicacion_relevante': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'resenyas_en_revista': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'resultados_destacados': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'revista_25': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'tipo_de_soporte': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
+            'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.capitulo': {
-            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Capitulo', '_ormbases': [u'cvn.Publicacion']},
-            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'Capitulo'},
+            'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'categoria': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'ciudad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'coleccion': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'comunidad_or_region': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'deposito_legal': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'editorial': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'en_calidad_de': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'filtro': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fuente_de_citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fuente_de_impacto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'indice_de_impacto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'isbn': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'issn': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'nombre_publicacion': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'num_revistas': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'numero': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pagina_final': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pagina_inicial': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'pais': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'posicion': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'posicion_sobre_total': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'publicacion_relevante': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'resenyas_en_revista': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'resultados_destacados': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'revista_25': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'tipo_de_soporte': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
+            'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
+            'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.congreso': {
             'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Congreso'},
@@ -406,7 +558,7 @@ class Migration(SchemaMigration):
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
         u'cvn.convenio': {
-            'Meta': {'ordering': "['-fecha_de_inicio', 'denominacion_del_proyecto']", 'object_name': 'Convenio'},
+            'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Convenio'},
             'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'calidad_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -418,7 +570,6 @@ class Migration(SchemaMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'cuantia_subproyecto': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
             'cuantia_total': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'denominacion_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
             'duracion': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'entidad_de_realizacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'entidad_financiadora': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -440,6 +591,7 @@ class Migration(SchemaMigration):
             'resultados_mas_relevantes': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'null': 'True', 'blank': 'True'}),
             'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
             'tipo_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'titulo': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
@@ -447,9 +599,9 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'CVN'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'cvn_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
-            'fecha_cvn': ('django.db.models.fields.DateField', [], {}),
+            'fecha': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'status': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'status': ('django.db.models.fields.IntegerField', [], {}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'user_profile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.UserProfile']", 'unique': 'True'}),
             'xml_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'})
@@ -459,52 +611,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
         u'cvn.libro': {
-            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Libro', '_ormbases': [u'cvn.Publicacion']},
-            u'publicacion_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['cvn.Publicacion']", 'unique': 'True', 'primary_key': 'True'})
-        },
-        u'cvn.proyecto': {
-            'Meta': {'ordering': "['-fecha_de_inicio', 'denominacion_del_proyecto']", 'object_name': 'Proyecto'},
-            'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'aportacion_del_solicitante': ('django.db.models.fields.TextField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
-            'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'calidad_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'ciudad_de_la_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'ciudad_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'cod_segun_financiadora': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
-            'comunidad_or_region_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'comunidad_or_region_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'cuantia_subproyecto': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'cuantia_total': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'denominacion_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
-            'duracion': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'entidad_de_realizacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'entidad_financiadora': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'entidad_participante': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'fecha_de_fin': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'fecha_de_inicio': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'modalidad_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'nombre_del_programa': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'numero_de_investigadores': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'numero_personas_anyo': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'otro_ambito': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
-            'pais_de_la_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'pais_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'palabras_clave': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
-            'palabras_clave_dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'porcentaje_en_credito': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'porcentaje_en_subvencion': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'porcentaje_mixto': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
-            'resultados_mas_relevantes': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'null': 'True', 'blank': 'True'}),
-            'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'tipo_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
-            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
-        },
-        u'cvn.publicacion': {
-            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Publicacion'},
+            'Meta': {'object_name': 'Libro'},
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'categoria': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'citas': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -535,7 +642,6 @@ class Migration(SchemaMigration):
             'resenyas_en_revista': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'resultados_destacados': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'revista_25': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'tipo_de_produccion': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'tipo_de_soporte': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
             'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
@@ -543,8 +649,49 @@ class Migration(SchemaMigration):
             'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
         },
+        u'cvn.proyecto': {
+            'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Proyecto'},
+            'ambito': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'aportacion_del_solicitante': ('django.db.models.fields.TextField', [], {'max_length': '2048', 'null': 'True', 'blank': 'True'}),
+            'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'calidad_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'ciudad_de_la_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'ciudad_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'cod_segun_financiadora': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'comunidad_or_region_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'comunidad_or_region_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'cuantia_subproyecto': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
+            'cuantia_total': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
+            'dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
+            'duracion': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'entidad_de_realizacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'entidad_financiadora': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'entidad_participante': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'fecha_de_fin': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'fecha_de_inicio': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'modalidad_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'nombre_del_programa': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'numero_de_investigadores': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'numero_personas_anyo': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'otro_ambito': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
+            'pais_de_la_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'pais_del_proyecto': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'palabras_clave': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
+            'palabras_clave_dedicacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'porcentaje_en_credito': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
+            'porcentaje_en_subvencion': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
+            'porcentaje_mixto': ('django.db.models.fields.DecimalField', [], {'null': 'True', 'max_digits': '19', 'decimal_places': '2', 'blank': 'True'}),
+            'resultados_mas_relevantes': ('django.db.models.fields.CharField', [], {'max_length': '1024', 'null': 'True', 'blank': 'True'}),
+            'tipo_de_entidad': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'tipo_participacion': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'titulo': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
+        },
         u'cvn.tesisdoctoral': {
-            'Meta': {'ordering': "['-fecha_de_lectura', 'titulo']", 'object_name': 'TesisDoctoral'},
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'TesisDoctoral'},
             'autor': ('django.db.models.fields.CharField', [], {'max_length': '256', 'null': 'True', 'blank': 'True'}),
             'calificacion': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'ciudad_del_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
@@ -552,7 +699,7 @@ class Migration(SchemaMigration):
             'comunidad_or_region_trabajo': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'doctorado_europeo': ('django.db.models.fields.CharField', [], {'max_length': '4', 'null': 'True', 'blank': 'True'}),
-            'fecha_de_lectura': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'fecha_mencion_de_calidad': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'fecha_mencion_doctorado_europeo': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

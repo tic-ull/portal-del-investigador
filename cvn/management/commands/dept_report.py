@@ -1,15 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import (Publicacion, Congreso, Proyecto, Convenio,
-                        TesisDoctoral, UserProfile)
+from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
+                        Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from informe_csv import Informe_csv
 from optparse import make_option
-# from viinvDB.models import (GrupoinvestInvestigador,
-#                             GrupoinvestAreaconocimiento)
 import simplejson as json
 import urllib
 
@@ -118,15 +116,9 @@ class Command(BaseCommand):
         investigadores, usuarios = self.getInvestigadores(
             year, element
         )
-        articulos = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, year, 'Articulo'
-        )
-        libros = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, year, 'Libro'
-        )
-        capitulosLibro = Publicacion.objects.byUsuariosYearTipo(
-            usuarios, year, 'Capitulo de Libro'
-        )
+        articulos = Articulo.objects.byUsuariosYear(usuarios, year)
+        libros = Libro.objects.byUsuariosYear(usuarios, year)
+        capitulosLibro = Capitulo.objects.byUsuariosYear(usuarios, year)
         congresos = Congreso.objects.byUsuariosYear(usuarios, year)
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
         convenios = Convenio.objects.byUsuariosYear(usuarios, year)

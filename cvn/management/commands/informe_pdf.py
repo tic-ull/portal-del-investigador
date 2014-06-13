@@ -254,8 +254,8 @@ class Informe_pdf:
     def listProyectos(self, story):
         for proy in self.proyectos:
             text = ""
-            if proy.denominacion_del_proyecto:
-                text += u"<b>%s</b><br/>" % (proy.denominacion_del_proyecto)
+            if proy.titulo:
+                text += u"<b>%s</b><br/>" % (proy.titulo)
             if proy.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     proy.fecha_de_inicio.strftime("%d/%m/%Y")
@@ -284,8 +284,8 @@ class Informe_pdf:
     def listConvenios(self, story):
         for conv in self.convenios:
             text = ""
-            if conv.denominacion_del_proyecto:
-                text += u"<b>%s</b><br/>" % (conv.denominacion_del_proyecto)
+            if conv.titulo:
+                text += u"<b>%s</b><br/>" % (conv.titulo)
             if conv.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     conv.fecha_de_inicio.strftime("%d/%m/%Y")
@@ -325,9 +325,9 @@ class Informe_pdf:
                 text += u"Director: %s" % (t.usuario)
             if t.codirector:
                 text += u"Codirector: %s" % (t.codirector)
-            if t.fecha_de_lectura:
+            if t.fecha:
                 text += u"Fecha de lectura: %s<br/>" % (
-                    t.fecha_de_lectura.strftime("%d/%m/%Y")
+                    t.fecha.strftime("%d/%m/%Y")
                 )
             story.append(Paragraph(text, self.styleN()))
 

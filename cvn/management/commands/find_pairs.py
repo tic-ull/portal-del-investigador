@@ -1,7 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import (Usuario, Proyecto, Publicacion, Congreso, Convenio,
-                        TesisDoctoral)
+from cvn.models import (Proyecto, Congreso, Convenio, Articulo,
+                        TesisDoctoral, Libro, Capitulo)
+from core.models import UserProfile
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from joblib import Parallel, delayed
@@ -102,29 +103,22 @@ class Command(BaseCommand):
             default=False,
             help="specify the year for searching in format XXXX or use 'all'",
         ),
-        make_option(
-            "-p",
-            "--publication",
-            dest="publication",
-            default=False,
-            help="specify the type of publication for searching",
-        ),
     )
 
-    PUBLICATION_TYPES = {'libro': u'Libro',
-                         'capitulo': u'Capitulo de Libro',
-                         'articulo': u'Articulo'}
-
     TABLES = {'Proyecto': Proyecto,
-              'Publicacion': Publicacion,
+              'Articulo': Articulo,
+              'Libro': Libro,
+              'Capitulo': Capitulo,
               'Congreso': Congreso,
               'Convenio': Convenio,
               'Tesis': TesisDoctoral}
 
-    NAME_FIELDS = {'Proyecto': 'denominacion_del_proyecto',
-                   'Publicacion': 'titulo',
+    NAME_FIELDS = {'Proyecto': 'titulo',
+                   'Articulo': 'titulo',
+                   'Libro': 'titulo',
+                   'Capitulo': 'titulo',
                    'Congreso': 'titulo',
-                   'Convenio': 'denominacion_del_proyecto',
+                   'Convenio': 'titulo',
                    'Tesis': 'titulo'}
 
     TIMESTAMP_FIELDS = ['updated_at', 'created_at', ]
@@ -171,10 +165,6 @@ class Command(BaseCommand):
         log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
 
     def checkArgs(self, options):
-        if options['publication']:
-            if options['publication'] not in self.PUBLICATION_TYPES:
-                raise CommandError('Option publication: allowed values:'
-                                   'libro, capitulo, articulo')
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
@@ -183,7 +173,8 @@ class Command(BaseCommand):
                 NAME_FIELD = self.NAME_FIELDS[options['table']]
             else:
                 raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
-                                   "Convenio, Publicacion, Tesis or Congreso "
+                                   "Convenio, Articulo, Libro, Capitulo, " +
+                                   "Tesis or Congreso "
                                    .format(options['table']))
         if options['differing_pairs'] is None:
             raise CommandError("Option `--diff=0, 1...` must be specified.")
@@ -206,16 +197,10 @@ class Command(BaseCommand):
                     fecha_de_inicio__year=self.YEAR
                 ).exclude(usuario=None)
 
-            elif TABLE == Publicacion:
+            elif TABLE in [Articulo, Libro, Capitulo]:
                 registros = TABLE.objects.filter(
                     fecha__year=self.YEAR
                 ).exclude(usuario=None)
-                if options['publication']:
-                    registros = registros.filter(
-                        tipo_de_produccion=self.PUBLICATION_TYPES[
-                            options['publication']
-                        ]
-                    )
 
             elif TABLE == Congreso:
                 registros = TABLE.objects.filter(
@@ -224,7 +209,7 @@ class Command(BaseCommand):
 
             elif TABLE == TesisDoctoral:
                 registros = TABLE.objects.filter(
-                    fecha_de_lectura__year=self.YEAR
+                    fecha__year=self.YEAR
                 ).exclude(usuario=None)
 
             elif TABLE == Convenio:
@@ -235,12 +220,12 @@ class Command(BaseCommand):
         if options['usuario']:
             usuario = options['usuario']
             try:
-                usuario = Usuario.objects.get(documento=usuario)
+                usuario = UserProfile.objects.get(documento=usuario)
             except:
                 raise CommandError('El usuario con documento "{0}" no existe'
                                    .format(usuario))
 
-            if TABLE in [Congreso, Publicacion, Proyecto]:
+            if TABLE in [Congreso, Articulo, Libro, Capitulo, Proyecto]:
                 registros = registros.filter(usuario=usuario)
             else:
                 new_registros = []
@@ -308,10 +293,10 @@ class Command(BaseCommand):
                         # exit=True
                         if choice == 'q':
                             return None, True
-                         # Selecciona el registro recomendado
+                        # Selecciona el registro recomendado
                         if choice == "":
                             attr = master_f
-                       # Selecciona el registro de la tupla 1
+                        # Selecciona el registro de la tupla 1
                         if choice == 1:
                             attr = f1
                         # Selecciona el registro de la tupla 2

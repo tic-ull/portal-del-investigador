@@ -192,13 +192,13 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a class="fa fa-plus" data-toggle="collapse" href="#conv{{convenio.id}}">
-                                    {{ convenio.denominacion_del_proyecto }}</a>
+                                    {{ convenio.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="conv{{convenio.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if convenio.denominacion_del_proyecto %}
-                                        <strong>{{ convenio.denominacion_del_proyecto }}</strong><br>
+                                    {% if convenio.titulo %}
+                                        <strong>{{ convenio.titulo }}</strong><br>
                                     {% endif %}
                                     {% if fecha_de_inicio %}
                                         {% trans "Fecha de inicio" %}: {{ convenio.fecha_de_inicio }}<br>
@@ -231,13 +231,13 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a  class="fa fa-plus" data-toggle="collapse" href="#pro{{proyecto.id}}">
-                                    {{ proyecto.denominacion_del_proyecto  }}</a>
+                                    {{ proyecto.titulo  }}</a>
                                 </h4>
                             </div>
                             <div id="pro{{proyecto.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if proyecto.denominacion_del_proyecto %}
-                                        <strong>{{ proyecto.denominacion_del_proyecto }}</strong><br>
+                                    {% if proyecto.titulo %}
+                                        <strong>{{ proyecto.titulo }}</strong><br>
                                     {% endif %}
                                     {% if proyecto.fecha_de_inicio %}
                                         {% trans "Fecha de inicio" %}: {{ proyecto.fecha_de_inicio }}<br>
@@ -291,8 +291,8 @@
                                     {% if tesis.codirector %}
                                         {% trans "Codirector" %}: {{ tesis.codirector }}<br>
                                     {% endif %}
-                                    {% if tesis.fecha_de_lectura %}
-                                        {% trans "Fecha de lectura" %}: {{ tesis.fecha_de_lectura }}
+                                    {% if tesis.fecha %}
+                                        {% trans "Fecha de lectura" %}: {{ tesis.fecha }}
                                     {% endif %}
                                 </div>
                             </div>

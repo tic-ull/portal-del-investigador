@@ -73,7 +73,7 @@ class FECYT(models.Model):
 class CVN(models.Model):
     cvn_file = models.FileField(_(u'PDF'), upload_to=stCVN.PDF_ROOT)
     xml_file = models.FileField(_(u'XML'), upload_to=stCVN.XML_ROOT)
-    fecha_cvn = models.DateField(_(u'Fecha del CVN'))
+    fecha = models.DateField(_(u'Fecha del CVN'))
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
     user_profile = models.OneToOneField(UserProfile)
@@ -83,7 +83,7 @@ class CVN(models.Model):
         verbose_name_plural = _(u'Currículum Vitae Normalizado')
 
     def __unicode__(self):
-        return _(u'%s con fecha %s') % (self.cvn_file, self.fecha_cvn)
+        return _(u'%s con fecha %s') % (self.cvn_file, self.fecha)
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
@@ -120,7 +120,9 @@ class CVN(models.Model):
                     _(u'WARNING: Se requiere de un fichero CVN-XML'))
 
     def _remove_producciones(self):
-        Publicacion.objects.removeByUserProfile(self.user_profile)
+        Articulo.removeByUserProfile(self.user_profile)
+        Libro.removeByUserProfile(self.user_profile)
+        Capitulo.removeByUserProfile(self.user_profile)
         Congreso.objects.removeByUserProfile(self.user_profile)
         Proyecto.objects.removeByUserProfile(self.user_profile)
         Convenio.objects.removeByUserProfile(self.user_profile)
@@ -152,7 +154,7 @@ class CVN(models.Model):
         status = None
         if not self._is_valid_identity():
             status = stCVN.CVNStatus.INVALID_IDENTITY
-        elif self.fecha_cvn <= stCVN.FECHA_CADUCIDAD:
+        elif self.fecha <= stCVN.FECHA_CADUCIDAD:
             status = stCVN.CVNStatus.EXPIRED
         else:
             status = stCVN.CVNStatus.UPDATED
@@ -181,9 +183,6 @@ class Publicacion(models.Model):
     # Una publicación puede pertenecer a varios usuarios.
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    # Campos recomendados
-    tipo_de_produccion = models.CharField(_(u'Tipo de producción'),
-                                          max_length=50, blank=True, null=True)
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
 
     tipo_de_soporte = models.CharField(_(u'Tipo de soporte'),
@@ -268,16 +267,23 @@ class Publicacion(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return "%s %s" % (self.tipo_de_produccion, self.titulo)
+        return "%s" % (self.titulo)
 
     class Meta:
         verbose_name_plural = _(u'Publicaciones')
         ordering = ['-fecha', 'titulo']
+        abstract = True
 
 
 class Articulo(Publicacion):
 
     objects = PublicacionManager()
+
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.articulo_set.remove(
+            *user_profile.articulo_set.all())
+        Articulo.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Artículos')
@@ -287,6 +293,12 @@ class Libro(Publicacion):
 
     objects = PublicacionManager()
 
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.libro_set.remove(
+            *user_profile.libro_set.all())
+        Libro.objects.filter(user_profile__isnull=True).delete()
+
     class Meta:
         verbose_name_plural = _(u'Libros')
 
@@ -294,6 +306,12 @@ class Libro(Publicacion):
 class Capitulo(Publicacion):
 
     objects = PublicacionManager()
+
+    @staticmethod
+    def removeByUserProfile(user_profile):
+        user_profile.capitulo_set.remove(
+            *user_profile.capitulo_set.all())
+        Capitulo.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Capítulos de Libros')
@@ -415,7 +433,7 @@ class Proyecto(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     # Campos recomendados
-    denominacion_del_proyecto = models.CharField(
+    titulo = models.CharField(
         _('Denominación del proyecto'), max_length=1000,
         blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
@@ -537,11 +555,11 @@ class Proyecto(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % (self.denominacion_del_proyecto)
+        return u'%s' % (self.titulo)
 
     class Meta:
         verbose_name_plural = _(u'Proyectos')
-        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 class Convenio(models.Model):
@@ -553,7 +571,7 @@ class Convenio(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     # Campos recomendados
-    denominacion_del_proyecto = models.CharField(
+    titulo = models.CharField(
         _(u'Denominación del proyecto'), max_length=1000,
         blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
@@ -671,11 +689,11 @@ class Convenio(models.Model):
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % (self.denominacion_del_proyecto)
+        return u'%s' % (self.titulo)
 
     class Meta:
         verbose_name_plural = _(u'Convenios')
-        ordering = ['-fecha_de_inicio', 'denominacion_del_proyecto']
+        ordering = ['-fecha_de_inicio', 'titulo']
 
 
 class TesisDoctoral(models.Model):
@@ -687,8 +705,8 @@ class TesisDoctoral(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     titulo = models.TextField(_(u'Título del trabajo'), blank=True, null=True)
-    fecha_de_lectura = models.DateField(_(u'Fecha de lectura'),
-                                        blank=True, null=True)
+    fecha = models.DateField(_(u'Fecha de lectura'),
+                             blank=True, null=True)
 
     # Doctorando-a/alumno-a
     autor = models.CharField(_(u'Autor'), max_length=256,
@@ -739,4 +757,4 @@ class TesisDoctoral(models.Model):
 
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')
-        ordering = ['-fecha_de_lectura', 'titulo']
+        ordering = ['-fecha', 'titulo']
