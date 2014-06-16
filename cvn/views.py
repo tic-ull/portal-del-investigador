@@ -6,8 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 #
-from django.conf import settings as st
-from statistics.settings import PERCENT_VALID_DEPT_CVN
+from statistics.settings import PERCENT_VALID_DEPT_CVN, WS_DEPARTMENT
 from statistics.utils import calc_stats_department
 #
 from django.http import HttpResponse
@@ -34,10 +33,9 @@ def index(request):
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     # STATS
-    WS = '%sget_departamento_y_miembros?cod_persona=%s'\
-         % (st.WS_SERVER_URL, user.profile.rrhh_code)
     try:
-        department = json.loads(urllib.urlopen(WS).read())
+        department = json.loads(urllib.urlopen(
+                                WS_DEPARTMENT % user.profile.rrhh_code).read())
         context['stats'] = {'department': department['departamento']['nombre']}
         context['stats'].update(calc_stats_department(department['miembros']))
         context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN

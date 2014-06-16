@@ -17,9 +17,10 @@ class DepartmentManager(models.Manager):
         num_computable_members = 0
         for member in members:
             try:
-                user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
                 if (member['cod_cce'] in PROFESSIONAL_CATEGORY):
                     num_computable_members += 1
+                    user = UserProfile.objects.get(rrhh_code=
+                                                   member['cod_persona'])
                     status = user.cvn.status
                     if (status == stCVN.CVNStatus.UPDATED or
                             status == stCVN.CVNStatus.INVALID_IDENTITY):

@@ -2,7 +2,7 @@
 
 from django.core.management.base import BaseCommand
 from statistics.models import Department
-from statistics.settings import WS_ALL_DEPARTMETS
+from statistics.settings import WS_ALL_DEPARTMENTS
 import json
 import logging
 import urllib
@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             department_list = json.loads(urllib.urlopen(
-                                         WS_ALL_DEPARTMETS).read())
+                                         WS_ALL_DEPARTMENTS).read())
             Department.objects.all().delete()
             Department.objects.create_all(department_list)
         except IOError as e:

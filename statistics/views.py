@@ -2,7 +2,6 @@
 
 from core.models import UserProfile
 from cvn import settings as stCVN
-from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from statistics.settings import (PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY,
-                                 WS_DEPARTMEMT, WS_INFO_PDI)
+                                 WS_DEPARTMENT, WS_INFO_PDI)
 from statistics.models import Department
 import json
 import urllib
@@ -42,7 +41,7 @@ def stats_detail(request, codigo):
     context = {}
     try:
         dataDepartment = json.loads(urllib.urlopen(
-                                    WS_DEPARTMEMT % codigo).read())
+                                    WS_DEPARTMENT % codigo).read())
         context['departamento'] = dataDepartment['departamento']['nombre']
         members_list = []
         for member in dataDepartment['miembros']:
