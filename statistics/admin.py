@@ -1,3 +1,9 @@
 from django.contrib import admin
+from statistics.models import ProfessionalCategory
 
-# Register your models here.
+
+class ProfessionalCategoryAdmin(admin.ModelAdmin):
+    model = ProfessionalCategory
+
+
+admin.site.register(ProfessionalCategory, ProfessionalCategoryAdmin)

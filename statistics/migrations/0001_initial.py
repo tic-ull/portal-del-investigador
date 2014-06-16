@@ -32,6 +32,15 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'statistics', ['Area'])
 
+        # Adding model 'ProfessionalCategory'
+        db.create_table(u'statistics_professionalcategory', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('code', self.gf('django.db.models.fields.CharField')(unique=True, max_length=10)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('is_cvn_required', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+        ))
+        db.send_create_signal(u'statistics', ['ProfessionalCategory'])
+
 
     def backwards(self, orm):
         # Deleting model 'Department'
@@ -39,6 +48,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Area'
         db.delete_table(u'statistics_area')
+
+        # Deleting model 'ProfessionalCategory'
+        db.delete_table(u'statistics_professionalcategory')
 
 
     models = {
@@ -61,6 +73,13 @@ class Migration(SchemaMigration):
             'number_valid_cvn': ('django.db.models.fields.IntegerField', [], {}),
             'percentage': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '2'}),
             'total_members': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'statistics.professionalcategory': {
+            'Meta': {'object_name': 'ProfessionalCategory'},
+            'code': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '10'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_cvn_required': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         }
     }
 

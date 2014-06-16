@@ -1,20 +1,22 @@
 # -*- encoding: UTF-8 -*-
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from statistics.managers import StatsManager
 from core.models import UserProfile
 import statistics.settings as stSt
 import cvn.settings as stCVN
-from django.core.exceptions import ObjectDoesNotExist
+import json
+import urllib
 
 
 class Stats(models.Model):
-    name = models.CharField(_('Nombre'), max_length=40, unique=True)
+    name = models.CharField(_(u'Nombre'), max_length=40, unique=True)
     code = models.CharField(_(u'Código departamento'), max_length=10)
     number_valid_cvn = models.IntegerField(_(u'Número de CVN válidos'))
     computable_members = models.IntegerField(_(u'Miembros computables'))
-    total_members = models.IntegerField(_('Miembros totales'))
+    total_members = models.IntegerField(_(u'Miembros totales'))
     percentage = models.DecimalField(_(u'Porcentaje de CVN válidos'),
                                      max_digits=5, decimal_places=2)
     objects = StatsManager()
@@ -58,3 +60,31 @@ class Department(Stats):
 
 class Area(Stats):
     pass
+
+
+class ProfessionalCategory(models.Model):
+    code = models.CharField(_(u'Código de categoría'), max_length=10,
+                            unique=True)
+    name = models.CharField(_(u'Nombre'), max_length=255)
+    is_cvn_required = models.NullBooleanField(_(u'CVN requerido'))
+
+    @staticmethod
+    def update(past_days=0):
+        categories = json.loads(
+            urllib.urlopen(stSt.WS_CATEGORY % past_days).read())
+        for category in categories:
+            try:
+                pc = ProfessionalCategory.objects.get(code=category['id'])
+                if pc.name != category['descripcion']:
+                    pc.name = category['descripcion']
+                    pc.save()
+            except ObjectDoesNotExist:
+                ProfessionalCategory.objects.create(
+                    **{'name': category['descripcion'],
+                       'code': category['id']})
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = _(u'Professional categories')

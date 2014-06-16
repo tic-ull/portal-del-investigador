@@ -2,6 +2,7 @@
 
 from cvn.forms import UploadCVNForm
 from cvn.utils import scientific_production_to_context, cvn_to_context
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -43,6 +44,8 @@ def index(request):
     except IOError:  # WS down
         pass
     except KeyError:  # Test users
+        pass
+    except ObjectDoesNotExist:  # Not Department load
         pass
     return render(request, 'cvn/index.html', context)
 

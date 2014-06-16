@@ -13,6 +13,9 @@ WS_INFO_USER = st.WS_SERVER_URL + 'get_departamento_y_miembros?cod_persona=%s'
 WS_INFO_PDI = st.WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
 WS_INFO_PDI_YEAR = st.WS_SERVER_URL + 'get_info_pdi?cod_persona=%s&ano=%s'
 WS_PDI_VALID = st.WS_SERVER_URL + 'get_pdi_vigente?cod_%s=%s&ano=%s'
+# WS_CATEGORY = st.WS_SERVER_URL +'get_cce'
+WS_CATEGORY = st.WS_SERVER_URL +'get_cce?past_days=%s'
+
 
 
 PERCENT_VALID_DEPT_CVN = 75
