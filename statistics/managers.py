@@ -43,6 +43,4 @@ class DepartmentManager(models.Manager):
                                department['departamento']['nombre'],
                                department['departamento']['cod_departamento'],
                                department['miembros']))
-        import pdb
-        pdb.set_trace()
         return super(DepartmentManager, self).bulk_create(departments)

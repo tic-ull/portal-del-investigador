@@ -9,7 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 #from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from statistics.settings import PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY
+from statistics.settings import (PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY,
+                                 WS_DEPARTMEMT, WS_INFO_PDI)
 from statistics.models import Department
 import json
 import urllib
@@ -39,18 +40,16 @@ def statistics(request):
 
 def stats_detail(request, codigo):
     context = {}
-    # Buscar datos del departamento (miembros, categoria. etc...)
-    WS = '%sget_departamento_y_miembros?cod_departamento=%s' %\
-        (st.WS_SERVER_URL, codigo)
     try:
-        dataDepartment = json.loads(urllib.urlopen(WS).read())
+        dataDepartment = json.loads(urllib.urlopen(
+                                    WS_DEPARTMEMT % codigo).read())
         context['departamento'] = dataDepartment['departamento']['nombre']
         members_list = []
         for member in dataDepartment['miembros']:
             data = {}
-            WS = '%sget_info_pdi?cod_persona= %s' % (st.WS_SERVER_URL,
-                                                     member['cod_persona'])
-            member_info = json.loads(urllib.urlopen(WS).read())
+            member_info = json.loads(urllib.urlopen(
+                                     WS_INFO_PDI %
+                                     member['cod_persona']).read())
             data['miembro'] = (member_info['apellido2'] + ' ' +
                                member_info['apellido1'] + ', ' +
                                member_info['nombre'])
