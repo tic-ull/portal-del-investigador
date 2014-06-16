@@ -32,7 +32,7 @@ def index(request):
     context['CVN'] = scientific_production_to_context(user.profile, context)
     # STATS
     try:
-        dept_json = json.loads(urllib.urlopen(stSt.WS_DEPARTMENT %
+        dept_json = json.loads(urllib.urlopen(stSt.WS_INFO_USER %
                                               user.profile.rrhh_code).read())
         dept = Department.objects.get(
             code=dept_json['departamento']['cod_departamento'])
