@@ -9,6 +9,7 @@ from informe_pdf import Informe_pdf
 from informe_csv import Informe_csv
 from optparse import make_option
 import simplejson as json
+import statistics.settings as stSt
 import urllib
 
 
@@ -75,9 +76,10 @@ class Command(BaseCommand):
     def createReports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
-                WS = '%sget_departamentos?ano=%s' % (
-                    st.WS_SERVER_URL, year)
-                elements = urllib.urlopen(WS).read()
+                #WS = '%sget_departamentos?ano=%s' % (
+                #    st.WS_SERVER_URL, year)
+                elements = urllib.urlopen(stSt.WS_DEPARTMENT_YEAR %
+                                          year).read()
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -88,9 +90,11 @@ class Command(BaseCommand):
         for element in elements:
             if not element == 'INVES':
                 if self.model_type == 'departamento':
-                    WS = '%sget_info_departamento?cod_departamento=%s' % (
-                        st.WS_SERVER_URL, element)
-                    departamento = json.loads(urllib.urlopen(WS).read())
+                    #WS = '%sget_info_departamento?cod_departamento=%s' % (
+                    #    st.WS_SERVER_URL, element)
+                    departamento = json.loads(urllib.urlopen(
+                                              stSt.WS_DEPARTMENT_INFO %
+                                              element).read())
                     if departamento:
                         self.createReport(year, departamento)
                 else:
@@ -128,15 +132,19 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def getInvestigadores(self, year, element):
-        WS = '%sget_pdi_vigente?cod_%s=%s&ano=%s' % (
-            st.WS_SERVER_URL, self.model_type,
-            element[self.codigo], year)
-        invesRRHH = json.loads(urllib.urlopen(WS).read())
+        #WS = '%sget_pdi_vigente?cod_%s=%s&ano=%s' % (
+        #    st.WS_SERVER_URL, self.model_type,
+        #    element[self.codigo], year)
+        invesRRHH = json.loads(urllib.urlopen(stSt.WS_PDI_VALID %
+                                              self.model_type,
+                                              element[self.codigo],
+                                              year).read())
         inves = list()
         for inv in invesRRHH:
-            WS = '%sget_info_pdi?cod_persona=%s&ano=%s' % (
-                st.WS_SERVER_URL, inv, year)
-            dataInv = json.loads(urllib.urlopen(WS).read())
+            #WS = '%sget_info_pdi?cod_persona=%s&ano=%s' % (
+            #    st.WS_SERVER_URL, inv, year)
+            dataInv = json.loads(urllib.urlopen(stSt.WS_INFO_PDI_YEAR %
+                                                inv, year).read())
             dataInv = self.checkInves(dataInv)
             inves.append(dataInv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
