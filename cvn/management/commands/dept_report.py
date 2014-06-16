@@ -3,7 +3,6 @@
 from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
                         Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
-from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
 from informe_pdf import Informe_pdf
 from informe_csv import Informe_csv
