@@ -3,7 +3,6 @@
 from core.tests.helpers import init, clean
 from cvn import settings as stCVN
 from django import test
-from django.conf import settings as st
 from django.contrib.auth.models import User
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
@@ -90,7 +89,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id("id_cvn_file").send_keys(
-            st.BASE_DIR + "/cvn/tests/files/cvn/CVN-NO-FECYT.pdf")
+            stCVN.TEST_ROOT + "cvn/CVN-NO-FECYT.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "errorlist"))
