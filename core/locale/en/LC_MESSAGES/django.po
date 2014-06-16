@@ -1,39 +1,39 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-02 10:56+0100\n"
-"PO-Revision-Date: 2014-06-02 08:39-0102\n"
+"POT-Creation-Date: 2014-06-16 11:23+0100\n"
+"PO-Revision-Date: 2014-06-16 11:24-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
-#: models.py:17
+#: models.py:14
 msgid "Documento"
 msgstr "Document"
 
-#: models.py:18
+#: models.py:15
 msgid "Código persona"
 msgstr "Person code"
 
-#: models.py:36
+#: models.py:33
 msgid "Aplicación"
 msgstr "Application"
 
-#: models.py:37
+#: models.py:34
 msgid "Tipo"
 msgstr "Type"
 
-#: models.py:38
+#: models.py:35
 msgid "Fecha"
 msgstr "Date"
 
-#: models.py:39
+#: models.py:36
 msgid "Mensaje"
 msgstr "Message"
 
@@ -110,11 +110,10 @@ msgid "Ayuda y soporte"
 msgstr "Help and support"
 
 #: templates/core/base.html:107 templates/core/faq.html:7
-#: templates/core/faq.html.py:11
 msgid "FAQ"
 msgstr "FAQ"
 
-#: templates/core/base.html:107
+#: templates/core/base.html:107 templates/core/faq.html:11
 msgid "Preguntas Frecuentes"
 msgstr "Frequently Asked Questions"
 

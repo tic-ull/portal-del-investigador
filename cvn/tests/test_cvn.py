@@ -30,10 +30,9 @@ class CVNTestCase(TestCase):
     def test_insert_xml_ull(self):
         """ Insert the data of XML in the database """
         try:
-            cvn = CVN(xml_file=self.xml_ull)
-            cvn.xml_file.seek(0)
             user = UserFactory.create()
-            user.profile.cvn = cvn
+            cvn = UploadCVNForm.CVN(user, os.path.join(
+                stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
             cvn.insert_xml()
             self.assertEqual(user.profile.articulo_set.count(), 1074)
             self.assertEqual(user.profile.libro_set.count(), 6)
@@ -208,8 +207,9 @@ class CVNTestCase(TestCase):
 
     def test_productions_no_title(self):
         u = UserFactory.create()
-        UploadCVNForm.CVN(u, os.path.join(
+        cvn = UploadCVNForm.CVN(u, os.path.join(
             stCVN.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
+        cvn.insert_xml()
         self.assertEqual(len(u.profile.proyecto_set.all()), 3)
         self.assertEqual(len(Articulo.objects.filter(user_profile__user=u)), 3)
 

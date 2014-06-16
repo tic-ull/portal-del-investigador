@@ -38,7 +38,8 @@ class Command(BaseCommand):
                 upload_file.close()
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
-                    form.save()
+                    cvn = form.save()
+                    cvn.insert_xml()
                     print u'[%s] Usuario: %s - CVN: %s \t \t OK' % (
                         lines.line_num, line[0], line[2])
                 else:
