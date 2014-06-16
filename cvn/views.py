@@ -43,7 +43,7 @@ def index(request):
             except ObjectDoesNotExist:
                 old_status = None
             new_status = form.save().status
-            if old_status != new_status:
+            if old_status != new_status and dept is not None:
                 dept.update(dept_json['departamento']['nombre'],
                             dept_json['miembros'], True)
             context['message'] = _(u'CVN actualizado con éxito.')
