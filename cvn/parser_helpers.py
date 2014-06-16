@@ -234,3 +234,13 @@ def parse_produccion_id(id_list, code_type):
             continue
         return node.find('Code/Item').text
     return None
+
+
+def parse_economic(node_list):
+    '''Input: a list of EconomicDimension nodes'''
+    dataCVN = {}
+    for item in node_list:
+        economic = item.find('Value').attrib['code']
+        dataCVN[stCVN.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
+            'Value/Item').text.strip())
+    return dataCVN
