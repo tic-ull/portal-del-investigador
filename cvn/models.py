@@ -13,18 +13,18 @@ from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
 from core import settings as stCore
 from django.utils.translation import ugettext_lazy as _
 import base64
+import datetime
 import logging
 import os
 import suds
 import sys
 import time
-import datetime
 
 
 logger = logging.getLogger(__name__)
 
 
-class FECYT(models.Model):
+class FECYT:
 
     @staticmethod
     def get_produccion_from_code(code, subtype):
@@ -46,7 +46,6 @@ class FECYT(models.Model):
             logger.error(_(u'ERROR: No existe el fichero o directorio: %s') % (
                 filePDF.name))
             return False
-
         # Web Service - FECYT
         clientWS = suds.client.Client(stCVN.URL_WS)
         WSResponse = False
@@ -60,23 +59,26 @@ class FECYT(models.Model):
                     _(u'WARNING: No hay respuesta del WS') +
                     _(u' de la FECYT para el fichero %s') % (filePDF.name))
                 time.sleep(5)
-
         # Format CVN-XML of FECYT
         if resultXML.errorCode == 0:
             return (base64.decodestring(resultXML.cvnXml), 0)
         return (False, resultXML.errorCode)
 
-    class Meta:
-        managed = False
-
 
 class CVN(models.Model):
+
     cvn_file = models.FileField(_(u'PDF'), upload_to=stCVN.PDF_ROOT)
+
     xml_file = models.FileField(_(u'XML'), upload_to=stCVN.XML_ROOT)
+
     fecha = models.DateField(_(u'Fecha del CVN'))
+
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
     user_profile = models.OneToOneField(UserProfile)
+
     status = models.IntegerField(_(u'Estado'), choices=stCVN.CVN_STATUS)
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
@@ -176,26 +178,14 @@ class Publicacion(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
-    # FECYT_CODE = stCVN.FECYT_CODE['Publicacion']
-    objects = PublicacionManager()
-    # Campo recomendado
     titulo = models.TextField(_(u'Título de la publicación'),
                               blank=True, null=True)
-
-    # Una publicación puede pertenecer a varios usuarios.
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
 
-    tipo_de_soporte = models.CharField(_(u'Tipo de soporte'),
-                                       max_length=1000, blank=True, null=True)
-    # Publicaciones con nombre de hasta 1400 caracteres
     nombre_publicacion = models.TextField(_(u'Nombre de la publicación'),
                                           blank=True, null=True)
-    editorial = models.CharField(_(u'Editorial'),
-                                 max_length=500, blank=True, null=True)
-
-    # Volumen
     volumen = models.CharField(_(u'Volumen'),
                                max_length=100, blank=True, null=True)
     numero = models.CharField(_(u'Número'),
@@ -204,69 +194,67 @@ class Publicacion(models.Model):
                                       max_length=100, blank=True, null=True)
     pagina_final = models.CharField(_(u'Página Final'),
                                     max_length=100, blank=True, null=True)
-
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
 
-    # Otros campos
-    posicion_sobre_total = models.IntegerField(_(u'Posición sobre total'),
-                                               blank=True, null=True)
-    en_calidad_de = models.CharField(_(u'En calidad de'),
-                                     max_length=500, blank=True, null=True)
-
     isbn = models.CharField(_(u'ISBN'), max_length=150, blank=True, null=True)
+
     issn = models.CharField(_(u'ISSN'), max_length=150, blank=True, null=True)
 
     deposito_legal = models.CharField(_(u'Depósito legal'),
                                       max_length=150, blank=True, null=True)
-    url = models.URLField(_(u'URL'), max_length=500, blank=True, null=True)
-    coleccion = models.CharField(_(u'Colección'),
-                                 max_length=150, blank=True, null=True)
-
-    ciudad = models.CharField(_(u'Ciudad de la titulación'),
-                              max_length=500,  blank=True, null=True)
-    pais = models.CharField(_(u'País de la titulación'),
-                            max_length=500, blank=True, null=True)
-    comunidad_or_region = models.CharField(_(u'Autónoma/Reg. de trabajo'),
-                                           max_length=500,
-                                           blank=True, null=True)
-
-    # Índice de impacto
-    fuente_de_impacto = models.CharField(_(u'Fuente de impacto'),
-                                         max_length=500, blank=True, null=True)
-    categoria = models.CharField(_(u'Categoría'),
-                                 max_length=500, blank=True, null=True)
-    indice_de_impacto = models.CharField(_(u'Índice de impacto'),
-                                         max_length=500, blank=True, null=True)
-    posicion = models.IntegerField(_(u'Posicion'), blank=True, null=True)
-    num_revistas = models.IntegerField(
-        _(u'Número de revistas en la categoría'),
-        blank=True, null=True)
-    revista_25 = models.CharField(_(u'Revista dentro del 25%'),
-                                  max_length=50, blank=True, null=True)
-
-    # Citas
-    fuente_de_citas = models.CharField(_(u'Fuente de citas'),
-                                       max_length=500, blank=True, null=True)
-    citas = models.CharField(_(u'Citas'), max_length=500,
-                             blank=True, null=True)
-
-    publicacion_relevante = models.CharField(_(u'Publicación relevante'),
-                                             max_length=50,
-                                             blank=True, null=True)
-    resenyas_en_revista = models.CharField(_(u'Reseñas en revistas'),
-                                           max_length=500,
-                                           blank=True, null=True)
-
-    # Traducciones
-    # NOTE: Campo de autocompletado. Desde este control se permite
-    # seleccionar varias titulaciones de la norma.
-    filtro = models.CharField(_(u'Filtro'), max_length=500,
-                              blank=True, null=True)
-    resultados_destacados = models.TextField(_(u'Resultados destacados'),
-                                             blank=True, null=True)
-
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    # tipo_de_soporte = models.CharField(_(u'Tipo de soporte'),
+    #                                    max_length=1000, blank=True,
+    #                                    null=True)
+    # Publicaciones con nombre de hasta 1400 caracteres
+    # editorial = models.CharField(_(u'Editorial'),
+    #                              max_length=500, blank=True, null=True)
+    # Otros campos
+    # posicion_sobre_total = models.IntegerField(_(u'Posición sobre total'),
+    #                                            blank=True, null=True)
+    # en_calidad_de = models.CharField(_(u'En calidad de'),
+    #                                  max_length=500, blank=True, null=True)
+    # url = models.URLField(_(u'URL'), max_length=500, blank=True, null=True)
+    # coleccion = models.CharField(_(u'Colección'),
+    #                              max_length=150, blank=True, null=True)
+    # ciudad = models.CharField(_(u'Ciudad'),
+    #                           max_length=500,  blank=True, null=True)
+    # pais = models.CharField(_(u'País'),
+    #                         max_length=500, blank=True, null=True)
+    # comunidad_or_region = models.CharField(_(u'Autónoma/Reg. de trabajo'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # Índice de impacto
+    # fuente_de_impacto = models.CharField(_(u'Fuente de impacto'),
+    #                                    max_length=500, blank=True, null=True)
+    # categoria = models.CharField(_(u'Categoría'),
+    #                              max_length=500, blank=True, null=True)
+    # indice_de_impacto = models.CharField(_(u'Índice de impacto'),
+    #                                    max_length=500, blank=True, null=True)
+    # posicion = models.IntegerField(_(u'Posicion'), blank=True, null=True)
+    # num_revistas = models.IntegerField(
+    #     _(u'Número de revistas en la categoría'),
+    #     blank=True, null=True)
+    # revista_25 = models.CharField(_(u'Revista dentro del 25%'),
+    #                               max_length=50, blank=True, null=True)
+    # Citas
+    # fuente_de_citas = models.CharField(_(u'Fuente de citas'),
+    #                                    max_length=500, blank=True, null=True)
+    # citas = models.CharField(_(u'Citas'), max_length=500,
+    #                          blank=True, null=True)
+    # publicacion_relevante = models.CharField(_(u'Publicación relevante'),
+    #                                          max_length=50,
+    #                                          blank=True, null=True)
+    # resenyas_en_revista = models.CharField(_(u'Reseñas en revistas'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # filtro = models.CharField(_(u'Filtro'), max_length=500,
+    #                           blank=True, null=True)
+    # resultados_destacados = models.TextField(_(u'Resultados destacados'),
+    #                                          blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % (self.titulo)
@@ -321,102 +309,94 @@ class Capitulo(Publicacion):
 
 class Congreso(models.Model):
     """
-        # https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
+        https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA
     """
     objects = CongresoManager()
+
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    # Campos recomendados
     titulo = models.TextField(_(u'Título'), blank=True, null=True)
+
     fecha_de_inicio = models.DateField(_(u'Fecha de realización'),
                                        blank=True, null=True)
     fecha_de_fin = models.DateField(_(u'Fecha de finalización'),
                                     blank=True, null=True)
-
     nombre_del_congreso = models.TextField(_(u'Nombre del congreso'),
                                            blank=True, null=True)
-    ciudad_de_realizacion = models.CharField(_(u'Ciudad de realización'),
-                                             max_length=500,
-                                             blank=True, null=True)
-    pais_de_realizacion = models.CharField(_(u'País de realización'),
-                                           max_length=500,
-                                           blank=True, null=True)
-    comunidad_or_region_realizacion = models.CharField(
-        _(u'Comunidad/Región de realizacion'),
-        max_length=500, blank=True, null=True
-    )
-
-    entidad_organizadora = models.CharField(_(u'Entidad organizadora'),
-                                            max_length=250,
-                                            blank=True, null=True)
-    ciudad = models.CharField(_(u'Ciudad'), max_length=500,
-                              blank=True, null=True)
-    pais = models.CharField(_(u'País'), max_length=500, blank=True, null=True)
-    comunidad_or_region = models.CharField(_(u'Comunidad autónoma/Región'),
-                                           max_length=500,
-                                           blank=True, null=True)
-
+    ciudad_de_realizacion = models.CharField(
+        _(u'Ciudad de realización'), max_length=500, blank=True, null=True)
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
 
-    titulo_publicacion = models.CharField(_(u'Título de la publicación'),
-                                          max_length=250,
-                                          blank=True, null=True)
-
-    tipo_evento = models.CharField(_(u'Tipo evento'),
-                                   max_length=50, blank=True, null=True)
-    tipo = models.CharField(_(u'Tipo'), max_length=250, blank=True, null=True)
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
-    nombre_de_publicacion = models.CharField(_(u'Nombre de la publicación'),
-                                             max_length=250,
-                                             blank=True, null=True)
-    comite_admision_externa = models.CharField(
-        _(u'Con comité de admisión externa'),
-        max_length=250, blank=True, null=True
-    )
 
     ambito = models.CharField(_(u'Ámbito del congreso'),
                               max_length=50, blank=True, null=True)
     otro_ambito = models.CharField(_(u'Otro ámbito'),
                                    max_length=250, blank=True, null=True)
-
-    tipo_de_participacion = models.CharField(_(u'Tipo de participación'),
-                                             max_length=250,
-                                             blank=True, null=True)
-    intervencion_por = models.CharField(_(u'Intevención por'),
-                                        max_length=250,
-                                        blank=True, null=True)
-
-    volumen = models.CharField(_(u'Volumen'),
-                               max_length=100, blank=True, null=True)
-    numero = models.CharField(_(u'Número'), max_length=100,
-                              blank=True, null=True)
-    pagina_inicial = models.CharField(_(u'Página Inicial'),
-                                      max_length=100, blank=True, null=True)
-    pagina_final = models.CharField(_(u'Página Final'),
-                                    max_length=100, blank=True, null=True)
-
-    editorial = models.CharField(_(u'Editorial'),
-                                 max_length=500, blank=True, null=True)
-
-    isbn = models.CharField(_(u'ISBN'), max_length=150, blank=True, null=True)
-    issn = models.CharField(_(u'ISSN'), max_length=150, blank=True, null=True)
-
     deposito_legal = models.CharField(_(u'Depósito legal'),
                                       max_length=150, blank=True, null=True)
     publicacion_acta_congreso = models.CharField(
-        _(u'Publicación en acta congreso'),
-        max_length=100, blank=True, null=True
-    )
-
-    url = models.URLField(_(u'URL'), max_length=500, blank=True, null=True)
-
-    pais = models.CharField(_(u'País'), max_length=500, blank=True, null=True)
-    comunidad_or_region = models.CharField(_(u'Comunidad Autónoma/Región'),
-                                           max_length=500,
-                                           blank=True, null=True)
-
+        _(u'Publicación en acta'), max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+    # pais_de_realizacion = models.CharField(_(u'País de realización'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # comunidad_or_region_realizacion = models.CharField(
+    #     _(u'Comunidad/Región de realizacion'),
+    #     max_length=500, blank=True, null=True
+    # )
+    # entidad_organizadora = models.CharField(_(u'Entidad organizadora'),
+    #                                         max_length=250,
+    #                                         blank=True, null=True)
+    # ciudad = models.CharField(_(u'Ciudad'), max_length=500,
+    #                           blank=True, null=True)
+    # pais = models.CharField(_(u'País'), max_length=500, blank=True,
+    #                         null=True)
+    # comunidad_or_region = models.CharField(_(u'Comunidad autónoma/Región'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # titulo_publicacion = models.CharField(_(u'Título de la publicación'),
+    #                                       max_length=250,
+    #                                       blank=True, null=True)
+    # tipo_evento = models.CharField(_(u'Tipo evento'),
+    #                                max_length=50, blank=True, null=True)
+    # tipo = models.CharField(_(u'Tipo'), max_length=250, blank=True,
+    #                         null=True)
+    # nombre_de_publicacion = models.CharField(_(u'Nombre de la publicación'),
+    #                                          max_length=250,
+    #                                          blank=True, null=True)
+    # comite_admision_externa = models.CharField(
+    #     _(u'Con comité de admisión externa'),
+    #     max_length=250, blank=True, null=True
+    # )
+    # tipo_de_participacion = models.CharField(_(u'Tipo de participación'),
+    #                                          max_length=250,
+    #                                          blank=True, null=True)
+    # intervencion_por = models.CharField(_(u'Intevención por'),
+    #                                     max_length=250,
+    #                                     blank=True, null=True)
+    # volumen = models.CharField(_(u'Volumen'),
+    #                            max_length=100, blank=True, null=True)
+    # numero = models.CharField(_(u'Número'), max_length=100,
+    #                           blank=True, null=True)
+    # pagina_inicial = models.CharField(_(u'Página Inicial'),
+    #                                   max_length=100, blank=True, null=True)
+    # pagina_final = models.CharField(_(u'Página Final'),
+    #                                 max_length=100, blank=True, null=True)
+    # editorial = models.CharField(_(u'Editorial'),
+    #                              max_length=500, blank=True, null=True)
+    # isbn = models.CharField(_(u'ISBN'), max_length=150,
+    #                         blank=True, null=True)
+    # issn = models.CharField(_(u'ISSN'), max_length=150,
+    #                         blank=True, null=True)
+    # url = models.URLField(_(u'URL'), max_length=500, blank=True, null=True)
+    # pais = models.CharField(_(u'País'), max_length=500,
+    #                         blank=True, null=True)
+    # comunidad_or_region = models.CharField(_(u'Comunidad Autónoma/Región'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
 
     def __unicode__(self):
         return "%s" % (self.titulo)
@@ -432,129 +412,104 @@ class Proyecto(models.Model):
         =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDIComp
     """
     objects = ProyectoManager()
+
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    # Campos recomendados
-    titulo = models.CharField(
-        _('Denominación del proyecto'), max_length=1000,
-        blank=True, null=True)
+    titulo = models.CharField(_('Denominación del proyecto'),
+                              max_length=1000, blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
-        _(u'Número de investigadores/as'),
-        blank=True, null=True
-    )
-
-    # Investigadores responsables
+        _(u'Número de investigadores/as'), blank=True, null=True)
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
-
-    entidad_de_realizacion = models.CharField(_(u'Entidad de realización'),
-                                              max_length=500,
-                                              blank=True, null=True)
-
-    ciudad_del_proyecto = models.CharField(_(u'Ciudad del trabajo'),
-                                           max_length=500,
-                                           blank=True, null=True)
-    pais_del_proyecto = models.CharField(_(u'País del trabajo'),
-                                         max_length=500, blank=True, null=True)
-    comunidad_or_region_proyecto = models.CharField(
-        _(u'Autónoma/Reg. del trabajo'),
-        max_length=500, blank=True, null=True)
-
-    # Entidades financiadoras
-    # FIXME En el editor de la FECYT se pueden añadir múltiples
-    # entidades financiadoras
-    entidad_financiadora = models.CharField(_(u'Entidad financiadora'),
-                                            max_length=500,
-                                            blank=True, null=True)
-    tipo_de_entidad = models.CharField(_(u'Tipo de entidad'),
-                                       max_length=500, blank=True, null=True)
-
-    ciudad_de_la_entidad = models.CharField(_(u'Ciudad del trabajo'),
-                                            max_length=500,
-                                            blank=True, null=True)
-    pais_de_la_entidad = models.CharField(_(u'País del trabajo'),
-                                          max_length=500,
-                                          blank=True, null=True)
-    comunidad_or_region_entidad = models.CharField(
-        _(u'Autónoma/Reg. del trabajo'),
-        max_length=500, blank=True, null=True
-    )
 
     fecha_de_inicio = models.DateField(_(u'Fecha de inicio'),
                                        blank=True, null=True)
     fecha_de_fin = models.DateField(_(u'Fecha de finalización'),
                                     blank=True, null=True)
-
-    cuantia_total = models.DecimalField(_(u'Cuantía'),
-                                        max_digits=19, decimal_places=2,
-                                        blank=True, null=True)
-
-    # Más campos
     duracion = models.IntegerField(_(u'Duración (en días)'),
                                    blank=True, null=True)
-
-    palabras_clave = models.CharField(_(u'Describir con palabras clave'),
-                                      max_length=250, blank=True, null=True)
-
-    modalidad_del_proyecto = models.CharField(_(u'Modalidad del proyecto'),
-                                              max_length=500,
-                                              blank=True, null=True)
-
     ambito = models.CharField(_(u'Ámbito del proyecto'),
                               max_length=50, blank=True, null=True)
     otro_ambito = models.CharField(_(u'Otro ámbito'),
                                    max_length=250, blank=True, null=True)
+    cod_segun_financiadora = models.CharField(
+        _(u'Código según financiadora'), max_length=150, blank=True, null=True)
+    cuantia_total = models.CharField(_(u'Cuantía'), max_length=19, blank=True,
+                                     null=True)
+    cuantia_subproyecto = models.CharField(
+        _(u'Cuantía subproyecto'), max_length=19, blank=True, null=True)
+    porcentaje_en_subvencion = models.CharField(
+        _(u'Porcentaje en subvención'), max_length=19, blank=True, null=True)
+    porcentaje_en_credito = models.CharField(
+        _(u'Porcentaje en crédito'), max_length=19, blank=True, null=True)
+    porcentaje_mixto = models.CharField(
+        _(u'Porcentaje mixto'), max_length=19, blank=True, null=True)
+    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
 
-    numero_personas_anyo = models.IntegerField(_(u'Número personas/año'),
-                                               blank=True, null=True)
-    calidad_participacion = models.CharField(
-        _(u'Calidad en que ha participado'), max_length=500,
-        blank=True, null=True)
-    tipo_participacion = models.CharField(_(u'Tipo de participación'),
-                                          max_length=500,
-                                          blank=True, null=True)
-    nombre_del_programa = models.CharField(_(u'Nombre del programa'),
-                                           max_length=500,
-                                           blank=True, null=True)
+    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
-    cod_segun_financiadora = models.CharField(_(u'Código según financiadora'),
-                                              max_length=150,
-                                              blank=True, null=True)
-    cuantia_subproyecto = models.DecimalField(_(u'Cuantía subproyecto'),
-                                              max_digits=19, decimal_places=2,
-                                              blank=True, null=True)
-    porcentaje_en_subvencion = models.DecimalField(
-        _(u'Porcentaje en subvención'), max_digits=19, decimal_places=2,
-        blank=True, null=True)
-    porcentaje_en_credito = models.DecimalField(_(u'Porcentaje en crédito'),
-                                                max_digits=19,
-                                                decimal_places=2,
-                                                blank=True, null=True)
-    porcentaje_mixto = models.DecimalField(_(u'Porcentaje mixto'),
-                                           max_digits=19, decimal_places=2,
-                                           blank=True, null=True)
-    resultados_mas_relevantes = models.CharField(
-        _(u'Resultados más relevantes'), max_length=1024,
-        blank=True, null=True)
-    dedicacion = models.CharField(_(u'Dedicación'),
-                                  max_length=16, blank=True, null=True)
-    palabras_clave_dedicacion = models.CharField(
-        _(u'Palabras clave dedicación'), max_length=500,
-        blank=True, null=True)
-
+    # entidad_de_realizacion = models.CharField(_(u'Entidad de realización'),
+    #                                           max_length=500,
+    #                                           blank=True, null=True)
+    # ciudad_del_proyecto = models.CharField(_(u'Ciudad del trabajo'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # pais_del_proyecto = models.CharField(_(u'País del trabajo'),
+    #                                    max_length=500, blank=True, null=True)
+    # comunidad_or_region_proyecto = models.CharField(
+    #     _(u'Autónoma/Reg. del trabajo'),
+    #     max_length=500, blank=True, null=True)
+    # Entidades financiadoras
+    # FIXME En el editor de la FECYT se pueden añadir múltiples
+    # entidades financiadoras
+    # entidad_financiadora = models.CharField(_(u'Entidad financiadora'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # tipo_de_entidad = models.CharField(_(u'Tipo de entidad'),
+    #                                    max_length=500, blank=True, null=True)
+    # ciudad_de_la_entidad = models.CharField(_(u'Ciudad del trabajo'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # pais_de_la_entidad = models.CharField(_(u'País del trabajo'),
+    #                                       max_length=500,
+    #                                       blank=True, null=True)
+    # comunidad_or_region_entidad = models.CharField(
+    #     _(u'Autónoma/Reg. del trabajo'),
+    #     max_length=500, blank=True, null=True
+    # )
+    # palabras_clave = models.CharField(_(u'Describir con palabras clave'),
+    #                                   max_length=250, blank=True, null=True)
+    # modalidad_del_proyecto = models.CharField(_(u'Modalidad del proyecto'),
+    #                                           max_length=500,
+    #                                           blank=True, null=True)
+    # numero_personas_anyo = models.IntegerField(_(u'Número personas/año'),
+    #                                            blank=True, null=True)
+    # calidad_participacion = models.CharField(
+    #     _(u'Calidad en que ha participado'), max_length=500,
+    #     blank=True, null=True)
+    # tipo_participacion = models.CharField(_(u'Tipo de participación'),
+    #                                       max_length=500,
+    #                                       blank=True, null=True)
+    # nombre_del_programa = models.CharField(_(u'Nombre del programa'),
+    #                                        max_length=500,
+    #                                        blank=True, null=True)
+    # resultados_mas_relevantes = models.CharField(
+    #     _(u'Resultados más relevantes'), max_length=1024,
+    #     blank=True, null=True)
+    # dedicacion = models.CharField(_(u'Dedicación'),
+    #                               max_length=16, blank=True, null=True)
+    # palabras_clave_dedicacion = models.CharField(
+    #     _(u'Palabras clave dedicación'), max_length=500,
+    #     blank=True, null=True)
     # Entidades participantes
     # FIXME En el editor de la FECYT se pueden añadir múltiples
     # entidades participantes
-    entidad_participante = models.CharField(_(u'Entidad participantes'),
-                                            max_length=500,
-                                            blank=True, null=True)
-
-    aportacion_del_solicitante = models.TextField(
-        _(u'Aportación del solicitante'),
-        max_length=2048, blank=True, null=True
-    )
-
-    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
-    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+    # entidad_participante = models.CharField(_(u'Entidad participantes'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # aportacion_del_solicitante = models.TextField(
+    #     _(u'Aportación del solicitante'),
+    #     max_length=2048, blank=True, null=True
+    # )
 
     def __unicode__(self):
         return u'%s' % (self.titulo)
@@ -570,125 +525,99 @@ class Convenio(models.Model):
     =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDINoComp
     """
     objects = ConvenioManager()
+
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    # Campos recomendados
-    titulo = models.CharField(
-        _(u'Denominación del proyecto'), max_length=1000,
-        blank=True, null=True)
-    numero_de_investigadores = models.IntegerField(
-        _(u'Número de investigadores/as'),
-        blank=True, null=True
-    )
-
-    # Investigadores responsables
+    titulo = models.CharField(_(
+        u'Denominación del proyecto'), max_length=1000, blank=True, null=True)
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
-
-    # FIXME: Se permiten multiples instancias
-    # Entidades financiadoras ###
-    entidad_financiadora = models.CharField(_(u'Entidad financiadora'),
-                                            max_length=500,
-                                            blank=True, null=True)
-    tipo_de_entidad = models.CharField(_(u'Tipo de entidad'),
-                                       max_length=150,
-                                       blank=True, null=True)
-
-    ciudad_de_la_entidad = models.CharField(_(u'Ciudad del trabajo'),
-                                            max_length=500,
-                                            blank=True, null=True)
-    pais_de_la_entidad = models.CharField(_(u'País del trabajo'),
-                                          max_length=500,
-                                          blank=True, null=True)
-    comunidad_or_region_entidad = models.CharField(
-        _(u'Autónoma/Reg. del trabajo'),
-        max_length=500, blank=True, null=True
-    )
-
-    calidad_participacion = models.CharField(
-        _(u'Calidad en que ha participado'), max_length=500,
-        blank=True, null=True)
-
-    # Entidades participantes
-    entidad_participante = models.CharField(_(u'Entidad participantes'),
-                                            max_length=500,
-                                            blank=True, null=True)
 
     fecha_de_inicio = models.DateField(_(u'Fecha de inicio'),
                                        blank=True, null=True)
-
     fecha_de_fin = models.DateField(_(u'Fecha de finalización'),
                                     blank=True, null=True)
-
     duracion = models.IntegerField(_(u'Duración (en días)'),
                                    blank=True, null=True)
-
-    cuantia_total = models.DecimalField(_(u'Cuantía'),
-                                        max_digits=19, decimal_places=2,
-                                        blank=True, null=True)
-
-    # Más campos
-    palabras_clave = models.CharField(_(u'Describir con palabras clave'),
-                                      max_length=250,
-                                      blank=True, null=True)
-
-    modalidad_del_proyecto = models.CharField(_(u'Modalidad del proyecto'),
-                                              max_length=500,
-                                              blank=True, null=True)
-
     ambito = models.CharField(_(u'Ámbito del convenio'),
                               max_length=50, blank=True, null=True)
     otro_ambito = models.CharField(_(u'Otro ámbito'),
                                    max_length=250, blank=True, null=True)
-
-    entidad_de_realizacion = models.CharField(_(u'Entidad de realización'),
-                                              max_length=500,
-                                              blank=True, null=True)
-
-    ciudad_del_proyecto = models.CharField(_(u'Ciudad del trabajo'),
-                                           max_length=250,
-                                           blank=True, null=True)
-    pais_del_proyecto = models.CharField(_(u'País del trabajo'),
-                                         max_length=250,
-                                         blank=True, null=True)
-    comunidad_or_region_proyecto = models.CharField(
-        _(u'Autónoma/Reg. del trabajo'),
-        max_length=250, blank=True, null=True
-    )
-
-    numero_personas_anyo = models.IntegerField(_(u'Número personas/año'),
-                                               blank=True, null=True)
-
-    tipo_proyecto = models.CharField(_(u'Tipo de proyecto'),
-                                     max_length=100, blank=True, null=True)
-    nombre_del_programa = models.CharField(_(u'Nombre del programa'),
-                                           max_length=400,
-                                           blank=True, null=True)
-
-    cod_segun_financiadora = models.CharField(_(u'Código según financiadora'),
-                                              max_length=100,
-                                              blank=True, null=True)
-    cuantia_subproyecto = models.DecimalField(_(u'Cuantía subproyecto'),
-                                              max_digits=19, decimal_places=2,
-                                              blank=True, null=True)
-    porcentaje_en_subvencion = models.DecimalField(
-        _(u'Porcentaje en subvención'), max_digits=19, decimal_places=2,
-        blank=True, null=True)
-    porcentaje_en_credito = models.DecimalField(_(u'Porcentaje en crédito'),
-                                                max_digits=19,
-                                                decimal_places=2,
-                                                blank=True, null=True)
-    porcentaje_mixto = models.DecimalField(_(u'Porcentaje mixto'),
-                                           max_digits=19, decimal_places=2,
-                                           blank=True, null=True)
-
-    resultados_mas_relevantes = models.CharField(
-        _(u'Resultados más relevantes'), max_length=1024,
-        blank=True, null=True)
-    palabras_clave = models.CharField(_(u'Describir con palabras clave'),
-                                      max_length=500, blank=True, null=True)
-
+    cod_segun_financiadora = models.CharField(
+        _(u'Código según financiadora'), max_length=100, blank=True, null=True)
+    cuantia_total = models.CharField(_(u'Cuantía'), max_length=19, blank=True,
+                                     null=True)
+    cuantia_subproyecto = models.CharField(
+        _(u'Cuantía subproyecto'), max_length=19, blank=True, null=True)
+    porcentaje_en_subvencion = models.CharField(
+        _(u'Porcentaje en subvención'), max_length=19, blank=True, null=True)
+    porcentaje_en_credito = models.CharField(
+        _(u'Porcentaje en crédito'), max_length=19, blank=True, null=True)
+    porcentaje_mixto = models.CharField(
+        _(u'Porcentaje mixto'), max_length=19, blank=True, null=True)
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+    # numero_de_investigadores = models.IntegerField(
+    #     _(u'Número de investigadores/as'),
+    #     blank=True, null=True
+    # )
+    # Investigadores responsables
+    # FIXME: Se permiten multiples instancias
+    # Entidades financiadoras ###
+    # entidad_financiadora = models.CharField(_(u'Entidad financiadora'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # tipo_de_entidad = models.CharField(_(u'Tipo de entidad'),
+    #                                    max_length=150,
+    #                                    blank=True, null=True)
+    # ciudad_de_la_entidad = models.CharField(_(u'Ciudad del trabajo'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # pais_de_la_entidad = models.CharField(_(u'País del trabajo'),
+    #                                       max_length=500,
+    #                                       blank=True, null=True)
+    # comunidad_or_region_entidad = models.CharField(
+    #     _(u'Autónoma/Reg. del trabajo'),
+    #     max_length=500, blank=True, null=True
+    # )
+    # calidad_participacion = models.CharField(
+    #     _(u'Calidad en que ha participado'), max_length=500,
+    #     blank=True, null=True)
+    # Entidades participantes
+    # entidad_participante = models.CharField(_(u'Entidad participantes'),
+    #                                         max_length=500,
+    #                                         blank=True, null=True)
+    # palabras_clave = models.CharField(_(u'Describir con palabras clave'),
+    #                                   max_length=250,
+    #                                   blank=True, null=True)
+    # modalidad_del_proyecto = models.CharField(_(u'Modalidad del proyecto'),
+    #                                           max_length=500,
+    #                                           blank=True, null=True)
+    # entidad_de_realizacion = models.CharField(_(u'Entidad de realización'),
+    #                                           max_length=500,
+    #                                           blank=True, null=True)
+    # ciudad_del_proyecto = models.CharField(_(u'Ciudad del trabajo'),
+    #                                        max_length=250,
+    #                                        blank=True, null=True)
+    # pais_del_proyecto = models.CharField(_(u'País del trabajo'),
+    #                                      max_length=250,
+    #                                      blank=True, null=True)
+    # comunidad_or_region_proyecto = models.CharField(
+    #     _(u'Autónoma/Reg. del trabajo'),
+    #     max_length=250, blank=True, null=True
+    # )
+    # numero_personas_anyo = models.IntegerField(_(u'Número personas/año'),
+    #                                            blank=True, null=True)
+    # tipo_proyecto = models.CharField(_(u'Tipo de proyecto'),
+    #                                  max_length=100, blank=True, null=True)
+    # nombre_del_programa = models.CharField(_(u'Nombre del programa'),
+    #                                        max_length=400,
+    #                                        blank=True, null=True)
+    # resultados_mas_relevantes = models.CharField(
+    #     _(u'Resultados más relevantes'), max_length=1024,
+    #     blank=True, null=True)
+    # palabras_clave = models.CharField(_(u'Describir con palabras clave'),
+    #                                   max_length=500, blank=True, null=True)
 
     def __unicode__(self):
         return u'%s' % (self.titulo)
@@ -703,59 +632,51 @@ class TesisDoctoral(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE
     """
     objects = TesisDoctoralManager()
-    # Campos recomendados
+
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     titulo = models.TextField(_(u'Título del trabajo'), blank=True, null=True)
+
     fecha = models.DateField(_(u'Fecha de lectura'),
                              blank=True, null=True)
-
-    # Doctorando-a/alumno-a
     autor = models.CharField(_(u'Autor'), max_length=256,
                              blank=True, null=True)
-
-    universidad_que_titula = models.CharField(_(u'Universidad que titula'),
-                                              max_length=500,
-                                              blank=True, null=True)
-
-    # Más campos
-    ciudad_del_trabajo = models.CharField(_(u'Ciudad del trabajo'),
-                                          max_length=500,
-                                          blank=True, null=True)
-    pais_del_trabajo = models.CharField(_(u'País del trabajo'),
-                                        max_length=500, blank=True, null=True)
-    comunidad_or_region_trabajo = models.CharField(
-        _(u'Comunidad/Región del trabajo'),
-        max_length=500, blank=True, null=True
-    )
-
-    tipo_de_proyecto = models.CharField(_(u'Tipo de proyecto'),
-                                        max_length=150, blank=True, null=True)
-
+    universidad_que_titula = models.CharField(_(
+        u'Universidad que titula'), max_length=500, blank=True, null=True)
     codirector = models.CharField(_(u'Codirector'),
                                   max_length=256, blank=True, null=True)
-
-    calificacion = models.CharField(_(u'Calificación'),
-                                    max_length=100, blank=True, null=True)
-
-    mencion_de_calidad = models.CharField(_(u'Mención de calidad'),
-                                          max_length=4, blank=True, null=True)
-    fecha_mencion_de_calidad = models.DateField(_(u'Fecha mención de calidad'),
-                                                blank=True, null=True)
-
-    doctorado_europeo = models.CharField(_(u'Doctorado europeo'),
-                                         max_length=4, blank=True, null=True)
-    fecha_mencion_doctorado_europeo = models.DateField(
-        _(u'Fecha de mención de doctorado europeo'),
-        blank=True, null=True
-    )
-
-    palabras_clave_titulo = models.CharField(_(u'Palabras clave del título'),
-                                             max_length=500,
-                                             blank=True, null=True)
-
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+    # ciudad_del_trabajo = models.CharField(_(u'Ciudad del trabajo'),
+    #                                       max_length=500,
+    #                                       blank=True, null=True)
+    # pais_del_trabajo = models.CharField(_(u'País del trabajo'),
+    #                                     max_length=500, blank=True,
+    #                                     null=True)
+    # comunidad_or_region_trabajo = models.CharField(
+    #     _(u'Comunidad/Región del trabajo'),
+    #     max_length=500, blank=True, null=True
+    # )
+    # tipo_de_proyecto = models.CharField(_(u'Tipo de proyecto'),
+    #                                     max_length=150, blank=True,
+    #                                     null=True)
+    # calificacion = models.CharField(_(u'Calificación'),
+    #                                 max_length=100, blank=True, null=True)
+    # mencion_de_calidad = models.CharField(_(u'Mención de calidad'),
+    #                                       max_length=4, blank=True,
+    #                                       null=True)
+    # fecha_mencion_de_calidad = models.DateField(
+    #     _(u'Fecha mención de calidad'), blank=True, null=True)
+    # doctorado_europeo = models.CharField(_(u'Doctorado europeo'),
+    #                                      max_length=4, blank=True, null=True)
+    # fecha_mencion_doctorado_europeo = models.DateField(
+    #     _(u'Fecha de mención de doctorado europeo'),
+    #     blank=True, null=True
+    # )
+    # palabras_clave_titulo = models.CharField(_(u'Palabras clave del título'),
+    #                                          max_length=500,
+    #                                          blank=True, null=True)
 
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')

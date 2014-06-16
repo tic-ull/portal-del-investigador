@@ -165,11 +165,11 @@ class CVNTestCase(TestCase):
                     self.assertEqual(data.ambito, u'Autonómica')
                 self.assertEqual(data.cod_segun_financiadora,
                                  u'Cód. según financiadora')
-                # self.assertEqual(data.cuantia_total, 1)
-                # self.assertEqual(data.cuantia_subproyecto, 1)
-                # self.assertEqual(data.porcentaje_en_subvencion, 1)
-                # self.assertEqual(data.porcentaje_en_credito, 1)
-                # self.assertEqual(data.porcentaje_mixto, 1)
+                self.assertEqual(data.cuantia_total, '1')
+                self.assertEqual(data.cuantia_subproyecto, '1')
+                self.assertEqual(data.porcentaje_en_subvencion, '1')
+                self.assertEqual(data.porcentaje_en_credito, '1')
+                self.assertEqual(data.porcentaje_mixto, '1')
 
     def test_check_read_data_tesis(self):
         cvn = CVN(xml_file=self.xml_test)
