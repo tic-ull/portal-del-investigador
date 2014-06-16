@@ -41,7 +41,9 @@ def index(request):
         context['stats'] = {'department': department['departamento']['nombre']}
         context['stats'].update(calc_stats_department(department['miembros']))
         context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
-    except IOError:
+    except IOError:  # WS down
+        pass
+    except KeyError:  # Test users
         pass
     return render(request, 'cvn/index.html', context)
 
