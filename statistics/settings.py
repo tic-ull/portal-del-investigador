@@ -1,5 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
+from django.conf import settings as st
+
+
+WS_ALL_DEPARTMENTS = st.WS_SERVER_URL + 'get_departamentos_y_miembros'
+WS_DEPARTMENT = (st.WS_SERVER_URL +
+                 'get_departamento_y_miembros?cod_departamento=%s')
+WS_INFO_PDI = st.WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
+
 PERCENT_VALID_DEPT_CVN = 75
 
 PROFESSIONAL_CATEGORY = [5609, 5610, 5611, 5612, 5617, 5632, 5686, 5687, 5709,

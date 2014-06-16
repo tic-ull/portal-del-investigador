@@ -4,6 +4,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns(
     'statistics.views',
-    url(r'^departamento/$', 'statistics', name='statistics'),
-    url(r'^departamento/(?P<codigo>\d+)/$', 'stats_detail', name='stats_detail'),
+    url(r'^departamentos/$', 'statistics', name='statistics'),
+    url(r'^departamentos/(?P<codigo>\d+)/$', 'stats_detail',
+        name='stats_detail'),
 )
