@@ -3,12 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from statistics.managers import DepartmentManager
-#from cvn import settings as stCVN
-#from cvn.models import UserProfile
-#from django.core.exceptions import ObjectDoesNotExist
-# PROFESSIONAL CATEGORY TABLE
-#from statistics.settings import PROFESSIONAL_CATEGORY
-
 
 class Department(models.Model):
     name = models.CharField(_('Nombre'), max_length=40, unique=True)

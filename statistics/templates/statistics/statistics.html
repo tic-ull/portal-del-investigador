@@ -28,17 +28,17 @@
 	        <tbody>
 	    {% for department in departmentStats %}
 	            <tr>
-	                <td width='40%'><a href='{% url 'stats_detail' department.codigo %}'>{{ department.nombre }}</a></td>
-	                <td width='12%'>{{ department.num_cvn_update }}</td>
-	                <td width='12%'>{{ department.num_computable_members }}</td>
+	                <td width='40%'><a href='{% url 'stats_detail' department.code %}'>{{ department.name }}</a></td>
+	                <td width='12%'>{{ department.num_valid_cvn }}</td>
+	                <td width='12%'>{{ department.computable_members }}</td>
 	                <td width='12%'>{{ department.total_members }}</td>
 	                <td>
 	                    <div class="progress">
 	                        <div class="progress-bar 
-	                        {% if department.cvn_percent_updated >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
-	                            role="progressbar" aria-valuenow={{ department.cvn_percent_updated }} aria-valuemin="0" aria-valuemax="100" 
-	                            style="width: {{ department.cvn_percent_updated|unlocalize }}%">
-	                            <span class="num_pcnt">{{ department.cvn_percent_updated|floatformat:1 }}%</span> 
+	                        {% if department.percentage >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
+	                            role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0" aria-valuemax="100" 
+	                            style="width: {{ department.percentage|unlocalize }}%">
+	                            <span class="num_pcnt">{{ department.percentage|floatformat:1 }}%</span> 
 	                        </div>
 	                    </div>
 	                    <script>

@@ -10,10 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from statistics.settings import PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY
-#from statistics.utils import calc_stats_department
-#
-from statistics.management.commands.calc_stats import Command
-#
+from statistics.models import Department
 import json
 import urllib
 
@@ -21,16 +18,8 @@ import urllib
 @ login_required
 @staff_member_required
 def statistics(request):
-    # Access to data in memory, cache...
     context = {}
-    # This part is calculate by admincommand 'calc_stats'
-    # and save in shared memory
-    command = Command()
-    departmentStats = command.handle()
-#    context['departmentStats'] = departmentStats
-    context['departmentStats'] = sorted(departmentStats,
-                                        key=lambda departmentStats:
-                                        departmentStats['nombre'])
+    context['departmentStats'] = Department.objects.all().order_by('name')
     context['validPercentCVN'] = PERCENT_VALID_DEPT_CVN
     return render(request, 'statistics/statistics.html', context)
 
