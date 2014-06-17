@@ -37,7 +37,7 @@ class Command(BaseCommand):
             department_list = json.loads(urllib.urlopen(
                                          WS_ALL_DEPARTMENTS).read())
             Department.objects.all().delete()
-            ProfessionalCategory.update(options['past_days'])
+            ProfessionalCategory.objects.update(options['past_days'])
             Department.objects.create_all(department_list)
         except IOError as e:
             print "I/O error({0}): {1}".format(e.errno, e.strerror)

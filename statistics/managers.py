@@ -1,6 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
 from django.db import models
+import json
+import urllib
+import statistics.settings as stSt
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class StatsManager(models.Manager):
@@ -18,3 +22,20 @@ class StatsManager(models.Manager):
                                stat['departamento']['cod_departamento'],
                                stat['miembros']))
         return super(StatsManager, self).bulk_create(object_list)
+
+
+class ProfessionalCategoryManager(models.Manager):
+
+    def update(self, past_days=0):
+        categories = json.loads(
+            urllib.urlopen(stSt.WS_CATEGORY % past_days).read())
+        for category in categories:
+            try:
+                pc = self.model.objects.get(code=category['id'])
+                if pc.name != category['descripcion']:
+                    pc.name = category['descripcion']
+                    pc.save()
+            except ObjectDoesNotExist:
+                self.model.objects.create(
+                    **{'name': category['descripcion'],
+                       'code': category['id']})

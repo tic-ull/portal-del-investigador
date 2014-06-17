@@ -3,12 +3,11 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from statistics.managers import StatsManager
+from statistics.managers import (StatsManager,
+                                 ProfessionalCategoryManager)
 from core.models import UserProfile
 import statistics.settings as stSt
 import cvn.settings as stCVN
-import json
-import urllib
 
 
 class Stats(models.Model):
@@ -65,21 +64,7 @@ class ProfessionalCategory(models.Model):
                             unique=True)
     name = models.CharField(_(u'Categoría'), max_length=255)
     is_cvn_required = models.NullBooleanField(_(u'CVN requerido'))
-
-    @staticmethod
-    def update(past_days=0):
-        categories = json.loads(
-            urllib.urlopen(stSt.WS_CATEGORY % past_days).read())
-        for category in categories:
-            try:
-                pc = ProfessionalCategory.objects.get(code=category['id'])
-                if pc.name != category['descripcion']:
-                    pc.name = category['descripcion']
-                    pc.save()
-            except ObjectDoesNotExist:
-                ProfessionalCategory.objects.create(
-                    **{'name': category['descripcion'],
-                       'code': category['id']})
+    objects = ProfessionalCategoryManager()
 
     def __unicode__(self):
         return self.name
