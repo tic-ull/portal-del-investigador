@@ -2,5 +2,9 @@
 10 00 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py sync_rrhh
 # Actualiza estados del CVN
 10 01 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_all_status_cvn
+
+# Calcula estadísticas y añade categorías profesionales.
+10 02 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py calc_stats
+
 # Insercion tardia de nuevos CVNs
 50 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
