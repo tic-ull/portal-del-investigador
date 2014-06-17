@@ -6,7 +6,6 @@ from django.utils.translation import ugettext_lazy as _
 from statistics.managers import (StatsManager,
                                  ProfessionalCategoryManager)
 from core.models import UserProfile
-import statistics.settings as stSt
 import cvn.settings as stCVN
 
 
@@ -26,7 +25,8 @@ class Stats(models.Model):
         num_computable_members = 0
         for member in members:
             try:
-                if (member['cod_cce'] in stSt.PROFESSIONAL_CATEGORY):
+                if (ProfessionalCategory.objects.get(
+                        code=member['cod_cce']).is_cvn_required) is True:
                     num_computable_members += 1
                     user = UserProfile.objects.get(
                         rrhh_code=member['cod_persona'])
