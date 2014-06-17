@@ -97,10 +97,6 @@ AUTHENTICATION_BACKENDS = (
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 DEVEL = True
-if DEVEL:
-    INSTALLED_APPS += ('debug_toolbar', 'rosetta')
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
 # Set ID for flatpages
 SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'

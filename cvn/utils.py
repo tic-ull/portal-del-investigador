@@ -10,7 +10,8 @@ from parser_helpers import parse_nif
 
 def scientific_production_to_context(user_profile, context):
     try:
-        user_profile.cvn
+        if not user_profile.cvn.is_inserted:
+            return False
         context['Articulos'] = Articulo.objects.filter(
             user_profile=user_profile)
         context['Capitulos'] = Capitulo.objects.filter(

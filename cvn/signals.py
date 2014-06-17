@@ -14,10 +14,12 @@ def save_date(sender, instance, **kwargs):
     if (not hasattr(db_instance, 'fecha_de_fin') or
             not hasattr(db_instance, 'duracion')):
         return
-    if db_instance.fecha_de_fin != instance.fecha_de_fin:
+    if (db_instance.fecha_de_fin != instance.fecha_de_fin and
+       instance.fecha_de_fin is not None):
         duracion = instance.fecha_de_fin - instance.fecha_de_inicio
         instance.duracion = duracion.days
-    elif db_instance.duracion != instance.duracion:
+    elif (db_instance.duracion != instance.duracion and
+            instance.duracion is not None):
         instance.fecha_de_fin = (instance.fecha_de_inicio +
                                  datetime.timedelta(days=instance.duracion))
 

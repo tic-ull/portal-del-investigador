@@ -31,9 +31,7 @@ class Stats(models.Model):
                     num_computable_members += 1
                     user = UserProfile.objects.get(
                         rrhh_code=member['cod_persona'])
-                    status = user.cvn.status
-                    if (status == stCVN.CVNStatus.UPDATED or
-                            status == stCVN.CVNStatus.INVALID_IDENTITY):
+                    if user.cvn.status == stCVN.CVNStatus.UPDATED:
                         num_cvn_update += 1
             except ObjectDoesNotExist:
                 pass

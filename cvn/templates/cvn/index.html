@@ -75,7 +75,7 @@
                                 <td align='center'>{{ cvn.fecha }}</td>
                             </tr>
                             {% if department %}
-                            <tr>
+                            <tr id="dept">
                                 <td colspan=2>
                                     <center><strong>{{ department.name }}</strong></center>
                                     <div class="progress">
@@ -103,9 +103,21 @@
             </div>
         {% endif %}
     </div>
+    {% if cvn and not cvn.is_inserted %}
+        <p class="alert alert-warning"><b>{% trans 'Próximamente podrá visualizar el contenido de su CVN' %}</b><p>
+    {% endif %}
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
+
+    <div class="modal fade upload-cvn-modal" tabindex="-1" role="dialog" aria-labelledby="upload-cvn-modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <p class="alert alert-warning"><b>{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</b></p>
+            </div>
+        </div>
+    </div>
+
     <script>
         $('#id_cvn_file').change(function () {
             if (document.getElementById('hideme')) {
@@ -113,6 +125,10 @@
             }
             var btn = $('#send_file');
             btn.button('loading');
+            $('.upload-cvn-modal').modal({
+                backdrop: "static",
+                keyboard: "false"
+            })
         });
     </script>
 {% endblock main %}
