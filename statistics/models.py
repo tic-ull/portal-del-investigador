@@ -65,7 +65,7 @@ class Area(Stats):
 class ProfessionalCategory(models.Model):
     code = models.CharField(_(u'Código de categoría'), max_length=10,
                             unique=True)
-    name = models.CharField(_(u'Nombre'), max_length=255)
+    name = models.CharField(_(u'Categoría'), max_length=255)
     is_cvn_required = models.NullBooleanField(_(u'CVN requerido'))
 
     @staticmethod
