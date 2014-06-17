@@ -25,8 +25,8 @@ class Stats(models.Model):
         num_computable_members = 0
         for member in members:
             try:
-                if (ProfessionalCategory.objects.get(
-                        code=member['cod_cce']).is_cvn_required) is True:
+                if ProfessionalCategory.objects.get(
+                        code=member['cod_cce']).is_cvn_required is True:
                     num_computable_members += 1
                     user = UserProfile.objects.get(
                         rrhh_code=member['cod_persona'])

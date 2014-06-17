@@ -8,9 +8,9 @@ from django.core.exceptions import ObjectDoesNotExist
 #from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from statistics.settings import (PERCENT_VALID_DEPT_CVN, PROFESSIONAL_CATEGORY,
-                                 WS_DEPARTMENT, WS_INFO_PDI)
-from statistics.models import Department
+from statistics.settings import (PERCENT_VALID_DEPT_CVN, WS_DEPARTMENT,
+                                 WS_INFO_PDI)
+from statistics.models import Department, ProfessionalCategory
 import json
 import urllib
 
@@ -54,7 +54,8 @@ def stats_detail(request, codigo):
                                member_info['nombre'])
             data['categoria'] = member_info['categoria']
             data['obligatorio'] = _(u'No')
-            if member_info['cod_categoria'] in PROFESSIONAL_CATEGORY:
+            if ProfessionalCategory.objects.get(code=member_info[
+                    'cod_categoria']).is_cvn_required is True:
                 data['obligatorio'] = _(u'Sí')
             try:
                 user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
