@@ -1,0 +1,6 @@
+# Actualizacion codigo RRHH
+10 00 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py sync_rrhh
+# Actualiza estados del CVN
+10 01 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_all_status_cvn
+# Insercion tardia de nuevos CVNs
+50 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
