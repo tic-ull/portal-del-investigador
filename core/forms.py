@@ -3,7 +3,7 @@
 from core import settings as stCore
 from django import forms
 from django.conf import settings as st
-from django.contrib.flatpages.admin import FlatpageForm
+from flatpages_i18n.forms import FlatpageForm
 from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
 
