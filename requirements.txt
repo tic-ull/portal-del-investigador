@@ -24,3 +24,4 @@ enum
 django-rosetta
 django-tinymce
 django-staticfiles
+django-flatpages-i18n
