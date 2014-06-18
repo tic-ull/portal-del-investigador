@@ -1,11 +1,7 @@
-{% extends 'core/base.html' %}
+{% extends 'core/faq/base_faq.html' %}
 
 {% load i18n %}
 {% load staticfiles %}
-
-{% block breadcrumb_app %}
-    <li><a href="{% url 'faq'%}">{% trans 'FAQ' %}</a></li>
-{% endblock breadcrumb_app %}
 
 {% block main %}
     <h1 class='page-header'><a name='start'></a> {% trans 'Preguntas Frecuentes' %}</h1>
@@ -20,7 +16,7 @@
         {% endfor %}
         <br>
         {% for page in flatpages %}
-            {% include 'core/partials/default_faq.html' %}
+            {% include 'core/faq/partials/default_faq.html' %}
             <p align="right">
                 <a href="#start">[<i class="fa fa-chevron-up">]</i></a>
             </p>
