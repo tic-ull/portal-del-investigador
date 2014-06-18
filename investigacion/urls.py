@@ -28,9 +28,9 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/cvn/', include('cvn.urls')),
     url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
-        template_name='core/faq.html'), name='faq'),
+        template_name='core/faq/faq.html'), name='faq'),
     url(r'^investigacion/faq/(?P<pk>\d+)/$', DetailView.as_view(
-        template_name='core/question_faq.html', model=FlatPage),
+        template_name='core/faq/question_faq.html', model=FlatPage),
         name='question_faq'),
 )
 
