@@ -5,7 +5,7 @@ from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.flatpages.models import FlatPage
+from flatpages_i18n.models import FlatPage_i18n
 from django.views.generic import TemplateView, RedirectView
 from django.views.generic.detail import DetailView
 
@@ -29,9 +29,10 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq/faq.html'), name='faq'),
     url(r'^investigacion/faq/(?P<pk>\d+)/$', DetailView.as_view(
-        template_name='core/faq/question_faq.html', model=FlatPage),
+        template_name='core/faq/question_faq.html', model=FlatPage_i18n),
         name='question_faq'),
 )
+
 
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)

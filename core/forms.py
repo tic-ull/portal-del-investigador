@@ -4,7 +4,7 @@ from core import settings as stCore
 from django import forms
 from django.conf import settings as st
 from django.contrib.flatpages.admin import FlatpageForm
-from django.contrib.flatpages.models import Site, FlatPage
+from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
 
 
@@ -31,7 +31,6 @@ class PageForm(FlatpageForm):
         return flatpage
 
     class Meta:
-        model = FlatPage
         widgets = {
             'content': forms.widgets.Textarea(),
         }

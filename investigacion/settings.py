@@ -57,13 +57,15 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.sites',
-    'django.contrib.flatpages',
     'tinymce',
     'south',
     'core',
     'cvn',
     'crequest',
     'django_coverage',
+    'mptt',
+    'modeltranslation',
+    'flatpages_i18n',
 )
 
 COVERAGE_MODULE_EXCLUDES = (
@@ -83,7 +85,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
