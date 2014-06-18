@@ -251,7 +251,7 @@ STATICFILES_FINDERS = (
 )
 
 try:
-    LOCAL_SETTINGS
+    SETTINGS_LOCAL
 except NameError:
     try:
         from settings_local import *
