@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
+from django.utils.translation import ugettext_lazy as _
 
 
 class UserProfileInline(admin.StackedInline):
@@ -44,6 +45,10 @@ class LogAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         return tuple(Log._meta.get_all_field_names())
+
+
+FlatPage._meta.verbose_name = _("Preguntas Frecuentes")
+FlatPage._meta.verbose_name_plural = _("Preguntas Frecuentes")
 
 
 class PageAdmin(FlatPageAdmin):

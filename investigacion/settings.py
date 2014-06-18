@@ -254,6 +254,9 @@ STATICFILES_FINDERS = (
 )
 
 try:
-    from settings_local import *
-except ImportError:
-    pass
+    SETTINGS_LOCAL
+except NameError:
+    try:
+        from settings_local import *
+    except ImportError:
+        pass
