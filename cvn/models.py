@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile, Log
-from cvn import settings as stCVN
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
 from django.db import models
 from lxml import etree
+from cvn import settings as stCVN
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
