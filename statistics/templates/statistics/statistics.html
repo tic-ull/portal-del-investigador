@@ -2,93 +2,74 @@
 
 {% load i18n %}
 {% load l10n %}
-
 {% load staticfiles %}
+
 {%block breadcrumb %}	
     <li><a href='{% url 'dept_stats' %}'>{% trans 'Departamentos' %}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
-<script>
-  $(document).ready(function (){
-    $('.content').tooltip({
-      selector: "[data-toggle=tooltip]",
-      container: "body"
-    })
-  });
-</script>
-	<h1 class="page-header">{% trans 'Estadísticas del CVN' %}</h1>
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">{% trans 'Departamentos' %}</li>
-    </ul>
-	<div class="content">
-	    <table class="table table-striped table-condensed">
-	        <thead>
-	            <tr>
-	                <th width='38%'>{% trans 'Nombre' %} </th>
-	                <th width='14%'>
-                        {% trans 'CVN válidos' %} 
-                        <div class="glyphicon glyphicon-info-sign" data-original-title="{% trans "CVN actualizado y con NIF/NIE correcto" %}" style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
-                    </th>
-	                <th width='11%'>{% trans 'Miembros computables' %}</th>
-	                <th width='11%'>{% trans 'Miembros totales' %}</th>
-	                <th>
-                        {% trans 'Porcentaje de CVN válidos' %}
-                        <div class="glyphicon glyphicon-info-sign" data-original-title="{% trans "CVN válidos / Miembros computables" %}" style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
-                    </th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	    {% for department in departmentStats %}
-	            <tr>
-	                <td><a href='{% url 'stats_detail' department.code %}'>{{ department.name }}</a></td>
-	                <td>{{ department.number_valid_cvn }}</td>
-	                <td>{{ department.computable_members }}</td>
-	                <td>{{ department.total_members }}</td>
-	                <td>
-	                    <div class="progress">
-	                        <div class="progress-bar 
-	                        {% if department.percentage >= validPercentCVN %}  progress-bar-success {% else %} progress-bar-danger {% endif %} "
-	                            role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0" aria-valuemax="100" 
-	                            style="width: {{ department.percentage|unlocalize }}%">
-	                            <span class="num_pcnt">{{ department.percentage|floatformat:1 }}%</span> 
-	                        </div>
-	                    </div>
-	                    <script>
-	                        $(".num_pcnt").css("width", $(".progress").width());
-	                    </script>
-	                </td>
-	            </tr>
-	    {% endfor %}
-	        </tbody>
-	    </table>
-	</div>
-</div>
-{% comment %}
-<div class="pagination">
-    <span class="step-links">
-{% endcomment %}
-<!-- STYLE 1 -->
-{% comment %}
-<ul class="pager">
-        {% if departmentStats.has_previous %}
-            <li><a href="?page={{ departmentStats.previous_page_number }}">{% trans 'Anterior' %}</a></li>
-        {% endif %}
+    <h1 class="page-header">{% trans 'Estadísticas del CVN' %}</h1>
+    <div class="section">
+        <ul class="nav nav-tabs header">
+            <li class="active">{% trans 'Departamentos' %}</li>
+        </ul>
+	    <div class="content">
+	        <table class="table table-striped table-condensed">
+	            <thead>
+	                <tr>
+	                    <th width='38%'>{% trans 'Nombre' %} </th>
+	                    <th width='14%'>
+                            {% trans 'CVN válidos' %} 
+                            <div class="glyphicon glyphicon-info-sign" data-original-title="{% trans "CVN actualizado y con NIF/NIE correcto" %}" style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
+                        </th>
+	                    <th width='11%'>{% trans 'Miembros computables' %}</th>
+	                    <th width='11%'>{% trans 'Miembros totales' %}</th>
+	                    <th>
+                            {% trans 'Porcentaje de CVN válidos' %}
+                            <div class="glyphicon glyphicon-info-sign" data-original-title="{% trans "CVN válidos / Miembros computables" %}" style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
+                        </th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                {% for department in departmentStats %}
+	                    <tr>
+	                        <td><a href='{% url 'stats_detail' department.code %}'>{{ department.name }}</a></td>
+	                        <td>{{ department.number_valid_cvn }}</td>
+	                        <td>{{ department.computable_members }}</td>
+	                        <td>{{ department.total_members }}</td>
+	                        <td>
+	                            <div class="progress">
+	                                <div class="progress-bar 
+	                                    {% if department.percentage >= validPercentCVN %}
+                                            progress-bar-success
+                                        {% else %}
+                                            progress-bar-danger
+                                        {% endif %}"
+	                                    role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0" aria-valuemax="100" 
+	                                    style="width: {{ department.percentage|unlocalize }}%">
+	                                        <span class="num_pcnt">{{ department.percentage|floatformat:1 }}%</span> 
+	                                </div>
+	                            </div>
+	                        </td>
+	                    </tr>
+	                {% endfor %}
+	            </tbody>
+	        </table>
+	    </div>
+    </div>
 
-        <span class="current">
-            {% trans 'Página' %} {{ departmentStats.number }} {% trans 'de' %} {{ departmentStats.paginator.num_pages }}.
-        </span>
+    <script>
+        $(document).ready(function() {
+            $('.content').tooltip({
+                selector: "[data-toggle=tooltip]",
+                container: "body"
+            })
+        });
+    </script>
 
-        {% if departmentStats.has_next %}
-            <li><a href="?page={{ departmentStats.next_page_number }}">{% trans 'Siguiente' %}</a></li>
-        {% endif %}
-</ul>
-</div>
-{% endcomment %}
-{% comment %}
-    </span>
-</div>
-{% endcomment %}
+    <script>
+        $(".num_pcnt").css("width", $(".progress").width());
+    </script>
 
 {% endblock main %}

@@ -4,7 +4,7 @@ from cvn.utils import isdigit
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 from statistics.models import Department, ProfessionalCategory
-from statistics.settings import WS_ALL_DEPARTMENTS
+from django.conf import settings as st
 import json
 import logging
 import urllib
@@ -34,8 +34,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self._checkArgs(options)
         try:
-            department_list = json.loads(urllib.urlopen(
-                                         WS_ALL_DEPARTMENTS).read())
+            department_list = json.loads(
+                urllib.urlopen(st.WS_ALL_DEPARTMENTS).read())
             Department.objects.all().delete()
             ProfessionalCategory.objects.update(options['past_days'])
             Department.objects.create_all(department_list)

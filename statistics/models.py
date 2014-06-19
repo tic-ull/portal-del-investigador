@@ -1,12 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
+from core.models import UserProfile
+from cvn import settings as stCVN
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from statistics.managers import (StatsManager,
-                                 ProfessionalCategoryManager)
-from core.models import UserProfile
-import cvn.settings as stCVN
+from statistics.managers import StatsManager, ProfessionalCategoryManager
 
 
 class Stats(models.Model):
@@ -48,6 +47,7 @@ class Stats(models.Model):
         return self.name
 
     class Meta:
+        ordering = ['name']
         abstract = True
 
 
