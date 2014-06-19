@@ -55,7 +55,7 @@ class Migration(SchemaMigration):
 
     models = {
         u'statistics.area': {
-            'Meta': {'object_name': 'Area'},
+            'Meta': {'ordering': "['name']", 'object_name': 'Area'},
             'code': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'computable_members': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
@@ -65,7 +65,7 @@ class Migration(SchemaMigration):
             'total_members': ('django.db.models.fields.IntegerField', [], {})
         },
         u'statistics.department': {
-            'Meta': {'object_name': 'Department'},
+            'Meta': {'ordering': "['name']", 'object_name': 'Department'},
             'code': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'computable_members': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
