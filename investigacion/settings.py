@@ -14,7 +14,6 @@ BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
 LOGIN_URL = 'login'  # Login address for login_required decorator
 BASE_URL = 'http://wwwpre.ull.es/investigacion'
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
@@ -46,6 +45,7 @@ USE_TZ = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
     os.path.join(BASE_DIR, 'cvn/locale'),
+    os.path.join(BASE_DIR, 'statistics/locale'),
 )
 
 INSTALLED_APPS = (
@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'core',
     'cvn',
     'crequest',
+    'statistics',
     'django_coverage',
     'mptt',
     'modeltranslation',
@@ -242,6 +243,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates'),
     os.path.join(BASE_DIR, 'core/templates'),
+    os.path.join(BASE_DIR, 'statistics/templates'),
 )
 
 
@@ -251,6 +253,22 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+
+# Web Services
+WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
+WS_DEPARTMENT = (WS_SERVER_URL +
+                 'get_departamento_y_miembros?cod_departamento=%s')
+WS_DEPARTMENT_YEAR = WS_SERVER_URL + 'get_departamentos?ano=%s'
+WS_DEPARTMENT_INFO = (WS_SERVER_URL +
+                      'get_info_departamento?cod_departamento=%s')
+WS_INFO_USER = WS_SERVER_URL + 'get_departamento_y_miembros?cod_persona=%s'
+WS_INFO_PDI = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
+WS_INFO_PDI_YEAR = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s&ano=%s'
+WS_PDI_VALID = WS_SERVER_URL + 'get_pdi_vigente?cod_%s=%s&ano=%s'
+# WS_CATEGORY = WS_SERVER_URL + 'get_cce'
+WS_CATEGORY = WS_SERVER_URL + 'get_cce?past_days=%s'
+
 
 try:
     SETTINGS_LOCAL

@@ -1,7 +1,7 @@
 # -*- encondig: UTF-8 -*-
 
 from cvn import settings as stCVN
-from cvn.models import Articulo, Capitulo, Libro
+from cvn.models import Articulo, Capitulo, Libro, UserProfile
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
 from lxml import etree

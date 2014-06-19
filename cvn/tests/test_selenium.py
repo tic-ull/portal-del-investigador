@@ -8,7 +8,6 @@ from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
 from selenium.webdriver.common.by import By
-import time
 import unittest  # , time, re
 
 
@@ -107,7 +106,6 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
         # Add admin permissions after login CAS
-        time.sleep(1)
         u = User.objects.get(username="invipas")
         u.is_staff = True
         u.is_superuser = True
@@ -134,23 +132,38 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
         # First upload CVN
-        time.sleep(2)
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id("id_cvn_file").send_keys(
             stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
-        time.sleep(2)
         driver.find_element_by_link_text(
             u'Descargar una copia de mi CVN').click()
-        time.sleep(2)
         # Check if CVN window is open
         self.assertEqual(len(driver.window_handles), 2)
         # Change to CVN window
         driver.switch_to_window(driver.window_handles[-1])
         # Return to 'Main' windows
         driver.switch_to_window(driver.window_handles[0])
+        driver.find_element_by_link_text(u"Cerrar sesión").click()
+
+    def test_user_rrhh(self):
+        driver = self.driver
+        driver.get(self.base_url +
+                   "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
+                   "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
+                   "es%252Finvestigacion%252Fcvn%252F")
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("invbecario")
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("pruebasINV1")
+        driver.find_element_by_name("submit").click()
+        driver.execute_script(
+            'document.getElementById("id_cvn_file").removeAttribute("style")')
+        driver.find_element_by_id(
+            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
+        self.assertFalse(self.is_element_present(By.ID, "dept"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 
     def is_element_present(self, how, what):
