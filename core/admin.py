@@ -5,9 +5,10 @@ from core.models import UserProfile, Log
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from flatpages_i18n.models import FlatPage_i18n, MenuItem
-from flatpages_i18n.admin import FlatPageAdmin
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
+from flatpages_i18n.admin import FlatPageAdmin
+from flatpages_i18n.models import FlatPage_i18n, MenuItem
 
 
 class UserProfileInline(admin.StackedInline):
@@ -67,3 +68,4 @@ admin.site.register(Log, LogAdmin)
 admin.site.unregister(FlatPage_i18n)
 admin.site.register(FlatPage_i18n, PageAdmin)
 admin.site.unregister(MenuItem)
+admin.site.unregister(Site)
