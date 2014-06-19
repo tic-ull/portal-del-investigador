@@ -1,17 +1,18 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.forms import UploadCVNForm
-from cvn.utils import scientific_production_to_context, cvn_to_context
 from cvn.models import CVN
+from cvn.utils import scientific_production_to_context, cvn_to_context
+from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from statistics.models import Department
-import statistics.settings as stSt
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from django.core.exceptions import ObjectDoesNotExist
+from statistics import settings as stSt
+from statistics.models import Department
 import json
 import logging
 import urllib
@@ -28,11 +29,11 @@ def index(request):
     # Get department code of the user from webservice, and with it,
     # find the department statistics on database
     try:
-        dept_json = json.loads(urllib.urlopen(stSt.WS_INFO_USER %
-                                              user.profile.rrhh_code).read())
+        dept_json = json.loads(
+            urllib.urlopen(st.WS_INFO_USER % user.profile.rrhh_code).read())
         dept = Department.objects.get(
             code=dept_json['departamento']['cod_departamento'])
-    except (IOError, KeyError):  # WS down, user without dept
+    except (IOError, KeyError):
         dept = None
 
     if request.method == 'POST':

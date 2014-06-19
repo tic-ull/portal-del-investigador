@@ -56,44 +56,45 @@
                     <div class="content">
                         <table class="table table-bordered">
                             <tbody>
-                            <tr>
-                                <th style="vertical-align: middle;"><strong>{% trans 'Estado' %}</strong></th>
-                                {% if cvn_status == "Actualizado" %}
-                                    <td class="alert alert-success align-center"><b>{% trans cvn_status %}</b></td>
-                                {% else %}
-                                    <td class="alert alert-danger align-center">
-                                        <b>{% trans cvn_status %}</b>
-                                        {% if cvn_status == "NIF/NIE Incorrecto" %}
-                                            <br>
-                                            {{ user.profile.documento }} - {{ nif_invalid }}
-                                        {% endif %}
-                                    </td>
+                                <tr>
+                                    <th style="vertical-align: middle;"><strong>{% trans 'Estado' %}</strong></th>
+                                    {% if cvn_status == "Actualizado" %}
+                                        <td class="alert alert-success align-center"><b>{% trans cvn_status %}</b></td>
+                                    {% else %}
+                                        <td class="alert alert-danger align-center">
+                                            <b>{% trans cvn_status %}</b>
+                                            {% if cvn_status == "NIF/NIE Incorrecto" %}
+                                                <br>
+                                                {{ user.profile.documento }} - {{ nif_invalid }}
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                <tr>
+                                    <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
+                                    <td align='center'>{{ cvn.fecha }}</td>
+                                </tr>
+                                {% if department %}
+                                    <tr id="dept">
+                                        <td colspan=2>
+                                            <center><strong>{{ department.name }}</strong></center>
+                                            <div class="progress">
+                                                <div class="progress-bar
+                                                    {% if department.percentage >= validPercentCVN %}
+                                                        progress-bar-success
+                                                    {% else %}
+                                                        progress-bar-danger
+                                                    {% endif %} "
+                                                    role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0"
+                                                    aria-valuemax="100" style="width: {{ department.percentage|unlocalize }}%">
+                                                    <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">
+                                                        {{ department.percentage|floatformat:1 }}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 {% endif %}
-                            </tr>
-                            <tr>
-                                <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
-                                <td align='center'>{{ cvn.fecha }}</td>
-                            </tr>
-                            {% if department %}
-                            <tr id="dept">
-                                <td colspan=2>
-                                    <center><strong>{{ department.name }}</strong></center>
-                                    <div class="progress">
-                                        <div class="progress-bar {% if department.percentage >= validPercentCVN %} progress-bar-success 
-                                            {% else %} progress-bar-danger {% endif %} "
-                                            role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0" 
-                                            aria-valuemax="100" style="width: {{ department.percentage|unlocalize }}%">
-                                            <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">
-                                                {{ department.percentage|floatformat:1 }}%
-                                            </span> 
-                                        </div>
-                                    </div>
-                                    <script>
-                                        $(".num_pcnt").css("width", $(".progress").width());
-                                    </script>
-                                </td>
-                            </tr>
-                            {% endif %}
                             </tbody>
                         </table>
                         <br>
@@ -103,9 +104,11 @@
             </div>
         {% endif %}
     </div>
+
     {% if cvn and not cvn.is_inserted %}
         <p class="alert alert-warning"><b>{% trans 'Próximamente podrá visualizar el contenido de su CVN' %}</b><p>
     {% endif %}
+
     {% if CVN %}
         {% include 'cvn/partials/producciones_chart.html' %}
     {% endif %}
@@ -131,4 +134,9 @@
             })
         });
     </script>
+
+    <script>
+        $(".num_pcnt").css("width", $(".progress").width());
+    </script>
+
 {% endblock main %}
