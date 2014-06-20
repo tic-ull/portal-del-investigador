@@ -1,21 +1,22 @@
 {% extends 'core/faq/base_faq.html' %}
 
-{% load i18n %}
+{% load i18n flatpages_i18n %}
 {% load staticfiles %}
+
+{% get_available_languages as LANGUAGES %}
 
 {% block main %}
     <h1 class='page-header'><a name='start'></a> {% trans 'Preguntas Frecuentes' %}</h1>
-    {% load flatpages %}
-    {% get_flatpages as flatpages %}
+    {% get_flatpages_i18n as flatpages_i18n %}
     <ul>
-        {% for page in flatpages %}
+        {% for page in flatpages_i18n %}
             <li>
                 <strong><a href='#{{page.id}}'>{{page.title}}</a></strong>
                 <br>
             </li>
         {% endfor %}
         <br>
-        {% for page in flatpages %}
+        {% for page in flatpages_i18n %}
             {% include 'core/faq/partials/default_faq.html' %}
             <p align="right">
                 <a href="#start">[<i class="fa fa-chevron-up">]</i></a>

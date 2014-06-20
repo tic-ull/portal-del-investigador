@@ -34,8 +34,8 @@ MANAGERS = ADMINS
 
 # Internationalization
 LANGUAGES = (
-    ('en', 'English'),
     ('es', 'Español'),
+    ('en', 'English'),
 )
 USE_I18N = True
 USE_L10N = True
@@ -57,7 +57,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.sites',
-    'django.contrib.flatpages',
     'tinymce',
     'south',
     'core',
@@ -65,6 +64,9 @@ INSTALLED_APPS = (
     'crequest',
     'statistics',
     'django_coverage',
+    'mptt',
+    'modeltranslation',
+    'flatpages_i18n',
 )
 
 COVERAGE_MODULE_EXCLUDES = (
@@ -84,7 +86,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (

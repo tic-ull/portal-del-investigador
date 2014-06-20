@@ -5,9 +5,10 @@ from core.models import UserProfile, Log
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.contrib.flatpages.admin import FlatPageAdmin
-from django.contrib.flatpages.models import FlatPage
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
+from flatpages_i18n.admin import FlatPageAdmin
+from flatpages_i18n.models import FlatPage_i18n, MenuItem
 
 
 class UserProfileInline(admin.StackedInline):
@@ -47,12 +48,15 @@ class LogAdmin(admin.ModelAdmin):
         return tuple(Log._meta.get_all_field_names())
 
 
-FlatPage._meta.verbose_name = _("Preguntas Frecuentes")
-FlatPage._meta.verbose_name_plural = _("Preguntas Frecuentes")
+FlatPage_i18n._meta.verbose_name = _("Preguntas Frecuentes")
+FlatPage_i18n._meta.verbose_name_plural = _("Preguntas Frecuentes")
+FlatPage_i18n._meta.app_label = "FlatPage"
 
 
 class PageAdmin(FlatPageAdmin):
     form = PageForm
+    list_editable = []
+    list_display = ('url', 'title', )
     fieldsets = (
         (None, {'fields': ('title', 'content')}),
     )
@@ -61,5 +65,7 @@ class PageAdmin(FlatPageAdmin):
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Log, LogAdmin)
-admin.site.unregister(FlatPage)
-admin.site.register(FlatPage, PageAdmin)
+admin.site.unregister(FlatPage_i18n)
+admin.site.register(FlatPage_i18n, PageAdmin)
+admin.site.unregister(MenuItem)
+admin.site.unregister(Site)
