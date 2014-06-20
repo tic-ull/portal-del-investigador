@@ -8,8 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from django_tables2 import RequestConfig
 from statistics import settings as stSt
 from statistics.models import Department, ProfessionalCategory
+from statistics.tables import DepartmentTable
 import json
 import urllib
 
@@ -18,7 +20,10 @@ import urllib
 @staff_member_required
 def statistics(request):
     context = {}
-    context['departmentStats'] = Department.objects.all()
+#    context['departmentStats'] = Department.objects.all()
+    context['departmentStats'] = DepartmentTable(Department.objects.all())
+    RequestConfig(request, paginate=False).configure(
+        context['departmentStats'])
     context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     return render(request, 'statistics/statistics.html', context)
 
