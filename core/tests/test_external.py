@@ -8,5 +8,4 @@ import urllib
 class ExternalTests(TestCase):
 
     def test_ws_is_alive(self):
-        WS = st.WS_SERVER_URL + 'get_codpersona?nif=.'
-        self.assertEqual(urllib.urlopen(WS).code, 200)
+        self.assertEqual(urllib.urlopen(st.WS_COD_PERSONA % '.').code, 200)

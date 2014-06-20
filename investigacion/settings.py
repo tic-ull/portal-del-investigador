@@ -256,6 +256,7 @@ STATICFILES_FINDERS = (
 
 # Web Services
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
 WS_DEPARTMENT = (WS_SERVER_URL +
                  'get_departamento_y_miembros?cod_departamento=%s')

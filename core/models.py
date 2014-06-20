@@ -4,8 +4,8 @@ from core import settings as stCore
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
-import simplejson as json
 from django.utils.translation import ugettext_lazy as _
+import simplejson as json
 import urllib
 
 
@@ -16,8 +16,7 @@ class UserProfile(models.Model):
                                  blank=True, null=True, unique=True)
 
     def update_rrhh_code(self):
-        WS = st.WS_SERVER_URL + 'get_codpersona?nif=' + self.documento
-        rrhh_request = urllib.urlopen(WS)
+        rrhh_request = urllib.urlopen(st.WS_COD_PERSONA % self.documento)
         if rrhh_request.code == 200:
             rrhh_code = rrhh_request.read()
             if rrhh_code.isdigit():
