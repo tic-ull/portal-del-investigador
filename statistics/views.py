@@ -46,9 +46,12 @@ def stats_detail(request, codigo):
             try:
                 user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
                 data['CVNStatus'] = _(u'Válido')
+                data['is_CVN_valid'] = True
                 if user.cvn.status != stCVN.CVNStatus.UPDATED:
+                    data['is_CVN_valid'] = False
                     data['CVNStatus'] = _(u'Inválido')
             except ObjectDoesNotExist:
+                data['is_CVN_valid'] = False
                 data['CVNStatus'] = _(u'No dispone de CVN')
             members_list.append(data)
         context['members_list'] = members_list

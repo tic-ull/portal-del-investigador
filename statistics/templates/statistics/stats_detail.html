@@ -30,7 +30,7 @@
 	                        <td>{{ member.miembro }}</td>
 	                        <td>{{ member.categoria }}</td>
 	                        <td>{{ member.obligatorio }}</td>
-                            {% if member.CVNStatus == 'Válido' %}
+                            {% if member.is_CVN_valid %}
 	                            <td class="alert alert-success">
                             {% else %}
 	                            <td class="alert alert-danger">
