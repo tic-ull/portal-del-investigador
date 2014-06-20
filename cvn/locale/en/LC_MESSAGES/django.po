@@ -1,16 +1,16 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-16 11:23+0100\n"
+"POT-Creation-Date: 2014-06-20 13:17+0100\n"
 "PO-Revision-Date: 2014-06-16 11:30-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: forms.py:40
@@ -53,7 +53,7 @@ msgstr "Created"
 msgid "Actualizado"
 msgstr "Updated"
 
-#: models.py:82 templates/cvn/index.html:59
+#: models.py:82 templates/cvn/index.html:60
 msgid "Estado"
 msgstr "Status"
 
@@ -330,7 +330,7 @@ msgstr "Invalid Identity"
 msgid "Desconocido"
 msgstr "Unknown"
 
-#: views.py:25
+#: views.py:50
 msgid "CVN actualizado con éxito."
 msgstr "CVN updated successfully."
 
@@ -338,47 +338,47 @@ msgstr "CVN updated successfully."
 msgid "Editor de CVN de la FECYT"
 msgstr "FECYT's CVN Editor"
 
-#: templates/cvn/index.html:7
+#: templates/cvn/index.html:8
 msgid "Currículum Vítae Normalizado (CVN)"
 msgstr "Normalized Curriculum Vitae (CVN)"
 
-#: templates/cvn/index.html:13
+#: templates/cvn/index.html:14
 msgid "Actualización del CVN"
 msgstr "Updated CVN"
 
-#: templates/cvn/index.html:37
+#: templates/cvn/index.html:38
 msgid "Cargando"
 msgstr "Loading"
 
-#: templates/cvn/index.html:37
+#: templates/cvn/index.html:38
 msgid "Subir un nuevo CVN"
 msgstr "Upload a new CVN"
 
-#: templates/cvn/index.html:43
+#: templates/cvn/index.html:44
 msgid "Puede crear su CVN desde el "
 msgstr "You can create your CVN from"
 
-#: templates/cvn/index.html:43
+#: templates/cvn/index.html:44
 msgid "Editor de la FECYT"
 msgstr "FECYT's CVN Editor"
 
-#: templates/cvn/index.html:53
+#: templates/cvn/index.html:54
 msgid "Información del CVN"
 msgstr "Information CVN"
 
-#: templates/cvn/index.html:73
+#: templates/cvn/index.html:74
 msgid "Fecha del Documento"
 msgstr "Document Date"
 
-#: templates/cvn/index.html:79
+#: templates/cvn/index.html:101
 msgid "Descargar una copia de mi CVN"
 msgstr "Download a copy of my CVN"
 
-#: templates/cvn/index.html:86
+#: templates/cvn/index.html:109
 msgid "Próximamente podrá visualizar el contenido de su CVN"
 msgstr "Soon you can view the contents of your CVN"
 
-#: templates/cvn/index.html:95
+#: templates/cvn/index.html:119
 msgid "Este proceso puede tardar unos minutos, por favor espere."
 msgstr "This process may take several minutes, please wait."
 

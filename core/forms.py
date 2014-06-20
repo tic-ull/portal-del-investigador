@@ -3,9 +3,9 @@
 from core import settings as stCore
 from django import forms
 from django.conf import settings as st
-from django.contrib.flatpages.admin import FlatpageForm
-from django.contrib.flatpages.models import Site, FlatPage
+from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
+from flatpages_i18n.forms import FlatpageForm
 
 
 class PageForm(FlatpageForm):
@@ -19,6 +19,8 @@ class PageForm(FlatpageForm):
         self.fields['url'].initial = stCore.BASE_URL_FLATPAGES
         self.fields['url'].widget = HiddenInput()
         self.fields['sites'].widget = MultipleHiddenInput()
+        content_field = 'content_' + st.LANGUAGE_CODE
+        self.fields[content_field].required = True
 
     def clean_url(self):
         return True
@@ -31,7 +33,6 @@ class PageForm(FlatpageForm):
         return flatpage
 
     class Meta:
-        model = FlatPage
         widgets = {
             'content': forms.widgets.Textarea(),
         }

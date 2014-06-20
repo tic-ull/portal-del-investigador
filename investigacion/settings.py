@@ -34,8 +34,8 @@ MANAGERS = ADMINS
 
 # Internationalization
 LANGUAGES = (
-    ('en', 'English'),
     ('es', 'Español'),
+    ('en', 'English'),
 )
 USE_I18N = True
 USE_L10N = True
@@ -57,7 +57,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.sites',
-    'django.contrib.flatpages',
     'tinymce',
     'south',
     'core',
@@ -66,6 +65,9 @@ INSTALLED_APPS = (
     'statistics',
     'django_coverage',
     'django_tables2',
+    'mptt',
+    'modeltranslation',
+    'flatpages_i18n',
 )
 
 COVERAGE_MODULE_EXCLUDES = (
@@ -85,7 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -256,6 +258,7 @@ STATICFILES_FINDERS = (
 
 # Web Services
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
 WS_DEPARTMENT = (WS_SERVER_URL +
                  'get_departamento_y_miembros?cod_departamento=%s')
