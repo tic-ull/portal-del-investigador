@@ -6,6 +6,7 @@ from django.test import TestCase
 from core.tests.factories import UserFactory
 from statistics.models import Department, ProfessionalCategory
 import datetime
+from decimal import Decimal
 
 
 class CVNTestCase(TestCase):
@@ -16,6 +17,19 @@ class CVNTestCase(TestCase):
         for i in codes:
             member_list.append({'cod_cce': str(i % 2), 'cod_persona': i})
         return member_list
+
+    def _check_dept(self, dept, total, computable, valid):
+        # miembros 0-9
+        exp_members = Decimal(total)
+        # miembros computables => 1, 3, 5, 7, 9
+        exp_computable = Decimal(computable)
+        # miembros computables con cvn => 3, 9
+        exp_valid = Decimal(valid)
+        self.assertEqual(dept.number_valid_cvn, exp_valid)
+        self.assertEqual(dept.total_members, exp_members)
+        self.assertEqual(dept.computable_members, exp_computable)
+        self.assertEqual(abs(dept.percentage - exp_valid * 100
+                         / exp_computable) <= 0.1, True)
 
     def test_calc_statistics(self):
         stats = [
@@ -54,7 +68,5 @@ class CVNTestCase(TestCase):
                 cvn.status = stCVN.CVNStatus.INVALID_IDENTITY
             cvn.save()
         Department.objects.create_all(stats)
-        dept = Department.objects.get(code='1')
-        #self.assertEqual(dept.number_valid_cvn, 4)
-        #self.assertEqual(dept.total)
-        # 4 / 10
+        self._check_dept(Department.objects.get(code='1'), 10, 5, 2)
+        self._check_dept(Department.objects.get(code='2'), 10, 5, 1)
