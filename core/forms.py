@@ -19,6 +19,8 @@ class PageForm(FlatpageForm):
         self.fields['url'].initial = stCore.BASE_URL_FLATPAGES
         self.fields['url'].widget = HiddenInput()
         self.fields['sites'].widget = MultipleHiddenInput()
+        content_field = 'content_' + st.LANGUAGE_CODE
+        self.fields[content_field].required = True
 
     def clean_url(self):
         return True
