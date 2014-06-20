@@ -56,7 +56,7 @@ FlatPage_i18n._meta.app_label = "FlatPage"
 class PageAdmin(FlatPageAdmin):
     form = PageForm
     list_editable = []
-    list_display = ('indented_title', 'url')
+    list_display = ('url', 'title', )
     fieldsets = (
         (None, {'fields': ('title', 'content')}),
     )

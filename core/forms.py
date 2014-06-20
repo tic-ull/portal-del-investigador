@@ -3,9 +3,9 @@
 from core import settings as stCore
 from django import forms
 from django.conf import settings as st
-from flatpages_i18n.forms import FlatpageForm
 from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
+from flatpages_i18n.forms import FlatpageForm
 
 
 class PageForm(FlatpageForm):
