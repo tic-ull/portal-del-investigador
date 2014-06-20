@@ -50,7 +50,6 @@ class LogAdmin(admin.ModelAdmin):
 
 FlatPage_i18n._meta.verbose_name = _("Preguntas Frecuentes")
 FlatPage_i18n._meta.verbose_name_plural = _("Preguntas Frecuentes")
-FlatPage_i18n._meta.app_label = "FlatPage"
 
 
 class PageAdmin(FlatPageAdmin):

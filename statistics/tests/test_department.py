@@ -1,12 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
+from core.tests.factories import UserFactory
 from cvn import settings as stCVN
 from cvn.models import CVN
+from decimal import Decimal
 from django.test import TestCase
-from core.tests.factories import UserFactory
 from statistics.models import Department, ProfessionalCategory
 import datetime
-from decimal import Decimal
 
 
 class CVNTestCase(TestCase):
