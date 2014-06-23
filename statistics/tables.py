@@ -1,6 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
+from django.utils.translation import ugettext_lazy as _
 import django_tables2 as tables
+
 
 PERCENTAGE_TEMPLATE = '''
 {% load l10n %}
@@ -28,13 +30,17 @@ NAME_TEMPLATE = '''
 
 class DepartmentTable(tables.Table):
     name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
-    num_valid_cvn = tables.Column(accessor='number_valid_cvn',
-                                  attrs={'th': {'width': '14%'}})
+    num_valid_cvn = tables.Column(
+        accessor='number_valid_cvn',
+        attrs={'th': {'width': '14%'},
+               'data_helper': _('CVN actualizado y con NIF/NIE correcto')})
     computable_member = tables.Column(accessor='computable_members',
                                       attrs={'th': {'width': '11%'}})
     total_member = tables.Column(accessor='total_members',
                                  attrs={'th': {'width': '11%'}})
-    percentage = tables.TemplateColumn(PERCENTAGE_TEMPLATE)
+    percentage = tables.TemplateColumn(
+        PERCENTAGE_TEMPLATE,
+        attrs={'data_helper': _(u'CVN válidos / Miembros computables')})
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
