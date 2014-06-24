@@ -116,7 +116,7 @@
     <div class="modal fade upload-cvn-modal" tabindex="-1" role="dialog" aria-labelledby="upload-cvn-modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <p class="alert alert-warning"><b>{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</b></p>
+                <p id="show" class="alert alert-warning"><b>{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</b></p>
             </div>
         </div>
     </div>
@@ -133,6 +133,30 @@
                 keyboard: "false"
             })
         });
+    </script>
+
+    <script>
+        function get_message_waiting(key) {
+            $.get('/prueba/', {key:key}, function(data){
+                $('#show').text(key);
+            });
+        } 
+    </script>
+
+    <script>
+        $('.modal-content').on('visibility', function() {
+            var $key = 0
+            var $element = $(this);
+            var timer = setInterval(function() {
+                if($element.is(':hidden')) {
+                    $key = 0
+                } else {
+                    $key += 1
+                    $('#show').text($key);
+                    /*get_message_waiting($key);*/
+                }
+            }, 5000);
+        }).trigger('visibility');
     </script>
 
     <script>
