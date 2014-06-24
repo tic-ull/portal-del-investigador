@@ -37,16 +37,41 @@ table td.alert-danger {
     border-color: transparent;
 }
 
-table thead th.orderable > a {
+.orderable:after {
+    content: "\f0dc";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    /*--adjust as necessary--*/
+    color: #000;
+    font-size: 18px;
     padding-right: 20px;
-    background: url(../images/arrow-inactive-up.png) right center no-repeat;
+    left: 0;
 }
 
-table thead th.orderable.asc > a {
-    background-image: url(../images/arrow-active-up.png);
+.orderable.asc:after {
+    content: "\f0d8";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    /*--adjust as necessary--*/
+    color: #000;
+    font-size: 18px;
+    padding-right: 20px;
+    left: 0;
 }
 
-table thead th.orderable.desc > a {
-    background-image: url(../images/arrow-active-down.png);
+.orderable.desc:after{
+    content: "\f0d7";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    /*--adjust as necessary--*/
+    color: #000;
+    font-size: 18px;
+    padding-right: 20px;
+    left: 0;
 }
-

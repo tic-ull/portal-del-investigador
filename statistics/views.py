@@ -20,7 +20,6 @@ import urllib
 @staff_member_required
 def statistics(request):
     context = {}
-#    context['departmentStats'] = Department.objects.all()
     context['departmentStats'] = DepartmentTable(Department.objects.all())
     RequestConfig(request, paginate=False).configure(
         context['departmentStats'])
