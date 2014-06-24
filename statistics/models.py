@@ -11,10 +11,10 @@ from statistics.managers import StatsManager, ProfessionalCategoryManager
 class Stats(models.Model):
     name = models.CharField(_(u'Nombre'), max_length=40, unique=True)
     code = models.CharField(_(u'Código departamento'), max_length=10)
-    number_valid_cvn = models.IntegerField(_(u'Número de CVN válidos'))
+    number_valid_cvn = models.IntegerField(_(u'CVN válidos'))
     computable_members = models.IntegerField(_(u'Miembros computables'))
     total_members = models.IntegerField(_(u'Miembros totales'))
-    percentage = models.DecimalField(_(u'Porcentaje de CVN válidos'),
+    percentage = models.DecimalField(_(u'Porcentaje CVN válidos'),
                                      max_digits=5, decimal_places=2)
     objects = StatsManager()
 
