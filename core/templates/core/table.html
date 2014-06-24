@@ -1,0 +1,24 @@
+{% extends "django_tables2/table.html" %}
+ 
+{% load django_tables2 %}
+{% load i18n %}
+
+{% block table.thead %}
+    <thead>
+        <tr>
+        {% for column in table.columns %}
+            <th {{ column.attrs.th.as_html }}>
+                {% if column.attrs.data_helper %}
+                    <div class="fa fa-info-circle" data-original-title="{{ column.attrs.data_helper }}" 
+                         style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
+                {% endif %}
+                {% if column.orderable %}
+                    <a href="{% querystring table.prefixed_order_by_field=column.order_by_alias.next %}">{{ column.header }}</a>
+                {% else %}
+                    {{ column.header }}
+                {% endif %}
+            </th>
+        {% endfor %}
+        </tr>
+    </thead>
+{% endblock table.thead %}
