@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 from django_tables2 import RequestConfig
 from statistics import settings as stSt
 from statistics.models import Department, ProfessionalCategory
-from statistics.tables import DepartmentTable
+from statistics.tables import DepartmentTable, DepartmentDetailTable
 import json
 import urllib
 
@@ -58,7 +58,9 @@ def stats_detail(request, codigo):
                 data['is_CVN_valid'] = False
                 data['CVNStatus'] = _(u'No dispone de CVN')
             members_list.append(data)
-        context['members_list'] = members_list
+        context['members_list'] = DepartmentDetailTable(members_list)
     except IOError:
         pass
+    RequestConfig(request, paginate=False).configure(
+        context['members_list'])
     return render(request, 'statistics/stats_detail.html', context)

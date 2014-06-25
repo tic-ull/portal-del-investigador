@@ -50,3 +50,31 @@ class DepartmentTable(tables.Table):
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
         ordered = {'name'}
+
+
+class DepartmentDetailTable(tables.Table):
+    CVN_STATUS_TEMPLATE = '''
+        {% if record.is_CVN_valid %}
+            <div style="padding: 4px; text-align:center;"
+                 class="alert alert-success">
+        {% else %}
+            <div style="padding: 4px; text-align:center;"
+                 class="alert alert-danger">
+        {% endif %}
+                {{ record.CVNStatus }}
+            </div>
+    '''
+
+    research = tables.Column(accessor='miembro',
+                             verbose_name=_(u'Investigador'))
+    category = tables.Column(accessor='categoria',
+                             verbose_name=_(u'Categoría'))
+    cvn_required = tables.Column(accessor='obligatorio',
+                                 verbose_name=_(u'CVN obligatorio'))
+    cvn_status = tables.TemplateColumn(CVN_STATUS_TEMPLATE,
+                                       accessor='CVNStatus',
+                                       verbose_name=_(u'Estado CVN'),
+                                       attrs={'td': {'style': 'padding: 0'}})
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}
