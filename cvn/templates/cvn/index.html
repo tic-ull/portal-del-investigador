@@ -136,14 +136,6 @@
     </script>
 
     <script>
-        function get_message_waiting(key) {
-            $.get('/prueba/', {key:key}, function(data){
-                $('#show').text(key);
-            });
-        } 
-    </script>
-
-    <script>
         $('.modal-content').on('visibility', function() {
             var $key = 0
             var $element = $(this);
@@ -152,8 +144,9 @@
                     $key = 0
                 } else {
                     $key += 1
-                    $('#show').text($key);
-                    /*get_message_waiting($key);*/
+                    $.ajax({ url: "prueba", success: function(data){
+                        // UPDATE MESSAGE
+                    }, dataType: "json"});
                 }
             }, 5000);
         }).trigger('visibility');
