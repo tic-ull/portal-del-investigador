@@ -37,42 +37,6 @@ table td.alert-danger {
     border-color: transparent;
 }
 
-.orderable:after {
-    content: "\f0dc";
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
-    /*--adjust as necessary--*/
-    color: #000;
-    padding-right: 20px;
-    left: 0;
-}
-
-.orderable.asc:after {
-    content: "\f0de";
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
-    /*--adjust as necessary--*/
-    color: #000;
-    padding-right: 20px;
-    left: 0;
-}
-
-.orderable.desc:after{
-    content: "\f0dd";
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
-    /*--adjust as necessary--*/
-    color: #000;
-    padding-right: 20px;
-    left: 0;
-}
-
 table thead th.orderable > a {
     color: #000;
 }

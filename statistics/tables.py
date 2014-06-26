@@ -32,7 +32,7 @@ class DepartmentTable(tables.Table):
 
     name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
 
-    num_valid_cvn = tables.Column(
+    valid_cvn = tables.Column(
         accessor='number_valid_cvn',
         attrs={'th': {'width': '15%'},
                'data_helper': _('CVN actualizado y con NIF/NIE correcto')})
