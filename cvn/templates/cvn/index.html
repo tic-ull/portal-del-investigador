@@ -123,8 +123,9 @@
 
     <script>
         $('#id_cvn_file').change(function () {
-            if (document.getElementById('hideme')) {
-                document.getElementById('hideme').style.display = 'none'
+            var hideme = $('#hideme');
+            if (hideme.length) {
+                hideme[0].style.display = 'none';
             }
             var btn = $('#send_file');
             btn.button('loading');
