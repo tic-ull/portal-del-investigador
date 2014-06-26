@@ -6,7 +6,7 @@
 
 {%block breadcrumb %}
     <li><a href='{% url 'statistics' %}'>{% trans 'Departamentos' %}</a></li>
-    <li><a href=''>{% trans 'Información departamento' %}</a></li>
+    <li><a href=''>{{ dept_nombre_corto }}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}

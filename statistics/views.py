@@ -11,6 +11,7 @@ from django.utils.translation import ugettext as _
 from django_tables2 import RequestConfig
 from statistics import settings as stSt
 from statistics.models import Department, ProfessionalCategory
+from statistics.utils import get_user_data
 from statistics.tables import DepartmentTable, DepartmentDetailTable
 import json
 import urllib
@@ -33,30 +34,35 @@ def stats_detail(request, codigo):
         dataDepartment = json.loads(
             urllib.urlopen(st.WS_DEPARTMENT % codigo).read())
         context['departamento'] = dataDepartment['departamento']['nombre']
+        context['dept_nombre_corto'] =\
+            dataDepartment['departamento']['nombre_corto']
         members_list = []
         for member in dataDepartment['miembros']:
             data = {}
-            member_info = json.loads(
-                urllib.urlopen(st.WS_INFO_PDI % member['cod_persona']).read())
-            data['miembro'] = (
-                member_info['apellido1'] + ' ' +
-                member_info['apellido2'] + ', ' +
-                member_info['nombre'])
-            data['categoria'] = member_info['categoria']
+            category = ProfessionalCategory.objects.get(code=member['cod_cce'])
+            data['categoria'] = category.name
             data['obligatorio'] = _(u'No')
-            if ProfessionalCategory.objects.get(code=member_info[
-                    'cod_categoria']).is_cvn_required is True:
+            if category.is_cvn_required is True:
                 data['obligatorio'] = _(u'Sí')
             try:
-                user = UserProfile.objects.get(rrhh_code=member['cod_persona'])
+                user_profile = UserProfile.objects.get(
+                    rrhh_code=member['cod_persona'])
+                data['miembro'] = (user_profile.user.last_name +
+                                   ',' +
+                                   user_profile.user.first_name)
                 data['CVNStatus'] = _(u'Válido')
                 data['is_CVN_valid'] = True
-                if user.cvn.status != stCVN.CVNStatus.UPDATED:
+                if user_profile.cvn.status != stCVN.CVNStatus.UPDATED:
                     data['is_CVN_valid'] = False
                     data['CVNStatus'] = _(u'Inválido')
             except ObjectDoesNotExist:
                 data['is_CVN_valid'] = False
                 data['CVNStatus'] = _(u'No dispone de CVN')
+                user_data = json.loads(
+                    urllib.urlopen(st.WS_INFO_PDI % member['cod_persona']).read())
+                data['miembro'] = (user_data['apellido1'] + ' ' +
+                                   user_data['apellido2'] + ', ' +
+                                   user_data['nombre'])
             members_list.append(data)
         context['members_list'] = DepartmentDetailTable(members_list)
     except IOError:
