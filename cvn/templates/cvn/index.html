@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load l10n %}
 {% load staticfiles %}
+{% load cvn_extras %}
 
 {% block main %}
     <h1 class="page-header">{% trans "Currículum Vítae Normalizado (CVN)" %}</h1>
@@ -116,7 +117,9 @@
     <div class="modal fade upload-cvn-modal" tabindex="-1" role="dialog" aria-labelledby="upload-cvn-modal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <p id="show" class="alert alert-warning"><b>{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</b></p>
+                <p class="alert alert-warning">
+                    <b><span id="show">{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</span></b>
+                </p>
             </div>
         </div>
     </div>
@@ -144,9 +147,22 @@
                     $key = 0
                 } else {
                     $key += 1
-                    $.ajax({ url: "prueba", success: function(data){
+                    switch($key) {
+                        case 1:
+                            $('#show').text("{% message_waiting "1" %}");
+                            break;
+                        case 2:
+                            $('#show').text("{% message_waiting "2" %}");
+                            break;
+                        case 3:
+                            $('#show').text("{% message_waiting "3" %}");
+                            break;
+                        default:
+                            $('#show').text("{% message_waiting "4" %}");
+                    }
+                    $.post("waiting", function(data){
                         // UPDATE MESSAGE
-                    }, dataType: "json"});
+                    });
                 }
             }, 5000);
         }).trigger('visibility');

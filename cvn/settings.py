@@ -134,6 +134,6 @@ MESSAGES_WAITING = {
     2: _(u'Se ha establecido la conexión con la FECYT. Su CVN se está procesando, por favor espere.'),
     3: _(u'Verificando la información de su CVN, por favor espere.'),
     4: _(u'Este proceso esta tardando más tiempo de lo habitual, por favor espere.'
-         u'Si se produce un error repita el proceso.'
-         u'Si el error persiste contacte con el Servicio de Investigación (sopinve@ull.es).')
+         u' Si se produce un error repita el proceso.'
+         u' Si el error persiste contacte con el Servicio de Investigación (sopinve@ull.es).')
 }
