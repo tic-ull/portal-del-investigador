@@ -161,7 +161,7 @@
                         default:
                             $('#show').text("{% message_waiting "4" %}");
                     }
-                    $.post("waiting/", function(data){
+                    $.get("waiting/", function(data){
                         // UPDATE MESSAGE
                     });
                 }
