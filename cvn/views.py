@@ -13,6 +13,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from statistics import settings as stSt
 from statistics.models import Department
+from cvn import settings as stCVN
 import json
 import logging
 import urllib
@@ -53,6 +54,8 @@ def index(request):
     context['CVN'] = scientific_production_to_context(user.profile, context)
     context['department'] = dept
     context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
+    context['TIME_WAITING'] = stCVN.TIME_WAITING
+    context['MESSAGES_WAITING'] = stCVN.MESSAGES_WAITING
     return render(request, 'cvn/index.html', context)
 
 

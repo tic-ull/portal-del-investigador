@@ -118,7 +118,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <p class="alert alert-warning">
-                    <b><span id="show">{% trans 'Este proceso puede tardar unos minutos, por favor espere.'%}</span></b>
+                    <b><span id="show">{{ MESSAGES_WAITING.1|safe }}</span></b>
                 </p>
             </div>
         </div>
@@ -141,31 +141,26 @@
 
     <script>
         $('.modal-content').on('visibility', function() {
-            var $key = 0
+            var $key
             var $element = $(this);
             var timer = setInterval(function() {
                 if($element.is(':hidden')) {
-                    $key = 0
+                    $key = 1
                 } else {
                     $key += 1
                     switch($key) {
-                        case 1:
-                            $('#show').text("{% message_waiting "1" %}");
-                            break;
                         case 2:
-                            $('#show').text("{% message_waiting "2" %}");
+                            $('#show').text("{{ MESSAGES_WAITING.2|safe }}");
                             break;
                         case 3:
-                            $('#show').text("{% message_waiting "3" %}");
+                            $('#show').text("{{ MESSAGES_WAITING.3|safe }}");
                             break;
                         default:
-                            $('#show').text("{% message_waiting "4" %}");
+                            $('#show').text("{{ MESSAGES_WAITING.4|safe }}");
                     }
-                    $.get("waiting/", function(data){
-                        // UPDATE MESSAGE
-                    });
+                    $.get("waiting/");
                 }
-            }, 5000);
+            }, {{ TIME_WAITING }});
         }).trigger('visibility');
     </script>
 
