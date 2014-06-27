@@ -47,6 +47,16 @@ class DepartmentTable(tables.Table):
         PERCENTAGE_TEMPLATE,
         attrs={'data_helper': _(u'CVN válidos / Miembros computables')})
 
+    @classmethod
+    def create_row(cls, data):
+        table = cls(data)
+        table.sortable = False
+        table.columns[0].column.visible = False
+        table.columns[1].column.attrs = {'th': {'width': '20%'}}
+        table.columns[2].column.attrs = {'th': {'width': '20%'}}
+        table.columns[3].column.attrs = {'th': {'width': '20%'}}
+        return table
+
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
         ordered = {'name'}
