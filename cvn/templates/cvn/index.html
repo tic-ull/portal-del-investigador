@@ -118,7 +118,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <p class="alert alert-warning">
-                    <b><span id="show">{{ MESSAGES_WAITING.1|safe }}</span></b>
+                    <b><span id="show">{{ MESSAGES_WAITING.0|safe }}</span></b>
                 </p>
             </div>
         </div>
@@ -145,19 +145,10 @@
             var $element = $(this);
             var timer = setInterval(function() {
                 if($element.is(':hidden')) {
-                    $key = 1
+                    $key = 0
                 } else {
+                    {% messages_waiting %}
                     $key += 1
-                    switch($key) {
-                        case 2:
-                            $('#show').text("{{ MESSAGES_WAITING.2|safe }}");
-                            break;
-                        case 3:
-                            $('#show').text("{{ MESSAGES_WAITING.3|safe }}");
-                            break;
-                        default:
-                            $('#show').text("{{ MESSAGES_WAITING.4|safe }}");
-                    }
                     $.get("waiting/");
                 }
             }, {{ TIME_WAITING }});
