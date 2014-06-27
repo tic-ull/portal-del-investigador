@@ -139,4 +139,5 @@ MESSAGES_WAITING = {
          u' Si el error persiste contacte con el Servicio de Investigación (sopinve@ull.es).'),
 }
 
+# In milliseconds
 TIME_WAITING = 5000
