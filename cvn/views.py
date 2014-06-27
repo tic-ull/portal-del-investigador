@@ -34,7 +34,7 @@ def index(request):
             urllib.urlopen(st.WS_INFO_USER % user.profile.rrhh_code).read())
         dept = Department.objects.get(
             code=dept_json['departamento']['cod_departamento'])
-    except (IOError, KeyError):
+    except (IOError, KeyError, ObjectDoesNotExist):
         dept = None
 
     if request.method == 'POST':
