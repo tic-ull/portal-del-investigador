@@ -30,6 +30,7 @@ def statistics(request):
 
 def stats_detail(request, codigo):
     context = {}
+    context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     try:
         dataDepartment = json.loads(
             urllib.urlopen(st.WS_DEPARTMENT % codigo).read())
@@ -65,6 +66,13 @@ def stats_detail(request, codigo):
                                    user_data['nombre'])
             members_list.append(data)
         context['members_list'] = DepartmentDetailTable(members_list)
+        context['info_department'] = DepartmentTable(
+            Department.objects.filter(code=codigo))
+        context['info_department'].sortable = False
+        context['info_department'].columns[0].column.visible = False
+        context['info_department'].columns[1].column.attrs = {'th': {'width': '20%'}}
+        context['info_department'].columns[2].column.attrs = {'th': {'width': '20%'}}
+        context['info_department'].columns[3].column.attrs = {'th': {'width': '20%'}}
     except IOError:
         pass
     RequestConfig(request, paginate=False).configure(

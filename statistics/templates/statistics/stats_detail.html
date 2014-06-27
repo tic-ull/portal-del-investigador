@@ -10,13 +10,28 @@
 {% endblock breadcrumb %}
 
 {% block main %}
-	<h1 class="page-header">{% trans 'Datos del departamento' %}</h1>
+<h1 class="page-header">{{ departamento }}</h1>
+
     <div class="section">
         <ul class="nav nav-tabs header">
-            <li class="active">{{ departamento }}</li>
+            <li class="active">{% trans 'Información general' %}</li>
+        </ul>
+	    <div class="content">
+            {% render_table info_department "core/table.html" %}
+	    </div>
+    </div>
+
+    <div class="section">
+        <ul class="nav nav-tabs header">
+            <li class="active">{% trans 'Información detallada' %}</li>
         </ul>
 	    <div class="content">
             {% render_table members_list "core/table.html" %}
 	    </div>
     </div>
+
+    <script>
+        $(".num_pcnt").css("width", $(".progress").width());
+    </script>
+
 {% endblock main %}
