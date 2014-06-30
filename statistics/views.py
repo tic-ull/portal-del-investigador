@@ -48,7 +48,7 @@ def stats_detail(request, codigo):
                 user_profile = UserProfile.objects.get(
                     rrhh_code=member['cod_persona'])
                 data['miembro'] = (user_profile.user.last_name +
-                                   ',' +
+                                   ', ' +
                                    user_profile.user.first_name)
                 data['CVNStatus'] = _(u'Válido')
                 data['is_CVN_valid'] = True
