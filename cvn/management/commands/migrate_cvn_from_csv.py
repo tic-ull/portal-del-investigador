@@ -21,7 +21,10 @@ class Command(BaseCommand):
             lines = csv.reader(csvfile, delimiter=';')
             for line in lines:
                 user = User.objects.get_or_create(
-                    username=unicode(line[0]), password='')[0]
+                    username=unicode(line[0]),
+                    password='',
+                    first_name=line[3].decode('utf-8'),
+                    last_name=line[4].decode('utf-8'))[0]
                 UserProfile.objects.get_or_create(user=user)[0]
                 user.profile.documento = unicode(line[1])
                 user.profile.save()
