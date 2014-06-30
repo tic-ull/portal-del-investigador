@@ -11,7 +11,6 @@ from django.utils.translation import ugettext as _
 from django_tables2 import RequestConfig
 from statistics import settings as stSt
 from statistics.models import Department, ProfessionalCategory
-from statistics.utils import get_user_data
 from statistics.tables import DepartmentTable, DepartmentDetailTable
 import json
 import urllib
@@ -59,15 +58,17 @@ def stats_detail(request, codigo):
             except ObjectDoesNotExist:
                 data['is_CVN_valid'] = False
                 data['CVNStatus'] = _(u'No dispone de CVN')
-                user_data = json.loads(
-                    urllib.urlopen(st.WS_INFO_PDI % member['cod_persona']).read())
+                user_data = json.loads(urllib.urlopen(
+                    st.WS_INFO_PDI % member['cod_persona']).read())
                 data['miembro'] = (user_data['apellido1'] + ' ' +
                                    user_data['apellido2'] + ', ' +
                                    user_data['nombre'])
             members_list.append(data)
         context['members_list'] = DepartmentDetailTable(members_list)
+        data_table = {1: {'th': {'width': '20%'}}, 2: {'th': {'width': '20%'}},
+                      3: {'th': {'width': '20%'}}, 4: {'th': {'width': '20%'}}}
         context['info_department'] = DepartmentTable.create_row(
-            Department.objects.filter(code=codigo))
+            Department.objects.filter(code=codigo), data_table, False)
     except IOError:
         pass
     RequestConfig(request, paginate=False).configure(

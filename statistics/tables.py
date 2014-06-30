@@ -48,13 +48,14 @@ class DepartmentTable(tables.Table):
         attrs={'data_helper': _(u'CVN válidos / Miembros computables')})
 
     @classmethod
-    def create_row(cls, data):
+    def create_row(cls, data, attrs, sortable=False):
         table = cls(data)
-        table.sortable = False
-        table.columns[0].column.visible = False
-        table.columns[1].column.attrs = {'th': {'width': '20%'}}
-        table.columns[2].column.attrs = {'th': {'width': '20%'}}
-        table.columns[3].column.attrs = {'th': {'width': '20%'}}
+        table.sortable = sortable
+        for i in range(0, len(table.columns.all())):
+            try:
+                table.columns[i].column.attrs = attrs[i]
+            except KeyError:
+                table.columns[i].column.visible = False
         return table
 
     class Meta:

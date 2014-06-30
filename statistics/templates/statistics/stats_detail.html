@@ -31,6 +31,15 @@
     </div>
 
     <script>
+        $(document).ready(function() {
+            $('.content').tooltip({
+                selector: "[data-toggle=tooltip]",
+                container: "body"
+            })
+        });
+    </script>
+
+    <script>
         $(".num_pcnt").css("width", $(".progress").width());
     </script>
 
