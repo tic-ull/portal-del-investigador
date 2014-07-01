@@ -13,8 +13,6 @@ from django_tables2 import RequestConfig
 from statistics import settings as stSt
 from statistics.models import Department, ProfessionalCategory
 from statistics.tables import DepartmentTable, DepartmentDetailTable
-import json
-import urllib
 
 
 @login_required
@@ -32,7 +30,7 @@ def dept_stats_detail(request, codigo):
     context = {}
     context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     dataDepartment = wsget(st.WS_DEPARTMENT % codigo)
-    if dataDepartment is None:
+    if dataDepartment is None:  # TODO template error
         context['members_list'] = DepartmentDetailTable({})
         context['info_department'] = DepartmentTable({})
         return render(request, 'statistics/stats_detail.html', context)
