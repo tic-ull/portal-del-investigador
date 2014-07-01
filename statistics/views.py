@@ -18,7 +18,7 @@ import urllib
 
 @login_required
 @staff_member_required
-def statistics(request):
+def dept_stats(request):
     context = {}
     context['departmentStats'] = DepartmentTable(Department.objects.all())
     RequestConfig(request, paginate=False).configure(
@@ -27,7 +27,7 @@ def statistics(request):
     return render(request, 'statistics/statistics.html', context)
 
 
-def stats_detail(request, codigo):
+def dept_stats_detail(request, codigo):
     context = {}
     context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     try:
@@ -67,7 +67,7 @@ def stats_detail(request, codigo):
         context['members_list'] = DepartmentDetailTable(members_list)
         data_table = {1: {'th': {'width': '20%'}}, 2: {'th': {'width': '20%'}},
                       3: {'th': {'width': '20%'}}, 4: {'th': {'width': '20%'}}}
-        context['info_department'] = DepartmentTable.create_row(
+        context['info_department'] = DepartmentTable.create(
             Department.objects.filter(code=codigo), data_table, False)
     except IOError:
         pass

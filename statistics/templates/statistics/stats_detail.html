@@ -5,7 +5,7 @@
 {% load render_table from django_tables2 %}
 
 {%block breadcrumb %}
-    <li><a href='{% url 'statistics' %}'>{% trans 'Departamentos' %}</a></li>
+    <li><a href='{% url 'dept_stats' %}'>{% trans 'Departamentos' %}</a></li>
     <li><a href=''>{{ dept_nombre_corto }}</a></li>
 {% endblock breadcrumb %}
 

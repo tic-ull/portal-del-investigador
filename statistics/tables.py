@@ -1,10 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
 from django.utils.translation import ugettext_lazy as _
+from core.tables import Table
 import django_tables2 as tables
 
 
-class DepartmentTable(tables.Table):
+class DepartmentTable(Table):
 
     PERCENTAGE_TEMPLATE = '''
         {% load l10n %}
@@ -27,7 +28,7 @@ class DepartmentTable(tables.Table):
     '''
 
     NAME_TEMPLATE = '''
-        <a href='{% url 'stats_detail' record.code %}'>{{ record.name }}</a>
+        <a href='{% url 'dept_stats_detail' record.code %}'>{{ record.name }}</a>
     '''
 
     name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
@@ -47,23 +48,11 @@ class DepartmentTable(tables.Table):
         PERCENTAGE_TEMPLATE,
         attrs={'data_helper': _(u'CVN válidos / Miembros computables')})
 
-    @classmethod
-    def create_row(cls, data, attrs, sortable=False):
-        table = cls(data)
-        table.sortable = sortable
-        for i in range(0, len(table.columns.all())):
-            try:
-                table.columns[i].column.attrs = attrs[i]
-            except KeyError:
-                table.columns[i].column.visible = False
-        return table
-
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
-        ordered = {'name'}
 
 
-class DepartmentDetailTable(tables.Table):
+class DepartmentDetailTable(Table):
     CVN_STATUS_TEMPLATE = '''
         {% if record.is_CVN_valid %}
             <div style="padding: 4px; text-align:center;"
