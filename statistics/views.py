@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile
-from core.helpers import wsget
+from core.utils import wsget
 from cvn import settings as stCVN
 from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
