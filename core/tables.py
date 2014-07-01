@@ -2,16 +2,16 @@
 
 import django_tables2 as tables
 
+
 class Table(tables.Table):
 
-    @classmethod
-    def create(cls, data, attrs, sortable=True):
-        table = cls(data)
-        table.sortable = sortable
-        for i in range(0, len(table.columns.all())):
+    def __init__(self, *args, **kwargs):
+        columns = kwargs.pop('columns', None)
+        super(Table, self).__init__(*args, **kwargs)
+        if columns is None:
+            return
+        for i in range(0, len(self.columns.all())):
             try:
-                table.columns[i].column.attrs = attrs[i]
+                self.columns[i].column.attrs = columns[i]
             except KeyError:
-                table.columns[i].column.visible = False
-        return table
-
+                self.columns[i].column.visible = False
