@@ -1,13 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.utils import isdigit
+from core.utils import wsget
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 from statistics.models import Department, ProfessionalCategory
 from django.conf import settings as st
-import json
 import logging
-import urllib
 
 logger = logging.getLogger(__name__)
 
@@ -31,13 +30,15 @@ class Command(BaseCommand):
             raise CommandError(
                 'Option `--past_days=X` must be a number')
 
-    def handle(self, *args, **options):
+    def handle(self, *args,  **options):
         self._checkArgs(options)
         try:
-            department_list = json.loads(
-                urllib.urlopen(st.WS_ALL_DEPARTMENTS).read())
+            department_list = wsget(st.WS_ALL_DEPARTMENTS)
+            if department_list is None:
+                raise IOError('WebService "%s" does not work' %
+                              (st.WS_ALL_DEPARTMENTS))
             Department.objects.all().delete()
             ProfessionalCategory.objects.update(options['past_days'])
             Department.objects.create_all(department_list)
-        except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+        except Exception as e:
+            raise type(e)(e.message)
