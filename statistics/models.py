@@ -1,14 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile
+from core.utils import wsget
 from cvn import settings as stCVN
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from statistics.managers import StatsManager, ProfessionalCategoryManager
-import json
-import urllib
 
 
 class Stats(models.Model):
@@ -59,11 +58,10 @@ class Department(Stats):
     @staticmethod
     def get_user_department(rrhh_code):
         try:
-            dept_json = json.loads(
-                urllib.urlopen(st.WS_INFO_USER % rrhh_code).read())
+            dept_json = wsget(st.WS_INFO_USER % rrhh_code)
             dept = Department.objects.get(
                 code=dept_json['departamento']['cod_departamento'])
-        except (IOError, KeyError, ObjectDoesNotExist):
+        except (KeyError, ObjectDoesNotExist):
             return None, None
         return dept, dept_json
 
