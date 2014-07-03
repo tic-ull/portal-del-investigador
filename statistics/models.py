@@ -57,6 +57,8 @@ class Department(Stats):
 
     @staticmethod
     def get_user_department(rrhh_code):
+        if rrhh_code is None:
+            return None, None
         try:
             dept_json = wsget(st.WS_INFO_USER % rrhh_code)
             dept = Department.objects.get(

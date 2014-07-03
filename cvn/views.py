@@ -29,6 +29,8 @@ def index(request):
         dept_json = request.session['dept_json']
         context['department'] = dept
         context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
+    else:
+        dept = None
     form = UploadCVNForm()
     if request.method == 'POST':
         form = UploadCVNForm(request.POST, request.FILES, user=user)
