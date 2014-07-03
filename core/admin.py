@@ -14,11 +14,14 @@ from flatpages_i18n.models import FlatPage_i18n, MenuItem
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     extra = 0
+    readonly_fields = ('rrhh_code', )
 
 
 UserAdmin.list_display = (
     'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
 )
+
+UserAdmin.readonly_fields = ('first_name', 'last_name', 'email')
 
 UserAdmin.search_fields += ('profile__documento', 'profile__rrhh_code', )
 
@@ -57,6 +60,7 @@ class PageAdmin(FlatPageAdmin):
     form = PageForm
     list_editable = []
     list_display = ('url', 'title', )
+    list_filter = ()
     fieldsets = (
         (None, {'fields': ('title', 'content')}),
     )

@@ -28,6 +28,6 @@ class CASBackend(django_cas.backends.CASBackend):
                     entry_type=stCore.LogType.AUTH_ERROR,
                     date=datetime.datetime.now(),
                     message='Username already exists. Possibly changed ID.' +
-                            ' Old ID=' + user.profile.documento +
-                            ' New ID=' + documento)
+                            ' Old ID = ' + user.profile.documento +
+                            ' New ID = ' + documento)
         return user

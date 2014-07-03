@@ -11,7 +11,9 @@ import urllib
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
+
     documento = models.CharField(_('Documento'), max_length=20, unique=True)
+
     rrhh_code = models.CharField(_(u'Código persona'), max_length=20,
                                  blank=True, null=True, unique=True)
 
@@ -26,12 +28,19 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return self.user.username
 
+    class Meta:
+        ordering = ['user__username']
+
 
 class Log(models.Model):
     user_profile = models.ForeignKey(UserProfile, blank=True, null=True)
+
     application = models.CharField(_(u'Aplicación'), max_length=20)
+
     entry_type = models.IntegerField(_('Tipo'), choices=stCore.LOG_TYPE)
+
     date = models.DateTimeField(_('Fecha'))
+
     message = models.TextField(_('Mensaje'))
 
     def __unicode__(self):

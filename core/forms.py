@@ -11,6 +11,7 @@ from flatpages_i18n.forms import FlatpageForm
 class PageForm(FlatpageForm):
 
     url = forms.CharField(label='', max_length=100, required=False)
+
     sites = forms.ModelMultipleChoiceField(queryset=Site.objects.all(),
                                            required=False, label='')
 
