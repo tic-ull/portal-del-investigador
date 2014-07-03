@@ -1,5 +1,5 @@
 {% extends "django_tables2/table.html" %}
- 
+
 {% load django_tables2 %}
 {% load i18n %}
 
@@ -9,7 +9,7 @@
         {% for column in table.columns %}
             <th {{ column.attrs.th.as_html }}>
                 {% if column.attrs.data_helper %}
-                    <div class="fa fa-info-circle" data-original-title="{{ column.attrs.data_helper }}" 
+                    <div class="fa fa-info-circle" data-original-title="{{ column.attrs.data_helper }}"
                          style="display: inline;" data-placement="top" data-toggle="tooltip"></div>
                 {% endif %}
                 {% if column.orderable %}
