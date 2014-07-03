@@ -44,7 +44,7 @@ def index(request):
             context['message'] = _(u'CVN actualizado con éxito.')
             if dept is not None and old_cvn_status != cvn.status:
                 dept.update(dept_json['departamento']['nombre'],
-                            dept_json['miembros'], True)
+                            dept_json['miembros'], commit=True)
     context['form'] = form
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)

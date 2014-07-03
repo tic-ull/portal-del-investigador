@@ -5,9 +5,6 @@ from cvn.models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
                         Libro, CVN, Capitulo)
 from core.models import UserProfile
 from django.contrib import admin
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class CVNAdmin(admin.ModelAdmin):
@@ -37,7 +34,12 @@ class CVNInline(admin.StackedInline):
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'documento', 'rrhh_code', )
-    search_fields = ['user__username', 'documento', 'rrhh_code', ]
+
+    search_fields = ['user__username', 'documento', 'rrhh_code',
+                     'user__first_name', 'user__last_name', ]
+
+    readonly_fields = ('rrhh_code', )
+
     inlines = [
         CVNInline,
     ]
