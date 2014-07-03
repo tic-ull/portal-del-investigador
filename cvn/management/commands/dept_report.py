@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from core.utils import wsget
 from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
                         Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
@@ -8,8 +9,6 @@ from django.conf import settings as st
 from informe_pdf import Informe_pdf
 from informe_csv import Informe_csv
 from optparse import make_option
-import simplejson as json
-import urllib
 
 
 class Command(BaseCommand):
@@ -75,8 +74,10 @@ class Command(BaseCommand):
     def createReports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
-                elements = urllib.urlopen(
-                    st.WS_DEPARTMENT_YEAR % year).read()
+                elements = wsget(st.WS_DEPARTMENT_YEAR % year)
+                if elements is None:
+                    raise IOError(('WS "%s" does not work') %
+                                  (st.WS_DEPARTMENT_YEAR % year))
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -87,8 +88,7 @@ class Command(BaseCommand):
         for element in elements:
             if not element == 'INVES':
                 if self.model_type == 'departamento':
-                    departamento = json.loads(
-                        urllib.urlopen(st.WS_DEPARTMENT_INFO % element).read())
+                    departamento = wsget(st.WS_DEPARTMENT_INFO % element)
                     if departamento:
                         self.createReport(year, departamento)
                 else:
@@ -126,13 +126,18 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def getInvestigadores(self, year, element):
-        invesRRHH = json.loads(
-            urllib.urlopen(st.WS_PDI_VALID % (
-                self.model_type, element[self.codigo], year)).read())
+        invesRRHH = wsget(st.WS_PDI_VALID % (
+            self.model_type, element[self.codigo], year))
+        if invesRRHH is None:
+            raise IOError(('WS "%s" does not work') %
+                          (st.WS_PDI_VALID % (
+                           self.model_type, element[self.codigo], year)))
         inves = list()
         for inv in invesRRHH:
-            dataInv = json.loads(
-                urllib.urlopen(st.WS_INFO_PDI_YEAR % inv, year).read())
+            dataInv = wsget(st.WS_INFO_PDI_YEAR % inv, year)
+            if dataInv is None:
+                raise IOError(('WS "%s" does not work') %
+                              (st.WS_INFO_PDI_YEAR % inv, year))
             dataInv = self.checkInves(dataInv)
             inves.append(dataInv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
