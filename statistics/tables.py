@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
-from django.utils.translation import ugettext_lazy as _
 from core.tables import Table
+from django.utils.translation import ugettext_lazy as _
 import django_tables2 as tables
 
 

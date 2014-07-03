@@ -30,7 +30,7 @@ def dept_stats_detail(request, codigo):
     context = {}
     context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     dataDepartment = wsget(st.WS_DEPARTMENT % codigo)
-    if dataDepartment is None:  # TODO template error
+    if dataDepartment is None:
         context['members_list'] = DepartmentDetailTable({})
         context['info_department'] = DepartmentTable({})
         return render(request, 'statistics/stats_detail.html', context)
