@@ -46,13 +46,12 @@ class UploadCVNForm(forms.ModelForm):
     @transaction.atomic
     def save(self, commit=True):
         cvn = super(UploadCVNForm, self).save(commit=False)
+        cvn.cvn_file.name = u'CVN-%s.pdf' % (self.user.username)
         try:
             cvn_old = CVN.objects.get(user_profile=self.user)
             cvn_old.remove()
-            cvn_old.delete()
         except ObjectDoesNotExist:
             pass
-        cvn.cvn_file.name = u'CVN-%s.pdf' % (self.user.username)
         cvn.user_profile = self.user.profile
         cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                           ContentFile(self.xml), save=False)
@@ -69,7 +68,12 @@ class UploadCVNForm(forms.ModelForm):
         cvn_file = SimpleUploadedFile(
             upload_file.name, upload_file.read(), content_type=stCVN.PDF)
         upload_file.close()
-        form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
+        try:
+            cvn = CVN.objects.get(user_profile__user=user)
+        except ObjectDoesNotExist:
+            cvn = None
+        form = UploadCVNForm(initial={'cvn_file': cvn_file},
+                             user=user, instance=cvn)
         if form.is_valid():
             cvn = form.save()
         return cvn

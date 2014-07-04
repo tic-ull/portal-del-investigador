@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 def index(request):
     context = {}
     user = request.user
+
     if 'dept' and 'dept_json' in request.session:
         for obj in serializers.deserialize(
                 "json", request.session['dept'], ignorenonexistent=True):
@@ -31,20 +32,25 @@ def index(request):
         context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
     else:
         dept = None
+
+    try:
+        cvn = CVN.objects.get(user_profile__user=user)
+        old_cvn_status = cvn.status
+    except ObjectDoesNotExist:
+        cvn = None
+        old_cvn_status = None
+
     form = UploadCVNForm()
     if request.method == 'POST':
-        form = UploadCVNForm(request.POST, request.FILES, user=user)
+        form = UploadCVNForm(request.POST, request.FILES,
+                             user=user, instance=cvn)
         if form.is_valid():
-            try:
-                old_cvn_status = CVN.objects.get(
-                    user_profile__user=user).status
-            except ObjectDoesNotExist:
-                old_cvn_status = None
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
             if dept is not None and old_cvn_status != cvn.status:
                 dept.update(dept_json['departamento']['nombre'],
                             dept_json['miembros'], commit=True)
+
     context['form'] = form
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
