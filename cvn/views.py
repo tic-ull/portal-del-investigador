@@ -23,6 +23,7 @@ def index(request):
     context = {}
     user = request.user
 
+    dept, dept_json = None, None
     if 'dept' and 'dept_json' in request.session:
         for obj in serializers.deserialize(
                 "json", request.session['dept'], ignorenonexistent=True):
@@ -30,8 +31,6 @@ def index(request):
         dept_json = request.session['dept_json']
         context['department'] = dept
         context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
-    else:
-        dept = None
 
     try:
         cvn = CVN.objects.get(user_profile__user=user)
@@ -69,10 +68,10 @@ def download_cvn(request):
     return response
 
 
-@ login_required
+@login_required
 @staff_member_required
 def ull_report(request):
     context = {}
-    userULL = User.objects.get(username='GesInv-ULL')
-    scientific_production_to_context(userULL.profile, context)
+    user = User.objects.get(username='GesInv-ULL')
+    scientific_production_to_context(user.profile, context)
     return render(request, 'cvn/ull_report.html', context)

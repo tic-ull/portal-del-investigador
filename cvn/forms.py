@@ -57,6 +57,7 @@ class UploadCVNForm(forms.ModelForm):
                           ContentFile(self.xml), save=False)
         treeXML = etree.XML(self.xml)
         cvn.fecha = parse_date(treeXML.find('Version/VersionID/Date'))
+        cvn.is_inserted = False
         cvn.update_status()
         cvn.save()
         cvn.xml_file.close()
