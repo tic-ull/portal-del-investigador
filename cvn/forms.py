@@ -1,16 +1,16 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
-from cvn.models import FECYT, CVN
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
-from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import SimpleUploadedFile
-from lxml import etree
-from parser_helpers import parse_date
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
+from lxml import etree
+from models import FECYT, CVN
+from parser_helpers import parse_date
+import settings as stCVN
 
 
 class UploadCVNForm(forms.ModelForm):
@@ -46,7 +46,7 @@ class UploadCVNForm(forms.ModelForm):
     @transaction.atomic
     def save(self, commit=True):
         cvn = super(UploadCVNForm, self).save(commit=False)
-        cvn.cvn_file.name = u'CVN-%s.pdf' % (self.user.username)
+        cvn.cvn_file.name = u'CVN-%s.pdf' % self.user.username
         try:
             cvn_old = CVN.objects.get(user_profile=self.user)
             cvn_old.remove()

@@ -1,8 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.forms import UploadCVNForm
-from cvn.models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
-                        Libro, CVN, Capitulo)
+from forms import UploadCVNForm
+from models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
+                    Libro, CVN, Capitulo)
 from core.models import UserProfile
 from django.contrib import admin
 

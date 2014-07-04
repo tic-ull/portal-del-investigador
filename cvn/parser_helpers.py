@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
 import datetime
+import settings as stCVN
 import string
 
 

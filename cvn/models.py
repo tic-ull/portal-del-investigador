@@ -1,21 +1,21 @@
 # -*- encoding: UTF-8 -*-
 
+from core import settings as stCore
 from core.models import UserProfile, Log
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 from lxml import etree
-from cvn import settings as stCVN
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
-from core import settings as stCore
-from django.utils.translation import ugettext_lazy as _
 import base64
 import datetime
 import logging
 import os
+import settings as stCVN
 import suds
 import sys
 import time
@@ -57,7 +57,7 @@ class FECYT:
             except:
                 logger.warning(
                     _(u'WARNING: No hay respuesta del WS') +
-                    _(u' de la FECYT para el fichero %s') % (filePDF.name))
+                    _(u' de la FECYT para el fichero %s') % filePDF.name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
         if resultXML.errorCode == 0:

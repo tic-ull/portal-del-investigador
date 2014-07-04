@@ -1,8 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import Proyecto, Convenio
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save
+from models import Proyecto, Convenio
 import datetime
 
 

@@ -1,9 +1,5 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
-from cvn.forms import UploadCVNForm
-from cvn.models import CVN
-from cvn.utils import scientific_production_to_context, cvn_to_context
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -12,8 +8,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from forms import UploadCVNForm
+from models import CVN
 from statistics import settings as stSt
+from utils import scientific_production_to_context, cvn_to_context
 import logging
+import settings as stCVN
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +61,7 @@ def index(request):
 @login_required
 def download_cvn(request):
     cvn = request.user.profile.cvn
-    pdf = open(cvn.cvn_file.path, 'r')
+    pdf = open(cvn.cvn_file.path)
     response = HttpResponse(pdf, mimetype='application/pdf')
     response['Content-Disposition'] = 'inline; filename=%s' % (
         cvn.cvn_file.name.split('/')[-1])

@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
+import settings as stCVN
 
 
 def extra_info(request):
