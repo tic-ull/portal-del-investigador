@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from django.contrib import admin
-from statistics.models import ProfessionalCategory
+from models import ProfessionalCategory
 
 
 class ProfessionalCategoryAdmin(admin.ModelAdmin):

@@ -2,7 +2,7 @@
 
 from core.models import UserProfile
 from core.utils import wsget
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -10,35 +10,35 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django_tables2 import RequestConfig
-from statistics import settings as stSt
-from statistics.models import Department, ProfessionalCategory
-from statistics.tables import DepartmentTable, DepartmentDetailTable
+from models import Department, ProfessionalCategory
+from tables import DepartmentTable, DepartmentDetailTable
+import settings as st_stat
 
 
 @login_required
 @staff_member_required
 def dept_stats(request):
-    context = {}
+    context = dict()
     context['departmentStats'] = DepartmentTable(Department.objects.all())
     RequestConfig(request, paginate=False).configure(
         context['departmentStats'])
-    context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
+    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
     return render(request, 'statistics/statistics.html', context)
 
 
 def dept_stats_detail(request, codigo):
-    context = {}
-    context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
-    dataDepartment = wsget(st.WS_DEPARTMENT % codigo)
-    if dataDepartment is None:
+    context = dict()
+    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
+    data_department = wsget(st.WS_DEPARTMENT % codigo)
+    if data_department is None:
         context['members_list'] = DepartmentDetailTable({})
         context['info_department'] = DepartmentTable({})
         return render(request, 'statistics/stats_detail.html', context)
-    context['departamento'] = dataDepartment['departamento']['nombre']
+    context['departamento'] = data_department['departamento']['nombre']
     context['dept_nombre_corto'] =\
-        dataDepartment['departamento']['nombre_corto']
+        data_department['departamento']['nombre_corto']
     members_list = []
-    for member in dataDepartment['miembros']:
+    for member in data_department['miembros']:
         data = {}
         category = ProfessionalCategory.objects.get(code=member['cod_cce'])
         data['categoria'] = category.name
@@ -51,7 +51,7 @@ def dept_stats_detail(request, codigo):
                 rrhh_code=member['cod_persona'])
             data['is_CVN_valid'] = True
             data['CVNStatus'] = _(u'Válido')
-            if user_profile.cvn.status != stCVN.CVNStatus.UPDATED:
+            if user_profile.cvn.status != st_cvn.CVNStatus.UPDATED:
                 data['is_CVN_valid'] = False
                 data['CVNStatus'] = _(u'Inválido')
         except ObjectDoesNotExist:

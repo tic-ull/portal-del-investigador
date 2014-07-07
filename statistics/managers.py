@@ -28,7 +28,7 @@ class ProfessionalCategoryManager(models.Manager):
     def update(self, past_days=0):
         categories = wsget(st.WS_CATEGORY % past_days)
         if categories is None:
-            raise IOError(('WS "%s" does not work') %
+            raise IOError('WS "%s" does not work' %
                           (st.WS_CATEGORY % past_days))
         for category in categories:
             try:

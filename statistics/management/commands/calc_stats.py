@@ -36,7 +36,7 @@ class Command(BaseCommand):
             department_list = wsget(st.WS_ALL_DEPARTMENTS)
             if department_list is None:
                 raise IOError('WebService "%s" does not work' %
-                              (st.WS_ALL_DEPARTMENTS))
+                              st.WS_ALL_DEPARTMENTS)
             Department.objects.all().delete()
             ProfessionalCategory.objects.update(options['past_days'])
             Department.objects.create_all(department_list)

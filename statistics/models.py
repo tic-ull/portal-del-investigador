@@ -2,12 +2,12 @@
 
 from core.models import UserProfile
 from core.utils import wsget
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from statistics.managers import StatsManager, ProfessionalCategoryManager
+from managers import StatsManager, ProfessionalCategoryManager
 
 
 class Stats(models.Model):
@@ -31,7 +31,7 @@ class Stats(models.Model):
                     num_computable_members += 1
                     user = UserProfile.objects.get(
                         rrhh_code=member['cod_persona'])
-                    if user.cvn.status == stCVN.CVNStatus.UPDATED:
+                    if user.cvn.status == st_cvn.CVNStatus.UPDATED:
                         num_cvn_update += 1
             except ObjectDoesNotExist:
                 pass
