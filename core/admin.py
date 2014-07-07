@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
-from core.forms import PageForm
-from core.models import UserProfile, Log
+from forms import PageForm
+from models import UserProfile, Log
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User

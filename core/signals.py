@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.models import UserProfile
+from models import UserProfile
 from crequest.middleware import CrequestMiddleware
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in

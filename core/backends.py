@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as stCore
-from core.models import Log
+from models import Log
 from django.contrib.auth.models import User
 from django_cas.backends import _verify
 import datetime
 import django_cas
+import settings as st_core
 
 
 class CASBackend(django_cas.backends.CASBackend):
@@ -25,7 +25,7 @@ class CASBackend(django_cas.backends.CASBackend):
                 Log.objects.create(
                     user_profile=user.profile,
                     application='core',
-                    entry_type=stCore.LogType.AUTH_ERROR,
+                    entry_type=st_core.LogType.AUTH_ERROR,
                     date=datetime.datetime.now(),
                     message='Username already exists. Possibly changed ID.' +
                             ' Old ID = ' + user.profile.documento +

@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as stCore
+from core import settings as st_core
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
@@ -37,7 +37,7 @@ class Log(models.Model):
 
     application = models.CharField(_(u'Aplicación'), max_length=20)
 
-    entry_type = models.IntegerField(_('Tipo'), choices=stCore.LOG_TYPE)
+    entry_type = models.IntegerField(_('Tipo'), choices=st_core.LOG_TYPE)
 
     date = models.DateTimeField(_('Fecha'))
 
@@ -45,7 +45,7 @@ class Log(models.Model):
 
     def __unicode__(self):
         return u'%s - %s' % (self.application,
-                             stCore.LOG_TYPE[self.entry_type][1])
+                             st_core.LOG_TYPE[self.entry_type][1])
 
     class Meta:
         ordering = ['-date']

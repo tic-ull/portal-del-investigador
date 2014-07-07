@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as stCore
 from django import forms
 from django.conf import settings as st
 from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
 from flatpages_i18n.forms import FlatpageForm
+import settings as st_core
 
 
 class PageForm(FlatpageForm):
@@ -17,19 +17,20 @@ class PageForm(FlatpageForm):
 
     def __init__(self, *args, **kwargs):
         super(FlatpageForm, self).__init__(*args, **kwargs)
-        self.fields['url'].initial = stCore.BASE_URL_FLATPAGES
+        self.fields['url'].initial = st_core.BASE_URL_FLATPAGES
         self.fields['url'].widget = HiddenInput()
         self.fields['sites'].widget = MultipleHiddenInput()
         content_field = 'content_' + st.LANGUAGE_CODE
         self.fields[content_field].required = True
 
+    @property
     def clean_url(self):
         return True
 
     def save(self, commit=True):
         flatpage = super(PageForm, self).save(commit=False)
         flatpage.save()
-        flatpage.url = stCore.BASE_URL_FLATPAGES + str(flatpage.id) + '/'
+        flatpage.url = st_core.BASE_URL_FLATPAGES + str(flatpage.id) + '/'
         flatpage.sites.add(Site.objects.get(id=st.SITE_ID))
         return flatpage
 
