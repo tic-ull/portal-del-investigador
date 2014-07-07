@@ -23,7 +23,6 @@ class PageForm(FlatpageForm):
         content_field = 'content_' + st.LANGUAGE_CODE
         self.fields[content_field].required = True
 
-    @property
     def clean_url(self):
         return True
 
