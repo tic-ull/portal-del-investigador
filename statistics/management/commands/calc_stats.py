@@ -24,14 +24,14 @@ class Command(BaseCommand):
         ),
     )
 
-    def _checkArgs(self, options):
+    def _check_args(self, options):
         if (not isdigit(options['past_days']) and
                 options['past_days'] is not None):
             raise CommandError(
                 'Option `--past_days=X` must be a number')
 
     def handle(self, *args,  **options):
-        self._checkArgs(options)
+        self._check_args(options)
         try:
             department_list = wsget(st.WS_ALL_DEPARTMENTS)
             if department_list is None:
