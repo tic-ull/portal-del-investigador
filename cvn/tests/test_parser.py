@@ -4,7 +4,7 @@ from django.test import TestCase
 import os
 from cvn.parser_helpers import (parse_date, parse_date_interval,
                                 parse_produccion_id)
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from lxml import etree
 import datetime
 
@@ -12,10 +12,10 @@ import datetime
 class ParserTestCase(TestCase):
 
     def setUp(self):
-        self.xml_externalpks = open(os.path.join(stCVN.TEST_ROOT,
-                                    'xml/externalpks.xml'), 'r')
-        self.xml_dates = open(os.path.join(stCVN.TEST_ROOT,
-                              'xml/dates.xml'), 'r')
+        self.xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
+                                    'xml/externalpks.xml'))
+        self.xml_dates = open(os.path.join(st_cvn.TEST_ROOT,
+                              'xml/dates.xml'))
 
     def test_parse_dates(self):
         dates = etree.parse(self.xml_dates).findall('Date')
@@ -92,11 +92,11 @@ class ParserTestCase(TestCase):
     def test_parse_publicacion_ids(self):
         ids = etree.parse(self.xml_externalpks).findall('ExternalPK')
         self.xml_dates.seek(0)
-        issn = parse_produccion_id(ids, stCVN.PRODUCCION_ID_CODE['ISSN'])
-        isbn = parse_produccion_id(ids, stCVN.PRODUCCION_ID_CODE['ISBN'])
-        financiadora = parse_produccion_id(ids, stCVN.PRODUCCION_ID_CODE[
+        issn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISSN'])
+        isbn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISBN'])
+        financiadora = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
             'FINANCIADORA'])
-        deposito_legal = parse_produccion_id(ids, stCVN.PRODUCCION_ID_CODE[
+        deposito_legal = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
             'DEPOSITO_LEGAL'])
         self.assertEqual(issn, '0395-2037')
         self.assertEqual(isbn, '1-56619-909-1')

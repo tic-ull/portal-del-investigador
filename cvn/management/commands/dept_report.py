@@ -43,7 +43,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        self.checkArgs(options)
+        self.check_args(options)
         year = int(options['year'])
         type_id = [int(options['id'])] if type(options['id']) is str else None
         model = None
@@ -57,9 +57,9 @@ class Command(BaseCommand):
             self.generator = Informe_pdf
         else:
             self.generator = Informe_csv
-        self.createReports(year, type_id, model)
+        self.create_reports(year, type_id, model)
 
-    def checkArgs(self, options):
+    def check_args(self, options):
         if not isdigit(options['year']):
             raise CommandError(
                 "Option `--year=YYYY` must exist and be a number")
@@ -71,13 +71,13 @@ class Command(BaseCommand):
         if not options['format'] == 'pdf' and not options['format'] == 'csv':
             raise CommandError("Option `--format=X` must be pdf or csv")
 
-    def createReports(self, year, element_id, model):
+    def create_reports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
                 elements = wsget(st.WS_DEPARTMENT_YEAR % year)
                 if elements is None:
-                    raise IOError(('WS "%s" does not work') %
-                                  (st.WS_DEPARTMENT_YEAR % year))
+                    raise IOError('WS "%s" does not work' %
+                                  st.WS_DEPARTMENT_YEAR % year)
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -90,19 +90,19 @@ class Command(BaseCommand):
                 if self.model_type == 'departamento':
                     departamento = wsget(st.WS_DEPARTMENT_INFO % element)
                     if departamento:
-                        self.createReport(year, departamento)
+                        self.create_report(year, departamento)
                 else:
-                    self.createReport(year, element)
+                    self.create_report(year, element)
 
-    def createReport(self, year, element):
+    def create_report(self, year, element):
         (investigadores, articulos,
-         libros, capitulosLibro, congresos, proyectos,
-         convenios, tesis) = self.getData(year, element)
+         libros, capitulos_libro, congresos, proyectos,
+         convenios, tesis) = self.get_data(year, element)
         print 'Generando Informe para [%s] %s ... ' % (
             element[self.codigo], element['nombre'])
         if investigadores:
             informe = self.generator(year, element, investigadores,
-                                     articulos, libros, capitulosLibro,
+                                     articulos, libros, capitulos_libro,
                                      congresos, proyectos, convenios, tesis,
                                      self.model_type)
             informe.go()
@@ -110,42 +110,42 @@ class Command(BaseCommand):
         else:
             print 'ERROR: No hay Investigadores\n'
 
-    def getData(self, year, element):
-        investigadores, usuarios = self.getInvestigadores(
+    def get_data(self, year, element):
+        investigadores, usuarios = self.get_investigadores(
             year, element
         )
         articulos = Articulo.objects.byUsuariosYear(usuarios, year)
         libros = Libro.objects.byUsuariosYear(usuarios, year)
-        capitulosLibro = Capitulo.objects.byUsuariosYear(usuarios, year)
+        capitulos_libro = Capitulo.objects.byUsuariosYear(usuarios, year)
         congresos = Congreso.objects.byUsuariosYear(usuarios, year)
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
         convenios = Convenio.objects.byUsuariosYear(usuarios, year)
         tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, year)
         return (investigadores, articulos,
-                libros, capitulosLibro, congresos, proyectos,
+                libros, capitulos_libro, congresos, proyectos,
                 convenios, tesis)
 
-    def getInvestigadores(self, year, element):
-        invesRRHH = wsget(st.WS_PDI_VALID % (
+    def get_investigadores(self, year, element):
+        inves_rrhh = wsget(st.WS_PDI_VALID % (
             self.model_type, element[self.codigo], year))
-        if invesRRHH is None:
-            raise IOError(('WS "%s" does not work') %
+        if inves_rrhh is None:
+            raise IOError('WS "%s" does not work' %
                           (st.WS_PDI_VALID % (
                            self.model_type, element[self.codigo], year)))
         inves = list()
-        for inv in invesRRHH:
-            dataInv = wsget(st.WS_INFO_PDI_YEAR % inv, year)
-            if dataInv is None:
-                raise IOError(('WS "%s" does not work') %
-                              (st.WS_INFO_PDI_YEAR % inv, year))
-            dataInv = self.checkInves(dataInv)
-            inves.append(dataInv)
+        for inv in inves_rrhh:
+            data_inv = wsget(st.WS_INFO_PDI_YEAR % inv, year)
+            if data_inv is None:
+                raise IOError('WS "%s" does not work' %
+                              st.WS_INFO_PDI_YEAR % inv, year)
+            data_inv = self.check_inves(data_inv)
+            inves.append(data_inv)
         investigadores = sorted(inves, key=lambda k: "%s %s" % (
             k['apellido1'], k['apellido2']))
-        usuarios = UserProfile.objects.filter(rrhh_code__in=invesRRHH)
+        usuarios = UserProfile.objects.filter(rrhh_code__in=inves_rrhh)
         return investigadores, usuarios
 
-    def checkInves(self, inv):
+    def check_inves(self, inv):
         if 'nombre' not in inv:
             inv['nombre'] = ''
         if 'apellido1' not in inv:

@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core.tests.helpers import init, clean
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from django import test
 from django.contrib.auth.models import User
 from selenium import webdriver
@@ -67,7 +67,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id(
-            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
+            "id_cvn_file").send_keys(st_cvn.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
@@ -88,7 +88,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id("id_cvn_file").send_keys(
-            stCVN.TEST_ROOT + "cvn/CVN-NO-FECYT.pdf")
+            st_cvn.TEST_ROOT + "cvn/CVN-NO-FECYT.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "errorlist"))
@@ -114,7 +114,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id("id_cvn_file").send_keys(
-            stCVN.TEST_ROOT + "cvn/CVN-Test.pdf")
+            st_cvn.TEST_ROOT + "cvn/CVN-Test.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         self.assertTrue(self.is_element_present(By.CLASS_NAME,
                                                 "alert-success"))
@@ -135,7 +135,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id("id_cvn_file").send_keys(
-            stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
+            st_cvn.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         #driver.find_element_by_xpath("//button[@type='submit']").click()
         # Download CVN
         driver.find_element_by_link_text(
@@ -162,7 +162,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.execute_script(
             'document.getElementById("id_cvn_file").removeAttribute("style")')
         driver.find_element_by_id(
-            "id_cvn_file").send_keys(stCVN.TEST_ROOT + "cvn/CVN-Test_2.pdf")
+            "id_cvn_file").send_keys(st_cvn.TEST_ROOT + "cvn/CVN-Test_2.pdf")
         self.assertFalse(self.is_element_present(By.ID, "dept"))
         driver.find_element_by_link_text(u"Cerrar sesión").click()
 

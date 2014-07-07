@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from cvn.models import (CVN, Congreso, Convenio, Proyecto,
                         TesisDoctoral, Articulo, Libro, Capitulo)
 from cvn.parser_helpers import parse_produccion_type, parse_produccion_subtype
@@ -20,19 +20,19 @@ class CVNTestCase(TestCase):
         init()
 
     def setUp(self):
-        self.xml_ull = open(os.path.join(stCVN.TEST_ROOT,
-                            'xml/CVN-ULL.xml'), 'r')
-        self.xml_empty = open(os.path.join(stCVN.TEST_ROOT,
-                              'xml/empty.xml'), 'r')
-        self.xml_test = open(os.path.join(stCVN.TEST_ROOT,
-                             'xml/CVN-Test.xml'), 'r')
+        self.xml_ull = open(os.path.join(st_cvn.TEST_ROOT,
+                            'xml/CVN-ULL.xml'))
+        self.xml_empty = open(os.path.join(st_cvn.TEST_ROOT,
+                              'xml/empty.xml'))
+        self.xml_test = open(os.path.join(st_cvn.TEST_ROOT,
+                             'xml/CVN-Test.xml'))
 
     def test_insert_xml_ull(self):
         """ Insert the data of XML in the database """
         try:
             user = UserFactory.create()
             cvn = UploadCVNForm.CVN(user, os.path.join(
-                stCVN.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
+                st_cvn.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
             cvn.insert_xml()
             self.assertEqual(user.profile.articulo_set.count(), 1074)
             self.assertEqual(user.profile.libro_set.count(), 6)
@@ -57,7 +57,7 @@ class CVNTestCase(TestCase):
             except AttributeError:
                 subtype = ''
             if cvn_key == '060.010.010.000' and subtype == '035':
-                count = count + 1
+                count += 1
                 Articulo.objects.create(item, u.profile)
         self.assertEqual(count, 1214)
         self.assertEqual(Articulo.objects.all().count(), 1074)
@@ -68,7 +68,6 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            data = {}
             tipo = parse_produccion_type(item)
             if tipo == 'Congreso':
                 data = Congreso.objects.create(item, u.profile)
@@ -177,7 +176,6 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            data = {}
             tipo = parse_produccion_type(item)
             if tipo == 'TesisDoctoral':
                 data = TesisDoctoral.objects.create(item, u.profile)
@@ -196,19 +194,19 @@ class CVNTestCase(TestCase):
     def test_on_insert_cvn_old_pdf_is_moved(self):
         u = UserFactory.create()
         cvn = UploadCVNForm.CVN(u, os.path.join(
-            stCVN.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+            st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         relative_path = (
             cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
-        full_path = os.path.join(stCVN.OLD_PDF_ROOT, relative_path)
-        cvn = UploadCVNForm.CVN(u, os.path.join(
-            stCVN.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+        full_path = os.path.join(st_cvn.OLD_PDF_ROOT, relative_path)
+        UploadCVNForm.CVN(u, os.path.join(
+            st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         self.assertTrue(os.path.isfile(full_path))
 
     def test_productions_no_title(self):
         u = UserFactory.create()
         cvn = UploadCVNForm.CVN(u, os.path.join(
-            stCVN.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
+            st_cvn.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
         cvn.insert_xml()
         self.assertEqual(len(u.profile.proyecto_set.all()), 3)
         self.assertEqual(len(Articulo.objects.filter(user_profile__user=u)), 3)
@@ -240,8 +238,8 @@ class CVNTestCase(TestCase):
         user.profile.documento = '00000000A'
         user.profile.save()
         cvn = UploadCVNForm.CVN(user, os.path.join(
-            stCVN.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
-        self.assertNotEqual(cvn.status, stCVN.CVNStatus.INVALID_IDENTITY)
+            st_cvn.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
+        self.assertNotEqual(cvn.status, st_cvn.CVNStatus.INVALID_IDENTITY)
 
     @classmethod
     def tearDownClass(cls):

@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from cvn.forms import UploadCVNForm
 from django.conf import settings as st
 from django.contrib.auth.models import User
@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 user.profile.documento = unicode(line[1])
                 user.profile.save()
                 try:
-                    upload_file = open(import_path + line[2], 'r')
+                    upload_file = open(import_path + line[2])
                 except IOError:
                     print u'[%s] \t \t ERROR: CVN No encontrado (%s - %s)' % (
                         lines.line_num, line[0], line[2])
@@ -37,7 +37,7 @@ class Command(BaseCommand):
                 cvn_file = SimpleUploadedFile(
                     upload_file.name,
                     upload_file.read(),
-                    content_type=stCVN.PDF)
+                    content_type=st_cvn.PDF)
                 upload_file.close()
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():

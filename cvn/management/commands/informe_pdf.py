@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from PIL import Image
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 from django.utils import translation
 from django.utils.translation import ugettext
 from reportlab.lib import colors
@@ -30,14 +30,14 @@ class Informe_pdf:
     VIOLET_ULL = colors.HexColor('#7A3B7A')
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
-                 capitulosLibro, congresos, proyectos, convenios, tesis,
+                 capitulos_libro, congresos, proyectos, convenios, tesis,
                  model_type=None):
         self.year = str(year)
         self.departamento = departamento
         self.investigadores = investigadores
         self.articulos = articulos
         self.libros = libros
-        self.capitulosLibro = capitulosLibro
+        self.capitulosLibro = capitulos_libro
         self.congresos = congresos
         self.proyectos = proyectos
         self.convenios = convenios
@@ -45,7 +45,7 @@ class Informe_pdf:
         self.setLogo()
 
     def setLogo(self):
-        img_path = stCVN.PDF_DEPT_IMAGES
+        img_path = st_cvn.PDF_DEPT_IMAGES
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
         else:
@@ -59,12 +59,12 @@ class Informe_pdf:
         self.logo_height *= logo_scale
 
     def go(self):
-        pathFile = "%s/%s/" % (stCVN.PDF_DEPT_ROOT, self.year)
-        if not os.path.isdir(pathFile):
-            os.makedirs(pathFile)
-        fileName = slugify(
+        path_file = "%s/%s/" % (st_cvn.PDF_DEPT_ROOT, self.year)
+        if not os.path.isdir(path_file):
+            os.makedirs(path_file)
+        file_name = slugify(
             self.year + "-" + self.departamento['nombre']) + ".pdf"
-        doc = SimpleDocTemplate(pathFile + fileName)
+        doc = SimpleDocTemplate(path_file + file_name)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
             self.showInvestigadores(story)
@@ -97,16 +97,16 @@ class Informe_pdf:
         story.append(self.tableInvestigadores())
 
     def tableInvestigadores(self):
-        tableInv = []
+        table_inv = []
         for inv in self.investigadores:
-            tableInv.append([
+            table_inv.append([
                 inv['nombre'],
                 inv['apellido1'],
                 inv['apellido2'],
                 inv['categoria']])
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
-        data = [HEADERS] + tableInv
+        data = [HEADERS] + table_inv
         table = Table(data, repeatRows=1)
         table.setStyle(self.styleTable())
         return table
@@ -128,22 +128,22 @@ class Informe_pdf:
                     art.fecha.strftime("%d/%m/%Y")
                 )
             if art.titulo:
-                text += u"<b>%s</b><br/>" % (art.titulo)
+                text += u"<b>%s</b><br/>" % art.titulo
             if art.autores:
-                text += u"%s<br/>" % (art.autores)
+                text += u"%s<br/>" % art.autores
             if art.nombre_publicacion:
-                text += u"%s<br/>" % (art.nombre_publicacion)
+                text += u"%s<br/>" % art.nombre_publicacion
             if art.volumen:
-                text += u"Vol. %s &nbsp; &nbsp;" % (art.volumen)
+                text += u"Vol. %s &nbsp; &nbsp;" % art.volumen
             if art.numero:
-                text += u"Núm. %s &nbsp; &nbsp;" % (art.numero)
+                text += u"Núm. %s &nbsp; &nbsp;" % art.numero
             if art.pagina_inicial and art.pagina_final:
                 text += u"Pág. %s-%s &nbsp; &nbsp;" % (
                     art.pagina_inicial,
                     art.pagina_final
                 )
             if art.issn:
-                text += u"ISSN: %s" % (art.issn)
+                text += u"ISSN: %s" % art.issn
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
@@ -163,13 +163,13 @@ class Informe_pdf:
                     libro.fecha.strftime("%d/%m/%Y")
                 )
             if libro.titulo:
-                text += u"<b>%s</b><br/>" % (libro.titulo)
+                text += u"<b>%s</b><br/>" % libro.titulo
             if libro.autores:
-                text += u"%s<br/>" % (libro.autores)
+                text += u"%s<br/>" % libro.autores
             if libro.nombre_publicacion:
-                text += u"%s<br/>" % (libro.nombre_publicacion)
+                text += u"%s<br/>" % libro.nombre_publicacion
             if libro.isbn:
-                text += u"ISBN: %s" % (libro.isbn)
+                text += u"ISBN: %s" % libro.isbn
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
@@ -191,18 +191,18 @@ class Informe_pdf:
                     capLibro.fecha.strftime("%d/%m/%Y")
                 )
             if capLibro.titulo:
-                text += u"<b>%s</b><br/>" % (capLibro.titulo)
+                text += u"<b>%s</b><br/>" % capLibro.titulo
             if capLibro.autores:
-                text += u"%s<br/>" % (capLibro.autores)
+                text += u"%s<br/>" % capLibro.autores
             if capLibro.nombre_publicacion:
-                text += u"%s &nbsp; &nbsp;" % (capLibro.nombre_publicacion)
+                text += u"%s &nbsp; &nbsp;" % capLibro.nombre_publicacion
             if capLibro.pagina_inicial and capLibro.pagina_final:
                 text += u"Pág. %s-%s &nbsp; &nbsp;" % (
                     capLibro.pagina_inicial,
                     capLibro.pagina_final
                 )
             if capLibro.isbn:
-                text += u"ISBN: %s" % (capLibro.isbn)
+                text += u"ISBN: %s" % capLibro.isbn
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
@@ -221,9 +221,9 @@ class Informe_pdf:
         for congreso in self.congresos:
             text = ""
             if congreso.titulo:
-                text += u"<b>%s</b><br/>" % (congreso.titulo)
+                text += u"<b>%s</b><br/>" % congreso.titulo
             if congreso.nombre_del_congreso:
-                text += u"%s " % (congreso.nombre_del_congreso)
+                text += u"%s " % congreso.nombre_del_congreso
             if congreso.ciudad_de_realizacion and congreso.fecha_de_inicio:
                 translation.activate('es')
                 text += "(%s, %s de %s)<br/>" % (
@@ -236,7 +236,7 @@ class Informe_pdf:
             elif congreso.fecha_de_inicio:
                 text += "(%s)<br/>" % congreso.fecha_de_inicio
             if congreso.autores:
-                text += u"%s" % (congreso.autores)
+                text += u"%s" % congreso.autores
             story.append(Paragraph(text, self.styleN()))
         translation.deactivate()
 
@@ -255,7 +255,7 @@ class Informe_pdf:
         for proy in self.proyectos:
             text = ""
             if proy.titulo:
-                text += u"<b>%s</b><br/>" % (proy.titulo)
+                text += u"<b>%s</b><br/>" % proy.titulo
             if proy.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     proy.fecha_de_inicio.strftime("%d/%m/%Y")
@@ -265,9 +265,9 @@ class Informe_pdf:
                     proy.fecha_de_fin.strftime("%d/%m/%Y")
                 )
             if proy.cuantia_total:
-                text += u"Cuantía: %s<br/>" % (proy.cuantia_total)
+                text += u"Cuantía: %s<br/>" % proy.cuantia_total
             if proy.autores:
-                text += u"Investigadores: %s" % (proy.autores)
+                text += u"Investigadores: %s" % proy.autores
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
@@ -285,7 +285,7 @@ class Informe_pdf:
         for conv in self.convenios:
             text = ""
             if conv.titulo:
-                text += u"<b>%s</b><br/>" % (conv.titulo)
+                text += u"<b>%s</b><br/>" % conv.titulo
             if conv.fecha_de_inicio:
                 text += u"Fecha de inicio: %s<br/>" % (
                     conv.fecha_de_inicio.strftime("%d/%m/%Y")
@@ -294,9 +294,9 @@ class Informe_pdf:
                     conv.fecha_de_fin.strftime("%d/%m/%Y")
                 )
             if conv.cuantia_total:
-                text += u"Cuantía: %s<br/>" % (conv.cuantia_total)
+                text += u"Cuantía: %s<br/>" % conv.cuantia_total
             if conv.autores:
-                text += u"Investigadores: %s" % (conv.autores)
+                text += u"Investigadores: %s" % conv.autores
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
@@ -314,17 +314,17 @@ class Informe_pdf:
         for t in self.tesis:
             text = ""
             if t.titulo:
-                text += u"<b>%s</b><br/>" % (t.titulo)
+                text += u"<b>%s</b><br/>" % t.titulo
             if t.autor:
-                text += u"Doctorando: %s<br/>" % (t.autor)
+                text += u"Doctorando: %s<br/>" % t.autor
             if t.universidad_que_titula:
                 text += u"Universidad: %s<br/>" % (
                     t.universidad_que_titula
                 )
             if t.usuario:
-                text += u"Director: %s" % (t.usuario)
+                text += u"Director: %s" % t.usuario
             if t.codirector:
-                text += u"Codirector: %s" % (t.codirector)
+                text += u"Codirector: %s" % t.codirector
             if t.fecha:
                 text += u"Fecha de lectura: %s<br/>" % (
                     t.fecha.strftime("%d/%m/%Y")

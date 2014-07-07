@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as stCVN
+from cvn import settings as st_cvn
 import os
 import csv
 
@@ -8,14 +8,14 @@ import csv
 class Informe_csv:
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
-                 capitulosLibro, congresos, proyectos, convenios, tesis,
+                 capitulos_libro, congresos, proyectos, convenios, tesis,
                  model_type):
         self.year = str(year)
         self.departamento = departamento['nombre'].encode('utf-8')
         self.investigadores = len(investigadores)
         self.articulos = len(articulos)
         self.libros = len(libros)
-        self.capitulos = len(capitulosLibro)
+        self.capitulos = len(capitulos_libro)
         self.congresos = len(congresos)
         self.proyectos = len(proyectos)
         self.convenios = len(convenios)
@@ -24,7 +24,7 @@ class Informe_csv:
                        u'Artículos'.encode('utf-8'),
                        'Libros', u'Capítulos'.encode('utf-8'), 'Congresos',
                        'Proyectos', 'Convenios', 'Tesis']
-        path = "%s/%s/" % (stCVN.CSV_DEPT_ROOT, self.year)
+        path = "%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.year)
         if not os.path.isdir(path):
             os.makedirs(path)
         self.filename = os.path.join(path, self.year +
