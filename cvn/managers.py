@@ -7,7 +7,7 @@ from parser_helpers import (parse_scope, parse_authors,
                             parse_produccion_id, parse_title)
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
-import settings as stCVN
+import settings as st_cvn
 
 
 class ProduccionManager(models.Manager):
@@ -50,23 +50,23 @@ class ProduccionManager(models.Manager):
 class PublicacionManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        dataCVN = {}
-        dataCVN['titulo'] = parse_title(item)
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
         if (item.find('Link/Title/Name') and
            item.find('Link/Title/Name/Item').text):
-            dataCVN[u'nombre_publicacion'] = unicode(item.find(
+            data_cvn[u'nombre_publicacion'] = unicode(item.find(
                 'Link/Title/Name/Item').text.strip())
-        dataCVN[u'autores'] = parse_authors(item.findall(
+        data_cvn[u'autores'] = parse_authors(item.findall(
             'Author'))
-        dataCVN.update(parse_publicacion_location(item.find('Location')))
-        dataCVN['fecha'] = parse_date(item.find('Date'))
-        dataCVN['issn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                              stCVN.PRODUCCION_ID_CODE['ISSN'])
-        dataCVN['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                              stCVN.PRODUCCION_ID_CODE['ISBN'])
-        dataCVN['deposito_legal'] = parse_produccion_id(item.findall(
-            'ExternalPK'), stCVN.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
-        return super(PublicacionManager, self)._create(dataCVN, user_profile)
+        data_cvn.update(parse_publicacion_location(item.find('Location')))
+        data_cvn['fecha'] = parse_date(item.find('Date'))
+        data_cvn['issn'] = parse_produccion_id(item.findall('ExternalPK'),
+                                               st_cvn.PRODUCCION_ID_CODE['ISSN'])
+        data_cvn['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
+                                               st_cvn.PRODUCCION_ID_CODE['ISBN'])
+        data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
+            'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
+        return super(PublicacionManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return self.model.objects.filter(
@@ -78,28 +78,28 @@ class PublicacionManager(ProduccionManager):
 class CongresoManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        dataCVN = {}
-        dataCVN['titulo'] = parse_title(item)
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
         for itemXML in item.findall('Link'):
             if itemXML.find(
                 'CvnItemID/CodeCVNItem/Item'
-            ).text.strip() == stCVN.DATA_CONGRESO:
+            ).text.strip() == st_cvn.DATA_CONGRESO:
                 if (itemXML.find('Title/Name') and
                    itemXML.find('Title/Name/Item').text):
-                    dataCVN[u'nombre_del_congreso'] = unicode(itemXML.find(
+                    data_cvn[u'nombre_del_congreso'] = unicode(itemXML.find(
                         'Title/Name/Item').text.strip())
 
                 date_node = itemXML.find('Date')
-                (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
+                (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
                     duracion) = parse_date_interval(date_node)
 
                 if itemXML.find('Place/City'):
-                    dataCVN[u'ciudad_de_realizacion'] = unicode(itemXML.find(
+                    data_cvn[u'ciudad_de_realizacion'] = unicode(itemXML.find(
                         'Place/City/Item').text.strip())
                 # Ámbito
-                dataCVN.update(parse_scope(itemXML.find('Scope')))
-        dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        return super(CongresoManager, self)._create(dataCVN, user_profile)
+                data_cvn.update(parse_scope(itemXML.find('Scope')))
+        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        return super(CongresoManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return super(CongresoManager, self).get_query_set().filter(
@@ -116,17 +116,17 @@ class CongresoManager(ProduccionManager):
 class TesisDoctoralManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        dataCVN = {}
-        dataCVN['titulo'] = parse_title(item)
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
         node = item.find('Entity/EntityName/Item')
         if node is not None:
-            dataCVN[u'universidad_que_titula'] = unicode(node.text.strip())
-        dataCVN[u'autor'] = parse_authors(
+            data_cvn[u'universidad_que_titula'] = unicode(node.text.strip())
+        data_cvn[u'autor'] = parse_authors(
             item.findall('Author'))
-        dataCVN[u'codirector'] = parse_authors(
+        data_cvn[u'codirector'] = parse_authors(
             item.findall('Link/Author'))
-        dataCVN['fecha'] = parse_date(item.find('Date'))
-        return super(TesisDoctoralManager, self)._create(dataCVN, user_profile)
+        data_cvn['fecha'] = parse_date(item.find('Date'))
+        return super(TesisDoctoralManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
         return super(TesisDoctoralManager, self).get_query_set().filter(
@@ -145,35 +145,35 @@ class ProyectoManager(ProduccionManager):
     search_items = ['titulo']
 
     def create(self, item, user_profile):
-        dataCVN = {}
-        dataCVN['titulo'] = parse_title(item)
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
         date_node = item.find('Date')
-        (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
-            dataCVN['duracion']) = parse_date_interval(date_node)
+        (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
+            data_cvn['duracion']) = parse_date_interval(date_node)
         # Autores
-        dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        dataCVN.update(parse_economic(item.findall('EconomicDimension')))
+        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        data_cvn.update(parse_economic(item.findall('EconomicDimension')))
         if item.find('ExternalPK/Code'):
-            dataCVN[u'cod_segun_financiadora'] = unicode(item.find(
+            data_cvn[u'cod_segun_financiadora'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
         # Ámbito
-        dataCVN.update(parse_scope(item.find('Scope')))
-        return super(ProyectoManager, self)._create(dataCVN, user_profile)
+        data_cvn.update(parse_scope(item.find('Scope')))
+        return super(ProyectoManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
-        fechaInicioMax = datetime.date(year, 12, 31)
-        fechaFinMin = datetime.date(year, 1, 1)
+        fecha_inicio_max = datetime.date(year, 12, 31)
+        fecha_fin_min = datetime.date(year, 1, 1)
         elements = super(ProyectoManager, self).get_query_set().filter(
             user_profile__in=usuarios,
             fecha_de_inicio__isnull=False,
-            fecha_de_inicio__lte=fechaInicioMax
+            fecha_de_inicio__lte=fecha_inicio_max
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
-            fechaFin = element.getFechaFin()
-            if fechaFin is None:
-                fechaFin = element.fecha_de_inicio
-            if fechaFin >= fechaFinMin:
+            fecha_fin = element.getFechaFin()
+            if fecha_fin is None:
+                fecha_fin = element.fecha_de_inicio
+            if fecha_fin >= fecha_fin_min:
                 elements_list.append(element)
         return elements_list
 
@@ -188,35 +188,35 @@ class ConvenioManager(ProduccionManager):
     search_items = ['titulo']
 
     def create(self, item, user_profile):
-        dataCVN = {}
-        dataCVN['titulo'] = parse_title(item)
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
         date_node = item.find('Date')
-        (dataCVN['fecha_de_inicio'], dataCVN['fecha_de_fin'],
-            dataCVN['duracion']) = parse_date_interval(date_node)
+        (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
+            data_cvn['duracion']) = parse_date_interval(date_node)
         # Autores
-        dataCVN[u'autores'] = parse_authors(item.findall('Author'))
-        dataCVN.update(parse_economic(item.findall('EconomicDimension')))
+        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        data_cvn.update(parse_economic(item.findall('EconomicDimension')))
         if item.find('ExternalPK/Code'):
-            dataCVN[u'cod_segun_financiadora'] = unicode(item.find(
+            data_cvn[u'cod_segun_financiadora'] = unicode(item.find(
                 'ExternalPK/Code/Item').text.strip())
         # Ámbito
-        dataCVN.update(parse_scope(item.find('Scope')))
-        return super(ConvenioManager, self)._create(dataCVN, user_profile)
+        data_cvn.update(parse_scope(item.find('Scope')))
+        return super(ConvenioManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
-        fechaInicioMax = datetime.date(year, 12, 31)
-        fechaFinMin = datetime.date(year, 1, 1)
+        fecha_inicio_max = datetime.date(year, 12, 31)
+        fecha_fin_min = datetime.date(year, 1, 1)
         elements = super(ConvenioManager, self).get_query_set().filter(
             user_profile__in=usuarios,
             fecha_de_inicio__isnull=False,
-            fecha_de_inicio__lte=fechaInicioMax
+            fecha_de_inicio__lte=fecha_inicio_max
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
-            fechaFin = element.getFechaFin()
-            if fechaFin is None:
-                fechaFin = element.fecha_de_inicio
-            if fechaFin >= fechaFinMin:
+            fecha_fin = element.getFechaFin()
+            if fecha_fin is None:
+                fecha_fin = element.fecha_de_inicio
+            if fecha_fin >= fecha_fin_min:
                 elements_list.append(element)
         return elements_list
 

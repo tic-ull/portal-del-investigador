@@ -1,14 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
 import datetime
-import settings as stCVN
+import settings as st_cvn
 import string
 
 
 def _parse_duration(duration):
-    '''Input: Duration/Item node
+    """Input: Duration/Item node
        Example: CvnItem/Date/Duration/Item
-    '''
+    """
     if duration is None:
         return None
     duration = duration.text
@@ -69,21 +69,22 @@ def _duration_to_enddate(node, fecha_inicio):
     return None, None
 
 
-def parse_scope(treeXML):
-    '''Input: Scope node
-       Example: CvnItem/Link/Scope'''
-    dataCVN = {}
-    if treeXML:
-        dataCVN['ambito'] = unicode(stCVN.SCOPE[treeXML.find(
+def parse_scope(tree_xml):
+    """Input: Scope node
+       Example: CvnItem/Link/Scope
+    """
+    data_cvn = {}
+    if tree_xml:
+        data_cvn['ambito'] = unicode(st_cvn.SCOPE[tree_xml.find(
             'Type/Item').text.strip()])
-        if dataCVN['ambito'] == u'Otros' and treeXML.find('Others/Item'):
-            dataCVN['otro_ambito'] = unicode(treeXML.find(
+        if data_cvn['ambito'] == u'Otros' and tree_xml.find('Others/Item'):
+            data_cvn['otro_ambito'] = unicode(tree_xml.find(
                 'Others/Item').text.strip())
-    return dataCVN
+    return data_cvn
 
 
 def parse_title(xml):
-    '''Input: CvnItem node'''
+    """Input: CvnItem node"""
     title = None
     node = xml.find('Title/Name/Item')
     if node is not None:
@@ -92,7 +93,7 @@ def parse_title(xml):
 
 
 def parse_nif(xml):
-    '''Input: root node'''
+    """Input: root node"""
     if xml is None:
         return ''
     nif = ''
@@ -111,75 +112,75 @@ def parse_nif(xml):
 
 
 def parse_authors(author_list):
-    '''Input: A list of Author nodes'''
+    """Input: A list of Author nodes"""
     authors = ''
     for author in author_list:
-        authorItem = ''
+        author_item = ''
         author_name = author.find("GivenName/Item")
         if author_name is not None and author_name.text:
-            authorItem = unicode(author_name.text.strip())
+            author_item = unicode(author_name.text.strip())
         author_ffname = author.find("FirstFamilyName/Item")
         if author_ffname is not None and author_ffname.text:
-            authorItem += ' ' + unicode(author_ffname.text.strip())
+            author_item += ' ' + unicode(author_ffname.text.strip())
         author_sfname = author.find("SecondFamilyName/Item")
         if author_sfname is not None and author_sfname.text:
-            authorItem += ' ' + unicode(author_sfname.text.strip())
+            author_item += ' ' + unicode(author_sfname.text.strip())
         signature = author.find("Signature/Item")
         if signature is not None and signature.text:
-            if authorItem:
+            if author_item:
                 authors += unicode(
-                    authorItem + ' (' + signature.text.strip() + '); ')
+                    author_item + ' (' + signature.text.strip() + '); ')
             else:
                 authors += unicode(signature.text.strip() + '; ')
-        elif authorItem:
-            authors += authorItem + '; '
+        elif author_item:
+            authors += author_item + '; '
     return authors[:-2] if authors else authors
 
 
 def parse_produccion_type(xml):
-    '''Input: CvnItem node'''
+    """Input: CvnItem node"""
     if xml is None:
         return ''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
-    if cvn_key not in stCVN.FECYT_CODE:
+    if cvn_key not in st_cvn.FECYT_CODE:
         return ''
-    return stCVN.FECYT_CODE[cvn_key]
+    return st_cvn.FECYT_CODE[cvn_key]
 
 
 def parse_produccion_subtype(xml):
-    '''Input: CvnItem node'''
+    """Input: CvnItem node"""
     if xml is None:
         return ''
     subtype = xml.find('Subtype/SubType1/Item')
     if subtype is None:
         return ''
     subtype = subtype.text.strip()
-    if subtype in stCVN.FECYT_CODE_SUBTYPE:
-        return stCVN.FECYT_CODE_SUBTYPE[subtype]
+    if subtype in st_cvn.FECYT_CODE_SUBTYPE:
+        return st_cvn.FECYT_CODE_SUBTYPE[subtype]
     return ''
 
 
-def parse_publicacion_location(treeXML):
-    '''Input: Location node'''
+def parse_publicacion_location(tree_xml):
+    """Input: Location node"""
     data = {}
-    if treeXML:
-        volume = treeXML.find('Volume/Item')
+    if tree_xml:
+        volume = tree_xml.find('Volume/Item')
         if volume is not None and volume.text is not None:
             data['volumen'] = volume.text.strip()
-        number = treeXML.find('Number/Item')
+        number = tree_xml.find('Number/Item')
         if number is not None and number.text is not None:
             data['numero'] = number.text.strip()
-        page = treeXML.find('InitialPage/Item')
+        page = tree_xml.find('InitialPage/Item')
         if page is not None and page.text is not None:
             data['pagina_inicial'] = page.text.strip()
-        page = treeXML.find('FinalPage/Item')
+        page = tree_xml.find('FinalPage/Item')
         if page is not None and page.text is not None:
             data['pagina_final'] = page.text.strip()
     return data
 
 
 def parse_date(xml):
-    '''Input: date node'''
+    """Input: date node"""
     if xml is None:
         return None
     # Node of type Date > OnlyDate
@@ -198,7 +199,7 @@ def parse_date(xml):
 
 
 def parse_date_interval(xml):
-    '''Input: date node'''
+    """Input: date node"""
     if xml is None:
         return None, None, None
     # Get start date
@@ -226,9 +227,10 @@ def parse_date_interval(xml):
 
 
 def parse_produccion_id(id_list, code_type):
-    '''Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
+    """Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
        different identifiers for produccion nodes. code_type is what
-       type of id you want to get: ISSN, ISBN, etc. (PRODUCCION_ID_CODE)'''
+       type of id you want to get: ISSN, ISBN, etc. (PRODUCCION_ID_CODE)
+    """
     for node in id_list:
         if node.find('Type/Item').text != code_type:
             continue
@@ -237,10 +239,10 @@ def parse_produccion_id(id_list, code_type):
 
 
 def parse_economic(node_list):
-    '''Input: a list of EconomicDimension nodes'''
-    dataCVN = {}
+    """Input: a list of EconomicDimension nodes"""
+    data_cvn = {}
     for item in node_list:
         economic = item.find('Value').attrib['code']
-        dataCVN[stCVN.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
+        data_cvn[st_cvn.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
             'Value/Item').text.strip())
-    return dataCVN
+    return data_cvn

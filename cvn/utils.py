@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from lxml import etree
 from models import Articulo, Capitulo, Libro
 from parser_helpers import parse_nif
-import settings as stCVN
+import settings as st_cvn
 
 
 def scientific_production_to_context(user_profile, context):
@@ -30,8 +30,8 @@ def scientific_production_to_context(user_profile, context):
 def cvn_to_context(user, context):
     try:
         context['cvn'] = user.cvn
-        context['cvn_status'] = stCVN.CVN_STATUS[user.cvn.status][1]
-        if user.cvn.status == stCVN.CVNStatus.INVALID_IDENTITY:
+        context['cvn_status'] = st_cvn.CVN_STATUS[user.cvn.status][1]
+        if user.cvn.status == st_cvn.CVNStatus.INVALID_IDENTITY:
             if user.cvn.xml_file.closed:
                 user.cvn.xml_file.open()
             xml_tree = etree.parse(user.cvn.xml_file)

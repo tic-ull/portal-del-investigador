@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 from models import FECYT, CVN
 from parser_helpers import parse_date
-import settings as stCVN
+import settings as st_cvn
 
 
 class UploadCVNForm(forms.ModelForm):
@@ -35,12 +35,12 @@ class UploadCVNForm(forms.ModelForm):
             cvn_file = self.cleaned_data['cvn_file']
         except:
             cvn_file = self.data['cvn_file']
-        if cvn_file.content_type != stCVN.PDF:
+        if cvn_file.content_type != st_cvn.PDF:
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
         (self.xml, error) = FECYT.getXML(cvn_file)
         if not self.xml:
-            raise forms.ValidationError(_(stCVN.ERROR_CODES[error]))
+            raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
         return cvn_file
 
     @transaction.atomic
@@ -55,8 +55,8 @@ class UploadCVNForm(forms.ModelForm):
         cvn.user_profile = self.user.profile
         cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
                           ContentFile(self.xml), save=False)
-        treeXML = etree.XML(self.xml)
-        cvn.fecha = parse_date(treeXML.find('Version/VersionID/Date'))
+        tree_xml = etree.XML(self.xml)
+        cvn.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
         cvn.is_inserted = False
         cvn.update_status()
         cvn.save()
@@ -65,9 +65,9 @@ class UploadCVNForm(forms.ModelForm):
 
     @staticmethod
     def CVN(user, pdf_path):
-        upload_file = open(pdf_path, 'r')
+        upload_file = open(pdf_path)
         cvn_file = SimpleUploadedFile(
-            upload_file.name, upload_file.read(), content_type=stCVN.PDF)
+            upload_file.name, upload_file.read(), content_type=st_cvn.PDF)
         upload_file.close()
         try:
             cvn = CVN.objects.get(user_profile__user=user)

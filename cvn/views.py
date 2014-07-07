@@ -10,10 +10,10 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm
 from models import CVN
-from statistics import settings as stSt
+from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
 import logging
-import settings as stCVN
+import settings as st_cvn
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ def index(request):
             dept = obj.object
         dept_json = request.session['dept_json']
         context['department'] = dept
-        context['validPercentCVN'] = stSt.PERCENT_VALID_DEPT_CVN
+        context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
 
     try:
         cvn = CVN.objects.get(user_profile__user=user)
@@ -53,8 +53,8 @@ def index(request):
     context['form'] = form
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
-    context['TIME_WAITING'] = stCVN.TIME_WAITING
-    context['MESSAGES_WAITING'] = stCVN.MESSAGES_WAITING
+    context['TIME_WAITING'] = st_cvn.TIME_WAITING
+    context['MESSAGES_WAITING'] = st_cvn.MESSAGES_WAITING
     return render(request, 'cvn/index.html', context)
 
 

@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
-import settings as stCVN
+import settings as st_cvn
 
 
 def extra_info(request):
     return {
-        'EDITOR_FECYT': stCVN.EDITOR_FECYT,  # URL of FECYT editor
+        'EDITOR_FECYT': st_cvn.EDITOR_FECYT,  # URL of FECYT editor
     }

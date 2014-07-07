@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as stCore
+from core import settings as st_core
 from core.models import UserProfile, Log
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
@@ -15,7 +15,7 @@ import base64
 import datetime
 import logging
 import os
-import settings as stCVN
+import settings as st_cvn
 import suds
 import sys
 import time
@@ -39,37 +39,37 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def getXML(filePDF):
+    def getXML(file_pdf):
         try:
-            dataPDF = base64.encodestring(filePDF.read())
+            data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
             logger.error(_(u'ERROR: No existe el fichero o directorio: %s') % (
-                filePDF.name))
+                file_pdf.name))
             return False
         # Web Service - FECYT
-        clientWS = suds.client.Client(stCVN.URL_WS)
-        WSResponse = False
-        while not WSResponse:
+        client_ws = suds.client.Client(st_cvn.URL_WS)
+        ws_response = False
+        while not ws_response:
             try:
-                resultXML = clientWS.service.cvnPdf2Xml(
-                    stCVN.USER_WS, stCVN.PASSWD_WS, dataPDF)
-                WSResponse = True
+                result_xml = client_ws.service.cvnPdf2Xml(
+                    st_cvn.USER_WS, st_cvn.PASSWD_WS, data_pdf)
+                ws_response = True
             except:
                 logger.warning(
                     _(u'WARNING: No hay respuesta del WS') +
-                    _(u' de la FECYT para el fichero %s') % filePDF.name)
+                    _(u' de la FECYT para el fichero %s') % file_pdf.name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
-        if resultXML.errorCode == 0:
-            return (base64.decodestring(resultXML.cvnXml), 0)
-        return (False, resultXML.errorCode)
+        if result_xml.errorCode == 0:
+            return base64.decodestring(result_xml.cvnXml), 0
+        return False, result_xml.errorCode
 
 
 class CVN(models.Model):
 
-    cvn_file = models.FileField(_(u'PDF'), upload_to=stCVN.PDF_ROOT)
+    cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.PDF_ROOT)
 
-    xml_file = models.FileField(_(u'XML'), upload_to=stCVN.XML_ROOT)
+    xml_file = models.FileField(_(u'XML'), upload_to=st_cvn.XML_ROOT)
 
     fecha = models.DateField(_(u'Fecha del CVN'))
 
@@ -79,7 +79,7 @@ class CVN(models.Model):
 
     user_profile = models.OneToOneField(UserProfile)
 
-    status = models.IntegerField(_(u'Estado'), choices=stCVN.CVN_STATUS)
+    status = models.IntegerField(_(u'Estado'), choices=st_cvn.CVN_STATUS)
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
     class Meta:
@@ -96,7 +96,7 @@ class CVN(models.Model):
 
     def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
-        old_path = os.path.join(st.MEDIA_ROOT, stCVN.OLD_PDF_ROOT)
+        old_path = os.path.join(st.MEDIA_ROOT, st_cvn.OLD_PDF_ROOT)
         new_file_name = self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(
                 self.updated_at.strftime('%Y-%m-%d')
@@ -111,8 +111,8 @@ class CVN(models.Model):
             if self.xml_file.closed:
                 self.xml_file.open()
             self.xml_file.seek(0)
-            CVNItems = etree.parse(self.xml_file).findall('CvnItem')
-            self._parse_producciones(CVNItems)
+            cvn_items = etree.parse(self.xml_file).findall('CvnItem')
+            self._parse_producciones(cvn_items)
             self.is_inserted = True
             self.save()
         except IOError:
@@ -132,8 +132,8 @@ class CVN(models.Model):
         Convenio.objects.removeByUserProfile(self.user_profile)
         TesisDoctoral.objects.removeByUserProfile(self.user_profile)
 
-    def _parse_producciones(self, CVNItems):
-        for CVNItem in CVNItems:
+    def _parse_producciones(self, cvn_items):
+        for CVNItem in cvn_items:
             code = parse_produccion_type(CVNItem)
             subtype = parse_produccion_subtype(CVNItem)
             produccion = FECYT.get_produccion_from_code(code, subtype)
@@ -157,20 +157,20 @@ class CVN(models.Model):
     def update_status(self):
         status = None
         if not self._is_valid_identity():
-            status = stCVN.CVNStatus.INVALID_IDENTITY
-        elif self.fecha <= stCVN.FECHA_CADUCIDAD:
-            status = stCVN.CVNStatus.EXPIRED
+            status = st_cvn.CVNStatus.INVALID_IDENTITY
+        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
+            status = st_cvn.CVNStatus.EXPIRED
         else:
-            status = stCVN.CVNStatus.UPDATED
+            status = st_cvn.CVNStatus.UPDATED
         if self.status != status:
             self.status = status
             self.save()
             Log.objects.create(
                 user_profile=self.user_profile,
                 application=self._meta.app_label.upper(),
-                entry_type=stCore.LogType.CVN_STATUS,
+                entry_type=st_core.LogType.CVN_STATUS,
                 date=datetime.datetime.now(),
-                message=stCVN.CVN_STATUS[self.status][1]
+                message=st_cvn.CVN_STATUS[self.status][1]
             )
 
 
@@ -257,7 +257,7 @@ class Publicacion(models.Model):
     #                                          blank=True, null=True)
 
     def __unicode__(self):
-        return "%s" % (self.titulo)
+        return "%s" % self.titulo
 
     class Meta:
         verbose_name_plural = _(u'Publicaciones')
@@ -399,7 +399,7 @@ class Congreso(models.Model):
     #                                        blank=True, null=True)
 
     def __unicode__(self):
-        return "%s" % (self.titulo)
+        return "%s" % self.titulo
 
     class Meta:
         verbose_name_plural = _(u'Congresos')
@@ -512,7 +512,7 @@ class Proyecto(models.Model):
     # )
 
     def __unicode__(self):
-        return u'%s' % (self.titulo)
+        return u'%s' % self.titulo
 
     class Meta:
         verbose_name_plural = _(u'Proyectos')
@@ -620,7 +620,7 @@ class Convenio(models.Model):
     #                                   max_length=500, blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s' % (self.titulo)
+        return u'%s' % self.titulo
 
     class Meta:
         verbose_name_plural = _(u'Convenios')
