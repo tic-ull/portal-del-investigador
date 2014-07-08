@@ -61,6 +61,8 @@ class Department(Stats):
             return None, None
         try:
             dept_json = wsget(st.WS_INFO_USER % rrhh_code)
+            if dept_json is None:
+                return None, None
             dept = Department.objects.get(
                 code=dept_json['departamento']['cod_departamento'])
         except (KeyError, ObjectDoesNotExist):
