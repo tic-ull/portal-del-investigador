@@ -26,6 +26,8 @@ def dept_stats(request):
     return render(request, 'statistics/statistics.html', context)
 
 
+@login_required
+@staff_member_required
 def dept_stats_detail(request, codigo):
     context = dict()
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
