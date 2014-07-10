@@ -7,6 +7,7 @@ from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from django_tables2 import RequestConfig
@@ -30,12 +31,10 @@ def dept_stats(request):
 @staff_member_required
 def dept_stats_detail(request, codigo):
     context = dict()
-    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
     data_department = wsget(st.WS_DEPARTMENT % codigo)
     if data_department is None:
-        context['members_list'] = DepartmentDetailTable({})
-        context['info_department'] = DepartmentTable({})
-        return render(request, 'statistics/stats_detail.html', context)
+        raise Http404
+    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
     context['departamento'] = data_department['departamento']['nombre']
     context['dept_nombre_corto'] =\
         data_department['departamento']['nombre_corto']
