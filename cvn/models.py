@@ -86,7 +86,8 @@ class CVN(models.Model):
         verbose_name_plural = _(u'Currículum Vitae Normalizado')
 
     def __unicode__(self):
-        return _(u'%s con fecha %s') % (self.cvn_file, self.fecha)
+        return _(u'%(cvn_file)s con fecha %(fecha)s') % \
+            {'cvn_file': self.cvn_file, 'fecha': self.fecha}
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.

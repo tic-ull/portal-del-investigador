@@ -2,79 +2,102 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-20 13:17+0100\n"
+"POT-Creation-Date: 2014-07-10 09:51+0100\n"
 "PO-Revision-Date: 2014-06-20 13:29-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
-#: models.py:12 templates/statistics/statistics.html:21
+#: models.py:14
 msgid "Nombre"
 msgstr "Name"
 
-#: models.py:13
+#: models.py:15
 msgid "Código departamento"
 msgstr "Department code"
 
-#: models.py:14
-msgid "Número de CVN válidos"
-msgstr "Number of CVN valid"
+#: models.py:16
+msgid "CVN válidos"
+msgstr "CVN valid"
 
-#: models.py:15 templates/statistics/statistics.html:26
+#: models.py:17
 msgid "Miembros computables"
 msgstr "Computable members"
 
-#: models.py:16 templates/statistics/statistics.html:27
+#: models.py:18
 msgid "Miembros totales"
 msgstr "Total members"
 
-#: models.py:17 templates/statistics/statistics.html:29
-msgid "Porcentaje de CVN válidos"
+#: models.py:19
+#, fuzzy
+msgid "Porcentaje CVN válidos"
 msgstr "Percentage of valid CVN"
 
-#: models.py:63
+#: models.py:78
 msgid "Código de categoría"
 msgstr "Category code"
 
-#: models.py:65 templates/statistics/stats_detail.html:22
+#: models.py:80 tables.py:71
 msgid "Categoría"
 msgstr "Category"
 
-#: models.py:66
+#: models.py:81
 msgid "CVN requerido"
 msgstr "CVN required"
 
-#: models.py:73
+#: models.py:88
 msgid "Professional categories"
 msgstr "Professional categories"
 
-#: views.py:42
+#: tables.py:39
+msgid "CVN actualizado y con NIF/NIE correcto"
+msgstr "CVN updated and NIF/NIE correct"
+
+#: tables.py:49
+msgid "CVN válidos / Miembros computables"
+msgstr "CVN valid / Computable members"
+
+#: tables.py:69
+msgid "Investigador"
+msgstr "Researcher"
+
+#: tables.py:73
+#, fuzzy
+msgid "CVN obligatorio"
+msgstr "Mandatory"
+
+#: tables.py:76
+#, fuzzy
+msgid "Estado CVN"
+msgstr "CVN Status"
+
+#: views.py:47
 msgid "No"
 msgstr "No"
 
-#: views.py:45
+#: views.py:49
 msgid "Sí"
 msgstr "Yes"
 
-#: views.py:48
+#: views.py:55
 msgid "Válido"
 msgstr "Valid"
 
-#: views.py:50
+#: views.py:58
 msgid "Inválido"
 msgstr "Invalid"
 
-#: views.py:52
+#: views.py:61
 msgid "No dispone de CVN"
 msgstr "CVN not available"
 
@@ -84,7 +107,7 @@ msgstr "Statistics"
 
 #: templates/statistics/statistics.html:8
 #: templates/statistics/statistics.html:15
-#: templates/statistics/stats_detail.html:7
+#: templates/statistics/stats_detail.html:8
 msgid "Departamentos"
 msgstr "Departments"
 
@@ -92,34 +115,18 @@ msgstr "Departments"
 msgid "Estadísticas del CVN"
 msgstr "CVN Statistics"
 
-#: templates/statistics/statistics.html:23
-msgid "CVN válidos"
-msgstr "CVN valid"
-
-#: templates/statistics/statistics.html:24
-msgid "CVN actualizado y con NIF/NIE correcto"
-msgstr "CVN updated and NIF/NIE correct"
-
-#: templates/statistics/statistics.html:30
-msgid "CVN válidos / Miembros computables"
-msgstr "CVN valid / Computable members"
-
-#: templates/statistics/stats_detail.html:8
-msgid "Información departamento"
+#: templates/statistics/stats_detail.html:17
+#, fuzzy
+msgid "Información general"
 msgstr "Department info"
 
-#: templates/statistics/stats_detail.html:12
-msgid "Datos del departamento"
-msgstr "Department data"
+#: templates/statistics/stats_detail.html:26
+#, fuzzy
+msgid "Información detallada"
+msgstr "Department info"
 
-#: templates/statistics/stats_detail.html:21
-msgid "Investigador"
-msgstr "Researcher"
+#~ msgid "Número de CVN válidos"
+#~ msgstr "Number of CVN valid"
 
-#: templates/statistics/stats_detail.html:23
-msgid "Obligatorio"
-msgstr "Mandatory"
-
-#: templates/statistics/stats_detail.html:24
-msgid "Estado del CVN"
-msgstr "CVN Status"
+#~ msgid "Datos del departamento"
+#~ msgstr "Department data"
