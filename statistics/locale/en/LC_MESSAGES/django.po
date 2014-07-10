@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-07-10 09:51+0100\n"
-"PO-Revision-Date: 2014-06-20 13:29-0102\n"
-"Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
+"PO-Revision-Date: 2014-07-10 11:09-0102\n"
+"Last-Translator: LUIS MARINO CERRUDO CONCEPCION <lcerrudo@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: models.py:14
@@ -28,7 +28,7 @@ msgstr "Department code"
 
 #: models.py:16
 msgid "CVN válidos"
-msgstr "CVN valid"
+msgstr "Valid CVN "
 
 #: models.py:17
 msgid "Miembros computables"
@@ -39,9 +39,8 @@ msgid "Miembros totales"
 msgstr "Total members"
 
 #: models.py:19
-#, fuzzy
 msgid "Porcentaje CVN válidos"
-msgstr "Percentage of valid CVN"
+msgstr "Percentage valid CVN"
 
 #: models.py:78
 msgid "Código de categoría"
@@ -61,23 +60,21 @@ msgstr "Professional categories"
 
 #: tables.py:39
 msgid "CVN actualizado y con NIF/NIE correcto"
-msgstr "CVN updated and NIF/NIE correct"
+msgstr "Updated  CVN and NIF/NIE correct"
 
 #: tables.py:49
 msgid "CVN válidos / Miembros computables"
-msgstr "CVN valid / Computable members"
+msgstr "Valid CVN / Computable members"
 
 #: tables.py:69
 msgid "Investigador"
 msgstr "Researcher"
 
 #: tables.py:73
-#, fuzzy
 msgid "CVN obligatorio"
-msgstr "Mandatory"
+msgstr "Mandatory CVN"
 
 #: tables.py:76
-#, fuzzy
 msgid "Estado CVN"
 msgstr "CVN Status"
 
@@ -116,14 +113,12 @@ msgid "Estadísticas del CVN"
 msgstr "CVN Statistics"
 
 #: templates/statistics/stats_detail.html:17
-#, fuzzy
 msgid "Información general"
-msgstr "Department info"
+msgstr "General information"
 
 #: templates/statistics/stats_detail.html:26
-#, fuzzy
 msgid "Información detallada"
-msgstr "Department info"
+msgstr "Details"
 
 #~ msgid "Número de CVN válidos"
 #~ msgstr "Number of CVN valid"
