@@ -46,7 +46,6 @@ def dept_stats_detail(request, codigo):
         data['obligatorio'] = _(u'No')
         if category.is_cvn_required is True:
             data['obligatorio'] = _(u'Sí')
-        user_data = wsget(st.WS_INFO_PDI % member['cod_persona'])
         try:
             user_profile = UserProfile.objects.get(
                 rrhh_code=member['cod_persona'])
@@ -58,9 +57,9 @@ def dept_stats_detail(request, codigo):
         except ObjectDoesNotExist:
             data['is_CVN_valid'] = False
             data['CVNStatus'] = _(u'No dispone de CVN')
-        data['miembro'] = (user_data['apellido1'] + ' ' +
-                           user_data['apellido2'] + ', ' +
-                           user_data['nombre'])
+        data['miembro'] = (member['cod_persona__apellido1'] + ' ' +
+                           member['cod_persona__apellido2'] + ', ' +
+                           member['cod_persona__nombre'])
         members_list.append(data)
     context['members_list'] = DepartmentDetailTable(members_list)
     data_table = {1: {'th': {'width': '20%'}}, 2: {'th': {'width': '20%'}},
