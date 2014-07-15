@@ -26,3 +26,4 @@ django-tinymce
 django-staticfiles
 django-flatpages-i18n
 django-tables2
+redis

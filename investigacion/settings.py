@@ -272,6 +272,11 @@ WS_PDI_VALID = WS_SERVER_URL + 'get_pdi_vigente?cod_%s=%s&ano=%s'
 # WS_CATEGORY = WS_SERVER_URL + 'get_cce'
 WS_CATEGORY = WS_SERVER_URL + 'get_cce?past_days=%s'
 
+# REDIS
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_PASSWORD = None
 
 try:
     SETTINGS_LOCAL

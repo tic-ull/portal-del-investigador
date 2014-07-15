@@ -1,12 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as st_core
+from utils import wsget
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-import simplejson as json
-import urllib
 
 
 class UserProfile(models.Model):
@@ -18,12 +17,10 @@ class UserProfile(models.Model):
                                  blank=True, null=True, unique=True)
 
     def update_rrhh_code(self):
-        rrhh_request = urllib.urlopen(st.WS_COD_PERSONA % self.documento)
-        if rrhh_request.code == 200:
-            rrhh_code = rrhh_request.read()
-            if rrhh_code.isdigit():
-                self.rrhh_code = json.loads(rrhh_code)
-                self.save()
+        rrhh_code = wsget(st.WS_COD_PERSONA % self.documento)
+        if rrhh_code is not None:
+            self.rrhh_code = rrhh_code
+            self.save()
 
     def __unicode__(self):
         return self.user.username
