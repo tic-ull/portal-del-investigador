@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.utils import isdigit
-from core.utils import wsget
+from core.redis_utils import wsget
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 from statistics.models import Department, ProfessionalCategory

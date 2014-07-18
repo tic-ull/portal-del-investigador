@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.utils import wsget
+from core.redis_utils import wsget
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models

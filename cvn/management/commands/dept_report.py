@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.utils import wsget
+from core.redis_utils import wsget
 from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
                         Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit

@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as st_core
-from utils import wsget
+from redis_utils import wsget
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
