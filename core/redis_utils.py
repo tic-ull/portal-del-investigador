@@ -39,6 +39,6 @@ def get_redis(key):
 def set_redis(key, value):
     try:
         r = redis.Redis(connection_pool=POOL)
-        r.set(key, value)
+        r.setex(key, st.REDIS_TIMEOUT, value)
     except redis.ConnectionError:
         pass

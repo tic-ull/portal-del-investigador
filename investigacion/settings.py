@@ -277,6 +277,8 @@ REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_PASSWORD = None
+# Seconds
+REDIS_TIMEOUT = 86400  # One Day
 
 try:
     SETTINGS_LOCAL
