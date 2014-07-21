@@ -17,7 +17,8 @@ class UserProfile(models.Model):
                                  blank=True, null=True, unique=True)
 
     def update_rrhh_code(self):
-        rrhh_code = wsget(st.WS_COD_PERSONA % self.documento)
+        rrhh_code = wsget(ws=(st.WS_COD_PERSONA % self.documento),
+                          use_redis=False)
         if rrhh_code is not None:
             self.rrhh_code = rrhh_code
             self.save()
