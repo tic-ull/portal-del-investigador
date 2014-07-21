@@ -33,7 +33,7 @@ class Command(BaseCommand):
     def handle(self, *args,  **options):
         self._check_args(options)
         try:
-            department_list = wsget(st.WS_ALL_DEPARTMENTS)
+            department_list = wsget(ws=st.WS_ALL_DEPARTMENTS, use_redis=False)
             if department_list is None:
                 raise IOError('WebService "%s" does not work' %
                               st.WS_ALL_DEPARTMENTS)
