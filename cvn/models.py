@@ -43,8 +43,8 @@ class FECYT:
         try:
             data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
-            logger.error(_(u'ERROR: No existe el fichero o directorio: %s') % (
-                file_pdf.name))
+            logger.error(_(u'ERROR: No existe el fichero o directorio:') +
+                         ' %s' % file_pdf.name)
             return False
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.URL_WS)
@@ -57,7 +57,8 @@ class FECYT:
             except:
                 logger.warning(
                     _(u'WARNING: No hay respuesta del WS') +
-                    _(u' de la FECYT para el fichero %s') % file_pdf.name)
+                    _(u' de la FECYT para el fichero') +
+                    ' %s' % file_pdf.name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
@@ -86,8 +87,7 @@ class CVN(models.Model):
         verbose_name_plural = _(u'Currículum Vitae Normalizado')
 
     def __unicode__(self):
-        return _(u'%(cvn_file)s con fecha %(fecha)s') % \
-            {'cvn_file': self.cvn_file, 'fecha': self.fecha}
+        return ('%s ' + _(u'con fecha') + ' %s') % (self.cvn_file, self.fecha)
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
@@ -118,7 +118,7 @@ class CVN(models.Model):
             self.save()
         except IOError:
             if self.xml_file:
-                logger.error(_(u'ERROR: No existe el fichero %s') % (
+                logger.error((_(u'ERROR: No existe el fichero') + ' %s') % (
                     self.xml_file.name))
             else:
                 logger.warning(
