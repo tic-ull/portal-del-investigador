@@ -34,16 +34,16 @@ class CVNTestCase(TestCase):
     def test_calc_statistics(self):
         stats = [
             {
-                'departamento': {
+                'unidad': {
                     'nombre': 'Departamento1',
-                    'cod_departamento': '1'
+                    'codigo': '1'
                 },
                 'miembros': self._get_member_list(range(10))
             },
             {
-                'departamento': {
+                'unidad': {
                     'nombre': 'Departamento2',
-                    'cod_departamento': '2'
+                    'codigo': '2'
                 },
                 'miembros': self._get_member_list(range(10, 20))
             }

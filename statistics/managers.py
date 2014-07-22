@@ -17,8 +17,8 @@ class StatsManager(models.Manager):
         object_list = []
         for stat in stats:
             object_list.append(self.create(
-                stat['departamento']['nombre'],
-                stat['departamento']['cod_departamento'],
+                stat['unidad']['nombre'],
+                stat['unidad']['codigo'],
                 stat['miembros']))
         return super(StatsManager, self).bulk_create(object_list)
 

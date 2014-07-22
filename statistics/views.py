@@ -36,9 +36,9 @@ def dept_stats_detail(request, codigo):
         raise Http404
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
     context['departamento'] = unicode(
-        data_department['departamento']['nombre'])
+        data_department['unidad']['nombre'])
     context['dept_nombre_corto'] = unicode(
-        data_department['departamento']['nombre_corto'])
+        data_department['unidad']['nombre_corto'])
     members_list = []
     for member in data_department['miembros']:
         data = {}
