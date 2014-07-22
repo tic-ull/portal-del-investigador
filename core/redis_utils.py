@@ -46,8 +46,8 @@ def get_redis(key):
 def set_redis(key, timeout, value):
     try:
         r = redis.Redis(connection_pool=POOL)
-        if timeout is None or not str(timeout).isdigit():
-            r.set(key, value)
-        r.setex(key, timeout, value)
+        r.set(key, value)
+        if timeout is not None and str(timeout).isdigit():
+            r.expire(key, timeout)
     except redis.ConnectionError:
         pass
