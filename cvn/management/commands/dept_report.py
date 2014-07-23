@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
                         Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
@@ -74,10 +74,11 @@ class Command(BaseCommand):
     def create_reports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
-                elements = wsget(st.WS_CODES_DEPARTMENTS_YEAR % year)
+                elements = ws.get(st.WS_CODES_DEPARTMENTS_YEAR % year)
                 if elements is None:
                     raise IOError('WS "%s" does not work' %
                                   st.WS_CODES_DEPARTMENTS_YEAR % year)
+                # elements = json.loads(elements)
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -88,7 +89,7 @@ class Command(BaseCommand):
         for element in elements:
             if not element == 'INVES':
                 if self.model_type == 'departamento':
-                    departamento = wsget(st.WS_INFO_DEPARTMENT % element)
+                    departamento = ws.get(st.WS_INFO_DEPARTMENT % element)
                     if departamento:
                         self.create_report(year, departamento)
                 else:
@@ -126,7 +127,7 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def get_investigadores(self, year, element):
-        inves_rrhh = wsget(st.WS_PDI_VALID_UNIDAD_YEAR % (
+        inves_rrhh = ws.get(st.WS_PDI_VALID_UNIDAD_YEAR % (
             self.model_type, element[self.codigo], year))
         if inves_rrhh is None:
             raise IOError('WS "%s" does not work' %
@@ -134,7 +135,7 @@ class Command(BaseCommand):
                            self.model_type, element[self.codigo], year)))
         inves = list()
         for inv in inves_rrhh:
-            data_inv = wsget(st.WS_INFO_PDI_YEAR % inv, year)
+            data_inv = ws.get(st.WS_INFO_PDI_YEAR % inv, year)
             if data_inv is None:
                 raise IOError('WS "%s" does not work' %
                               st.WS_INFO_PDI_YEAR % inv, year)

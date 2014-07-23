@@ -279,7 +279,6 @@ WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
 WS_INFO_DEPARTMENT = (WS_SERVER_URL +
                       'get_info_departamento?cod_departamento=%s')
 
-
 # CODES OF ALL CURRENT DEPARTMENTS
 WS_CODES_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
 
@@ -315,6 +314,12 @@ WS_ALL_AREAS = WS_SERVER_URL + 'get_areas_y_miembros'
 
 # INFO OF AN AREA
 WS_INFO_AREA = WS_SERVER_URL + 'get_info_area?cod_area=%s'
+
+# CODES OF ALL CURRENT AREAS
+WS_CODES_AREAS = WS_SERVER_URL + 'get_areas'
+
+# CODES OF ALL AREAS BY YEARS
+WS_CODES_AREAS_YEAR = WS_SERVER_URL + 'get_areas?year=%s'
 
 # AREA AND ITS MEMBERS OF AN USER
 WS_AREA_USER = (

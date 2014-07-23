@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
 from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
@@ -31,7 +31,7 @@ def dept_stats(request):
 @staff_member_required
 def dept_stats_detail(request, codigo):
     context = dict()
-    data_department = wsget(st.WS_DEPARTMENT % codigo)
+    data_department = ws.get(st.WS_DEPARTMENT % codigo)
     if data_department is None:
         raise Http404
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN

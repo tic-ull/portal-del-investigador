@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -26,7 +26,7 @@ class StatsManager(models.Manager):
 class ProfessionalCategoryManager(models.Manager):
 
     def update(self, past_days=0):
-        categories = wsget(ws=(st.WS_CATEGORY % past_days), use_redis=False)
+        categories = ws.get(ws=(st.WS_CATEGORY % past_days), use_redis=False)
         if categories is None:
             raise IOError('WS "%s" does not work' %
                           (st.WS_CATEGORY % past_days))

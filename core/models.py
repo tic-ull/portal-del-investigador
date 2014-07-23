@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as st_core
-from redis_utils import wsget
+from ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
@@ -17,8 +17,8 @@ class UserProfile(models.Model):
                                  blank=True, null=True, unique=True)
 
     def update_rrhh_code(self):
-        rrhh_code = wsget(ws=(st.WS_COD_PERSONA % self.documento),
-                          use_redis=False)
+        rrhh_code = ws.get(ws=(st.WS_COD_PERSONA % self.documento),
+                             use_redis=False)
         if rrhh_code is not None:
             self.rrhh_code = rrhh_code
             self.save()

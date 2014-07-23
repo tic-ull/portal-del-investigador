@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.utils import isdigit
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 from statistics.models import Department, ProfessionalCategory
@@ -33,7 +33,7 @@ class Command(BaseCommand):
     def handle(self, *args,  **options):
         self._check_args(options)
         try:
-            department_list = wsget(ws=st.WS_ALL_DEPARTMENTS, use_redis=False)
+            department_list = ws.get(ws=st.WS_ALL_DEPARTMENTS, use_redis=False)
             if department_list is None:
                 raise IOError('WebService "%s" does not work' %
                               st.WS_ALL_DEPARTMENTS)
