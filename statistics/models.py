@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core.models import UserProfile
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
@@ -60,7 +60,7 @@ class Department(Stats):
         if rrhh_code is None:
             return None, None
         try:
-            dept_json = wsget(st.WS_INFO_USER % rrhh_code)
+            dept_json = ws.get(st.WS_INFO_USER % rrhh_code)
             if dept_json is None:
                 return None, None
             dept = Department.objects.get(

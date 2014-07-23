@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from core.redis_utils import wsget
+from core.ws_utils import CachedWS as ws
 from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
                         Convenio, TesisDoctoral, UserProfile)
 from cvn.utils import isdigit
@@ -9,6 +9,7 @@ from django.conf import settings as st
 from informe_pdf import Informe_pdf
 from informe_csv import Informe_csv
 from optparse import make_option
+import json
 
 
 class Command(BaseCommand):
@@ -74,10 +75,11 @@ class Command(BaseCommand):
     def create_reports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
-                elements = wsget(st.WS_DEPARTMENT_YEAR % year)
+                elements = ws.get(st.WS_DEPARTMENT_YEAR % year)
                 if elements is None:
                     raise IOError('WS "%s" does not work' %
                                   st.WS_DEPARTMENT_YEAR % year)
+                #elements = json.loads(elements)
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -88,7 +90,7 @@ class Command(BaseCommand):
         for element in elements:
             if not element == 'INVES':
                 if self.model_type == 'departamento':
-                    departamento = wsget(st.WS_DEPARTMENT_INFO % element)
+                    departamento = ws.get(st.WS_DEPARTMENT_INFO % element)
                     if departamento:
                         self.create_report(year, departamento)
                 else:
@@ -126,7 +128,7 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def get_investigadores(self, year, element):
-        inves_rrhh = wsget(st.WS_PDI_VALID % (
+        inves_rrhh = ws.get(st.WS_PDI_VALID % (
             self.model_type, element[self.codigo], year))
         if inves_rrhh is None:
             raise IOError('WS "%s" does not work' %
@@ -134,7 +136,7 @@ class Command(BaseCommand):
                            self.model_type, element[self.codigo], year)))
         inves = list()
         for inv in inves_rrhh:
-            data_inv = wsget(st.WS_INFO_PDI_YEAR % inv, year)
+            data_inv = ws.get(st.WS_INFO_PDI_YEAR % inv, year)
             if data_inv is None:
                 raise IOError('WS "%s" does not work' %
                               st.WS_INFO_PDI_YEAR % inv, year)
