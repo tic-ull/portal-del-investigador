@@ -74,10 +74,10 @@ class Command(BaseCommand):
     def create_reports(self, year, element_id, model):
         if element_id is None:
             if self.model_type == 'departamento':
-                elements = wsget(st.WS_DEPARTMENT_YEAR % year)
+                elements = wsget(st.WS_CODES_DEPARTMENTS_YEAR % year)
                 if elements is None:
                     raise IOError('WS "%s" does not work' %
-                                  st.WS_DEPARTMENT_YEAR % year)
+                                  st.WS_CODES_DEPARTMENTS_YEAR % year)
                 elements = elements.replace(
                     '[', '').replace(']', '').split(', ')
             else:
@@ -88,7 +88,7 @@ class Command(BaseCommand):
         for element in elements:
             if not element == 'INVES':
                 if self.model_type == 'departamento':
-                    departamento = wsget(st.WS_DEPARTMENT_INFO % element)
+                    departamento = wsget(st.WS_INFO_DEPARTMENT % element)
                     if departamento:
                         self.create_report(year, departamento)
                 else:
@@ -126,11 +126,11 @@ class Command(BaseCommand):
                 convenios, tesis)
 
     def get_investigadores(self, year, element):
-        inves_rrhh = wsget(st.WS_PDI_VALID % (
+        inves_rrhh = wsget(st.WS_PDI_VALID_UNIDAD_YEAR % (
             self.model_type, element[self.codigo], year))
         if inves_rrhh is None:
             raise IOError('WS "%s" does not work' %
-                          (st.WS_PDI_VALID % (
+                          (st.WS_PDI_VALID_UNIDAD_YEAR % (
                            self.model_type, element[self.codigo], year)))
         inves = list()
         for inv in inves_rrhh:

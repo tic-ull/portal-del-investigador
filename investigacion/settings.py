@@ -256,31 +256,87 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# Web Services
+# ****************************** WEB SERVICES ******************************
+
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+
+# ALL CATEGORIES
+WS_CATEGORY = WS_SERVER_URL + 'get_cce?past_days=%s'
 
 # RRHH_CODE OF AN USER
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
-# ALL DEPARTMENTS
-WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
-# CODES OF ALL DEPARTMENTS BY YEARS
-WS_DEPARTMENT_YEAR = WS_SERVER_URL + 'get_departamentos?ano=%s'
-# INFO OF A DEPARTMENT
-WS_DEPARTMENT_INFO = (WS_SERVER_URL +
-                      'get_info_departamento?cod_departamento=%s')
-# DETAILS OF A DEPARTMENT
-WS_DEPARTMENT = (WS_SERVER_URL +
-                 'get_departamento_y_miembros?cod_departamento=%s')
-# DEPARTMENT AND ITS MEMBERS OF AN USER
-WS_INFO_USER = WS_SERVER_URL + 'get_departamento_y_miembros?cod_persona=%s'
+
 # INFO OF AN USER
 WS_INFO_PDI = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
+
 # INFO OF AN USER BY YEARS
 WS_INFO_PDI_YEAR = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s&ano=%s'
-# USERS BY DEPARTMENT AND YEAR
-WS_PDI_VALID = WS_SERVER_URL + 'get_pdi_vigente?cod_%s=%s&ano=%s'
-# ALL CATEGORIES
-WS_CATEGORY = WS_SERVER_URL + 'get_cce?past_days=%s'
+
+# ALL CURRENT DEPARTMENTS
+WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
+
+# INFO OF A DEPARTMENT
+WS_INFO_DEPARTMENT = (WS_SERVER_URL +
+                      'get_info_departamento?cod_departamento=%s')
+
+
+# CODES OF ALL CURRENT DEPARTMENTS
+WS_CODES_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
+
+# CODES OF ALL DEPARTMENTS BY YEARS
+WS_CODES_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
+
+# DEPARTMENT AND ITS MEMBERS OF AN USER
+WS_DEPARTMENT_USER = (
+    WS_SERVER_URL +
+    'get_departamento_y_miembros?cod_persona=%s')
+
+# DEPARTMENT AND ITS MEMBERS OF AN USER BY YEARS
+WS_DEPARTMENT_USER_YEAR = (
+    WS_SERVER_URL +
+    'get_departamento_y_miembros?cod_persona=%s&year=%s')
+
+# DETAILS OF A DEPARTMENT
+WS_DEPARTMENT = (
+    WS_SERVER_URL +
+    'get_departamento_y_miembros?cod_departamento=%s')
+
+# DETAILS OF A DEPARTMENT BY YEARS
+WS_DEPARTMENT_YEAR = (
+    WS_SERVER_URL +
+    'get_departamento_y_miembros?cod_departamento=%s&year=%s')
+
+# USERS BY UNIDAD AND YEAR
+WS_PDI_VALID_UNIDAD_YEAR = (WS_SERVER_URL +
+                            'get_pdi_vigente?cod_%s=%s&ano=%s')
+
+# ALL CURRENT AREAS
+WS_ALL_AREAS = WS_SERVER_URL + 'get_areas_y_miembros'
+
+# INFO OF AN AREA
+WS_INFO_AREA = WS_SERVER_URL + 'get_info_area?cod_area=%s'
+
+# AREA AND ITS MEMBERS OF AN USER
+WS_AREA_USER = (
+    WS_SERVER_URL +
+    'get_area_y_miembros?cod_persona=%s')
+
+# AREA AND ITS MEMBERS OF AN USER BY YEARS
+WS_AREA_USER_YEAR = (
+    WS_SERVER_URL +
+    'get_area_y_miembros?cod_persona=%s&year=%s')
+
+# DETAILS OF A AREA
+WS_AREA = (
+    WS_SERVER_URL +
+    'get_area_y_miembros?cod_area=%s')
+
+# DETAILS OF A DEPARTMENT BY YEARS
+WS_AREA_YEAR = (
+    WS_SERVER_URL +
+    'get_area_y_miembros?cod_area=%s&year=%s')
+
+# ****************************** END WEB SERVICES ******************************
 
 # REDIS
 REDIS_HOST = 'localhost'

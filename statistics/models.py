@@ -60,7 +60,7 @@ class Department(Stats):
         if rrhh_code is None:
             return None, None
         try:
-            dept_json = wsget(st.WS_INFO_USER % rrhh_code)
+            dept_json = wsget(st.WS_DEPARTMENT_USER % rrhh_code)
             if dept_json is None:
                 return None, None
             dept = Department.objects.get(
