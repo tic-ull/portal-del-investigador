@@ -11,9 +11,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'investigacion_2012',
-        'USER': 'investigacion',
-        'PASSWORD': 'netUf0Quigak',
-        'HOST': 'django1-pre.stic.ull.es'
+        'USER': 'postgres',
+        #'PASSWORD': '1234',
+        'HOST': 'localhost'
     },
     'portalinvestigador': {
         'ENGINE': 'django.db.backends.mysql',

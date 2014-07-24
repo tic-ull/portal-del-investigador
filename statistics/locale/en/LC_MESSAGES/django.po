@@ -23,7 +23,7 @@ msgid "Nombre"
 msgstr "Name"
 
 #: models.py:15
-msgid "Código departamento"
+msgid "Código unidad"
 msgstr "Department code"
 
 #: models.py:16
@@ -123,5 +123,5 @@ msgstr "Details"
 #~ msgid "Número de CVN válidos"
 #~ msgstr "Number of CVN valid"
 
-#~ msgid "Datos del departamento"
+#~ msgid "Datos del unidad"
 #~ msgstr "Department data"

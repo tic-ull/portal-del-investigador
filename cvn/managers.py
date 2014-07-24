@@ -170,7 +170,7 @@ class ProyectoManager(ProduccionManager):
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
-            fecha_fin = element.getFechaFin()
+            fecha_fin = element.fecha_de_fin
             if fecha_fin is None:
                 fecha_fin = element.fecha_de_inicio
             if fecha_fin >= fecha_fin_min:
@@ -213,7 +213,7 @@ class ConvenioManager(ProduccionManager):
         ).distinct().order_by('fecha_de_inicio')
         elements_list = []
         for element in elements:
-            fecha_fin = element.getFechaFin()
+            fecha_fin = element.fecha_de_fin
             if fecha_fin is None:
                 fecha_fin = element.fecha_de_inicio
             if fecha_fin >= fecha_fin_min:

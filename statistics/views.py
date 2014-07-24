@@ -35,7 +35,7 @@ def dept_stats_detail(request, codigo):
     if data_department is None:
         raise Http404
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
-    context['departamento'] = unicode(
+    context['unidad'] = unicode(
         data_department['unidad']['nombre'])
     context['dept_nombre_corto'] = unicode(
         data_department['unidad']['nombre_corto'])

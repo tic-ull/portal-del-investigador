@@ -15,7 +15,7 @@ from slugify import slugify
 import os
 
 
-class Informe_pdf:
+class InformePDF:
     BLUE_SECONDARY_ULL = colors.HexColor('#EBF3FA')
     BLUE_ULL = colors.HexColor('#006699')
     DEFAULT_FONT = 'Helvetica'
@@ -29,11 +29,11 @@ class Informe_pdf:
     PAGE_WIDTH = A4[0]
     VIOLET_ULL = colors.HexColor('#7A3B7A')
 
-    def __init__(self, year, departamento, investigadores, articulos, libros,
+    def __init__(self, year, unidad, investigadores, articulos, libros,
                  capitulos_libro, congresos, proyectos, convenios, tesis,
                  model_type=None):
         self.year = str(year)
-        self.departamento = departamento
+        self.unidad = unidad
         self.investigadores = investigadores
         self.articulos = articulos
         self.libros = libros
@@ -42,9 +42,9 @@ class Informe_pdf:
         self.proyectos = proyectos
         self.convenios = convenios
         self.tesis = tesis
-        self.setLogo()
+        self.set_logo()
 
-    def setLogo(self):
+    def set_logo(self):
         img_path = st_cvn.PDF_DEPT_IMAGES
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
@@ -63,7 +63,7 @@ class Informe_pdf:
         if not os.path.isdir(path_file):
             os.makedirs(path_file)
         file_name = slugify(
-            self.year + "-" + self.departamento['nombre']) + ".pdf"
+            self.year + "-" + self.unidad['nombre']) + ".pdf"
         doc = SimpleDocTemplate(path_file + file_name)
         story = [Spacer(1, 3 * self.DEFAULT_SPACER)]
         if self.investigadores:
@@ -100,10 +100,10 @@ class Informe_pdf:
         table_inv = []
         for inv in self.investigadores:
             table_inv.append([
-                inv['nombre'],
-                inv['apellido1'],
-                inv['apellido2'],
-                inv['categoria']])
+                inv['cod_persona__nombre'],
+                inv['cod_persona__apellido1'],
+                inv['cod_persona__apellido2'],
+                inv['cod_cce__descripcion']])
         HEADERS = ["NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO",
                    "CATEGORÍA"]
         data = [HEADERS] + table_inv
@@ -290,7 +290,8 @@ class Informe_pdf:
                 text += u"Fecha de inicio: %s<br/>" % (
                     conv.fecha_de_inicio.strftime("%d/%m/%Y")
                 )
-            text += u"Fecha de finalización: %s<br/>" % (
+            if conv.fecha_de_fin is not None:
+                text += u"Fecha de finalización: %s<br/>" % (
                     conv.fecha_de_fin.strftime("%d/%m/%Y")
                 )
             if conv.cuantia_total:
@@ -321,8 +322,8 @@ class Informe_pdf:
                 text += u"Universidad: %s<br/>" % (
                     t.universidad_que_titula
                 )
-            if t.usuario:
-                text += u"Director: %s" % t.usuario
+            if t.user_profile:
+                text += u"Director: %s" % t.user_profile
             if t.codirector:
                 text += u"Codirector: %s" % t.codirector
             if t.fecha:
@@ -348,7 +349,7 @@ class Informe_pdf:
                                  self.PAGE_NUMBERS_MARGIN,
                                  u'Página %s - %s' % (
                                      doc.page,
-                                     self.departamento['nombre']
+                                     self.unidad['nombre']
                                  ))
         canvas.restoreState()
 
@@ -356,7 +357,7 @@ class Informe_pdf:
         canvas.setFont(self.DEFAULT_FONT_BOLD, self.HEADER_FONT_SIZE)
         canvas.setFillColor(self.BLUE_ULL)
         canvas.drawString(self.MARGIN, self.PAGE_HEIGHT - 2 * self.MARGIN,
-                          self.departamento['nombre'])
+                          self.unidad['nombre'])
         canvas.drawImage(self.logo_path,
                          self.PAGE_WIDTH - self.MARGIN - self.logo_width,
                          self.PAGE_HEIGHT - self.logo_height - self.MARGIN,

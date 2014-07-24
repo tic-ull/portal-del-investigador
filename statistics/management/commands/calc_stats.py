@@ -33,10 +33,10 @@ class Command(BaseCommand):
     def handle(self, *args,  **options):
         self._check_args(options)
         try:
-            department_list = ws.get(ws=st.WS_ALL_DEPARTMENTS, use_redis=False)
+            department_list = ws.get(ws=st.WS_DEPARTMENTS, use_redis=False)
             if department_list is None:
                 raise IOError('WebService "%s" does not work' %
-                              st.WS_ALL_DEPARTMENTS)
+                              st.WS_DEPARTMENTS)
             Department.objects.all().delete()
             ProfessionalCategory.objects.update(options['past_days'])
             Department.objects.create_all(department_list)

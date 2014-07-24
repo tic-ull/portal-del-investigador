@@ -261,53 +261,56 @@ STATICFILES_FINDERS = (
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
 
 # ALL CATEGORIES
-WS_CATEGORY = WS_SERVER_URL + 'get_cce?past_days=%s'
+WS_CATEGORIES = WS_SERVER_URL + 'get_cce?past_days=%s'
 
 # RRHH_CODE OF AN USER
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 
-# INFO OF AN USER
+# TODO: INFO OF AN USER
 WS_INFO_PDI = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
 
-# INFO OF AN USER BY YEARS
+# TODO: INFO OF AN USER BY YEARS
 WS_INFO_PDI_YEAR = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s&ano=%s'
 
 # ALL CURRENT DEPARTMENTS
-WS_ALL_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
+WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
 
-# INFO OF A DEPARTMENT
+# ALL DEPARTMENTS BY YEARS
+WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos_y_miembros?year=%s'
+
+# TODO: INFO OF A DEPARTMENT
 WS_INFO_DEPARTMENT = (WS_SERVER_URL +
                       'get_info_departamento?cod_departamento=%s')
 
-# CODES OF ALL CURRENT DEPARTMENTS
+# TODO: CODES OF ALL CURRENT DEPARTMENTS
 WS_CODES_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
 
-# CODES OF ALL DEPARTMENTS BY YEARS
+# TODO: CODES OF ALL DEPARTMENTS BY YEARS
 WS_CODES_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
 
-# DEPARTMENT AND ITS MEMBERS OF AN USER
+# CURRENT DEPARTMENT AND ITS MEMBERS OF AN USER
 WS_DEPARTMENT_USER = (
     WS_SERVER_URL +
     'get_departamento_y_miembros?cod_persona=%s')
 
-# DEPARTMENT AND ITS MEMBERS OF AN USER BY YEARS
+# TODO: DEPARTMENT AND ITS MEMBERS OF AN USER BY YEARS
 WS_DEPARTMENT_USER_YEAR = (
     WS_SERVER_URL +
     'get_departamento_y_miembros?cod_persona=%s&year=%s')
 
-# DETAILS OF A DEPARTMENT
+# CURRENT DETAILS OF A DEPARTMENT
 WS_DEPARTMENT = (
     WS_SERVER_URL +
     'get_departamento_y_miembros?cod_departamento=%s')
 
-# DETAILS OF A DEPARTMENT BY YEARS
+# TODO: DETAILS OF A DEPARTMENT BY YEARS
 WS_DEPARTMENT_YEAR = (
     WS_SERVER_URL +
     'get_departamento_y_miembros?cod_departamento=%s&year=%s')
 
-# USERS BY UNIDAD AND YEAR
+# TODO: USERS BY UNIDAD AND YEAR
 WS_PDI_VALID_UNIDAD_YEAR = (WS_SERVER_URL +
-                            'get_pdi_vigente?cod_%s=%s&ano=%s')
+                            'get_pdi_vigente?cod_%s=%s&year=%s')
 
 # ALL CURRENT AREAS
 WS_ALL_AREAS = WS_SERVER_URL + 'get_areas_y_miembros'
