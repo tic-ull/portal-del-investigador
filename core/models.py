@@ -1,11 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as st_core
-from ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from ws_utils import CachedWS as ws
 
 
 class UserProfile(models.Model):
