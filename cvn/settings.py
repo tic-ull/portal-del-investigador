@@ -18,6 +18,7 @@ PDF_ROOT = "cvn/pdf"
 XML_ROOT = "cvn/xml"
 OLD_PDF_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/old_cvn/")  # CVN antiguos
 PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/pdf_departamento')
+CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/csv_departamento')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 

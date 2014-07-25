@@ -291,22 +291,22 @@ WS_CODES_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
 # CURRENT DEPARTMENT AND ITS MEMBERS OF AN USER
 WS_DEPARTMENT_USER = (
     WS_SERVER_URL +
-    'get_departamento_y_miembros?cod_persona=%s')
+    'get_departamentos_y_miembros?cod_persona=%s')
 
 # TODO: DEPARTMENT AND ITS MEMBERS OF AN USER BY YEARS
 WS_DEPARTMENT_USER_YEAR = (
     WS_SERVER_URL +
-    'get_departamento_y_miembros?cod_persona=%s&year=%s')
+    'get_departamentos_y_miembros?cod_persona=%s&year=%s')
 
 # CURRENT DETAILS OF A DEPARTMENT
 WS_DEPARTMENT = (
     WS_SERVER_URL +
-    'get_departamento_y_miembros?cod_departamento=%s')
+    'get_departamentos_y_miembros?codigo=%s')
 
-# TODO: DETAILS OF A DEPARTMENT BY YEARS
+# DETAILS OF A DEPARTMENT BY YEARS
 WS_DEPARTMENT_YEAR = (
     WS_SERVER_URL +
-    'get_departamento_y_miembros?cod_departamento=%s&year=%s')
+    'get_departamentos_y_miembros?codigo=%s&year=%s')
 
 # TODO: USERS BY UNIDAD AND YEAR
 WS_PDI_VALID_UNIDAD_YEAR = (WS_SERVER_URL +
