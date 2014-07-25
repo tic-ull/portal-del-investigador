@@ -47,7 +47,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.check_args(options)
         year = int(options['year'])
-        type_id = [int(options['id'])] if type(options['id']) is str else None
+        unit_id = [int(options['id'])] if type(options['id']) is str else None
         model = None
         if options['type'] == 'a':
             # model = GrupoinvestAreaconocimiento
@@ -59,7 +59,7 @@ class Command(BaseCommand):
             self.generator = InformePDF
         else:
             self.generator = Informe_csv
-        self.create_reports(year, type_id, model)
+        self.create_reports(year, unit_id, model)
 
     def check_args(self, options):
         if not isdigit(options['year']):
@@ -82,11 +82,12 @@ class Command(BaseCommand):
                         'WS "%s" does not work' % st.WS_DEPARTMENTS_YEAR % year)
             else:
                 units = model.objects.all()
+            for unit in units:
+                self.create_report(year, unit)
         else:
-            # TODO: COGER EL DEPARTAMENTO CON ESE ID
-            units = unit_id
-        for unit in units:
-            self.create_report(year, unit)
+            for code in unit_id:
+                unit = ws.get(st.WS_DEPARTMENT_YEAR % (code, year))
+                self.create_report(year, unit[0])
 
     def create_report(self, year, unit):
         (investigadores, articulos,
