@@ -76,18 +76,21 @@ class Command(BaseCommand):
     def create_reports(self, year, unit_id, model):
         if unit_id is None:
             if self.model_type == 'department':
-                units = ws.get(st.WS_DEPARTMENTS_YEAR % year)
+                units = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_YEAR % year)
                 if units is None:
                     raise IOError(
-                        'WS "%s" does not work' % st.WS_DEPARTMENTS_YEAR % year)
+                        'WS "%s" does not work' % (
+                            st.WS_DEPARTMENTS_AND_MEMBERS_YEAR % year))
             else:
                 units = model.objects.all()
             for unit in units:
                 self.create_report(year, unit)
         else:
             for code in unit_id:
-                unit = ws.get(st.WS_DEPARTMENT_YEAR % (code, year))
-                self.create_report(year, unit[0])
+                unit = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR % (
+                    code, year))
+                if unit is not None:
+                    self.create_report(year, unit.pop())
 
     def create_report(self, year, unit):
         (investigadores, articulos,

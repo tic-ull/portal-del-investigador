@@ -60,7 +60,7 @@ class Department(Stats):
         if rrhh_code is None:
             return None, None
         try:
-            dept_json = ws.get(st.WS_DEPARTMENT_USER % rrhh_code)
+            dept_json = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_USER % rrhh_code)
             if dept_json is None:
                 return None, None
             dept = Department.objects.get(

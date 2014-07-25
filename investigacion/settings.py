@@ -260,89 +260,83 @@ STATICFILES_FINDERS = (
 
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
 
-# ALL CATEGORIES
-WS_CATEGORIES = WS_SERVER_URL + 'get_cce?past_days=%s'
+# All categories
+WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
-# RRHH_CODE OF AN USER
+# RRHH code
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 
-# TODO: INFO OF AN USER
-WS_INFO_PDI = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s'
+# All current departments and members
+WS_DEPARTMENTS_AND_MEMBERS = (
+    WS_SERVER_URL +
+    'get_departamentos_y_miembros')
 
-# TODO: INFO OF AN USER BY YEARS
-WS_INFO_PDI_YEAR = WS_SERVER_URL + 'get_info_pdi?cod_persona=%s&ano=%s'
+# All departments and members by years
+WS_DEPARTMENTS_AND_MEMBERS_YEAR = (
+    WS_SERVER_URL +
+    'get_departamentos_y_miembros?year=%s')
 
-# ALL CURRENT DEPARTMENTS
-WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos_y_miembros'
-
-# ALL DEPARTMENTS BY YEARS
-WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos_y_miembros?year=%s'
-
-# TODO: INFO OF A DEPARTMENT
-WS_INFO_DEPARTMENT = (WS_SERVER_URL +
-                      'get_info_departamento?cod_departamento=%s')
-
-# TODO: CODES OF ALL CURRENT DEPARTMENTS
-WS_CODES_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
-
-# TODO: CODES OF ALL DEPARTMENTS BY YEARS
-WS_CODES_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
-
-# CURRENT DEPARTMENT AND ITS MEMBERS OF AN USER
-WS_DEPARTMENT_USER = (
+# Current department and members of an user
+WS_DEPARTMENTS_AND_MEMBERS_USER = (
     WS_SERVER_URL +
     'get_departamentos_y_miembros?cod_persona=%s')
 
-# TODO: DEPARTMENT AND ITS MEMBERS OF AN USER BY YEARS
-WS_DEPARTMENT_USER_YEAR = (
+# Department and members of an user by years
+WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR = (
     WS_SERVER_URL +
     'get_departamentos_y_miembros?cod_persona=%s&year=%s')
 
-# CURRENT DETAILS OF A DEPARTMENT
-WS_DEPARTMENT = (
+# Info and members of a department
+WS_DEPARTMENTS_AND_MEMBERS_UNIT = (
     WS_SERVER_URL +
     'get_departamentos_y_miembros?codigo=%s')
 
-# DETAILS OF A DEPARTMENT BY YEARS
-WS_DEPARTMENT_YEAR = (
+# Info and members of a department by years
+WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
     'get_departamentos_y_miembros?codigo=%s&year=%s')
 
-# TODO: USERS BY UNIDAD AND YEAR
-WS_PDI_VALID_UNIDAD_YEAR = (WS_SERVER_URL +
-                            'get_pdi_vigente?cod_%s=%s&year=%s')
+# All current departments
+WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
 
-# ALL CURRENT AREAS
-WS_ALL_AREAS = WS_SERVER_URL + 'get_areas_y_miembros'
+# All departments by years
+WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
 
-# INFO OF AN AREA
-WS_INFO_AREA = WS_SERVER_URL + 'get_info_area?cod_area=%s'
-
-# CODES OF ALL CURRENT AREAS
-WS_CODES_AREAS = WS_SERVER_URL + 'get_areas'
-
-# CODES OF ALL AREAS BY YEARS
-WS_CODES_AREAS_YEAR = WS_SERVER_URL + 'get_areas?year=%s'
-
-# AREA AND ITS MEMBERS OF AN USER
-WS_AREA_USER = (
+# All current areas and members
+WS_AREAS_AND_MEMBERS = (
     WS_SERVER_URL +
-    'get_area_y_miembros?cod_persona=%s')
+    'get_areas_y_miembros')
 
-# AREA AND ITS MEMBERS OF AN USER BY YEARS
-WS_AREA_USER_YEAR = (
+# All areas and members by years
+WS_AREAS_AND_MEMBERS_YEAR = (
     WS_SERVER_URL +
-    'get_area_y_miembros?cod_persona=%s&year=%s')
+    'get_areas_y_miembros?year=%s')
 
-# DETAILS OF A AREA
-WS_AREA = (
+# Current area and members of an user
+WS_AREAS_AND_MEMBERS_USER = (
     WS_SERVER_URL +
-    'get_area_y_miembros?cod_area=%s')
+    'get_areas_y_miembros?cod_persona=%s')
 
-# DETAILS OF A DEPARTMENT BY YEARS
-WS_AREA_YEAR = (
+# Area and members of an user by years
+WS_AREAS_AND_MEMBERS_USER_YEAR = (
     WS_SERVER_URL +
-    'get_area_y_miembros?cod_area=%s&year=%s')
+    'get_areas_y_miembros?cod_persona=%s&year=%s')
+
+# Info and members of an area
+WS_AREAS_AND_MEMBERS_UNIT = (
+    WS_SERVER_URL +
+    'get_areas_y_miembros?codigo=%s')
+
+# Info and members of an area by years
+WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
+    WS_SERVER_URL +
+    'get_area_y_miembros?codigo=%s&year=%s')
+
+# All current areas
+WS_AREAS = WS_SERVER_URL + 'get_areas'
+
+# All areas by years
+WS_AREAS_YEAR = WS_SERVER_URL + 'get_areas?year=%s'
 
 # ****************************** END WEB SERVICES ******************************
 

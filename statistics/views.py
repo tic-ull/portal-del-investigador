@@ -31,7 +31,7 @@ def dept_stats(request):
 @staff_member_required
 def dept_stats_detail(request, codigo):
     context = dict()
-    data_department = ws.get(st.WS_DEPARTMENT % codigo)
+    data_department = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT % codigo)
     if data_department is None:
         raise Http404
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN

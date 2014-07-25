@@ -26,10 +26,9 @@ class StatsManager(models.Manager):
 class ProfessionalCategoryManager(models.Manager):
 
     def update(self, past_days=0):
-        categories = ws.get(ws=(st.WS_CATEGORIES % past_days), use_redis=False)
+        categories = ws.get(ws=(st.WS_CCE % past_days), use_redis=False)
         if categories is None:
-            raise IOError('WS "%s" does not work' %
-                          (st.WS_CATEGORIES % past_days))
+            raise IOError('WS "%s" does not work' % (st.WS_CCE % past_days))
         for category in categories:
             try:
                 pc = self.model.objects.get(code=category['id'])
