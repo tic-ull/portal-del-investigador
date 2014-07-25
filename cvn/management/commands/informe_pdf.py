@@ -31,7 +31,7 @@ class InformePDF:
 
     def __init__(self, year, unidad, investigadores, articulos, libros,
                  capitulos_libro, congresos, proyectos, convenios, tesis,
-                 model_type=None):
+                 model_type):
         self.year = str(year)
         self.unidad = unidad
         self.investigadores = investigadores
@@ -42,6 +42,7 @@ class InformePDF:
         self.proyectos = proyectos
         self.convenios = convenios
         self.tesis = tesis
+        self.model_type = model_type
         self.set_logo()
 
     def set_logo(self):
@@ -59,7 +60,8 @@ class InformePDF:
         self.logo_height *= logo_scale
 
     def go(self):
-        path_file = "%s/%s/" % (st_cvn.PDF_DEPT_ROOT, self.year)
+        path_file = "%s/%s/%s/" % (st_cvn.PDF_DEPT_ROOT, self.model_type,
+                                   self.year)
         if not os.path.isdir(path_file):
             os.makedirs(path_file)
         file_name = slugify(

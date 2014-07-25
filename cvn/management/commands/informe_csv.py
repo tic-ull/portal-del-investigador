@@ -5,7 +5,7 @@ import os
 import csv
 
 
-class Informe_csv:
+class InformeCSV:
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
                  capitulos_libro, congresos, proyectos, convenios, tesis,
@@ -20,11 +20,13 @@ class Informe_csv:
         self.proyectos = len(proyectos)
         self.convenios = len(convenios)
         self.tesis = len(tesis)
+        self.model_type = model_type
         self.header = ['Nombre', 'Investigadores',
                        u'Artículos'.encode('utf-8'),
                        'Libros', u'Capítulos'.encode('utf-8'), 'Congresos',
                        'Proyectos', 'Convenios', 'Tesis']
-        path = "%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.year)
+        path = "%s/%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.model_type,
+                              self.year)
         if not os.path.isdir(path):
             os.makedirs(path)
         self.filename = os.path.join(path, self.year +

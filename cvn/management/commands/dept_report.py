@@ -8,7 +8,7 @@ from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand, CommandError
-from informe_csv import Informe_csv
+from informe_csv import InformeCSV
 from informe_pdf import InformePDF
 from optparse import make_option
 
@@ -50,15 +50,13 @@ class Command(BaseCommand):
         unit_id = [int(options['id'])] if type(options['id']) is str else None
         model = None
         if options['type'] == 'a':
-            # model = GrupoinvestAreaconocimiento
             self.model_type = 'area'
         else:
             self.model_type = 'department'
-            self.codigo = 'cod_departamento'
         if options['format'] == 'pdf':
             self.generator = InformePDF
         else:
-            self.generator = Informe_csv
+            self.generator = InformeCSV
         self.create_reports(year, unit_id, model)
 
     def check_args(self, options):
@@ -77,18 +75,20 @@ class Command(BaseCommand):
         if unit_id is None:
             if self.model_type == 'department':
                 units = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_YEAR % year)
-                if units is None:
-                    raise IOError(
-                        'WS "%s" does not work' % (
-                            st.WS_DEPARTMENTS_AND_MEMBERS_YEAR % year))
             else:
-                units = model.objects.all()
+                units = ws.get(st.WS_AREAS_AND_MEMBERS_YEAR % year)
+            if units is None:
+                raise IOError('WS does not work')
             for unit in units:
                 self.create_report(year, unit)
         else:
             for code in unit_id:
-                unit = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR % (
-                    code, year))
+                if self.model_type == 'department':
+                    unit = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR % (
+                        code, year))
+                else:
+                    unit = ws.get(st.WS_AREAS_AND_MEMBERS_UNIT_YEAR % (
+                        code, year))
                 if unit is not None:
                     self.create_report(year, unit.pop())
 
