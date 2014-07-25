@@ -34,6 +34,7 @@ def dept_stats_detail(request, codigo):
     data_department = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT % codigo)
     if data_department is None:
         raise Http404
+    data_department = data_department.pop()
     context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
     context['unidad'] = unicode(
         data_department['unidad']['nombre'])
