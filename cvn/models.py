@@ -143,8 +143,11 @@ class CVN(models.Model):
             produccion.objects.create(CVNItem, self.user_profile)
 
     def _is_valid_identity(self):
-        if self.xml_file.closed:
-            self.xml_file.open()
+        try:
+            if self.xml_file.closed:
+                self.xml_file.open()
+        except IOError:
+            return False
         xml_tree = etree.parse(self.xml_file)
         self.xml_file.seek(0)
         nif = parse_nif(xml_tree)
