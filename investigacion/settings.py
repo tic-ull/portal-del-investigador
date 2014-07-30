@@ -269,32 +269,32 @@ WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros')
+    'get_departamentos_y_ultimos_miembros')
 
 # All departments and members by years
 WS_DEPARTMENTS_AND_MEMBERS_YEAR = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros?year=%s')
+    'get_departamentos_y_ultimos_miembros?year=%s')
 
 # Current department and members of an user
 WS_DEPARTMENTS_AND_MEMBERS_USER = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros?cod_persona=%s')
+    'get_departamentos_y_ultimos_miembros?cod_persona=%s')
 
 # Department and members of an user by years
 WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros?cod_persona=%s&year=%s')
+    'get_departamentos_y_ultimos_miembros?cod_persona=%s&year=%s')
 
 # Info and members of a department
 WS_DEPARTMENTS_AND_MEMBERS_UNIT = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros?codigo=%s')
+    'get_departamentos_y_ultimos_miembros?codigo=%s')
 
 # Info and members of a department by years
 WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
-    'get_departamentos_y_miembros?codigo=%s&year=%s')
+    'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
 # All current departments
 WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
@@ -305,32 +305,32 @@ WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
     WS_SERVER_URL +
-    'get_areas_y_miembros')
+    'get_areas_y_ultimos_miembros')
 
 # All areas and members by years
 WS_AREAS_AND_MEMBERS_YEAR = (
     WS_SERVER_URL +
-    'get_areas_y_miembros?year=%s')
+    'get_areas_y_ultimos_miembros?year=%s')
 
 # Current area and members of an user
 WS_AREAS_AND_MEMBERS_USER = (
     WS_SERVER_URL +
-    'get_areas_y_miembros?cod_persona=%s')
+    'get_areas_y_ultimos_miembros?cod_persona=%s')
 
 # Area and members of an user by years
 WS_AREAS_AND_MEMBERS_USER_YEAR = (
     WS_SERVER_URL +
-    'get_areas_y_miembros?cod_persona=%s&year=%s')
+    'get_areas_y_ultimos_miembros?cod_persona=%s&year=%s')
 
 # Info and members of an area
 WS_AREAS_AND_MEMBERS_UNIT = (
     WS_SERVER_URL +
-    'get_areas_y_miembros?codigo=%s')
+    'get_areas_y_ultimos_miembros?codigo=%s')
 
 # Info and members of an area by years
 WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
-    'get_area_y_miembros?codigo=%s&year=%s')
+    'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
 # All current areas
 WS_AREAS = WS_SERVER_URL + 'get_areas'
