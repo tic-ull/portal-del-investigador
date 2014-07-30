@@ -72,7 +72,7 @@ class PublicacionManager(ProduccionManager):
         return self.model.objects.filter(
             user_profile__in=usuarios,
             fecha__year=year
-        ).distinct().order_by('fecha')
+        ).distinct().order_by('fecha').order_by('titulo')
 
 
 class CongresoManager(ProduccionManager):
@@ -105,7 +105,7 @@ class CongresoManager(ProduccionManager):
         return super(CongresoManager, self).get_query_set().filter(
             user_profile__in=usuarios,
             fecha_de_inicio__year=year
-        ).distinct().order_by('fecha_de_inicio')
+        ).distinct().order_by('fecha_de_inicio').order_by('titulo')
 
     def removeByUserProfile(self, user_profile):
         user_profile.congreso_set.remove(
@@ -132,7 +132,7 @@ class TesisDoctoralManager(ProduccionManager):
         return super(TesisDoctoralManager, self).get_query_set().filter(
             user_profile__in=usuarios,
             fecha__year=year
-        ).distinct().order_by('fecha')
+        ).distinct().order_by('fecha').order_by('titulo')
 
     def removeByUserProfile(self, user_profile):
         user_profile.tesisdoctoral_set.remove(
@@ -167,7 +167,7 @@ class ProyectoManager(ProduccionManager):
             user_profile__in=usuarios,
             fecha_de_inicio__isnull=False,
             fecha_de_inicio__lte=fecha_inicio_max
-        ).distinct().order_by('fecha_de_inicio')
+        ).distinct().order_by('fecha_de_inicio').order_by('titulo')
         elements_list = []
         for element in elements:
             fecha_fin = element.fecha_de_fin
@@ -210,7 +210,7 @@ class ConvenioManager(ProduccionManager):
             user_profile__in=usuarios,
             fecha_de_inicio__isnull=False,
             fecha_de_inicio__lte=fecha_inicio_max
-        ).distinct().order_by('fecha_de_inicio')
+        ).distinct().order_by('fecha_de_inicio').order_by('titulo')
         elements_list = []
         for element in elements:
             fecha_fin = element.fecha_de_fin
