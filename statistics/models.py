@@ -63,8 +63,9 @@ class Department(Stats):
             dept_json = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_USER % rrhh_code)
             if dept_json is None:
                 return None, None
+            dept_json = dept_json.pop()
             dept = Department.objects.get(
-                code=dept_json[0]['unidad']['codigo'])
+                code=dept_json['unidad']['codigo'])
         except (KeyError, ObjectDoesNotExist):
             return None, None
         return dept, dept_json
