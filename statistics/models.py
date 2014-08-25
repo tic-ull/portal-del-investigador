@@ -64,7 +64,7 @@ class Department(Stats):
             if dept_json is None:
                 return None, None
             dept = Department.objects.get(
-                code=dept_json['unidad']['codigo'])
+                code=dept_json[0]['unidad']['codigo'])
         except (KeyError, ObjectDoesNotExist):
             return None, None
         return dept, dept_json
