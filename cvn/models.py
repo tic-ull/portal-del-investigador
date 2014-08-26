@@ -682,6 +682,9 @@ class TesisDoctoral(models.Model):
     #                                          max_length=500,
     #                                          blank=True, null=True)
 
+    def __unicode__(self):
+        return "%s" % self.titulo
+
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')
         ordering = ['-fecha', 'titulo']
