@@ -81,6 +81,7 @@ class CVN(models.Model):
     user_profile = models.OneToOneField(UserProfile)
 
     status = models.IntegerField(_(u'Estado'), choices=st_cvn.CVN_STATUS)
+
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
     class Meta:
@@ -694,6 +695,8 @@ class Patente(models.Model):
     """
     https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
     """
+    user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
+
     denominacion = models.CharField(_(u'Denominación'), max_length=255,
                                     blank=True, null=True)
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
@@ -713,3 +716,7 @@ class Patente(models.Model):
     entidad_titular = models.CharField(_(u'Entidad titular'), max_length=255,
                                        blank=True, null=True)
     empresas = models.TextField(_(u'Empresas'), blank=True, null=True)
+
+    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
+    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)

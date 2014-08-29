@@ -21,13 +21,27 @@ class Migration(SchemaMigration):
             ('autores', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('entidad_titular', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('empresas', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('updated_at', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
         db.send_create_signal(u'cvn', ['Patente'])
+
+        # Adding M2M table for field user_profile on 'Patente'
+        m2m_table_name = db.shorten_name(u'cvn_patente_user_profile')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('patente', models.ForeignKey(orm[u'cvn.patente'], null=False)),
+            ('userprofile', models.ForeignKey(orm[u'core.userprofile'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['patente_id', 'userprofile_id'])
 
 
     def backwards(self, orm):
         # Deleting model 'Patente'
         db.delete_table(u'cvn_patente')
+
+        # Removing M2M table for field user_profile on 'Patente'
+        db.delete_table(db.shorten_name(u'cvn_patente_user_profile'))
 
 
     models = {
@@ -181,6 +195,7 @@ class Migration(SchemaMigration):
         u'cvn.patente': {
             'Meta': {'object_name': 'Patente'},
             'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'denominacion': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'empresas': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'entidad_titular': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
@@ -190,7 +205,9 @@ class Migration(SchemaMigration):
             'num_solicitud': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'pais_prioritario': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'paises': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'region_prioritaria': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
+            'region_prioritaria': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.proyecto': {
             'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Proyecto'},
