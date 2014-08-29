@@ -31,7 +31,7 @@ class InformePDF:
 
     def __init__(self, year, unidad, investigadores, articulos, libros,
                  capitulos_libro, congresos, proyectos, convenios, tesis,
-                 model_type):
+                 patentes, model_type):
         self.year = str(year)
         self.unidad = unidad
         self.investigadores = investigadores
@@ -42,6 +42,7 @@ class InformePDF:
         self.proyectos = proyectos
         self.convenios = convenios
         self.tesis = tesis
+        self.patentes = patentes
         self.model_type = model_type
         self.set_logo()
 
@@ -84,6 +85,8 @@ class InformePDF:
             self.showConvenios(story)
         if self.tesis:
             self.showTesis(story)
+        if self.patentes:
+            self.showPatentes(story)
         doc.build(story, onFirstPage=self.firstPage,
                   onLaterPages=self.laterPages)
 
@@ -332,6 +335,44 @@ class InformePDF:
                 text += u"Fecha de lectura: %s<br/>" % (
                     t.fecha.strftime("%d/%m/%Y")
                 )
+            story.append(Paragraph(text, self.styleN()))
+
+    # -------------------------------------------------------------------------
+
+    def showPatentes(self, story):
+        story.append(PageBreak())
+        story.append(Paragraph('PATENTES', self.styleH3()))
+        text = 'Número de patentes: ' + str(len(self.patentes))
+        story.append(Paragraph(text, self.styleN()))
+        self.listPatentes(story)
+
+    def listPatentes(self, story):
+        for pat in self.patentes:
+            text = ""
+            # TODO: Cambiar a titulo
+            if pat.denominacion:
+                text += u"<b>%s</b><br/>" % pat.denominacion
+            if pat.num_solicitud:
+                text += u"Número de solicitud: %s <br/>" % pat.num_solicitud
+            if pat.fecha:
+                text += u"Fecha de registro: %s <br/>" % (
+                    pat.fecha.strftime("%d/%m/%Y")
+                )
+            if pat.fecha_concesion:
+                text += u"Fecha de concesión: %s <br/>" % (
+                    pat.fecha_concesion.strftime("%d/%m/%Y")
+                )
+            if pat.region_prioritaria or pat.pais_prioritario:
+                text += u"Inscrita en: "
+                if pat.region_prioritaria:
+                    text += u"%s, " % pat.region_prioritaria
+                if pat.pais_prioritario:
+                    text += u"%s" % pat.pais_prioritario
+                text += u"<br/>"
+            if pat.autores:
+                text += u"%s<br/>" % pat.autores
+            if pat.entidad_titular:
+                text += u"%s<br/>" % pat.entidad_titular
             story.append(Paragraph(text, self.styleN()))
 
     # -------------------------------------------------------------------------
