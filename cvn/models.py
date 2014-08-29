@@ -688,3 +688,28 @@ class TesisDoctoral(models.Model):
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')
         ordering = ['-fecha', 'titulo']
+
+
+class Patente(models.Model):
+    """
+    https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
+    """
+    denominacion = models.CharField(_(u'Denominación'), max_length=255,
+                                    blank=True, null=True)
+    fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
+
+    fecha_concesion = models.DateField(_(u'Fecha de concesión'), blank=True,
+                                       null=True)
+    num_solicitud = models.CharField(_(u'Número de solicitud'), max_length=100,
+                                     blank=True, null=True)
+    pais_prioritario = models.CharField(_(u'País de prioridad'), max_length=100,
+                                    blank=True, null=True)
+    region_prioritaria = models.CharField(_(u'País de prioridad'),
+                                          max_length=100, blank=True, null=True)
+    paises = models.TextField(_(u'Países'), blank=True, null=True)
+
+    autores = models.TextField(_(u'Autores'), blank=True, null=True)
+
+    entidad_titular = models.CharField(_(u'Entidad titular'), max_length=255,
+                                       blank=True, null=True)
+    empresas = models.TextField(_(u'Empresas'), blank=True, null=True)
