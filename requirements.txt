@@ -27,3 +27,4 @@ django-staticfiles
 django-flatpages-i18n
 django-tables2
 redis
+iso3166
