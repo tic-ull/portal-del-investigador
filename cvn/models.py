@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager)
+                      ConvenioManager, TesisDoctoralManager, PatenteManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
 import base64
@@ -114,7 +114,7 @@ class CVN(models.Model):
                 self.xml_file.open()
             self.xml_file.seek(0)
             cvn_items = etree.parse(self.xml_file).findall('CvnItem')
-            self._parse_producciones(cvn_items)
+            self._parse_cvn_items(cvn_items)
             self.is_inserted = True
             self.save()
         except IOError:
@@ -134,7 +134,7 @@ class CVN(models.Model):
         Convenio.objects.removeByUserProfile(self.user_profile)
         TesisDoctoral.objects.removeByUserProfile(self.user_profile)
 
-    def _parse_producciones(self, cvn_items):
+    def _parse_cvn_items(self, cvn_items):
         for CVNItem in cvn_items:
             code = parse_produccion_type(CVNItem)
             subtype = parse_produccion_subtype(CVNItem)
@@ -695,9 +695,10 @@ class Patente(models.Model):
     """
     https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
     """
+    objects = PatenteManager()
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    denominacion = models.CharField(_(u'Denominación'), max_length=255,
+    titulo = models.CharField(_(u'Denominación'), max_length=255,
                                     blank=True, null=True)
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
 
@@ -705,11 +706,9 @@ class Patente(models.Model):
                                        null=True)
     num_solicitud = models.CharField(_(u'Número de solicitud'), max_length=100,
                                      blank=True, null=True)
-    pais_prioritario = models.CharField(_(u'País de prioridad'), max_length=100,
+    lugar_prioritario = models.CharField(_(u'País de prioridad'), max_length=100,
                                     blank=True, null=True)
-    region_prioritaria = models.CharField(_(u'País de prioridad'),
-                                          max_length=100, blank=True, null=True)
-    paises = models.TextField(_(u'Países'), blank=True, null=True)
+    lugares = models.TextField(_(u'Países'), blank=True, null=True)
 
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
 

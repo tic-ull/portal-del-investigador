@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from django.db import models
-from parser_helpers import (parse_scope, parse_authors,
+from parser_helpers import (parse_scope, parse_authors, parse_places,
                             parse_publicacion_location, parse_date,
-                            parse_date_interval, parse_economic,
+                            parse_date_interval, parse_economic, parse_entities,
                             parse_produccion_id, parse_title)
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
@@ -142,7 +142,7 @@ class TesisDoctoralManager(ProduccionManager):
 
 class ProyectoManager(ProduccionManager):
 
-    search_items = ['titulo']
+    #search_items = ['titulo']
 
     def create(self, item, user_profile):
         data_cvn = dict()
@@ -185,7 +185,7 @@ class ProyectoManager(ProduccionManager):
 
 class ConvenioManager(ProduccionManager):
 
-    search_items = ['titulo']
+    #search_items = ['titulo']
 
     def create(self, item, user_profile):
         data_cvn = dict()
@@ -224,3 +224,25 @@ class ConvenioManager(ProduccionManager):
         user_profile.convenio_set.remove(
             *user_profile.convenio_set.all())
         self.model.objects.filter(user_profile__isnull=True).delete()
+
+class PatenteManager(ProduccionManager):
+
+    def create(self, item, user_profile):
+        data_cvn = dict()
+        data_cvn['titulo'] = parse_title(item)
+        dates = item.findall('Date')
+        for date in dates:                              # There can be 2 dates
+            parsed_date = parse_date(date)
+            date_type = date.find("Moment/Item").text
+            if date_type == st_cvn.REGULAR_DATE_CODE:   # Date of request
+                data_cvn['fecha'] = parsed_date
+            else:                                       # And date of granting
+                data_cvn['fecha_concesion'] = parsed_date
+        data_cvn['num_solicitud'] = parse_produccion_id(item.findall(
+            'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['SOLICITUD'])
+        (data_cvn['lugar_prioritario'], data_cvn['lugares']) = parse_places(
+            item.findall("Place"))
+        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
+            item.findall("Entity"))
+        return super(PatenteManager, self)._create(data_cvn, user_profile)
