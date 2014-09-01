@@ -117,11 +117,7 @@ class Command(BaseCommand):
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
         convenios = Convenio.objects.byUsuariosYear(usuarios, year)
         tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, year)
-        # TODO: Usar los Managers
-        patentes = Patente.objects.filter(
-            user_profile__in=usuarios,
-            fecha__year=year
-        ).distinct().order_by('fecha').order_by('denominacion')
+        patentes = Patente.objects.byUsuariosYear(usuarios, year)
         return (investigadores, articulos,
                 libros, capitulos_libro, congresos, proyectos,
                 convenios, tesis, patentes)

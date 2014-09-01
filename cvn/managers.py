@@ -225,6 +225,7 @@ class ConvenioManager(ProduccionManager):
             *user_profile.convenio_set.all())
         self.model.objects.filter(user_profile__isnull=True).delete()
 
+
 class PatenteManager(ProduccionManager):
 
     def create(self, item, user_profile):
@@ -246,3 +247,9 @@ class PatenteManager(ProduccionManager):
         (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
             item.findall("Entity"))
         return super(PatenteManager, self)._create(data_cvn, user_profile)
+
+    def byUsuariosYear(self, usuarios, year):
+        return super(PatenteManager, self).get_query_set().filter(
+            user_profile__in=usuarios,
+            fecha__year=year
+        ).distinct().order_by('fecha').order_by('titulo')

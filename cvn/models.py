@@ -696,6 +696,7 @@ class Patente(models.Model):
     https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
     """
     objects = PatenteManager()
+
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     titulo = models.CharField(_(u'Denominación'), max_length=255,

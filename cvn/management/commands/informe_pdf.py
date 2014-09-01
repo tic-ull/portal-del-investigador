@@ -349,9 +349,8 @@ class InformePDF:
     def listPatentes(self, story):
         for pat in self.patentes:
             text = ""
-            # TODO: Cambiar a titulo
-            if pat.denominacion:
-                text += u"<b>%s</b><br/>" % pat.denominacion
+            if pat.titulo:
+                text += u"<b>%s</b><br/>" % pat.titulo
             if pat.num_solicitud:
                 text += u"Número de solicitud: %s <br/>" % pat.num_solicitud
             if pat.fecha:
