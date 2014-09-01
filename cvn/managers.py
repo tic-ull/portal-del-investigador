@@ -46,6 +46,12 @@ class ProduccionManager(models.Manager):
     def removeByUserProfile(self, user_profile):
         pass
 
+    def byUsuariosYear(self, usuarios, year):
+        return self.model.objects.filter(
+            user_profile__in=usuarios,
+            fecha__year=year
+        ).distinct().order_by('fecha').order_by('titulo')
+
 
 class PublicacionManager(ProduccionManager):
 
@@ -67,12 +73,6 @@ class PublicacionManager(ProduccionManager):
         data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
             'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
         return super(PublicacionManager, self)._create(data_cvn, user_profile)
-
-    def byUsuariosYear(self, usuarios, year):
-        return self.model.objects.filter(
-            user_profile__in=usuarios,
-            fecha__year=year
-        ).distinct().order_by('fecha').order_by('titulo')
 
 
 class CongresoManager(ProduccionManager):
@@ -127,12 +127,6 @@ class TesisDoctoralManager(ProduccionManager):
             item.findall('Link/Author'))
         data_cvn['fecha'] = parse_date(item.find('Date'))
         return super(TesisDoctoralManager, self)._create(data_cvn, user_profile)
-
-    def byUsuariosYear(self, usuarios, year):
-        return super(TesisDoctoralManager, self).get_query_set().filter(
-            user_profile__in=usuarios,
-            fecha__year=year
-        ).distinct().order_by('fecha').order_by('titulo')
 
     def removeByUserProfile(self, user_profile):
         user_profile.tesisdoctoral_set.remove(
@@ -247,9 +241,3 @@ class PatenteManager(ProduccionManager):
         (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
             item.findall("Entity"))
         return super(PatenteManager, self)._create(data_cvn, user_profile)
-
-    def byUsuariosYear(self, usuarios, year):
-        return super(PatenteManager, self).get_query_set().filter(
-            user_profile__in=usuarios,
-            fecha__year=year
-        ).distinct().order_by('fecha').order_by('titulo')

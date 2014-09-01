@@ -361,12 +361,10 @@ class InformePDF:
                 text += u"Fecha de concesión: %s <br/>" % (
                     pat.fecha_concesion.strftime("%d/%m/%Y")
                 )
-            if pat.region_prioritaria or pat.pais_prioritario:
+            if pat.lugar_prioritario:
                 text += u"Inscrita en: "
-                if pat.region_prioritaria:
-                    text += u"%s, " % pat.region_prioritaria
-                if pat.pais_prioritario:
-                    text += u"%s" % pat.pais_prioritario
+                if pat.lugar_prioritario:
+                    text += pat.lugar_prioritario
                 text += u"<br/>"
             if pat.autores:
                 text += u"%s<br/>" % pat.autores
