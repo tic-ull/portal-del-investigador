@@ -45,6 +45,7 @@ PRODUCCION_ID_CODE = {
     'ISSN': '010',
     'ISBN': '020',
     'DEPOSITO_LEGAL': '030',
+    'SOLICITUD': '060',
 }
 # Production subtype code in xml fecyt branch Subtype/SubType1/Item
 FECYT_CODE_SUBTYPE = {
@@ -53,6 +54,12 @@ FECYT_CODE_SUBTYPE = {
     u'112': u'Libro',
     u'100': u'TesisDoctoral',
 }
+
+FC_PRIORITY_COUNTRY = "050.030.010.120"
+FC_EXTENDED_COUNTRY = "050.030.010.220"
+FC_ENTITY_OWNER = "050.030.010.300"
+FC_ENITITY_OPERATOR = "050.030.010.250"
+
 
 # Indicates 'Link' node contains Congreso data
 DATA_CONGRESO = u"110"
@@ -65,6 +72,7 @@ FECYT_CODE = {
     # Experiencia científica y tecnológica
     u"050.020.010.000": u'Proyecto',
     u"050.020.020.000": u'Convenio',
+    u"050.030.010.000": u'Patente',
     # Actividad docente
     u"030.040.000.000": u'TesisDoctoral',
 }
@@ -116,6 +124,8 @@ ERROR_CODES = {
     17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha '
           'fallado.')
 }
+
+REGULAR_DATE_CODE = '040'
 
 
 class CVNStatus(Enum):
