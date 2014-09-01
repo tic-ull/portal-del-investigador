@@ -314,13 +314,13 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a  class="fa fa-plus" data-toggle="collapse" href="#pat{{patente.id}}">
-                                    {{ patente.denominacion  }}</a>
+                                    {{ patente.titulo  }}</a>
                                 </h4>
                             </div>
                             <div id="pat{{patente.id}}" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    {% if patente.denominacion %}
-                                        <strong>{{ patente.denominacion }}</strong><br>
+                                    {% if patente.titulo %}
+                                        <strong>{{ patente.titulo }}</strong><br>
                                     {% endif %}
                                     {% if patente.fecha %}
                                         {% trans "Fecha" %}: {{ patente.fecha }}<br>
@@ -331,11 +331,8 @@
                                     {% if patente.num_solicitud %}
                                         {% trans "Número de solicitud" %}: {{ patente.num_solicitud }}<br>
                                     {% endif %}
-                                    {% if patente.pais_prioritario %}
-                                        {% trans "País de prioridad" %}: {{ patente.pais_prioritario }} <br>
-                                    {% endif %}
-                                    {% if patente.region_prioritaria %}
-                                        {% trans "Región de prioridad" %}: {{ patente.region_prioritaria }} <br>
+                                    {% if patente.lugar_prioritario %}
+                                        {% trans "País de prioridad" %}: {{ patente.lugar_prioritario }} <br>
                                     {% endif %}
                                     {% if patente.paises %}
                                         {% trans "Países" %}: {{ patente.paises }} <br>
