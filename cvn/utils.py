@@ -22,6 +22,7 @@ def scientific_production_to_context(user_profile, context):
         context['Proyectos'] = user_profile.proyecto_set.all()
         context['Convenios'] = user_profile.convenio_set.all()
         context['TesisDoctorales'] = user_profile.tesisdoctoral_set.all()
+        context['Patentes'] = user_profile.patente_set.all()
         return True
     except ObjectDoesNotExist:
         return False

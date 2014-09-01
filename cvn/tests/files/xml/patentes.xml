@@ -1,0 +1,393 @@
+<Patentes>
+  <CvnItem>
+    <CvnItemID>
+      <CVNPK>
+        <Item>050.030.010.000</Item>
+      </CVNPK>
+      <CodeCVNItem>
+        <Item>120</Item>
+      </CodeCVNItem>
+      <ExperienceType>
+        <Item>020</Item>
+      </ExperienceType>
+      <ResultType>
+        <Item>000</Item>
+      </ResultType>
+    </CvnItemID>
+    <Subtype>
+      <SubType1 code="050.030.010.030">
+        <Item>058</Item>
+      </SubType1>
+      <SubType2 code="050.030.010.030">
+        <Item>235</Item>
+      </SubType2>
+    </Subtype>
+    <Title>
+      <Name code="050.030.010.020">
+        <Item>Patente dos</Item>
+      </Name>
+      <Type>000</Type>
+      <Category>000</Category>
+    </Title>
+    <Description code="050.030.010.010">
+      <Item>Uno dos tres</Item>
+    </Description>
+    <Description code="050.030.010.190">
+      <Item>resultados super relevantes</Item>
+    </Description>
+    <Subject>
+      <Type code="050.030.010.200">
+        <Item>010</Item>
+      </Type>
+      <SubjectList code="050.030.010.200">
+        <Item>THESAURUS_CODES</Item>
+      </SubjectList>
+      <SubjectAgency code="050.030.010.200">
+        <Item>CVN</Item>
+      </SubjectAgency>
+      <Description>
+        <Primary code="050.030.010.200">
+          <Item>007835491444866350000000</Item>
+        </Primary>
+        <Primary code="050.030.010.200">
+          <Item>008001792457000000000000</Item>
+        </Primary>
+        <Primary code="050.030.010.200">
+          <Item>008001792725000000000000</Item>
+        </Primary>
+      </Description>
+    </Subject>
+    <Filter>
+      <Type code="050.030.010.280">
+        <Item>130</Item>
+      </Type>
+      <Value code="050.030.010.280">
+        <Item>000</Item>
+      </Value>
+    </Filter>
+    <Entity>
+      <EntityName code="050.030.010.300">
+        <Item>Escuela Técnica Superior de Náutica, Máquinas y Radioelectrónica Naval</Item>
+      </EntityName>
+      <EntityID>
+        <CVNPK code="050.030.010.300">
+          <Item>8435246600011002700000003492126</Item>
+        </CVNPK>
+      </EntityID>
+    </Entity>
+    <Date>
+      <Moment>
+        <Item>040</Item>
+      </Moment>
+      <OnlyDate>
+        <DayMonthYear code="050.030.010.150">
+          <Item>2014-08-27</Item>
+        </DayMonthYear>
+      </OnlyDate>
+    </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <OnlyDate>
+        <DayMonthYear code="050.030.010.320">
+          <Item>2014-08-28</Item>
+        </DayMonthYear>
+      </OnlyDate>
+    </Date>
+    <Author>
+      <GivenName code="050.030.010.090">
+        <Item>Felipe</Item>
+      </GivenName>
+      <FirstFamilyName code="050.030.010.090">
+        <Item>Martín</Item>
+      </FirstFamilyName>
+      <SecondFamilyName code="050.030.010.090">
+        <Item>Martín</Item>
+      </SecondFamilyName>
+      <Signature code="050.030.010.090">
+        <Item/>
+      </Signature>
+      <SignatureOrder code="050.030.010.090">
+        <Item>1</Item>
+      </SignatureOrder>
+      <Roll>050</Roll>
+    </Author>
+    <Place>
+      <Moment>
+        <Item>010</Item>
+      </Moment>
+      <CountryCode code="050.030.010.120">
+        <Item>020</Item>
+      </CountryCode>
+    </Place>
+    <ExternalPK>
+      <Type code="050.030.010.100">
+        <Item>070</Item>
+      </Type>
+      <Code code="050.030.010.100">
+        <Item>0000000000002</Item>
+      </Code>
+    </ExternalPK>
+    <ExternalPK>
+      <Type code="050.030.010.110">
+        <Item>060</Item>
+      </Type>
+      <Code code="050.030.010.110">
+        <Item>2</Item>
+      </Code>
+    </ExternalPK>
+    <ExternalPK>
+      <Type code="050.030.010.310">
+        <Item>070</Item>
+      </Type>
+      <Code code="050.030.010.310">
+        <Item>22</Item>
+      </Code>
+    </ExternalPK>
+    <Quality>
+      <Measure code="050.030.010.050">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.050">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.060">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.060">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.070">
+        <Item>0</Item>
+      </Measure>
+      <Type code="050.030.010.070">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.080">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.080">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.160">
+        <Item>0</Item>
+      </Measure>
+      <Type code="050.030.010.160">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.170">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.170">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.180">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.180">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.210">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.210">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.260">
+        <Item>0</Item>
+      </Measure>
+      <Type code="050.030.010.260">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.270">
+        <Item>1</Item>
+      </Measure>
+      <Type code="050.030.010.270">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Quality>
+      <Measure code="050.030.010.330">
+        <Item>0</Item>
+      </Measure>
+      <Type code="050.030.010.330">
+        <Item>050</Item>
+      </Type>
+    </Quality>
+    <Collection code="050.030.010.290">
+      <Item>Ganado bovino</Item>
+    </Collection>
+    <Collection code="050.030.010.290">
+      <Item>Máquina de regadío</Item>
+    </Collection>
+  </CvnItem>
+
+  <CvnItem>
+    <CvnItemID>
+      <CVNPK>
+        <Item>050.030.010.000</Item>
+      </CVNPK>
+      <CodeCVNItem>
+        <Item>120</Item>
+      </CodeCVNItem>
+      <ExperienceType>
+        <Item>020</Item>
+      </ExperienceType>
+      <ResultType>
+        <Item>000</Item>
+      </ResultType>
+    </CvnItemID>
+    <Title>
+      <Name code="050.030.010.020">
+        <Item>Patente uno</Item>
+      </Name>
+      <Type>000</Type>
+      <Category>000</Category>
+    </Title>
+    <Entity>
+      <EntityName code="050.030.010.250">
+        <Item>Banco Pastor</Item>
+      </EntityName>
+    </Entity>
+    <Entity>
+      <EntityName code="050.030.010.250">
+        <Item>CEMUSA CORPORACION EUROPEA DE MOBILIARIO URBANO SA</Item>
+      </EntityName>
+      <EntityID>
+        <CVNPK code="050.030.010.250">
+          <Item>8435246600011000300000001095750</Item>
+        </CVNPK>
+      </EntityID>
+    </Entity>
+    <Entity>
+      <EntityName code="050.030.010.300">
+        <Item>BANCO POPULAR ESPAÑOL, S.A.</Item>
+      </EntityName>
+      <EntityID>
+        <CVNPK code="050.030.010.300">
+          <Item>8435246600011000300000000597842</Item>
+        </CVNPK>
+      </EntityID>
+    </Entity>
+    <Date>
+      <Moment>
+        <Item>040</Item>
+      </Moment>
+      <OnlyDate>
+        <DayMonthYear code="050.030.010.150">
+          <Item>2011-01-01</Item>
+        </DayMonthYear>
+      </OnlyDate>
+    </Date>
+    <Date>
+      <Moment>
+        <Item>OTHERS</Item>
+      </Moment>
+      <OnlyDate>
+        <DayMonthYear code="050.030.010.320">
+          <Item>2011-01-02</Item>
+        </DayMonthYear>
+      </OnlyDate>
+    </Date>
+    <Author>
+      <GivenName code="050.030.010.090">
+        <Item>Judas</Item>
+      </GivenName>
+      <FirstFamilyName code="050.030.010.090">
+        <Item>Iscariote</Item>
+      </FirstFamilyName>
+      <Signature code="050.030.010.090">
+        <Item>JI</Item>
+      </Signature>
+      <SignatureOrder code="050.030.010.090">
+        <Item>1</Item>
+      </SignatureOrder>
+      <Roll>050</Roll>
+    </Author>
+    <Author>
+      <GivenName code="050.030.010.090">
+        <Item>Juan</Item>
+      </GivenName>
+      <FirstFamilyName code="050.030.010.090">
+        <Item>Rodríguez</Item>
+      </FirstFamilyName>
+      <SecondFamilyName code="050.030.010.090">
+        <Item>González</Item>
+      </SecondFamilyName>
+      <Signature code="050.030.010.090">
+        <Item/>
+      </Signature>
+      <SignatureOrder code="050.030.010.090">
+        <Item>2</Item>
+      </SignatureOrder>
+      <Roll>050</Roll>
+    </Author>
+    <Place>
+      <Moment>
+        <Item>010</Item>
+      </Moment>
+      <Region>
+        <Code code="050.030.010.130">
+          <Item>ES70</Item>
+        </Code>
+        <Name code="050.030.010.130">
+          <Item>Canarias</Item>
+        </Name>
+      </Region>
+      <CountryCode code="050.030.010.120">
+        <Item>724</Item>
+      </CountryCode>
+    </Place>
+    <Place>
+      <Moment>
+        <Item>010</Item>
+      </Moment>
+      <CountryCode code="050.030.010.220">
+        <Item>376</Item>
+      </CountryCode>
+    </Place>
+    <Place>
+      <Moment>
+        <Item>010</Item>
+      </Moment>
+      <Region>
+        <Code code="050.030.010.230">
+          <Item>ES61</Item>
+        </Code>
+        <Name code="050.030.010.230">
+          <Item>Andalucía</Item>
+        </Name>
+      </Region>
+      <CountryCode code="050.030.010.220">
+        <Item>724</Item>
+      </CountryCode>
+    </Place>
+    <ExternalPK>
+      <Type code="050.030.010.110">
+        <Item>060</Item>
+      </Type>
+      <Code code="050.030.010.110">
+        <Item>111111111111111</Item>
+      </Code>
+    </ExternalPK>
+  </CvnItem>
+</Patentes>

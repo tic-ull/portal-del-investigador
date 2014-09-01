@@ -3,7 +3,7 @@
 from django.test import TestCase
 import os
 from cvn.parser_helpers import (parse_date, parse_date_interval,
-                                parse_produccion_id)
+                                parse_produccion_id, parse_places)
 from cvn import settings as st_cvn
 from lxml import etree
 import datetime
@@ -11,15 +11,9 @@ import datetime
 
 class ParserTestCase(TestCase):
 
-    def setUp(self):
-        self.xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
-                                    'xml/externalpks.xml'))
-        self.xml_dates = open(os.path.join(st_cvn.TEST_ROOT,
-                              'xml/dates.xml'))
-
     def test_parse_dates(self):
-        dates = etree.parse(self.xml_dates).findall('Date')
-        self.xml_dates.seek(0)
+        xml_dates = open(os.path.join(st_cvn.TEST_ROOT, 'xml/dates.xml'))
+        dates = etree.parse(xml_dates).findall('Date')
         for date in dates:
             date_id = int(date.find('date_id').text)
 
@@ -90,8 +84,9 @@ class ParserTestCase(TestCase):
                 self.assertEqual(parsed_duration, None)
 
     def test_parse_publicacion_ids(self):
-        ids = etree.parse(self.xml_externalpks).findall('ExternalPK')
-        self.xml_dates.seek(0)
+        xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
+                                            'xml/externalpks.xml'))
+        ids = etree.parse(xml_externalpks).findall('ExternalPK')
         issn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISSN'])
         isbn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISBN'])
         financiadora = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
@@ -102,3 +97,15 @@ class ParserTestCase(TestCase):
         self.assertEqual(isbn, '1-56619-909-1')
         self.assertEqual(financiadora, 'Cod. segun financiadora')
         self.assertEqual(deposito_legal, 'B-15155-1975')
+
+    def test_parse_place(self):
+        xml_patentes = open(os.path.join(st_cvn.TEST_ROOT, 'xml/patentes.xml'))
+        patentes = etree.parse(xml_patentes).findall('CvnItem')
+        for patente in patentes:
+            num_solicitud = patente.find(
+                "ExternalPK/Code[@code='050.030.010.110']")
+            if num_solicitud != None and num_solicitud.find('Item').text == '2':
+                (lugar_prioritario, lugares) = parse_places(
+                    patente.findall("Place"))
+                self.assertEqual(lugar_prioritario, 'Andorra')
+                self.assertEqual(lugares, '')
