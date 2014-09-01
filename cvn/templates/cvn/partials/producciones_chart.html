@@ -232,7 +232,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a  class="fa fa-plus" data-toggle="collapse" href="#pro{{proyecto.id}}">
-                                    {{ proyecto.titulo  }}</a>
+                                    {{ proyecto.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="pro{{proyecto.id}}" class="panel-collapse collapse">
@@ -271,7 +271,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a class="fa fa-plus" data-toggle="collapse" href="#tes{{tesis.id}}">
-                                    {{ tesis.titulo  }}</a>
+                                    {{ tesis.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="tes{{tesis.id}}" class="panel-collapse collapse">
@@ -306,7 +306,7 @@
                 {% endif %}
             </div>
         </div>
-       <div id="patente" class="tab-pane">
+        <div id="patente" class="tab-pane">
             <div class="panel-group" id="patentes">
                 {% if Patentes %}
                     {% for patente in Patentes %}
@@ -314,7 +314,7 @@
                             <div class="panel-heading">
                                 <h4 class="panel-title">
                                     <a  class="fa fa-plus" data-toggle="collapse" href="#pat{{patente.id}}">
-                                    {{ patente.titulo  }}</a>
+                                    {{ patente.titulo }}</a>
                                 </h4>
                             </div>
                             <div id="pat{{patente.id}}" class="panel-collapse collapse">
@@ -322,26 +322,26 @@
                                     {% if patente.titulo %}
                                         <strong>{{ patente.titulo }}</strong><br>
                                     {% endif %}
+                                    {% if patente.num_solicitud %}
+                                        {% trans "Número de solicitud" %}: {{ patente.num_solicitud }}<br>
+                                    {% endif %}
                                     {% if patente.fecha %}
-                                        {% trans "Fecha" %}: {{ patente.fecha }}<br>
+                                        {% trans "Fecha de registro" %}: {{ patente.fecha }}<br>
                                     {% endif %}
                                     {% if patente.fecha_concesion %}
                                         {% trans "Fecha de concesión" %}: {{ patente.fecha_concesion }}<br>
                                     {% endif %}
-                                    {% if patente.num_solicitud %}
-                                        {% trans "Número de solicitud" %}: {{ patente.num_solicitud }}<br>
-                                    {% endif %}
                                     {% if patente.lugar_prioritario %}
-                                        {% trans "País de prioridad" %}: {{ patente.lugar_prioritario }} <br>
-                                    {% endif %}
-                                    {% if patente.paises %}
-                                        {% trans "Países" %}: {{ patente.paises }} <br>
+                                        {% trans "Inscrita en" %}: {{ patente.lugar_prioritario }} <br>
                                     {% endif %}
                                     {% if patente.autores %}
                                         {% trans "Autores" %}: {{ patente.autores }} <br>
                                     {% endif %}
                                     {% if patente.entidad_titular %}
                                         {% trans "Entidad titular" %}: {{ patente.entidad_titular }} <br>
+                                    {% endif %}
+                                    {% if patente.paises %}
+                                        {% trans "Países" %}: {{ patente.paises }} <br>
                                     {% endif %}
                                     {% if patente.empresas %}
                                         {% trans "Empresas" %}: {{ patente.empresas }} <br>

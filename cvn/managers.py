@@ -66,10 +66,12 @@ class PublicacionManager(ProduccionManager):
             'Author'))
         data_cvn.update(parse_publicacion_location(item.find('Location')))
         data_cvn['fecha'] = parse_date(item.find('Date'))
-        data_cvn['issn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                               st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        data_cvn['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                               st_cvn.PRODUCCION_ID_CODE['ISBN'])
+        data_cvn['issn'] = parse_produccion_id(
+            item.findall('ExternalPK'),
+            st_cvn.PRODUCCION_ID_CODE['ISSN'])
+        data_cvn['isbn'] = parse_produccion_id(
+            item.findall('ExternalPK'),
+            st_cvn.PRODUCCION_ID_CODE['ISBN'])
         data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
             'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
         return super(PublicacionManager, self)._create(data_cvn, user_profile)
@@ -136,8 +138,6 @@ class TesisDoctoralManager(ProduccionManager):
 
 class ProyectoManager(ProduccionManager):
 
-    #search_items = ['titulo']
-
     def create(self, item, user_profile):
         data_cvn = dict()
         data_cvn['titulo'] = parse_title(item)
@@ -178,8 +178,6 @@ class ProyectoManager(ProduccionManager):
 
 
 class ConvenioManager(ProduccionManager):
-
-    #search_items = ['titulo']
 
     def create(self, item, user_profile):
         data_cvn = dict()
@@ -241,3 +239,8 @@ class PatenteManager(ProduccionManager):
         (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
             item.findall("Entity"))
         return super(PatenteManager, self)._create(data_cvn, user_profile)
+
+    def removeByUserProfile(self, user_profile):
+        user_profile.patente_set.remove(
+            *user_profile.patente_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()
