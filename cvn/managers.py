@@ -3,8 +3,8 @@
 from django.db import models
 from parser_helpers import (parse_scope, parse_authors, parse_places,
                             parse_publicacion_location, parse_date,
-                            parse_date_interval, parse_economic, parse_entities,
-                            parse_produccion_id, parse_title)
+                            parse_date_interval, parse_economic,
+                            parse_entities, parse_produccion_id, parse_title)
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
 import settings as st_cvn
@@ -66,10 +66,12 @@ class PublicacionManager(ProduccionManager):
             'Author'))
         data_cvn.update(parse_publicacion_location(item.find('Location')))
         data_cvn['fecha'] = parse_date(item.find('Date'))
-        data_cvn['issn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                               st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        data_cvn['isbn'] = parse_produccion_id(item.findall('ExternalPK'),
-                                               st_cvn.PRODUCCION_ID_CODE['ISBN'])
+        data_cvn['issn'] = parse_produccion_id(
+            item.findall('ExternalPK'),
+            st_cvn.PRODUCCION_ID_CODE['ISSN'])
+        data_cvn['isbn'] = parse_produccion_id(
+            item.findall('ExternalPK'),
+            st_cvn.PRODUCCION_ID_CODE['ISBN'])
         data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
             'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
         return super(PublicacionManager, self)._create(data_cvn, user_profile)
@@ -126,7 +128,8 @@ class TesisDoctoralManager(ProduccionManager):
         data_cvn[u'codirector'] = parse_authors(
             item.findall('Link/Author'))
         data_cvn['fecha'] = parse_date(item.find('Date'))
-        return super(TesisDoctoralManager, self)._create(data_cvn, user_profile)
+        return super(TesisDoctoralManager, self)._create(
+            data_cvn, user_profile)
 
     def removeByUserProfile(self, user_profile):
         user_profile.tesisdoctoral_set.remove(
@@ -135,8 +138,6 @@ class TesisDoctoralManager(ProduccionManager):
 
 
 class ProyectoManager(ProduccionManager):
-
-    #search_items = ['titulo']
 
     def create(self, item, user_profile):
         data_cvn = dict()
@@ -178,8 +179,6 @@ class ProyectoManager(ProduccionManager):
 
 
 class ConvenioManager(ProduccionManager):
-
-    #search_items = ['titulo']
 
     def create(self, item, user_profile):
         data_cvn = dict()
@@ -241,3 +240,8 @@ class PatenteManager(ProduccionManager):
         (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
             item.findall("Entity"))
         return super(PatenteManager, self)._create(data_cvn, user_profile)
+
+    def removeByUserProfile(self, user_profile):
+        user_profile.patente_set.remove(
+            *user_profile.patente_set.all())
+        self.model.objects.filter(user_profile__isnull=True).delete()

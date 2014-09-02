@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
+from iso3166 import countries
 import datetime
 import settings as st_cvn
 import string
-from iso3166 import countries
 
 
 def _parse_duration(duration):

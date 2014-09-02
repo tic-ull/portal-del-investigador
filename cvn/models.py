@@ -43,8 +43,8 @@ class FECYT:
         try:
             data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
-            logger.error(_(u'ERROR: No existe el fichero o directorio:') +
-                         ' %s' % file_pdf.name)
+            logger.error(u'ERROR: No existe el fichero o directorio:' +
+                         u' %s' % file_pdf.name)
             return False
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.URL_WS)
@@ -56,9 +56,9 @@ class FECYT:
                 ws_response = True
             except:
                 logger.warning(
-                    _(u'WARNING: No hay respuesta del WS') +
-                    _(u' de la FECYT para el fichero') +
-                    ' %s' % file_pdf.name)
+                    u'WARNING: No hay respuesta del WS' +
+                    u' de la FECYT para el fichero' +
+                    u' %s' % file_pdf.name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
@@ -119,11 +119,10 @@ class CVN(models.Model):
             self.save()
         except IOError:
             if self.xml_file:
-                logger.error((_(u'ERROR: No existe el fichero') + ' %s') % (
+                logger.error((u'ERROR: No existe el fichero' + u' %s') % (
                     self.xml_file.name))
             else:
-                logger.warning(
-                    _(u'WARNING: Se requiere de un fichero CVN-XML'))
+                logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
 
     def remove_producciones(self):
         Articulo.removeByUserProfile(self.user_profile)
@@ -133,6 +132,7 @@ class CVN(models.Model):
         Proyecto.objects.removeByUserProfile(self.user_profile)
         Convenio.objects.removeByUserProfile(self.user_profile)
         TesisDoctoral.objects.removeByUserProfile(self.user_profile)
+        Patente.objects.removeByUserProfile(self.user_profile)
 
     def _parse_cvn_items(self, cvn_items):
         for CVNItem in cvn_items:
@@ -700,15 +700,15 @@ class Patente(models.Model):
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
     titulo = models.CharField(_(u'Denominación'), max_length=255,
-                                    blank=True, null=True)
+                              blank=True, null=True)
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
 
     fecha_concesion = models.DateField(_(u'Fecha de concesión'), blank=True,
                                        null=True)
     num_solicitud = models.CharField(_(u'Número de solicitud'), max_length=100,
                                      blank=True, null=True)
-    lugar_prioritario = models.CharField(_(u'País de prioridad'), max_length=100,
-                                    blank=True, null=True)
+    lugar_prioritario = models.CharField(_(u'País de prioridad'),
+                                         max_length=100, blank=True, null=True)
     lugares = models.TextField(_(u'Países'), blank=True, null=True)
 
     autores = models.TextField(_(u'Autores'), blank=True, null=True)
@@ -720,3 +720,9 @@ class Patente(models.Model):
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    def __unicode__(self):
+        return "%s" % self.titulo
+
+    class Meta:
+        ordering = ['-fecha', 'titulo']
