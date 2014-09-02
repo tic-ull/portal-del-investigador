@@ -136,6 +136,14 @@ DATABASES = {
         'HOST': '',
         'PORT': '',
     },
+    'sigidi': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ncm-ull3',
+        'USER': 'nivaria',
+        'PASSWORD': 'teide311',
+        'HOST': '172.16.190.128',
+        'PORT': '',
+    },
 }
 
 
