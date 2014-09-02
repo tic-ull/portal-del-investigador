@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from iso3166 import countries
 import datetime
 import settings as st_cvn
 import string
@@ -67,6 +68,20 @@ def _duration_to_enddate(node, fecha_inicio):
                      datetime.timedelta(days=duration))
         return fecha_fin, duration
     return None, None
+
+
+def _parse_place(place_node):
+    """Input: a Place node"""
+    place = ""
+    region = place_node.find("Region/Name/Item")
+    country = place_node.find("CountryCode/Item")
+    if region is not None:
+        place += region.text
+    if region is not None and country is not None:
+        place += ", "
+    if country is not None:
+        place += countries.get(country.text).name
+    return place
 
 
 def parse_scope(tree_xml):
@@ -246,3 +261,32 @@ def parse_economic(node_list):
         data_cvn[st_cvn.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
             'Value/Item').text.strip())
     return data_cvn
+
+
+def parse_places(node_list):
+    """Input: a list of Place nodes
+       Output: main_place with the place of creation/registration,
+               extended_place with a list of places where the item
+               is registered/operated
+    """
+    main_place = None
+    extended_place = u""
+    for item in node_list:
+        country = item.find("CountryCode")
+        if country.attrib['code'] == st_cvn.FC_PRIORITY_COUNTRY:
+            main_place = _parse_place(item)
+        elif country.attrib['code'] == st_cvn.FC_EXTENDED_COUNTRY:
+            extended_place += _parse_place(item) + "; "
+    return main_place, extended_place.strip('; ')
+
+
+def parse_entities(node_list):
+    main_entity = None
+    extended_entities = u""
+    for item in node_list:
+        entity_name = item.find("EntityName")
+        if entity_name.attrib['code'] == st_cvn.FC_ENTITY_OWNER:
+            main_entity = entity_name.find("Item").text
+        elif entity_name.attrib['code'] == st_cvn.FC_ENITITY_OPERATOR:
+            extended_entities += entity_name.find("Item").text + "; "
+    return main_entity, extended_entities.strip('; ')

@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager)
+                      ConvenioManager, TesisDoctoralManager, PatenteManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif)
 import base64
@@ -44,7 +44,7 @@ class FECYT:
             data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
             logger.error(u'ERROR: No existe el fichero o directorio:' +
-                         ' %s' % file_pdf.name)
+                         u' %s' % file_pdf.name)
             return False
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.URL_WS)
@@ -58,7 +58,7 @@ class FECYT:
                 logger.warning(
                     u'WARNING: No hay respuesta del WS' +
                     u' de la FECYT para el fichero' +
-                    ' %s' % file_pdf.name)
+                    u' %s' % file_pdf.name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
@@ -81,6 +81,7 @@ class CVN(models.Model):
     user_profile = models.OneToOneField(UserProfile)
 
     status = models.IntegerField(_(u'Estado'), choices=st_cvn.CVN_STATUS)
+
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
     class Meta:
@@ -113,12 +114,12 @@ class CVN(models.Model):
                 self.xml_file.open()
             self.xml_file.seek(0)
             cvn_items = etree.parse(self.xml_file).findall('CvnItem')
-            self._parse_producciones(cvn_items)
+            self._parse_cvn_items(cvn_items)
             self.is_inserted = True
             self.save()
         except IOError:
             if self.xml_file:
-                logger.error((u'ERROR: No existe el fichero' + ' %s') % (
+                logger.error((u'ERROR: No existe el fichero' + u' %s') % (
                     self.xml_file.name))
             else:
                 logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
@@ -131,8 +132,9 @@ class CVN(models.Model):
         Proyecto.objects.removeByUserProfile(self.user_profile)
         Convenio.objects.removeByUserProfile(self.user_profile)
         TesisDoctoral.objects.removeByUserProfile(self.user_profile)
+        Patente.objects.removeByUserProfile(self.user_profile)
 
-    def _parse_producciones(self, cvn_items):
+    def _parse_cvn_items(self, cvn_items):
         for CVNItem in cvn_items:
             code = parse_produccion_type(CVNItem)
             subtype = parse_produccion_subtype(CVNItem)
@@ -686,4 +688,41 @@ class TesisDoctoral(models.Model):
 
     class Meta:
         verbose_name_plural = _(u'Tesis Doctorales')
+        ordering = ['-fecha', 'titulo']
+
+
+class Patente(models.Model):
+    """
+    https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
+    """
+    objects = PatenteManager()
+
+    user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
+
+    titulo = models.TextField(_(u'Denominación'), blank=True, null=True)
+
+    fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
+
+    fecha_concesion = models.DateField(_(u'Fecha de concesión'), blank=True,
+                                       null=True)
+    num_solicitud = models.CharField(_(u'Número de solicitud'), max_length=100,
+                                     blank=True, null=True)
+    lugar_prioritario = models.CharField(_(u'País de prioridad'),
+                                         max_length=100, blank=True, null=True)
+    lugares = models.TextField(_(u'Países'), blank=True, null=True)
+
+    autores = models.TextField(_(u'Autores'), blank=True, null=True)
+
+    entidad_titular = models.CharField(_(u'Entidad titular'), max_length=255,
+                                       blank=True, null=True)
+    empresas = models.TextField(_(u'Empresas'), blank=True, null=True)
+
+    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
+    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    def __unicode__(self):
+        return "%s" % self.titulo
+
+    class Meta:
         ordering = ['-fecha', 'titulo']

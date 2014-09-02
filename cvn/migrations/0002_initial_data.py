@@ -54,7 +54,7 @@ class Migration(DataMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'core.userprofile': {
-            'Meta': {'object_name': 'UserProfile'},
+            'Meta': {'ordering': "['user__username']", 'object_name': 'UserProfile'},
             'documento': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '20'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rrhh_code': ('django.db.models.fields.CharField', [], {'max_length': '20', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
@@ -163,6 +163,22 @@ class Migration(DataMigration):
             'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'}),
             'volumen': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'})
+        },
+        u'cvn.patente': {
+            'Meta': {'ordering': "['-fecha', 'titulo']", 'object_name': 'Patente'},
+            'autores': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'empresas': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'entidad_titular': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'fecha': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'fecha_concesion': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'lugar_prioritario': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'lugares': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'num_solicitud': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'titulo': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'updated_at': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'user_profile': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.UserProfile']", 'null': 'True', 'blank': 'True'})
         },
         u'cvn.proyecto': {
             'Meta': {'ordering': "['-fecha_de_inicio', 'titulo']", 'object_name': 'Proyecto'},

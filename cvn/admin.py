@@ -2,7 +2,7 @@
 
 from forms import UploadCVNForm
 from models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
-                    Libro, CVN, Capitulo)
+                    Libro, CVN, Capitulo, Patente)
 from core.models import UserProfile
 from django.contrib import admin
 
@@ -69,3 +69,4 @@ admin.site.register(TesisDoctoral, ProductionAdmin)
 admin.site.register(Congreso, ProductionAdmin)
 admin.site.register(Proyecto, ProductionAdmin)
 admin.site.register(Convenio, ProductionAdmin)
+admin.site.register(Patente, ProductionAdmin)

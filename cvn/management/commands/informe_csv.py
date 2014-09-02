@@ -9,7 +9,7 @@ class InformeCSV:
 
     def __init__(self, year, departamento, investigadores, articulos, libros,
                  capitulos_libro, congresos, proyectos, convenios, tesis,
-                 model_type):
+                 patentes, model_type):
         self.year = str(year)
         self.departamento = departamento['nombre'].encode('utf-8')
         self.investigadores = len(investigadores)
@@ -20,11 +20,12 @@ class InformeCSV:
         self.proyectos = len(proyectos)
         self.convenios = len(convenios)
         self.tesis = len(tesis)
+        self.patentes = len(patentes)
         self.model_type = model_type
         self.header = ['Nombre', 'Investigadores',
                        u'Artículos'.encode('utf-8'),
                        'Libros', u'Capítulos'.encode('utf-8'), 'Congresos',
-                       'Proyectos', 'Convenios', 'Tesis']
+                       'Proyectos', 'Convenios', 'Tesis', 'Patentes']
         path = "%s/%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.model_type,
                               self.year)
         if not os.path.isdir(path):
@@ -46,4 +47,5 @@ class InformeCSV:
                          'Congresos': self.congresos,
                          'Proyectos': self.proyectos,
                          'Convenios': self.convenios,
-                         'Tesis': self.tesis})
+                         'Tesis': self.tesis,
+                         'Patentes': self.patentes})

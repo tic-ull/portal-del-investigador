@@ -2,8 +2,8 @@
 
 from core.models import UserProfile
 from core.ws_utils import CachedWS as ws
-from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto, Convenio,
-                        TesisDoctoral)
+from cvn.models import (Articulo, Libro, Capitulo, Congreso, Proyecto,
+                        Convenio, TesisDoctoral, Patente)
 from cvn.utils import isdigit
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
@@ -95,14 +95,14 @@ class Command(BaseCommand):
     def create_report(self, year, unit):
         (investigadores, articulos,
          libros, capitulos_libro, congresos, proyectos,
-         convenios, tesis) = self.get_data(year, unit)
+         convenios, tesis, patentes) = self.get_data(year, unit)
         print 'Generando Informe para [%s] %s ... ' % (
             unit['unidad']['codigo'], unit['unidad']['nombre'])
         if investigadores:
             informe = self.generator(year, unit['unidad'], investigadores,
                                      articulos, libros, capitulos_libro,
                                      congresos, proyectos, convenios, tesis,
-                                     self.model_type)
+                                     patentes, self.model_type)
             informe.go()
             print 'OK\n'
         else:
@@ -117,9 +117,10 @@ class Command(BaseCommand):
         proyectos = Proyecto.objects.byUsuariosYear(usuarios, year)
         convenios = Convenio.objects.byUsuariosYear(usuarios, year)
         tesis = TesisDoctoral.objects.byUsuariosYear(usuarios, year)
+        patentes = Patente.objects.byUsuariosYear(usuarios, year)
         return (investigadores, articulos,
                 libros, capitulos_libro, congresos, proyectos,
-                convenios, tesis)
+                convenios, tesis, patentes)
 
     def get_investigadores(self, unit):
         investigadores = list()

@@ -1,10 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.models import (Proyecto, Congreso, Convenio, Articulo,
+from cvn.models import (Proyecto, Congreso, Convenio, Articulo, Patente,
                         TesisDoctoral, Libro, Capitulo)
 from core.models import UserProfile
 from django.conf import settings as st
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import FieldError
 from joblib import Parallel, delayed
 from optparse import make_option
 from string_utils.stringcmp import do_stringcmp
@@ -111,7 +112,8 @@ class Command(BaseCommand):
               'Capitulo': Capitulo,
               'Congreso': Congreso,
               'Convenio': Convenio,
-              'Tesis': TesisDoctoral}
+              'Tesis': TesisDoctoral,
+              'Patente': Patente}
 
     NAME_FIELDS = {'Proyecto': 'titulo',
                    'Articulo': 'titulo',
@@ -119,7 +121,8 @@ class Command(BaseCommand):
                    'Capitulo': 'titulo',
                    'Congreso': 'titulo',
                    'Convenio': 'titulo',
-                   'Tesis': 'titulo'}
+                   'Tesis': 'titulo',
+                   'Patente': 'titulo'}
 
     TIMESTAMP_FIELDS = ['updated_at', 'created_at', ]
 
@@ -174,7 +177,7 @@ class Command(BaseCommand):
             else:
                 raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
                                    "Convenio, Articulo, Libro, Capitulo, " +
-                                   "Tesis or Congreso "
+                                   "Tesis, Congreso or Patente"
                                    .format(options['table']))
         if options['differing_pairs'] is None:
             raise CommandError("Option `--diff=0, 1...` must be specified.")
@@ -192,31 +195,14 @@ class Command(BaseCommand):
             registros = TABLE.objects.exclude(usuario=None)
         else:
             self.YEAR = options['year']
-            if TABLE == Proyecto:
-                registros = TABLE.objects.filter(
-                    fecha_de_inicio__year=self.YEAR
-                ).exclude(usuario=None)
-
-            elif TABLE in [Articulo, Libro, Capitulo]:
+            try:
                 registros = TABLE.objects.filter(
                     fecha__year=self.YEAR
-                ).exclude(usuario=None)
-
-            elif TABLE == Congreso:
+                ).exclude(user_profile=None)
+            except FieldError:
                 registros = TABLE.objects.filter(
                     fecha_de_inicio__year=self.YEAR
-                ).exclude(usuario=None)
-
-            elif TABLE == TesisDoctoral:
-                registros = TABLE.objects.filter(
-                    fecha__year=self.YEAR
-                ).exclude(usuario=None)
-
-            elif TABLE == Convenio:
-                registros = TABLE.objects.filter(
-                    fecha_de_inicio__year=self.YEAR
-                ).exclude(usuario=None)
-
+                ).exclude(user_profile=None)
         if options['usuario']:
             usuario = options['usuario']
             try:
@@ -366,12 +352,12 @@ class Command(BaseCommand):
             master_p = TABLE.objects.get(pk=new_id)
             for pry_id in pair:
                 p = TABLE.objects.get(pk=pry_id)
-                for u in p.usuario.all():
-                    master_p.usuario.add(u)
+                for u in p.user_profile.all():
+                    master_p.user_profile.add(u)
                     log_print((u"Proyecto {0} [ID={1}] " +
                               u"añadir usuario {2} [ID={3}]")
                               .format(master_p, master_p.id, u, u.id))
-                    p.usuario.remove(u)
+                    p.user_profile.remove(u)
                     log_print((u"Proyecto {0} [ID={1}] " +
                               u"borrar usuario {2} [ID={3}]")
                               .format(p, p.id, u, u.id))
