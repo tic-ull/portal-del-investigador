@@ -1,4 +1,7 @@
+# -*- encoding: UTF-8 -*-
+
 from django.db import connections
+
 
 class SigidiConnection:
 
