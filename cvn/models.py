@@ -707,8 +707,8 @@ class Patente(models.Model):
                                        null=True)
     num_solicitud = models.CharField(_(u'Número de solicitud'), max_length=100,
                                      blank=True, null=True)
-    lugar_prioritario = models.CharField(_(u'País de prioridad'), max_length=100,
-                                         blank=True, null=True)
+    lugar_prioritario = models.CharField(_(u'País de prioridad'),
+                                         max_length=100, blank=True, null=True)
     lugares = models.TextField(_(u'Países'), blank=True, null=True)
 
     autores = models.TextField(_(u'Autores'), blank=True, null=True)

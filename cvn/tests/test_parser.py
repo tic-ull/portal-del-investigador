@@ -104,7 +104,8 @@ class ParserTestCase(TestCase):
         for patente in patentes:
             num_solicitud = patente.find(
                 "ExternalPK/Code[@code='050.030.010.110']")
-            if num_solicitud != None and num_solicitud.find('Item').text == '2':
+            if (num_solicitud is not None and
+                    num_solicitud.find('Item').text == '2'):
                 (lugar_prioritario, lugares) = parse_places(
                     patente.findall("Place"))
                 self.assertEqual(lugar_prioritario, 'Andorra')

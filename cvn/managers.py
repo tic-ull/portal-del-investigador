@@ -3,8 +3,8 @@
 from django.db import models
 from parser_helpers import (parse_scope, parse_authors, parse_places,
                             parse_publicacion_location, parse_date,
-                            parse_date_interval, parse_economic, parse_entities,
-                            parse_produccion_id, parse_title)
+                            parse_date_interval, parse_economic,
+                            parse_entities, parse_produccion_id, parse_title)
 from django.core.exceptions import ObjectDoesNotExist
 import datetime
 import settings as st_cvn
@@ -128,7 +128,8 @@ class TesisDoctoralManager(ProduccionManager):
         data_cvn[u'codirector'] = parse_authors(
             item.findall('Link/Author'))
         data_cvn['fecha'] = parse_date(item.find('Date'))
-        return super(TesisDoctoralManager, self)._create(data_cvn, user_profile)
+        return super(TesisDoctoralManager, self)._create(
+            data_cvn, user_profile)
 
     def removeByUserProfile(self, user_profile):
         user_profile.tesisdoctoral_set.remove(
