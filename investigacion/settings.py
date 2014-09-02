@@ -254,6 +254,7 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates'),
     os.path.join(BASE_DIR, 'core/templates'),
     os.path.join(BASE_DIR, 'statistics/templates'),
+    os.path.join(BASE_DIR, 'accounting/templates'),
 )
 
 
@@ -345,6 +346,11 @@ WS_AREAS = WS_SERVER_URL + 'get_areas'
 
 # All areas by years
 WS_AREAS_YEAR = WS_SERVER_URL + 'get_areas?year=%s'
+
+WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
+WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
+WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
+WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
 
 # ****************************** END WEB SERVICES ******************************
 
