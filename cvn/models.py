@@ -699,8 +699,8 @@ class Patente(models.Model):
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    titulo = models.CharField(_(u'Denominación'), max_length=255,
-                              blank=True, null=True)
+    titulo = models.TextField(_(u'Denominación'), blank=True, null=True)
+
     fecha = models.DateField(_(u'Fecha'), blank=True, null=True)
 
     fecha_concesion = models.DateField(_(u'Fecha de concesión'), blank=True,
