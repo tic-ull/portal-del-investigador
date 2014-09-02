@@ -47,7 +47,6 @@ def index(request):
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
             if dept is not None and old_cvn_status != cvn.status:
-                dept_json = dept_json.pop()
                 dept.update(dept_json['unidad']['nombre'],
                             dept_json['miembros'], commit=True)
 
