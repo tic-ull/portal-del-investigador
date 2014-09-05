@@ -725,4 +725,5 @@ class Patente(models.Model):
         return "%s" % self.titulo
 
     class Meta:
+        verbose_name_plural = _(u'Propiedades Intelectuales')
         ordering = ['-fecha', 'titulo']
