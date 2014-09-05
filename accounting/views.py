@@ -2,12 +2,13 @@
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from sigidi import SigidiUserPermissions
+from sigidi import SigidiConnection
 
 # Create your views here.
 
 @login_required
 def index(request):
     context = dict()
-    list_projects = SigidiUserPermissions(request.user).get_projects()
-    return render(request, 'accounting/base.html', context)
+    context['list_projects'] = SigidiConnection(request.user).get_projects()
+    print context['list_projects']
+    return render(request, 'accounting/index.html', context)

@@ -1,0 +1,14 @@
+{% extends 'accounting/base.html' %}
+{% load i18n %}
+
+{% block main %}
+    <h1 class="page-header">{% trans "Contabilidad de proyectos" %}</h1>
+    <ul>
+    {% for project in list_projects %}
+        <li><a href=''>{{ project.NAME }}</a></li>
+        {% comment %}
+            {% url '' project.CODIGO %}
+        {% endcomment %}
+    {%  endfor %}
+    </ul>
+{% endblock main %}

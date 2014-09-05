@@ -254,6 +254,7 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'cvn/templates'),
     os.path.join(BASE_DIR, 'core/templates'),
     os.path.join(BASE_DIR, 'statistics/templates'),
+    os.path.join(BASE_DIR, 'accounting/templates'),
 )
 
 

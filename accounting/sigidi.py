@@ -19,7 +19,7 @@ class SigidiConnection:
            ' in (' + proid + ')'
 
     permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST" from "OBJ_2216" where '
+                       '"ALLOW_CONTAB_LIST", "NAME" from "OBJ_2216" where '
 
     permission_query_end = '"{0}" in ({1})'
 
