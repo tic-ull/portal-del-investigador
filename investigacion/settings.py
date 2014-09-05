@@ -131,8 +131,16 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'memviinv',
-        'USER': 'viinv',
-        'PASSWORD': '1234',
+        'USER': '<user>',
+        'PASSWORD': '<password>',
+        'HOST': '',
+        'PORT': '',
+    },
+    'sigidi': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ncm-ull3',
+        'USER': '<user>',
+        'PASSWORD': '<password>',
         'HOST': '',
         'PORT': '',
     },

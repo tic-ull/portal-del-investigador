@@ -1,0 +1,8 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block breadcrumb_app %}
+    <li><a href="{% url 'accounting'%}">{% trans 'Contabilidad' %}</a></li>
+    {% block breadcrumb %}
+    {% endblock breadcrumb %}
+{% endblock breadcrumb_app %}
