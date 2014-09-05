@@ -197,11 +197,11 @@ class Command(BaseCommand):
             self.YEAR = options['year']
             try:
                 registros = TABLE.objects.filter(
-                    fecha__year=self.YEAR
+                    fecha_de_inicio__year=self.YEAR
                 ).exclude(user_profile=None)
             except FieldError:
                 registros = TABLE.objects.filter(
-                    fecha_de_inicio__year=self.YEAR
+                    fecha__year=self.YEAR
                 ).exclude(user_profile=None)
         if options['usuario']:
             usuario = options['usuario']

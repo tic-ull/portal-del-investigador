@@ -25,7 +25,8 @@ class InformeCSV:
         self.header = ['Nombre', 'Investigadores',
                        u'Artículos'.encode('utf-8'),
                        'Libros', u'Capítulos'.encode('utf-8'), 'Congresos',
-                       'Proyectos', 'Convenios', 'Tesis', 'Patentes']
+                       'Proyectos', 'Convenios', 'Tesis',
+                       'Propiedad Intelectual']
         path = "%s/%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.model_type,
                               self.year)
         if not os.path.isdir(path):
@@ -48,4 +49,4 @@ class InformeCSV:
                          'Proyectos': self.proyectos,
                          'Convenios': self.convenios,
                          'Tesis': self.tesis,
-                         'Patentes': self.patentes})
+                         'Propiedad Intelectual': self.patentes})
