@@ -8,6 +8,7 @@ src/
 static/files/
 media
 investigacion/settings_local.py
+investigacion/settings_management.py
 virtualenv
 collected_static
 backups

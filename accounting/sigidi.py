@@ -8,7 +8,7 @@ class SigidiPermissions:
     CONTAB_RES = "ALLOW_CONTAB_RES"
     CONTAB_LIST = "ALLOW_CONTAB_LIST"
 
-class SigidiUserPermissions:
+class SigidiConnection:
 
     dataid = 'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\''
 
@@ -25,12 +25,14 @@ class SigidiUserPermissions:
 
     def __init__(self, user):
         self.cursor = connections['sigidi'].cursor()
-        user = User.objects.get(profile__documento='PASMEN2')
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
         user_permissions = re.sub('[\[\]()]|,,', '',
                                        str(user_permissions)).strip(',')
-        self.user_permissions = re.sub(',,', ',', user_permissions)
+        user_permissions = re.sub(',,', ',', user_permissions)
+        if user_permissions == '':
+            user_permissions = '0'
+        self.user_permissions = user_permissions
 
     @staticmethod
     def _dictfetchall(cursor):
