@@ -341,8 +341,8 @@ class InformePDF:
 
     def showPatentes(self, story):
         story.append(PageBreak())
-        story.append(Paragraph('PATENTES', self.styleH3()))
-        text = 'Número de patentes: ' + str(len(self.patentes))
+        story.append(Paragraph('PROPIEDAD INTELECTUAL', self.styleH3()))
+        text = 'Número de Propiedades Intelectuales: ' + str(len(self.patentes))
         story.append(Paragraph(text, self.styleN()))
         self.listPatentes(story)
 
@@ -412,7 +412,7 @@ class InformePDF:
         style = getSampleStyleSheet()['Normal']
         style.leading = 12
         style.allowWidows = 0
-        style.spaceBefore = 0.5 * inch
+        style.spaceBefore = 0.2 * inch
         return style
 
     def styleH3(self):
