@@ -32,6 +32,7 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/faq/(?P<pk>\d+)/$', DetailView.as_view(
         template_name='core/faq/question_faq.html', model=FlatPage_i18n),
         name='question_faq'),
+    url(r'^investigacion/accounting/', include('accounting.urls')),
 )
 
 
