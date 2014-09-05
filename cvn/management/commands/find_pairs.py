@@ -131,7 +131,7 @@ class Command(BaseCommand):
     DONT_CHECK_FIELDS = TIMESTAMP_FIELDS + DONT_SET_FIELDS
 
     # mínima similitud para considerar dos registros como duplicados
-    LIMIT = 0.75
+    LIMIT = 0.7
 
     # Default value. No contamos la denominación
     DIFFERING_PAIRS = 0
