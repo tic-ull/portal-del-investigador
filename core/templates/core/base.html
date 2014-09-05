@@ -440,6 +440,7 @@
                                     {% if not user.is_anonymous %}
                                         <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
                                         <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Gestionar CVN" %}</a></li>
+                                        <li><a href='{% url 'cvn' %}'><i class="fa fa-eur"></i> {% trans "Contabilidad proyectos" %}</a></li>
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Salir" %}</a></li>
                                     {% else %}
                                         <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
