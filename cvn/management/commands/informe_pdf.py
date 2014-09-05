@@ -412,7 +412,7 @@ class InformePDF:
         style = getSampleStyleSheet()['Normal']
         style.leading = 12
         style.allowWidows = 0
-        style.spaceBefore = 0.5 * inch
+        style.spaceBefore = 0.2 * inch
         return style
 
     def styleH3(self):
