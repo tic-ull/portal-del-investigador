@@ -9,6 +9,7 @@ from django.core.exceptions import FieldError
 from joblib import Parallel, delayed
 from optparse import make_option
 from string_utils.stringcmp import do_stringcmp
+import datetime
 import logging
 import os
 import signal
@@ -195,10 +196,20 @@ class Command(BaseCommand):
             registros = TABLE.objects.exclude(usuario=None)
         else:
             self.YEAR = options['year']
+            fecha_inicio_max = datetime.date(int(self.YEAR), 12, 31)
+            fecha_fin_min = datetime.date(int(self.YEAR), 1, 1)
             try:
-                registros = TABLE.objects.filter(
-                    fecha_de_inicio__year=self.YEAR
+                elements = TABLE.objects.filter(
+                    fecha_de_inicio__lte=fecha_inicio_max
                 ).exclude(user_profile=None)
+                registros = []
+                for element in elements:
+                    fecha_fin = element.fecha_de_fin
+                    if fecha_fin is None:
+                        fecha_fin = element.fecha_de_inicio
+                    if fecha_fin >= fecha_fin_min:
+                        registros.append(element)
+                return registros
             except FieldError:
                 registros = TABLE.objects.filter(
                     fecha__year=self.YEAR
