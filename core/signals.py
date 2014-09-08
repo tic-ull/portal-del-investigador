@@ -30,7 +30,7 @@ def update_personal_data(request, user):
         if 'first_name' in cas_info:
             user.first_name = cas_info['first_name']
         if 'last_name' in cas_info:
-            user.last_name = cas_info['last_name']
+            user.last_name = cas_info['last_name'][:30]
         if 'email' in cas_info:
             user.email = cas_info['email']
         if 'username' in cas_info:
