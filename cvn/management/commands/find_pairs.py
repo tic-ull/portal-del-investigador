@@ -193,7 +193,7 @@ class Command(BaseCommand):
         log_print("Buscando duplicados en el modelo " +
                   "{0}".format(TABLE.__name__))
         if not options['year']:
-            registros = TABLE.objects.exclude(usuario=None)
+            registros = TABLE.objects.exclude(user_profile=None)
         else:
             self.YEAR = options['year']
             fecha_inicio_max = datetime.date(int(self.YEAR), 12, 31)
@@ -223,7 +223,7 @@ class Command(BaseCommand):
                                    .format(usuario))
 
             if TABLE in [Congreso, Articulo, Libro, Capitulo, Proyecto]:
-                registros = registros.filter(usuario=usuario)
+                registros = registros.filter(user_profile=usuario)
             else:
                 new_registros = []
                 for r in registros:
