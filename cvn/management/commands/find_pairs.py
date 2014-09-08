@@ -9,6 +9,7 @@ from django.core.exceptions import FieldError
 from joblib import Parallel, delayed
 from optparse import make_option
 from string_utils.stringcmp import do_stringcmp
+import datetime
 import logging
 import os
 import signal
@@ -131,7 +132,7 @@ class Command(BaseCommand):
     DONT_CHECK_FIELDS = TIMESTAMP_FIELDS + DONT_SET_FIELDS
 
     # mínima similitud para considerar dos registros como duplicados
-    LIMIT = 0.75
+    LIMIT = 0.7
 
     # Default value. No contamos la denominación
     DIFFERING_PAIRS = 0
@@ -192,13 +193,23 @@ class Command(BaseCommand):
         log_print("Buscando duplicados en el modelo " +
                   "{0}".format(TABLE.__name__))
         if not options['year']:
-            registros = TABLE.objects.exclude(usuario=None)
+            registros = TABLE.objects.exclude(user_profile=None)
         else:
             self.YEAR = options['year']
+            fecha_inicio_max = datetime.date(int(self.YEAR), 12, 31)
+            fecha_fin_min = datetime.date(int(self.YEAR), 1, 1)
             try:
-                registros = TABLE.objects.filter(
-                    fecha_de_inicio__year=self.YEAR
+                elements = TABLE.objects.filter(
+                    fecha_de_inicio__lte=fecha_inicio_max
                 ).exclude(user_profile=None)
+                registros = []
+                for element in elements:
+                    fecha_fin = element.fecha_de_fin
+                    if fecha_fin is None:
+                        fecha_fin = element.fecha_de_inicio
+                    if fecha_fin >= fecha_fin_min:
+                        registros.append(element)
+                return registros
             except FieldError:
                 registros = TABLE.objects.filter(
                     fecha__year=self.YEAR
@@ -212,7 +223,7 @@ class Command(BaseCommand):
                                    .format(usuario))
 
             if TABLE in [Congreso, Articulo, Libro, Capitulo, Proyecto]:
-                registros = registros.filter(usuario=usuario)
+                registros = registros.filter(user_profile=usuario)
             else:
                 new_registros = []
                 for r in registros:
