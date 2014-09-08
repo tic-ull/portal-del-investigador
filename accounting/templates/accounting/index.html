@@ -2,13 +2,48 @@
 {% load i18n %}
 
 {% block main %}
-    <h1 class="page-header">{% trans "Contabilidad de proyectos" %}</h1>
-    <ul>
-    {% for project in list_projects %}
-        <li><a href=''>{{ project.NAME }}</a></li>
-        {% comment %}
-            {% url '' project.CODIGO %}
-        {% endcomment %}
-    {%  endfor %}
-    </ul>
+    <h1 class="page-header">{% trans "Contabilidad" %}</h1>
+
+
+    <div class="section">
+        <ul class="nav nav-tabs header">
+            <li class="active">{% trans 'Proyectos' %}</li>
+        </ul>
+        <div class="content">
+                {% comment %}
+            <div class="row-fluid">
+            {% endcomment %}
+            <table class="table table-striped table-condensed">
+            {% if list_projects %}
+                <thead>
+                    <tr>
+                        <th>{% trans "Código" %}</th>
+                        <th>{% trans "Nombre" %}</th>
+                        {% if user.is_staff %}
+                        <th>{% trans "Clave contable" %}</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in list_projects %}
+                    <tr>
+                        <td>{{ project.CODIGO }}</td>
+                        <td><a href=''>{{ project.NAME }}</a></td>
+                        {% if user.is_staff %}
+                        <td>{{ project.CONT_KEY }}</td>
+                        {% endif %}
+                    </tr>
+                    {%  endfor %}
+                </tbody>
+            {% else %}
+                <div class="alert alert-warning">
+                    <strong>{% trans "Permisos insuficientes" %}</strong>
+                </div>
+            {% endif %}
+            </table>
+            {%  comment %}
+            </div>
+            {%  endcomment %}
+        </div>
+    </div>
 {% endblock main %}
