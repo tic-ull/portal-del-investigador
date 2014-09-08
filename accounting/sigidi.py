@@ -1,8 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from django.db import connections
-from django.contrib.auth.models import User
 import re
+import django.conf as conf
+
 
 class SigidiPermissions:
     CONTAB_RES = "ALLOW_CONTAB_RES"
@@ -24,6 +25,7 @@ class SigidiConnection:
     permission_query_end = '"{0}" in ({1})'
 
     def __init__(self, user):
+        conf.settings.DATABASES['sigidi'] = conf.settings.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
