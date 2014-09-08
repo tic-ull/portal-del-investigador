@@ -31,7 +31,7 @@ class SigidiConnection:
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
         user_permissions = re.sub('[\[\]()]|,,', '',
-                                       str(user_permissions)).strip(',')
+                                  str(user_permissions)).strip(',')
         user_permissions = re.sub(',,', ',', user_permissions)
         if user_permissions == '':
             user_permissions = '0'
