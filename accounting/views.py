@@ -7,7 +7,6 @@ from sigidi import SigidiConnection
 
 @login_required
 def index(request):
-<<<<<<< HEAD
     context = dict()
     context['list_projects'] = []
     list_projects = SigidiConnection(request.user).get_projects()
