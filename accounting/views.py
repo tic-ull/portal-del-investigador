@@ -7,6 +7,7 @@ from sigidi import SigidiConnection
 
 @login_required
 def index(request):
+<<<<<<< HEAD
     context = dict()
     context['list_projects'] = []
     list_projects = SigidiConnection(request.user).get_projects()
@@ -14,3 +15,10 @@ def index(request):
         if project['CONT_KEY'] is not None:
             context['list_projects'].append(project)
     return render(request, 'accounting/index.html', context)
+
+
+@login_required
+def accounting_detail(request, code):
+    context = {}
+    return render(request, 'accounting/base.html', context)
+
