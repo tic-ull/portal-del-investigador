@@ -28,7 +28,12 @@
                     {% for project in list_projects %}
                     <tr>
                         <td>{{ project.CODIGO }}</td>
-                        <td><a href=''>{{ project.NAME }}</a></td>
+                        <td>
+                            <a href=
+                            {% url 'accounting_detail' project.CODIGO %}>
+                                {{ project.NAME }}
+                            </a>
+                        </td>
                         {% if user.is_staff %}
                         <td>{{ project.CONT_KEY }}</td>
                         {% endif %}
