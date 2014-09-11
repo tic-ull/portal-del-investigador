@@ -21,7 +21,7 @@ class SigidiConnection:
            ' in (' + proid + ')'
 
     permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST" from "OBJ_2216" where '
+                       '"ALLOW_CONTAB_LIST", "NAME" from "OBJ_2216" where '
 
     permission_query_end = '"{0}" in ({1})'
 
@@ -51,7 +51,7 @@ class SigidiConnection:
         for permission in permissions:
             sentence += self.permission_query_end.format(
                 permission,self.user_permissions) + " OR "
-        sentence = sentence[:-4] # Remove the last OR
+        sentence = sentence[:-4]  # Remove the last OR
         self.cursor.execute(sentence)
         return self._dictfetchall(self.cursor)
 

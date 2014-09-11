@@ -9,13 +9,18 @@ from django.conf import settings as st
 
 @login_required
 def index(request):
-    context = {}
-    return render(request, 'accounting/base.html', context)
+    context = dict()
+    context['list_projects'] = []
+    list_projects = SigidiConnection(request.user).get_projects()
+    for project in list_projects:
+        if project['CONT_KEY'] is not None:
+            context['list_projects'].append(project)
+    return render(request, 'accounting/index.html', context)
 
 
 @login_required
 def accounting_detail(request, code):
-    context = {}
+    context = dict()
     context['code'] = code
     project = SigidiConnection(user=request.user).get_project(code)
     if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
