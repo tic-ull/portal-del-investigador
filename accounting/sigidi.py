@@ -1,8 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
 from django.db import connections
+from django.conf import settings as st
 import re
-import django.conf as conf
 
 
 class SigidiPermissions:
@@ -26,7 +26,7 @@ class SigidiConnection:
     permission_query_end = '"{0}" in ({1})'
 
     def __init__(self, user):
-        conf.settings.DATABASES['sigidi'] = conf.settings.SIGIDI_DB
+        st.DATABASES['sigidi'] = st.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
