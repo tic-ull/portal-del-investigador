@@ -1,4 +1,4 @@
-Django
+Django==1.6.6
 django_extensions
 django-debug-toolbar
 psycopg2
