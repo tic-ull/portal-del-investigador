@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">{% trans 'Desglose del gasto por anualidades' %}</li>
+    </ul>
+    <div class="content">
+        {% render_table breakdown_year "core/table.html" %}
+    </div>
+</div>

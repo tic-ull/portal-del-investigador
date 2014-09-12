@@ -9,5 +9,13 @@
 
 {% block main %}
     <h1 class="page-header">{{ code }}: {{ name }}</h1>
-    {% include 'accounting/partials/summary_year.html' %}
+    {% if summary_year %}
+        {% include 'accounting/partials/summary_year.html' %}
+    {% endif %}
+    {% if summary_concept %}
+        {% include 'accounting/partials/summary_concept.html' %}
+    {% endif %}
+    {% if breakdown_year %}
+        {% include 'accounting/partials/breakdown_year.html' %}
+    {% endif %}
 {% endblock main %}

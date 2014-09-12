@@ -46,3 +46,73 @@ class SummaryYearTable(Table):
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
+
+
+class SummaryConceptTable(Table):
+
+    concepto = tables.Column(accessor='concepto', verbose_name=_(u'Concepto'))
+
+    funSaldoEXP = tables.Column(accessor='funSaldoEXP',
+                                verbose_name=_(u'Saldo EXP'),
+                                orderable=False,
+                                attrs={'th': {'width': '10%'}})
+
+    funSaldoFAC = tables.Column(accessor='funSaldoFAC',
+                                verbose_name=_(u'Saldo Facturas'),
+                                orderable=False,
+                                attrs={'th': {'width': '10%'}})
+
+    funSaldoA = tables.Column(accessor='funSaldoA',
+                              verbose_name=_(u'Saldo A'),
+                              orderable=False)
+
+    funSaldoD = tables.Column(accessor='funSaldoD',
+                              verbose_name=_(u'Saldo D'),
+                              orderable=False)
+
+    funTotalObligaciones = tables.Column(accessor='funTotalObligaciones',
+                                         verbose_name=_(u'Total Obligaciones'),
+                                         orderable=False,
+                                         attrs={'th': {'width': '10%'}})
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}
+
+
+class BreakdownYearTable(Table):
+
+    ejercicio = tables.Column(accessor='ejercicio',
+                              verbose_name=_(u'Ejercicio'),
+                              attrs={'th': {'width': '12%'}})
+
+    concepto = tables.Column(accessor='concepto',
+                             verbose_name=_(u'Concepto'),
+                             orderable=False)
+
+    funSaldoEXP = tables.Column(accessor='funSaldoEXP',
+                                verbose_name=_(u'Saldo EXP'),
+                                orderable=False,
+                                attrs={'th': {'width': '10%'}})
+
+    funSaldoFAC = tables.Column(accessor='funSaldoFAC',
+                                verbose_name=_(u'Saldo Facturas'),
+                                orderable=False,
+                                attrs={'th': {'width': '10%'}})
+
+    funSaldoA = tables.Column(accessor='funSaldoA',
+                              verbose_name=_(u'Saldo A'),
+                              orderable=False,
+                              attrs={'th': {'width': '10%'}})
+
+    funSaldoD = tables.Column(accessor='funSaldoD',
+                              verbose_name=_(u'Saldo D'),
+                              orderable=False,
+                              attrs={'th': {'width': '10%'}})
+
+    funTotalObligaciones = tables.Column(accessor='funTotalObligaciones',
+                                         verbose_name=_(u'Total Obligaciones'),
+                                         orderable=False,
+                                         attrs={'th': {'width': '10%'}})
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}

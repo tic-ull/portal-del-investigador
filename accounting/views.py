@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from sigidi import SigidiConnection
-from tables import SummaryYearTable
+from tables import SummaryYearTable, SummaryConceptTable, BreakdownYearTable
 
 
 @login_required
@@ -31,14 +31,23 @@ def accounting_detail(request, code):
             context['name'] = project['NAME']
         if ('ALLOW_CONTAB_RES' in project and
                 project['ALLOW_CONTAB_RES'] is not None):
+
             summary_year = ws.get(st.WS_RESUMEN_YEAR % accounting_code)
-            summary_year_table = SummaryYearTable(summary_year)
-            RequestConfig(request, paginate=False).configure(summary_year_table)
-            context['summary_year'] = summary_year_table
-            context['resumen_concepto'] = ws.get(st.WS_RESUMEN_CONCEPTO % accounting_code)
-            context['desglose_year'] = ws.get(st.WS_DESGLOSE_YEAR % accounting_code)
-        if ('ALLOW_CONTAB_LIST' in project and
-                project['ALLOW_CONTAB_LIST'] is not None):
-            context['detalles'] = ws.get(st.WS_DETALLES % accounting_code)
-        print context['summary_year']
+            summary_year = SummaryYearTable(summary_year)
+            RequestConfig(request, paginate=False).configure(summary_year)
+            context['summary_year'] = summary_year
+
+            summary_concept = ws.get(st.WS_RESUMEN_CONCEPTO % accounting_code)
+            summary_concept = SummaryConceptTable(summary_concept)
+            RequestConfig(request, paginate=False).configure(summary_concept)
+            context['summary_concept'] = summary_concept
+
+            breakdown_year = ws.get(st.WS_DESGLOSE_YEAR % accounting_code)
+            breakdown_year = BreakdownYearTable(breakdown_year)
+            RequestConfig(request, paginate=False).configure(breakdown_year)
+            context['breakdown_year'] = breakdown_year
+
+        # if ('ALLOW_CONTAB_LIST' in project and
+        #        project['ALLOW_CONTAB_LIST'] is not None):
+        #    context['detalles'] = ws.get(st.WS_DETALLES % accounting_code)
     return render(request, 'accounting/accounting_detail.html', context)
