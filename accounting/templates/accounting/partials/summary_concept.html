@@ -7,6 +7,12 @@
         <li class="active">{% trans 'Resumen del gasto por concepto' %}</li>
     </ul>
     <div class="content">
-        {% render_table summary_concept "core/table.html" %}
+        {% if summary_concept %}
+            {% render_table summary_concept "core/table.html" %}
+        {% else %}
+            <div class="alert alert-warning">
+                <strong>{% trans "No se dispone de información contable" %}</strong>
+            </div>
+        {% endif %}
     </div>
 </div>

@@ -4,11 +4,11 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">{% trans 'Desglose del gasto por anualidades' %}</li>
+        <li class="active">{% trans 'Detalle contable' %}</li>
     </ul>
     <div class="content">
-        {% if breakdown_year %}
-            {% render_table breakdown_year "core/table.html" %}
+        {% if detail %}
+            {% render_table detail "core/table.html" %}
         {% else %}
             <div class="alert alert-warning">
                 <strong>{% trans "No se dispone de información contable" %}</strong>

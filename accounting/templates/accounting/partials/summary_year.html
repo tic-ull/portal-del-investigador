@@ -7,6 +7,12 @@
         <li class="active">{% trans 'Resumen de contabilidad por anualidades' %}</li>
     </ul>
     <div class="content">
-        {% render_table summary_year "core/table.html" %}
+        {% if summary_year %}
+            {% render_table summary_year "core/table.html" %}
+        {% else %}
+            <div class="alert alert-warning">
+                <strong>{% trans "No se dispone de información contable" %}</strong>
+            </div>
+        {% endif %}
     </div>
 </div>
