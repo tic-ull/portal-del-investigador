@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from django.conf import settings as st
-from enum import Enum
+from enum import IntEnum
 import datetime
 import os
 
@@ -128,7 +128,7 @@ ERROR_CODES = {
 REGULAR_DATE_CODE = '040'
 
 
-class CVNStatus(Enum):
+class CVNStatus(IntEnum):
     UPDATED = 0
     EXPIRED = 1
     INVALID_IDENTITY = 2
