@@ -1,6 +1,6 @@
 {% extends 'accounting/base.html' %}
-{% load i18n %}
 
+{% load i18n %}
 {% load staticfiles %}
 
 {% block breadcrumb %}
@@ -8,5 +8,6 @@
 {% endblock breadcrumb %}
 
 {% block main %}
-
+    <h1 class="page-header">{{ code }}: {{ name }}</h1>
+    {% include 'accounting/partials/summary_year.html' %}
 {% endblock main %}
