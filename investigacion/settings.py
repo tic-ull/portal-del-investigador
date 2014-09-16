@@ -46,6 +46,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
     os.path.join(BASE_DIR, 'cvn/locale'),
     os.path.join(BASE_DIR, 'statistics/locale'),
+    os.path.join(BASE_DIR, 'accounting/locale'),
 )
 
 INSTALLED_APPS = (

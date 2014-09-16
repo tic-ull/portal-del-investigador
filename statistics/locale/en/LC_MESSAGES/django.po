@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-28 10:03+0100\n"
+"POT-Creation-Date: 2014-09-16 14:21+0100\n"
 "PO-Revision-Date: 2014-07-22 10:02-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,19 +42,19 @@ msgstr "Total members"
 msgid "Porcentaje CVN válidos"
 msgstr "Percentage valid CVN"
 
-#: models.py:78
+#: models.py:79
 msgid "Código de categoría"
 msgstr "Category code"
 
-#: models.py:80 tables.py:71
+#: models.py:81 tables.py:71
 msgid "Categoría"
 msgstr "Category"
 
-#: models.py:81
+#: models.py:82
 msgid "CVN requerido"
 msgstr "CVN required"
 
-#: models.py:88
+#: models.py:89
 msgid "Professional categories"
 msgstr "Professional categories"
 

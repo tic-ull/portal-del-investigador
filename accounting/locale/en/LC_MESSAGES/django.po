@@ -1,0 +1,165 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-09-16 14:22+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: tables.py:11 tables.py:87 tables.py:127
+msgid "Ejercicio"
+msgstr ""
+
+#: tables.py:13
+msgid "Inicial"
+msgstr ""
+
+#: tables.py:17
+msgid "Reserva de Crédito"
+msgstr ""
+
+#: tables.py:21
+msgid "Saldo RC"
+msgstr ""
+
+#: tables.py:24 tables.py:69
+msgid "Saldo A"
+msgstr ""
+
+#: tables.py:27 tables.py:73
+msgid "Saldo D"
+msgstr ""
+
+#: tables.py:31
+msgid "Modificaciones"
+msgstr ""
+
+#: tables.py:35 tables.py:49 tables.py:77 tables.py:117
+msgid "Total Obligaciones"
+msgstr ""
+
+#: tables.py:39
+msgid "Saldo disponible"
+msgstr ""
+
+#: tables.py:58 tables.py:90 tables.py:145
+msgid "Concepto"
+msgstr ""
+
+#: tables.py:61
+msgid "Saldo EXP"
+msgstr ""
+
+#: tables.py:65
+msgid "Saldo Facturas"
+msgstr ""
+
+#: tables.py:101
+msgid "Saldo total EXP"
+msgstr ""
+
+#: tables.py:105
+msgid "Saldo total Facturas"
+msgstr ""
+
+#: tables.py:109
+msgid "Saldo total A"
+msgstr ""
+
+#: tables.py:113
+msgid "Saldo total D"
+msgstr ""
+
+#: tables.py:131
+msgid "Número"
+msgstr ""
+
+#: tables.py:133
+msgid "Tipo"
+msgstr ""
+
+#: tables.py:137
+msgid "Proveedor"
+msgstr ""
+
+#: tables.py:141
+msgid "Descripción"
+msgstr ""
+
+#: tables.py:149
+msgid "Variaciones"
+msgstr ""
+
+#: tables.py:152
+msgid "Gastos"
+msgstr ""
+
+#: tables.py:155
+msgid "Asiento"
+msgstr ""
+
+#: tables.py:159
+msgid "Validación"
+msgstr ""
+
+#: tables.py:162
+msgid "Pago"
+msgstr ""
+
+#: tables.py:172
+msgid "Código"
+msgstr ""
+
+#: tables.py:176
+msgid "Nombre"
+msgstr ""
+
+#: tables.py:180
+msgid "Clave contable"
+msgstr ""
+
+#: templates/accounting/base.html:6 templates/accounting/index.html:8
+msgid "Contabilidad"
+msgstr ""
+
+#: templates/accounting/index.html:12
+msgid "Proyectos"
+msgstr ""
+
+#: templates/accounting/index.html:19
+msgid "Acceso denegado: Permisos insuficientes"
+msgstr ""
+
+#: templates/accounting/partials/breakdown_year.html:7
+msgid "Desglose del gasto por anualidades"
+msgstr ""
+
+#: templates/accounting/partials/breakdown_year.html:18
+#: templates/accounting/partials/detail.html:14
+#: templates/accounting/partials/summary_concept.html:18
+#: templates/accounting/partials/summary_year.html:18
+msgid "No se dispone de información contable"
+msgstr ""
+
+#: templates/accounting/partials/detail.html:7
+msgid "Detalle contable"
+msgstr ""
+
+#: templates/accounting/partials/summary_concept.html:7
+msgid "Resumen del gasto por concepto"
+msgstr ""
+
+#: templates/accounting/partials/summary_year.html:7
+msgid "Resumen de contabilidad por anualidades"
+msgstr ""
