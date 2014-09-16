@@ -1,9 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
 from django.db import connections
+from django.conf import settings as st
 import re
-import django.conf as conf
-from enum import Enum, IntEnum
 
 
 class SigidiPermissions(Enum):
@@ -59,8 +58,7 @@ class SigidiConnection:
                                 SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
     def __init__(self, user):
-        self.user = user
-        conf.settings.DATABASES['sigidi'] = conf.settings.SIGIDI_DB
+        st.DATABASES['sigidi'] = st.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
@@ -90,15 +88,11 @@ class SigidiConnection:
         sentence = self.permission_query
         for permission in permissions:
             sentence += self.permission_query_end.format(
-                permission.value, self.user_permissions) + " OR "
-        sentence = sentence[:-4] # Remove the last OR
-        return self._make_query_dict(sentence)
 
-    def _codes_to_categories(self, codes):
-        roles = []
-        for code in codes:
-            roles.append(SigidiCategories(code[0]))
-        return roles
+                permission,self.user_permissions) + " OR "
+        sentence = sentence[:-4]  # Remove the last OR
+        self.cursor.execute(sentence)
+        return self._dictfetchall(self.cursor)
 
     def get_projects(self):
         '''Get the projects that the user has permissions to see'''

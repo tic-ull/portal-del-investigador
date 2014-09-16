@@ -1,0 +1,16 @@
+{% extends 'accounting/base.html' %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block breadcrumb %}
+    <li><a href=''>{{ code }}</a></li>
+{% endblock breadcrumb %}
+
+{% block main %}
+    <h1 class="page-header">{{ code }}: {{ name }}</h1>
+    {% include 'accounting/partials/summary_year.html' %}
+    {% include 'accounting/partials/summary_concept.html' %}
+    {% include 'accounting/partials/breakdown_year.html' %}
+    {% include 'accounting/partials/detail.html' %}
+{% endblock main %}
