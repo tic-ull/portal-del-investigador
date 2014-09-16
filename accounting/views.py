@@ -21,7 +21,7 @@ def index(request):
     for project in SigidiConnection(request.user).get_projects():
         if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
             projects.append(project)
-    if len(projects):
+    if projects is not None and len(projects):
         projects = AccountingTable(projects)
         RequestConfig(request, paginate=False).configure(projects)
         if not request.user.is_staff:
