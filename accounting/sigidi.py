@@ -58,6 +58,12 @@ class SigidiConnection:
                                 SigidiCategories.GESTOR_PROYECTOS,
                                 SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
+    convenios_permissions = set([
+        SigidiCategories.SUPERUSUARIO,
+        SigidiCategories.GESTOR_CONVENIOS_Y_CONTRATOS,
+        SigidiCategories.GESTOR_CONVENIOS_Y_CONTRATOS_SOLO_LECTURA
+    ])
+
     def __init__(self, user):
         self.user = user
         st.DATABASES['sigidi'] = st.SIGIDI_DB
@@ -100,6 +106,12 @@ class SigidiConnection:
             roles.append(SigidiCategories(code[0]))
         return roles
 
+    def _has_any_role(self, roles):
+        roles = self.get_user_roles()
+        if roles.intersection(roles):
+            return True
+        return False
+
     def get_projects(self):
         '''Get the projects that the user has permissions to see'''
         projects = self._query_projects(
@@ -140,10 +152,10 @@ class SigidiConnection:
         return set(self._codes_to_categories(roles))
 
     def can_view_all_projects(self):
-        roles = self.get_user_roles()
-        if roles.intersection(self.projects_permissions):
-            return True
-        return False
+        return self._has_any_role(self.projects_permissions)
+
+    def can_view_all_convenios(self):
+        return self._has_any_role(self.convenios_permissions)
 
     def get_all_projects(self):
         if self.can_view_all_projects():
