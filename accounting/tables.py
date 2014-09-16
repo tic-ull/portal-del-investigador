@@ -43,6 +43,16 @@ class SummaryYearTable(Table):
         attrs = {'class': 'table table-striped table-condensed'}
 
 
+class TotalSummaryYearTable(Table):
+
+    orgTotalObligaciones = tables.Column(accessor='orgTotalObligaciones',
+                                         verbose_name=_(u'Total Obligaciones'),
+                                         orderable=False)
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}
+
+
 class SummaryConceptTable(Table):
 
     concepto = tables.Column(accessor='concepto', verbose_name=_(u'Concepto'))
@@ -83,6 +93,32 @@ class BreakdownYearTable(SummaryConceptTable):
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
         fields = ('ejercicio', )
+
+
+class TotalConceptAndBreakdownTable(Table):
+
+    funSaldoEXP = tables.Column(accessor='funSaldoEXP',
+                                verbose_name=_(u'Saldo total EXP'),
+                                orderable=False)
+
+    funSaldoFAC = tables.Column(accessor='funSaldoFAC',
+                                verbose_name=_(u'Saldo total Facturas'),
+                                orderable=False)
+
+    funSaldoA = tables.Column(accessor='funSaldoA',
+                              verbose_name=_(u'Saldo total A'),
+                              orderable=False)
+
+    funSaldoD = tables.Column(accessor='funSaldoD',
+                              verbose_name=_(u'Saldo total D'),
+                              orderable=False)
+
+    funTotalObligaciones = tables.Column(accessor='funTotalObligaciones',
+                                         verbose_name=_(u'Total Obligaciones'),
+                                         orderable=False)
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}
 
 
 class DetailTable(Table):

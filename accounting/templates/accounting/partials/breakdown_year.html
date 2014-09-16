@@ -9,6 +9,10 @@
     <div class="content">
         {% if breakdown_year %}
             {% render_table breakdown_year "core/table.html" %}
+            {% if total_breakdown_year %}
+                <br>
+                {% render_table total_breakdown_year "core/table.html" %}
+            {% endif %}
         {% else %}
             <div class="alert alert-warning">
                 <strong>{% trans "No se dispone de información contable" %}</strong>
