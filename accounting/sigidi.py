@@ -2,14 +2,14 @@
 
 from django.db import connections
 from django.conf import settings as st
-import re
-import django.conf as conf
 from enum import Enum, IntEnum
+import re
 
 
 class SigidiPermissions(Enum):
     CONTAB_RES = "ALLOW_CONTAB_RES"
     CONTAB_LIST = "ALLOW_CONTAB_LIST"
+
 
 class SigidiCategories(IntEnum):
     SUPERUSUARIO = 1
@@ -55,13 +55,12 @@ class SigidiConnection:
                             ' in (' + product_from_dataids + ')'
 
     projects_permissions = set([SigidiCategories.SUPERUSUARIO,
-                                SigidiCategories.ADMINISTRADOR_PROYECTOS,
                                 SigidiCategories.GESTOR_PROYECTOS,
                                 SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
     def __init__(self, user):
         self.user = user
-        conf.settings.DATABASES['sigidi'] = conf.settings.SIGIDI_DB
+        st.DATABASES['sigidi'] = st.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.execute(self.vrid.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
