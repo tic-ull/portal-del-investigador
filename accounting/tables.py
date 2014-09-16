@@ -164,3 +164,21 @@ class DetailTable(Table):
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
+
+
+class AccountingTable(Table):
+
+    codigo = tables.Column(accessor='CODIGO',
+                           verbose_name=_(u'Código'),
+                           orderable=False)
+
+    nombre = tables.Column(accessor='NAME',
+                           verbose_name=_(u'Nombre'),
+                           orderable=False)
+
+    claveContable = tables.Column(accessor='CONT_KEY',
+                                  verbose_name=_(u'Clave contable'),
+                                  orderable=False)
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}

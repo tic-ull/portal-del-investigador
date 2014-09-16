@@ -9,8 +9,9 @@ from django_tables2 import RequestConfig
 from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
-                    TotalSummaryYearTable)
+                    TotalSummaryYearTable, AccountingTable)
 from utils import total_table
+
 
 
 @login_required
@@ -20,7 +21,12 @@ def index(request):
     for project in SigidiConnection(request.user).get_projects():
         if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
             projects.append(project)
-    context['projects'] = projects
+    if len(projects):
+        projects = AccountingTable(projects)
+        RequestConfig(request, paginate=False).configure(projects)
+        if not request.user.is_staff:
+            projects.columns[2].column.visible = False
+        context['projects'] = projects
     return render(request, 'accounting/index.html', context)
 
 
