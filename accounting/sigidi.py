@@ -54,7 +54,6 @@ class SigidiConnection:
                             ' in (' + product_from_dataids + ')'
 
     projects_permissions = set([SigidiCategories.SUPERUSUARIO,
-                                SigidiCategories.ADMINISTRADOR_PROYECTOS,
                                 SigidiCategories.GESTOR_PROYECTOS,
                                 SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
