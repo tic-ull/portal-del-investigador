@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
-from enum import Enum
+from enum import IntEnum
 
 
-class LogType(Enum):
+class LogType(IntEnum):
     CVN_STATUS = 0
     AUTH_ERROR = 1
 

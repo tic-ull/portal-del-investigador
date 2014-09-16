@@ -20,7 +20,7 @@ simplejson
 factory-boy
 coverage
 django-coverage
-enum
+enum34
 django-rosetta
 django-tinymce
 django-staticfiles
