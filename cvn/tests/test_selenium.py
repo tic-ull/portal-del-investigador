@@ -106,7 +106,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
         # Add admin permissions after login CAS
-        u = User.objects.get(username="invipas")
+        u = User.objects.get_or_create(username="invipas")[0]
         u.is_staff = True
         u.is_superuser = True
         u.save()
