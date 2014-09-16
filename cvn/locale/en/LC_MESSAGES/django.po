@@ -1,16 +1,16 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-16 14:20+0100\n"
-"PO-Revision-Date: 2014-07-22 10:02-0102\n"
+"PO-Revision-Date: 2014-09-16 14:34-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: forms.py:40
@@ -345,8 +345,8 @@ msgid ""
 "Se ha establecido la conexión con la FECYT. Su CVN se está procesando, por "
 "favor espere."
 msgstr ""
-"Connection has been established with the FECYT. Your CVN is being processed, "
-"please wait."
+"Connection has been established with the FECYT. Your CVN is being processed,"
+" please wait."
 
 #: settings.py:147
 msgid "Verificando la información de su CVN, por favor espere."
@@ -359,8 +359,8 @@ msgid ""
 "Servicio de Investigación (sopinve@ull.es)."
 msgstr ""
 "This process is taking longer than usual, please wait. If an error occurs "
-"try again. If the error persists contact the Research Service (sopinve@ull."
-"es)."
+"try again. If the error persists contact the Research Service "
+"(sopinve@ull.es)."
 
 #: utils.py:45
 msgid "Desconocido"
