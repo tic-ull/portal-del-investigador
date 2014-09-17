@@ -41,6 +41,9 @@ class SigidiConnection:
     all_projects_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
                          ' order by "NAME"'
 
+    one_project_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
+                        ' where "CODIGO"=\'{0}\''
+
     permission_query_end = '"{0}" in ({1})'
 
     dataids_from_username = 'select "DATAID" from "OBJ_2274"' \
@@ -112,7 +115,7 @@ class SigidiConnection:
             return True
         return False
 
-    def get_projects(self):
+    def get_user_projects(self):
         '''Get the projects that the user has permissions to see'''
         projects = self._query_projects(
             [SigidiPermissions.CONTAB_RES, SigidiPermissions.CONTAB_LIST])
@@ -138,6 +141,14 @@ class SigidiConnection:
         for proj in projects:
             if proj['CODIGO'] == project:
                 return proj
+
+        # The user doesnt have permissions over the project but he might still
+        # be an admin/gestor.
+        if self.can_view_all_projects() and permission is None:
+            projects = self._make_query_dict(
+                self.one_project_query.format(project))
+            if projects:
+                return projects[0]
         return False
 
     def can_contab_res(self, project):
