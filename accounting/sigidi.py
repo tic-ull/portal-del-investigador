@@ -127,6 +127,15 @@ class SigidiConnection:
         is not specified returns project where user has any permission
         '''
 
+        if self.can_view_all_projects():
+            projects = self._make_query_dict(
+                self.one_project_query.format(project))
+            if projects:
+                project = projects[0]
+                project[SigidiPermissions.CONTAB_RES.value] = True
+                project[SigidiPermissions.CONTAB_LIST.value] = True
+                return project
+
         if permission is None:
             permission = [SigidiPermissions.CONTAB_LIST,
                           SigidiPermissions.CONTAB_RES]
@@ -141,14 +150,6 @@ class SigidiConnection:
         for proj in projects:
             if proj['CODIGO'] == project:
                 return proj
-
-        # The user doesnt have permissions over the project but he might still
-        # be an admin/gestor.
-        if self.can_view_all_projects() and permission is None:
-            projects = self._make_query_dict(
-                self.one_project_query.format(project))
-            if projects:
-                return projects[0]
         return False
 
     def can_contab_res(self, project):
