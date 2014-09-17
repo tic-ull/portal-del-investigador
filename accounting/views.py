@@ -18,13 +18,19 @@ from utils import total_table
 def index(request):
     context = dict()
     projects = []
-    for project in SigidiConnection(request.user).get_projects():
+    sigidi = SigidiConnection(request.user)
+    manager_role = sigidi.can_view_all_projects()
+    if manager_role:
+        list_projects = sigidi.get_all_projects()
+    else:
+        list_projects = sigidi.get_projects()
+    for project in list_projects:
         if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
             projects.append(project)
-    if projects is not None and len(projects):
+    if len(projects):
         projects = AccountingTable(projects)
         RequestConfig(request, paginate=False).configure(projects)
-        if not request.user.is_staff:
+        if not manager_role:  # CONT_KEY column only for managers and admins
             projects.columns[2].column.visible = False
         context['projects'] = projects
     return render(request, 'accounting/index.html', context)
