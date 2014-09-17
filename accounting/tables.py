@@ -167,18 +167,21 @@ class DetailTable(Table):
 
 
 class AccountingTable(Table):
+    NAME_TEMPLATE = '''
+    <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
+    '''
 
     codigo = tables.Column(accessor='CODIGO',
-                           verbose_name=_(u'Código'),
-                           orderable=False)
+                           verbose_name=_(u'Código'))
 
-    nombre = tables.Column(accessor='NAME',
-                           verbose_name=_(u'Nombre'),
-                           orderable=False)
+    nombre = tables.TemplateColumn(NAME_TEMPLATE,
+                                   accessor='NAME',
+                                   verbose_name=_(u'Nombre'))
 
     claveContable = tables.Column(accessor='CONT_KEY',
-                                  verbose_name=_(u'Clave contable'),
-                                  orderable=False)
+                                  verbose_name=_(u'Clave contable'))
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
+        orderable = False
+
