@@ -41,6 +41,9 @@ class SigidiConnection:
     all_projects_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
                          ' order by "NAME"'
 
+    one_project_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
+                        ' where "CODIGO"=\'{0}\''
+
     permission_query_end = '"{0}" in ({1})'
 
     dataids_from_username = 'select "DATAID" from "OBJ_2274"' \
@@ -112,7 +115,7 @@ class SigidiConnection:
             return True
         return False
 
-    def get_projects(self):
+    def get_user_projects(self):
         '''Get the projects that the user has permissions to see'''
         projects = self._query_projects(
             [SigidiPermissions.CONTAB_RES, SigidiPermissions.CONTAB_LIST])
@@ -123,6 +126,15 @@ class SigidiConnection:
         Gets the specified project if the user has permission. If permission
         is not specified returns project where user has any permission
         '''
+
+        if self.can_view_all_projects():
+            projects = self._make_query_dict(
+                self.one_project_query.format(project))
+            if projects:
+                project = projects[0]
+                project[SigidiPermissions.CONTAB_RES.value] = True
+                project[SigidiPermissions.CONTAB_LIST.value] = True
+                return project
 
         if permission is None:
             permission = [SigidiPermissions.CONTAB_LIST,
