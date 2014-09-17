@@ -4,7 +4,7 @@ from core.tables import Table
 from django.utils.translation import ugettext_lazy as _
 import django_tables2 as tables
 
-MONEY_TEMPLATE = '''
+EURO_TEMPLATE = '''
     {% if value != None %}
         {{ value|floatformat:2 }} &euro;
     {% endif %}
@@ -18,49 +18,49 @@ class SummaryYearTable(Table):
         verbose_name=_(u'Ejercicio'))
 
     inicial = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='inicial',
         verbose_name=_(u'Inicial'),
         orderable=False)
 
     reserva = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='reserva',
         verbose_name=_(u'Reserva de Crédito'),
         orderable=False)
 
     orgSaldoRC = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgSaldoRC',
         verbose_name=_(u'Saldo RC'),
         orderable=False)
 
     orgSaldoA = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgSaldoA',
         verbose_name=_(u'Saldo A'),
         orderable=False)
 
     orgSaldoD = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgSaldoD',
         verbose_name=_(u'Saldo D'),
         orderable=False)
 
     orgModificaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgModificaciones',
         verbose_name=_(u'Modificaciones'),
         orderable=False)
 
     orgTotalObligaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgTotalObligaciones',
         verbose_name=_(u'Total Obligaciones'),
         orderable=False)
 
     orgSaldoDisponible = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgSaldoDisponible',
         verbose_name=_(u'Saldo disponible'),
         orderable=False)
@@ -72,7 +72,7 @@ class SummaryYearTable(Table):
 class TotalSummaryYearTable(Table):
 
     orgTotalObligaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='orgTotalObligaciones',
         verbose_name=_(u'Total Obligaciones'))
 
@@ -88,31 +88,31 @@ class SummaryConceptTable(Table):
         verbose_name=_(u'Concepto'))
 
     funSaldoEXP = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoEXP',
         verbose_name=_(u'Saldo EXP'),
         orderable=False)
 
     funSaldoFAC = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoFAC',
         verbose_name=_(u'Saldo Facturas'),
         orderable=False)
 
     funSaldoA = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoA',
         verbose_name=_(u'Saldo A'),
         orderable=False)
 
     funSaldoD = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoD',
         verbose_name=_(u'Saldo D'),
         orderable=False)
 
     funTotalObligaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funTotalObligaciones',
         verbose_name=_(u'Total Obligaciones'),
         orderable=False)
@@ -140,31 +140,31 @@ class BreakdownYearTable(SummaryConceptTable):
 class TotalConceptAndBreakdownTable(Table):
 
     funSaldoEXP = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoEXP',
         verbose_name=_(u'Saldo total EXP'),
         orderable=False)
 
     funSaldoFAC = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoFAC',
         verbose_name=_(u'Saldo total Facturas'),
         orderable=False)
 
     funSaldoA = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoA',
         verbose_name=_(u'Saldo total A'),
         orderable=False)
 
     funSaldoD = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funSaldoD',
         verbose_name=_(u'Saldo total D'),
         orderable=False)
 
     funTotalObligaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='funTotalObligaciones',
         verbose_name=_(u'Total Obligaciones'),
         orderable=False)
@@ -177,8 +177,7 @@ class DetailTable(Table):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Ejercicio'))
 
     numero = tables.Column(
         accessor='numero',
@@ -205,13 +204,13 @@ class DetailTable(Table):
         orderable=False)
 
     variaciones = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='variaciones',
         verbose_name=_(u'Variaciones'),
         orderable=False)
 
     gastos = tables.TemplateColumn(
-        MONEY_TEMPLATE,
+        EURO_TEMPLATE,
         accessor='gastos',
         verbose_name=_(u'Gastos'),
         orderable=False)
