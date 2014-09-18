@@ -10,7 +10,7 @@ from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
                     TotalSummaryYearTable, AccountingTable)
-from utils import (total_table, clean_accounting_table)
+from utils import total_table, clean_accounting_table
 
 
 
@@ -27,11 +27,11 @@ def index(request):
     if manager_agreements:
         list_agreements = sigidi.get_all_convenios()
     context['projects'] = clean_accounting_table(
-            request= request, data=list_projects,
-            table_class=AccountingTable, role=manager_projects)
+        request=request, data=list_projects,
+        table_class=AccountingTable, role=manager_projects)
     context['agreements'] = clean_accounting_table(
-            request= request, data=list_agreements,
-            table_class=AccountingTable, role=manager_agreements)
+        request=request, data=list_agreements,
+        table_class=AccountingTable, role=manager_agreements)
     return render(request, 'accounting/index.html', context)
 
 
@@ -39,19 +39,23 @@ def index(request):
 def accounting_detail(request, code):
     context = dict()
     context['code'] = code
-    project = SigidiConnection(user=request.user).get_project(code)
 
-    if not project:
+    if code.startswith('PR'):
+        entity = SigidiConnection(user=request.user).get_project(code)
+    else:
+        entity = SigidiConnection(user=request.user).get_convenio(code)
+
+    if not entity:
         raise Http404
 
-    if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
-        accounting_code = project['CONT_KEY']
+    if 'CONT_KEY' in entity and entity['CONT_KEY'] is not None:
+        accounting_code = entity['CONT_KEY']
 
-        if 'NAME' in project and project['NAME'] is not None:
-            context['name'] = project['NAME']
+        if 'NAME' in entity and entity['NAME'] is not None:
+            context['name'] = entity['NAME']
 
-        if ('ALLOW_CONTAB_RES' in project and
-                project['ALLOW_CONTAB_RES'] is not None):
+        if ('ALLOW_CONTAB_RES' in entity and
+                entity['ALLOW_CONTAB_RES'] is not None):
 
             summary_year = ws.get(st.WS_RESUMEN_YEAR % accounting_code)
             if summary_year is not None and len(summary_year):
@@ -84,8 +88,8 @@ def accounting_detail(request, code):
                 context['breakdown_year'] = breakdown_year
                 context['total_breakdown_year'] = total_breakdown_year
 
-        if ('ALLOW_CONTAB_LIST' in project and
-                project['ALLOW_CONTAB_LIST'] is not None):
+        if ('ALLOW_CONTAB_LIST' in entity and
+                entity['ALLOW_CONTAB_LIST'] is not None):
 
             detail = ws.get(st.WS_DETALLES % accounting_code)
             if detail is not None and len(detail):
