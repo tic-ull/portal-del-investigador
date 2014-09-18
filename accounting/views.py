@@ -23,7 +23,7 @@ def index(request):
     if manager_role:
         list_projects = sigidi.get_all_projects()
     else:
-        list_projects = sigidi.get_projects()
+        list_projects = sigidi.get_user_projects()
     for project in list_projects:
         if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
             projects.append(project)
