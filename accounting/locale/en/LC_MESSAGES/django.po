@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-18 09:53+0100\n"
-"PO-Revision-Date: 2014-09-18 10:09-0102\n"
-"Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
+"POT-Creation-Date: 2014-09-18 14:32+0100\n"
+"PO-Revision-Date: 2014-09-18 14:32-0102\n"
+"Last-Translator: LUIS MARINO CERRUDO CONCEPCION <lcerrudo@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,7 +138,11 @@ msgstr "Accounting"
 msgid "Proyectos"
 msgstr "Projects"
 
-#: templates/accounting/index.html:19
+#: templates/accounting/index.html:13
+msgid "Convenios y Contratos"
+msgstr "Agreements and Contracts"
+
+#: templates/accounting/index.html:23 templates/accounting/index.html.py:35
 msgid "Acceso denegado: Permisos insuficientes"
 msgstr "Access denied: Insufficient permissions"
 
