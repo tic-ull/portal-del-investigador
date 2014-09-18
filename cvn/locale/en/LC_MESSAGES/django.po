@@ -3,9 +3,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-16 14:20+0100\n"
-"PO-Revision-Date: 2014-09-16 14:34-0102\n"
-"Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
+"POT-Creation-Date: 2014-09-18 09:54+0100\n"
+"PO-Revision-Date: 2014-09-18 10:15-0102\n"
+"Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -238,41 +238,36 @@ msgid "Tesis Doctorales"
 msgstr "Doctoral Thesis"
 
 #: models.py:702
-#, fuzzy
 msgid "Denominación"
-msgstr "Dedication"
+msgstr "Designation"
 
 #: models.py:706 templates/cvn/partials/producciones_chart.html:332
-#, fuzzy
 msgid "Fecha de concesión"
-msgstr "End date"
+msgstr "Concession date"
 
 #: models.py:708 templates/cvn/partials/producciones_chart.html:326
 msgid "Número de solicitud"
-msgstr ""
+msgstr "Request number"
 
 #: models.py:710
-#, fuzzy
 msgid "País de prioridad"
-msgstr "Country"
+msgstr "Priority country"
 
 #: models.py:712 templates/cvn/partials/producciones_chart.html:344
-#, fuzzy
 msgid "Países"
-msgstr "Country"
+msgstr "Countries"
 
 #: models.py:716 templates/cvn/partials/producciones_chart.html:341
-#, fuzzy
 msgid "Entidad titular"
-msgstr "University issuing the qualification"
+msgstr "Owner entity"
 
 #: models.py:718 templates/cvn/partials/producciones_chart.html:347
 msgid "Empresas"
-msgstr ""
+msgstr "Companies"
 
 #: models.py:728
 msgid "Propiedades Intelectuales"
-msgstr ""
+msgstr "Intelectual Properties"
 
 #: settings.py:110
 msgid "Error general no determinado en el servidor de la FECYT."
@@ -372,7 +367,7 @@ msgstr "CVN updated successfully."
 
 #: templates/cvn/base.html:5
 msgid "CVN"
-msgstr ""
+msgstr "CVN"
 
 #: templates/cvn/base.html:11
 msgid "Editor de CVN de la FECYT"
@@ -432,7 +427,7 @@ msgstr "Thesis"
 
 #: templates/cvn/partials/producciones_chart.html:16
 msgid "Propiedad Intelectual"
-msgstr ""
+msgstr "Intelectual Property"
 
 #: templates/cvn/partials/producciones_chart.html:54
 msgid "No dispone de Congresos"
@@ -493,18 +488,16 @@ msgid "No dispone de Tesis Doctorales"
 msgstr "You don't have any Doctoral Thesis"
 
 #: templates/cvn/partials/producciones_chart.html:329
-#, fuzzy
 msgid "Fecha de registro"
-msgstr "Date of reading"
+msgstr "Registration date"
 
 #: templates/cvn/partials/producciones_chart.html:335
 msgid "Inscrita en"
-msgstr ""
+msgstr "Enrolled in"
 
 #: templates/cvn/partials/producciones_chart.html:355
-#, fuzzy
 msgid "No dispone de Propiedades Intelectuales"
-msgstr "You don't have any Projects"
+msgstr "You don't have any Intellectual Property"
 
 #~ msgid "ERROR: No existe el fichero o directorio:"
 #~ msgstr "ERROR: No such file or directory:"
