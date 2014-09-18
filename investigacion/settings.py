@@ -139,6 +139,14 @@ DATABASES = {
     },
 }
 
+SIGIDI_DB = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': '<name>',
+    'USER': '<user>',
+    'PASSWORD': '<password>',
+    'HOST': '',
+    'PORT': '',
+}
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
