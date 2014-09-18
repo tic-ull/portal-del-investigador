@@ -10,29 +10,28 @@ from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
                     TotalSummaryYearTable, AccountingTable)
-from utils import total_table
+from utils import (total_table, clean_accounting_table)
 
 
 
 @login_required
 def index(request):
     context = dict()
-    projects = []
     sigidi = SigidiConnection(request.user)
-    manager_role = sigidi.can_view_all_projects()
-    if manager_role:
+    manager_projects = sigidi.can_view_all_projects()
+    manager_agreements = sigidi.can_view_all_convenios()
+    list_projects = sigidi.get_user_projects()
+    if manager_projects:
         list_projects = sigidi.get_all_projects()
-    else:
-        list_projects = sigidi.get_user_projects()
-    for project in list_projects:
-        if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
-            projects.append(project)
-    if len(projects):
-        projects = AccountingTable(projects)
-        RequestConfig(request, paginate=False).configure(projects)
-        if not manager_role:  # CONT_KEY column only for managers and admins
-            projects.columns[2].column.visible = False
-        context['projects'] = projects
+    list_agreements = sigidi.get_user_convenios()
+    if manager_agreements:
+        list_agreements = sigidi.get_all_convenios()
+    context['projects'] = clean_accounting_table(
+            request= request, data=list_projects,
+            table_class=AccountingTable, role=manager_projects)
+    context['agreements'] = clean_accounting_table(
+            request= request, data=list_agreements,
+            table_class=AccountingTable, role=manager_agreements)
     return render(request, 'accounting/index.html', context)
 
 
