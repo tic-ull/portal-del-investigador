@@ -13,7 +13,6 @@ from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
 from utils import total_table, clean_accounting_table
 
 
-
 @login_required
 def index(request):
     context = dict()
@@ -84,7 +83,8 @@ def accounting_detail(request, code):
                     request=request, data=breakdown_year,
                     table_class=TotalConceptAndBreakdownTable)
                 breakdown_year = BreakdownYearTable(breakdown_year)
-                RequestConfig(request, paginate=False).configure(breakdown_year)
+                RequestConfig(
+                    request, paginate=False).configure(breakdown_year)
                 context['breakdown_year'] = breakdown_year
                 context['total_breakdown_year'] = total_breakdown_year
 

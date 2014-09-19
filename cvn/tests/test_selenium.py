@@ -109,7 +109,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_name("submit").click()
         # Add admin permissions after login CAS
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
-            (By.CLASS_NAME,'btn-signout')))
+            (By.CLASS_NAME, 'btn-signout')))
         u = User.objects.get(username="invipas")
         u.is_staff = True
         u.is_superuser = True

@@ -24,6 +24,7 @@ class SigidiCategories(IntEnum):
     GESTOR_CVN_SOLO_LECTURA = 1253
     AUXILIAR = 30
 
+
 class SigidiTables(Enum):
     PROJECTS = 'OBJ_2216'
     CONVENIOS = 'OBJ_2215'
@@ -46,7 +47,7 @@ class SigidiConnection:
                          ' from "%(table)s" order by "NAME"'
 
     one_entity_query = 'select "CODIGO", "CONT_KEY", "NAME" from "%(table)s"' \
-                        ' where "CODIGO"=\'%(entity)s\''
+                       'where "CODIGO"=\'%(entity)s\''
 
     permission_query_end = '"{0}" in ({1})'
 
@@ -61,9 +62,10 @@ class SigidiConnection:
                             ' where "REL_PC_PRODUCTID"' \
                             ' in (' + product_from_dataids + ')'
 
-    projects_permissions = set([SigidiCategories.SUPERUSUARIO,
-                                SigidiCategories.GESTOR_PROYECTOS,
-                                SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
+    projects_permissions = set([
+        SigidiCategories.SUPERUSUARIO,
+        SigidiCategories.GESTOR_PROYECTOS,
+        SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
     convenios_permissions = set([
         SigidiCategories.SUPERUSUARIO,
@@ -104,7 +106,7 @@ class SigidiConnection:
         for permission in permissions:
             sentence += self.permission_query_end.format(
                 permission.value, self.user_permissions) + " OR "
-        sentence = sentence[:-4] # Remove the last OR
+        sentence = sentence[:-4]  # Remove the last OR
         return self._make_query_dict(sentence, table)
 
     def _codes_to_categories(self, codes):
