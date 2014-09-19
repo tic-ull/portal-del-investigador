@@ -263,4 +263,3 @@ class AccountingTable(Table):
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
-        orderable = False
