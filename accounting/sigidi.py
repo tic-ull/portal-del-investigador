@@ -25,6 +25,11 @@ class SigidiCategories(IntEnum):
     AUXILIAR = 30
 
 
+class SigidiTables(Enum):
+    PROJECTS = 'OBJ_2216'
+    CONVENIOS = 'OBJ_2215'
+
+
 class SigidiConnection:
 
     dataid = 'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\''
@@ -36,13 +41,13 @@ class SigidiConnection:
            ' in (' + proid + ')'
 
     permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST", "NAME" from "OBJ_2216" where '
+                       '"ALLOW_CONTAB_LIST", "NAME" from "%(table)s" where '
 
-    all_projects_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
-                         ' order by "NAME"'
+    all_entities_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
+                         ' from "%(table)s" order by "NAME"'
 
-    one_project_query = 'select "CODIGO", "CONT_KEY", "NAME" from "OBJ_2216"' \
-                        ' where "CODIGO"=\'{0}\''
+    one_entity_query = 'select "CODIGO", "CONT_KEY", "NAME" from "%(table)s"' \
+                       'where "CODIGO"=\'%(entity)s\''
 
     permission_query_end = '"{0}" in ({1})'
 
@@ -57,9 +62,10 @@ class SigidiConnection:
                             ' where "REL_PC_PRODUCTID"' \
                             ' in (' + product_from_dataids + ')'
 
-    projects_permissions = set([SigidiCategories.SUPERUSUARIO,
-                                SigidiCategories.GESTOR_PROYECTOS,
-                                SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
+    projects_permissions = set([
+        SigidiCategories.SUPERUSUARIO,
+        SigidiCategories.GESTOR_PROYECTOS,
+        SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
 
     convenios_permissions = set([
         SigidiCategories.SUPERUSUARIO,
@@ -80,28 +86,28 @@ class SigidiConnection:
             user_permissions = '0'
         self.user_permissions = user_permissions
 
-    def _make_query(self, query):
-        '''Makes a query and returns the result'''
-        self.cursor.execute(query)
+    def _make_query(self, query, table=None):
+        """Makes a query and returns the result"""
+        self.cursor.execute(query % {'table': table})
         return self.cursor.fetchall()
 
-    def _make_query_dict(self, query):
-        '''Makes a query and returns the result in a dictionary'''
-        self.cursor.execute(query)
+    def _make_query_dict(self, query, table=None):
+        """Makes a query and returns the result in a dictionary"""
+        self.cursor.execute(query % {'table': table})
         desc = self.cursor.description
         return [
             dict(zip([col[0] for col in desc], row))
             for row in self.cursor.fetchall()
         ]
 
-    def _query_projects(self, permissions):
-        '''Builds dynamically query to get projects for a user'''
+    def _query_entity(self, permissions, table):
+        """Builds dynamically query to get projects for a user"""
         sentence = self.permission_query
         for permission in permissions:
             sentence += self.permission_query_end.format(
                 permission.value, self.user_permissions) + " OR "
-        sentence = sentence[:-4] # Remove the last OR
-        return self._make_query_dict(sentence)
+        sentence = sentence[:-4]  # Remove the last OR
+        return self._make_query_dict(sentence, table)
 
     def _codes_to_categories(self, codes):
         roles = []
@@ -109,32 +115,40 @@ class SigidiConnection:
             roles.append(SigidiCategories(code[0]))
         return roles
 
-    def _has_any_role(self, roles):
+    def _has_any_role(self, needed):
         roles = self.get_user_roles()
-        if roles.intersection(roles):
+        if roles.intersection(needed):
             return True
         return False
 
-    def get_user_projects(self):
-        '''Get the projects that the user has permissions to see'''
-        projects = self._query_projects(
-            [SigidiPermissions.CONTAB_RES, SigidiPermissions.CONTAB_LIST])
-        return projects
+    def _get_user_entities(self, entity_type):
+        """Get the projects that the user has permissions to see"""
+        entities = self._query_entity(
+            [SigidiPermissions.CONTAB_RES, SigidiPermissions.CONTAB_LIST],
+            entity_type)
+        return entities
 
-    def get_project(self, project, permission=None):
-        '''
+    def _can_view_all_entities(self, entity_type):
+        if entity_type == SigidiTables.PROJECTS:
+            return self.can_view_all_projects()
+        else:
+            return self.can_view_all_convenios()
+
+    def _get_entity(self, entity, entity_type, permission=None):
+        """
         Gets the specified project if the user has permission. If permission
         is not specified returns project where user has any permission
-        '''
+        """
 
-        if self.can_view_all_projects():
-            projects = self._make_query_dict(
-                self.one_project_query.format(project))
-            if projects:
-                project = projects[0]
-                project[SigidiPermissions.CONTAB_RES.value] = True
-                project[SigidiPermissions.CONTAB_LIST.value] = True
-                return project
+        if self._can_view_all_entities(entity_type):
+            entities = self._make_query_dict(
+                self.one_entity_query % {'entity': entity,
+                                         'table': entity_type})
+            if entities:
+                entity = entities[0]
+                entity[SigidiPermissions.CONTAB_RES.value] = True
+                entity[SigidiPermissions.CONTAB_LIST.value] = True
+                return entity
 
         if permission is None:
             permission = [SigidiPermissions.CONTAB_LIST,
@@ -144,13 +158,19 @@ class SigidiConnection:
 
         # We ask to database for the projects that the user
         # has permissions for
-        projects = self._query_projects(permission)
+        entities = self._query_entity(permission, entity_type)
 
         # We filter the project that was asked for
-        for proj in projects:
-            if proj['CODIGO'] == project:
+        for proj in entities:
+            if proj['CODIGO'] == entity:
                 return proj
         return False
+
+    def get_project(self, project, permission=None):
+        return self._get_entity(project, SigidiTables.PROJECTS.value)
+
+    def get_convenio(self, convenio, permission=None):
+        return self._get_entity(convenio, SigidiTables.CONVENIOS.value)
 
     def can_contab_res(self, project):
         return bool(self.get_project(project, SigidiPermissions.CONTAB_RES))
@@ -171,5 +191,18 @@ class SigidiConnection:
 
     def get_all_projects(self):
         if self.can_view_all_projects():
-            return self._make_query_dict(self.all_projects_query)
+            return self._make_query_dict(self.all_entities_query % {
+                'table': SigidiTables.PROJECTS.value})
         return None
+
+    def get_all_convenios(self):
+        if self.can_view_all_convenios():
+            return self._make_query_dict(self.all_entities_query % {
+                'table': SigidiTables.CONVENIOS.value})
+        return None
+
+    def get_user_projects(self):
+        return self._get_user_entities(SigidiTables.PROJECTS.value)
+
+    def get_user_convenios(self):
+        return self._get_user_entities(SigidiTables.CONVENIOS.value)

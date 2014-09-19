@@ -28,7 +28,7 @@ class DepartmentTable(Table):
     '''
 
     NAME_TEMPLATE = '''
-        <a href='{% url 'dept_stats_detail' record.code %}'>{{ record.name }}</a>
+    <a href='{% url 'dept_stats_detail' record.code %}'>{{ record.name }}</a>
     '''
 
     name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})

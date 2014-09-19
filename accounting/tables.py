@@ -15,7 +15,8 @@ class SummaryYearTable(Table):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'))
+        verbose_name=_(u'Ejercicio'),
+        attrs={'td': {'align': 'left'}})
 
     inicial = tables.TemplateColumn(
         EURO_TEMPLATE,
@@ -66,7 +67,8 @@ class SummaryYearTable(Table):
         orderable=False)
 
     class Meta:
-        attrs = {'class': 'table table-striped table-condensed'}
+        attrs = {'class': 'table table-striped table-condensed',
+                 'style': 'text-align: right;'}
 
 
 class TotalSummaryYearTable(Table):
@@ -85,7 +87,8 @@ class SummaryConceptTable(Table):
 
     concepto = tables.Column(
         accessor='concepto',
-        verbose_name=_(u'Concepto'))
+        verbose_name=_(u'Concepto'),
+        attrs={'td': {'align': 'left'}})
 
     funSaldoEXP = tables.TemplateColumn(
         EURO_TEMPLATE,
@@ -118,22 +121,26 @@ class SummaryConceptTable(Table):
         orderable=False)
 
     class Meta:
-        attrs = {'class': 'table table-striped table-condensed'}
+        attrs = {'class': 'table table-striped table-condensed',
+                 'style': 'text-align: right;'}
 
 
 class BreakdownYearTable(SummaryConceptTable):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'))
+        verbose_name=_(u'Ejercicio'),
+        attrs={'td': {'align': 'left'}})
 
     concepto = tables.Column(
         accessor='concepto',
         verbose_name=_(u'Concepto'),
-        orderable=False)
+        orderable=False,
+        attrs={'td': {'align': 'left'}})
 
     class Meta:
-        attrs = {'class': 'table table-striped table-condensed'}
+        attrs = {'class': 'table table-striped table-condensed',
+                 'style': 'text-align: right;'}
         fields = ('ejercicio', )
 
 
@@ -207,13 +214,15 @@ class DetailTable(Table):
         EURO_TEMPLATE,
         accessor='variaciones',
         verbose_name=_(u'Variaciones'),
-        orderable=False)
+        orderable=False,
+        attrs={'td': {'align': 'right'}})
 
     gastos = tables.TemplateColumn(
         EURO_TEMPLATE,
         accessor='gastos',
         verbose_name=_(u'Gastos'),
-        orderable=False)
+        orderable=False,
+        attrs={'td': {'align': 'right'}})
 
     asiento = tables.Column(
         accessor='asiento',
@@ -231,7 +240,8 @@ class DetailTable(Table):
         orderable=False)
 
     class Meta:
-        attrs = {'class': 'table table-striped table-condensed'}
+        attrs = {'class': 'table table-striped table-condensed',
+                 'style': 'text-align: left;'}
 
 
 class AccountingTable(Table):
@@ -254,4 +264,3 @@ class AccountingTable(Table):
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
-        orderable = False

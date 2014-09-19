@@ -10,29 +10,27 @@ from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
                     TotalSummaryYearTable, AccountingTable)
-from utils import total_table
-
+from utils import total_table, clean_accounting_table
 
 
 @login_required
 def index(request):
     context = dict()
-    projects = []
     sigidi = SigidiConnection(request.user)
-    manager_role = sigidi.can_view_all_projects()
-    if manager_role:
+    manager_projects = sigidi.can_view_all_projects()
+    manager_agreements = sigidi.can_view_all_convenios()
+    list_projects = sigidi.get_user_projects()
+    if manager_projects:
         list_projects = sigidi.get_all_projects()
-    else:
-        list_projects = sigidi.get_user_projects()
-    for project in list_projects:
-        if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
-            projects.append(project)
-    if len(projects):
-        projects = AccountingTable(projects)
-        RequestConfig(request, paginate=False).configure(projects)
-        if not manager_role:  # CONT_KEY column only for managers and admins
-            projects.columns[2].column.visible = False
-        context['projects'] = projects
+    list_agreements = sigidi.get_user_convenios()
+    if manager_agreements:
+        list_agreements = sigidi.get_all_convenios()
+    context['projects'] = clean_accounting_table(
+        request=request, data=list_projects,
+        table_class=AccountingTable, role=manager_projects)
+    context['agreements'] = clean_accounting_table(
+        request=request, data=list_agreements,
+        table_class=AccountingTable, role=manager_agreements)
     return render(request, 'accounting/index.html', context)
 
 
@@ -40,19 +38,23 @@ def index(request):
 def accounting_detail(request, code):
     context = dict()
     context['code'] = code
-    project = SigidiConnection(user=request.user).get_project(code)
 
-    if not project:
+    if code.startswith('PR'):
+        entity = SigidiConnection(user=request.user).get_project(code)
+    else:
+        entity = SigidiConnection(user=request.user).get_convenio(code)
+
+    if not entity:
         raise Http404
 
-    if 'CONT_KEY' in project and project['CONT_KEY'] is not None:
-        accounting_code = project['CONT_KEY']
+    if 'CONT_KEY' in entity and entity['CONT_KEY'] is not None:
+        accounting_code = entity['CONT_KEY']
 
-        if 'NAME' in project and project['NAME'] is not None:
-            context['name'] = project['NAME']
+        if 'NAME' in entity and entity['NAME'] is not None:
+            context['name'] = entity['NAME']
 
-        if ('ALLOW_CONTAB_RES' in project and
-                project['ALLOW_CONTAB_RES'] is not None):
+        if ('ALLOW_CONTAB_RES' in entity and
+                entity['ALLOW_CONTAB_RES'] is not None):
 
             summary_year = ws.get(st.WS_RESUMEN_YEAR % accounting_code)
             if summary_year is not None and len(summary_year):
@@ -81,12 +83,13 @@ def accounting_detail(request, code):
                     request=request, data=breakdown_year,
                     table_class=TotalConceptAndBreakdownTable)
                 breakdown_year = BreakdownYearTable(breakdown_year)
-                RequestConfig(request, paginate=False).configure(breakdown_year)
+                RequestConfig(
+                    request, paginate=False).configure(breakdown_year)
                 context['breakdown_year'] = breakdown_year
                 context['total_breakdown_year'] = total_breakdown_year
 
-        if ('ALLOW_CONTAB_LIST' in project and
-                project['ALLOW_CONTAB_LIST'] is not None):
+        if ('ALLOW_CONTAB_LIST' in entity and
+                entity['ALLOW_CONTAB_LIST'] is not None):
 
             detail = ws.get(st.WS_DETALLES % accounting_code)
             if detail is not None and len(detail):
