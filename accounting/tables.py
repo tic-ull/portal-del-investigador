@@ -184,8 +184,7 @@ class DetailTable(Table):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'),
-        attrs={'td': {'align': 'left'}})
+        verbose_name=_(u'Ejercicio'))
 
     numero = tables.Column(
         accessor='numero',
@@ -215,13 +214,15 @@ class DetailTable(Table):
         EURO_TEMPLATE,
         accessor='variaciones',
         verbose_name=_(u'Variaciones'),
-        orderable=False)
+        orderable=False,
+        attrs={'td': {'align': 'right'}})
 
     gastos = tables.TemplateColumn(
         EURO_TEMPLATE,
         accessor='gastos',
         verbose_name=_(u'Gastos'),
-        orderable=False)
+        orderable=False,
+        attrs={'td': {'align': 'right'}})
 
     asiento = tables.Column(
         accessor='asiento',
@@ -240,7 +241,7 @@ class DetailTable(Table):
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed',
-                 'style': 'text-align: right;'}
+                 'style': 'text-align: left;'}
 
 
 class AccountingTable(Table):
