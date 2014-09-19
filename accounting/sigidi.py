@@ -87,12 +87,12 @@ class SigidiConnection:
         self.user_permissions = user_permissions
 
     def _make_query(self, query, table=None):
-        '''Makes a query and returns the result'''
+        """Makes a query and returns the result"""
         self.cursor.execute(query % {'table': table})
         return self.cursor.fetchall()
 
     def _make_query_dict(self, query, table=None):
-        '''Makes a query and returns the result in a dictionary'''
+        """Makes a query and returns the result in a dictionary"""
         self.cursor.execute(query % {'table': table})
         desc = self.cursor.description
         return [
@@ -101,7 +101,7 @@ class SigidiConnection:
         ]
 
     def _query_entity(self, permissions, table):
-        '''Builds dynamically query to get projects for a user'''
+        """Builds dynamically query to get projects for a user"""
         sentence = self.permission_query
         for permission in permissions:
             sentence += self.permission_query_end.format(
@@ -122,7 +122,7 @@ class SigidiConnection:
         return False
 
     def _get_user_entities(self, entity_type):
-        '''Get the projects that the user has permissions to see'''
+        """Get the projects that the user has permissions to see"""
         entities = self._query_entity(
             [SigidiPermissions.CONTAB_RES, SigidiPermissions.CONTAB_LIST],
             entity_type)
@@ -135,10 +135,10 @@ class SigidiConnection:
             return self.can_view_all_convenios()
 
     def _get_entity(self, entity, entity_type, permission=None):
-        '''
+        """
         Gets the specified project if the user has permission. If permission
         is not specified returns project where user has any permission
-        '''
+        """
 
         if self._can_view_all_entities(entity_type):
             entities = self._make_query_dict(
