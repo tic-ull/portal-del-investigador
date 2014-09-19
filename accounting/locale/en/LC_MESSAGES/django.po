@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-18 09:53+0100\n"
-"PO-Revision-Date: 2014-09-18 10:09-0102\n"
+"PO-Revision-Date: 2014-09-19 13:38-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -144,7 +144,7 @@ msgstr "Access denied: Insufficient permissions"
 
 #: templates/accounting/partials/breakdown_year.html:7
 msgid "Desglose del gasto por anualidades"
-msgstr "Expenses anual breakdown"
+msgstr "Expenses annual breakdown"
 
 #: templates/accounting/partials/breakdown_year.html:18
 #: templates/accounting/partials/detail.html:14
