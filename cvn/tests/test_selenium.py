@@ -8,7 +8,9 @@ from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         NoAlertPresentException)
 from selenium.webdriver.common.by import By
-import unittest  # , time, re
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+import unittest
 
 
 class LoginCAS(test.LiveServerTestCase):
@@ -106,7 +108,9 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
         # Add admin permissions after login CAS
-        u = User.objects.get_or_create(username="invipas")[0]
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+            (By.CLASS_NAME,'btn-signout')))
+        u = User.objects.get(username="invipas")
         u.is_staff = True
         u.is_superuser = True
         u.save()
