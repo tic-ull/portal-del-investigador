@@ -21,10 +21,6 @@ urlpatterns = patterns(
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
-)
-
-urlpatterns += i18n_patterns(
-    '',
     url(r'^investigacion/cvn/', include('cvn.urls')),
     url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(

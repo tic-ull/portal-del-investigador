@@ -59,7 +59,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.sites',
     'tinymce',
-    'south',
+    #'south',
     'core',
     'cvn',
     'crequest',
@@ -68,8 +68,10 @@ INSTALLED_APPS = (
     'django_tables2',
     'mptt',
     'modeltranslation',
-    'flatpages_i18n',
+    #'flatpages_i18n',
 )
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 COVERAGE_MODULE_EXCLUDES = (
     'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
