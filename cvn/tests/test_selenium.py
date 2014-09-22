@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 import unittest
+from pyvirtualdisplay import Display
 
 
 class LoginCAS(test.LiveServerTestCase):
@@ -20,6 +21,9 @@ class LoginCAS(test.LiveServerTestCase):
         init()
 
     def setUp(self):
+        display = Display(visible=0, size=(1280, 1024))
+        display.start()
+        self.display = display
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         #self.driver.set_page_load_timeout(30)
@@ -198,6 +202,7 @@ class LoginCAS(test.LiveServerTestCase):
 
     def tearDown(self):
         self.driver.quit()
+        self.display.stop()
         self.assertEqual([], self.verificationErrors)
 
     @classmethod
