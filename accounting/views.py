@@ -32,6 +32,13 @@ def index(request):
     context['agreements'] = clean_accounting_table(
         request=request, data=list_agreements,
         table_class=AccountingTableAgreements, role=manager_agreements)
+    context['proyecto'] = "active"
+    try:
+        if "convenio" in request.GET['sort']:
+            context['convenio'] = "active"
+            context['proyecto'] = ""
+    except KeyError:
+        pass
     return render(request, 'accounting/index.html', context)
 
 

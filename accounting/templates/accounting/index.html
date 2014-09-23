@@ -9,12 +9,12 @@
 
     <div class="nav-ull">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#proyecto" data-toggle="tab">{% trans 'Proyectos' %}</a></li>
-            <li><a href="#convenio" data-toggle="tab">{% trans 'Convenios y Contratos' %}</a></li>
+            <li class="{{ proyecto }}"><a href="#proyecto" data-toggle="tab">{% trans 'Proyectos' %}</a></li>
+            <li class="{{ convenio }}"><a href="#convenio" data-toggle="tab">{% trans 'Convenios y Contratos' %}</a></li>
         </ul>
 
         <div class="tab-content">
-            <div id="proyecto" class="tab-pane active">
+            <div id="proyecto" class="tab-pane {{ proyecto }}">
                 <div class="panel-group" id="proyectos">
                 {% if projects %}
                     {% render_table projects "core/table.html" %}
@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div id="convenio" class="tab-pane">
+            <div id="convenio" class="tab-pane {{ convenio }}">
                 <div class="panel-group" id="convenios">
                 {% if agreements %}
                     {% render_table agreements "core/table.html" %}
