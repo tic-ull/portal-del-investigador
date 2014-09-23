@@ -9,7 +9,8 @@ from django_tables2 import RequestConfig
 from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
-                    TotalSummaryYearTable, AccountingTable)
+                    TotalSummaryYearTable, AccountingTableProjects,
+                    AccountingTableAgreements)
 from utils import total_table, clean_accounting_table
 
 
@@ -27,10 +28,10 @@ def index(request):
         list_agreements = sigidi.get_all_convenios()
     context['projects'] = clean_accounting_table(
         request=request, data=list_projects,
-        table_class=AccountingTable, role=manager_projects)
+        table_class=AccountingTableProjects, role=manager_projects)
     context['agreements'] = clean_accounting_table(
         request=request, data=list_agreements,
-        table_class=AccountingTable, role=manager_agreements)
+        table_class=AccountingTableAgreements, role=manager_agreements)
     return render(request, 'accounting/index.html', context)
 
 
