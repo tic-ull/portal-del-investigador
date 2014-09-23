@@ -165,6 +165,7 @@ class CVN(models.Model):
             status = st_cvn.CVNStatus.INVALID_IDENTITY
         elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
             status = st_cvn.CVNStatus.EXPIRED
+            # ENVIAR CORREO
         else:
             status = st_cvn.CVNStatus.UPDATED
         if self.status != status:

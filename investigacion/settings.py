@@ -363,6 +363,12 @@ REDIS_PASSWORD = None
 # Seconds
 REDIS_TIMEOUT = 86400  # One Day
 
+# Mail settings
+EMAIL_HOST = 'host.example.com'
+EMAIL_HOST_USER = 'example@example.com'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_PORT = ''
+
 try:
     SETTINGS_LOCAL
 except NameError:
