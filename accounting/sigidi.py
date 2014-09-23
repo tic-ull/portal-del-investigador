@@ -62,6 +62,17 @@ class SigidiConnection:
                             ' where "REL_PC_PRODUCTID"' \
                             ' in (' + product_from_dataids + ')'
 
+    #dataids_from_obj_2275 = 'select "DATAID" from "OBJ_2275"' \
+    #                        ' where "DNI"=\'{0}\''
+
+    refs_from_dataids = 'select "VRID" from "NIV_VALUES_REF"' \
+                        ' where "VRTARGETDATAID"' \
+                        ' in (' + dataid + ')'
+
+    projects_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
+                                 ' from "OBJ_2216" where "IP_ULL"' \
+                                 ' in (' + refs_from_dataids + ')'
+
     projects_permissions = set([
         SigidiCategories.SUPERUSUARIO,
         SigidiCategories.GESTOR_PROYECTOS,
@@ -166,8 +177,23 @@ class SigidiConnection:
                 return proj
         return False
 
-    def get_project(self, project, permission=None):
-        return self._get_entity(project, SigidiTables.PROJECTS.value)
+    def _get_projects_where_is_ip(self):
+        projects = self._make_query_dict(self.projects_where_is_ip_query.format(
+            '78637064H'))
+        for project in projects:
+            project[SigidiPermissions.CONTAB_RES.value] = True
+            project[SigidiPermissions.CONTAB_LIST.value] = True
+        return projects
+
+    def get_project(self, project_id, permission=None):
+        # We ask first for the ip, because if the user is the ip
+        # then he has all permissions over the project
+        projects_ip = self._get_projects_where_is_ip()
+        for project_ip in projects_ip:
+            if project_ip['CODIGO'] == project_id:
+                return project_ip
+        project_perm = self._get_entity(project_id, SigidiTables.PROJECTS.value)
+        return project_perm
 
     def get_convenio(self, convenio, permission=None):
         return self._get_entity(convenio, SigidiTables.CONVENIOS.value)
@@ -202,7 +228,14 @@ class SigidiConnection:
         return None
 
     def get_user_projects(self):
-        return self._get_user_entities(SigidiTables.PROJECTS.value)
+        projects_permission = self._get_user_entities(
+            SigidiTables.PROJECTS.value)
+        projects_ip = self._get_projects_where_is_ip()
+        for pp in projects_permission:
+            for pi in projects_ip:
+                if pp['CODIGO'] == pi['CODIGO']:
+                    projects_permission.remove(pp)
+        return projects_permission + projects_ip
 
     def get_user_convenios(self):
         return self._get_user_entities(SigidiTables.CONVENIOS.value)
