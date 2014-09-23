@@ -47,11 +47,11 @@ def accounting_detail(request, code):
     if not entity:
         raise Http404
 
+    if 'NAME' in entity and entity['NAME'] is not None:
+        context['name'] = entity['NAME']
+
     if 'CONT_KEY' in entity and entity['CONT_KEY'] is not None:
         accounting_code = entity['CONT_KEY']
-
-        if 'NAME' in entity and entity['NAME'] is not None:
-            context['name'] = entity['NAME']
 
         if ('ALLOW_CONTAB_RES' in entity and
                 entity['ALLOW_CONTAB_RES'] is not None):
