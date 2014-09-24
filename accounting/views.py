@@ -10,13 +10,17 @@ from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
                     TotalSummaryYearTable, AccountingTable)
+from django.db.utils import OperationalError
 from utils import total_table, clean_accounting_table
 
 
 @login_required
 def index(request):
     context = dict()
-    sigidi = SigidiConnection(request.user)
+    try:
+        sigidi = SigidiConnection(request.user)
+    except OperationalError:
+        return render(request, 'core/temporary_error.html', context)
     manager_projects = sigidi.can_view_all_projects()
     manager_agreements = sigidi.can_view_all_convenios()
     list_projects = sigidi.get_user_projects()
@@ -38,11 +42,13 @@ def index(request):
 def accounting_detail(request, code):
     context = dict()
     context['code'] = code
-
-    if code.startswith('PR'):
-        entity = SigidiConnection(user=request.user).get_project(code)
-    else:
-        entity = SigidiConnection(user=request.user).get_convenio(code)
+    try:
+        if code.startswith('PR'):
+            entity = SigidiConnection(user=request.user).get_project(code)
+        else:
+            entity = SigidiConnection(user=request.user).get_convenio(code)
+    except OperationalError:
+        return render(request, 'core/temporary_error.html', context)
 
     if not entity:
         raise Http404

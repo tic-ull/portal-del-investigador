@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+
+{% block main %}
+                    <div class="error-page">
+                        <h2>{% trans 'Servicio Temporalmente no disponible' %}</h2>
+                        <p>{% trans 'El servicio al que intenta acceder está temporalmente no disponible.' %}</p>
+                        <p>{% trans 'Si el problema persiste puede ponerse en contacto con nosotros en' %} <a href="mailto:sopinve@ull.es">sopinve@ull.es</a></p>
+                        <p><a class="btn btn-primary" href="{% url 'index'%}">{% trans 'Volver al portal' %}</a></p>
+                    </div>
+                    <div>
+                        <div class="col-md-6 col-md-offset-3">
+                            <hr>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">{% trans 'Acciones disponibles' %}</h3>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item"><a href="javascript:history.back();">{% trans 'Volver a la página anterior e intentarlo de nuevo.' %}</a></li>
+                                    <li class="list-group-item"><a href="http://www.ull.es/">{% trans 'Ir a la página de inicio de la Universidad de La Laguna.' %}</a></li>
+                                    <li class="list-group-item"><a href="http://soporte.ull.es/">{% trans 'Notificar incidencia' %}</a></li>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+    
+{% endblock main %}
