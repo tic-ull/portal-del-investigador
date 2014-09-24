@@ -179,7 +179,7 @@ class SigidiConnection:
 
     def _get_projects_where_is_ip(self):
         projects = self._make_query_dict(self.projects_where_is_ip_query.format(
-            '78637064H'))
+            self.user.profile.documento))
         for project in projects:
             project[SigidiPermissions.CONTAB_RES.value] = True
             project[SigidiPermissions.CONTAB_LIST.value] = True
