@@ -3,6 +3,7 @@
 from core.ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
+from django.db.utils import OperationalError
 from django.http import Http404
 from django.shortcuts import render
 from django_tables2 import RequestConfig
@@ -17,7 +18,10 @@ from utils import total_table, clean_accounting_table
 @login_required
 def index(request):
     context = dict()
-    sigidi = SigidiConnection(request.user)
+    try:
+        sigidi = SigidiConnection(request.user)
+    except OperationalError:
+        return render(request, 'core/503.html', context)
     manager_projects = sigidi.can_view_all_projects()
     manager_agreements = sigidi.can_view_all_convenios()
     list_projects = sigidi.get_user_projects()
@@ -46,20 +50,22 @@ def index(request):
 def accounting_detail(request, code):
     context = dict()
     context['code'] = code
-
-    if code.startswith('PR'):
-        entity = SigidiConnection(user=request.user).get_project(code)
-    else:
-        entity = SigidiConnection(user=request.user).get_convenio(code)
+    try:
+        if code.startswith('PR'):
+            entity = SigidiConnection(user=request.user).get_project(code)
+        else:
+            entity = SigidiConnection(user=request.user).get_convenio(code)
+    except OperationalError:
+        return render(request, 'core/503.html', context)
 
     if not entity:
         raise Http404
 
+    if 'NAME' in entity and entity['NAME'] is not None:
+        context['name'] = entity['NAME']
+
     if 'CONT_KEY' in entity and entity['CONT_KEY'] is not None:
         accounting_code = entity['CONT_KEY']
-
-        if 'NAME' in entity and entity['NAME'] is not None:
-            context['name'] = entity['NAME']
 
         if ('ALLOW_CONTAB_RES' in entity and
                 entity['ALLOW_CONTAB_RES'] is not None):

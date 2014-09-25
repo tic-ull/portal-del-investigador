@@ -11,7 +11,11 @@
             {% render_table detail "core/table.html" %}
         {% else %}
             <div class="alert alert-warning">
-                <strong>{% trans "No se dispone de información contable" %}</strong>
+                {% if summary_year or summary_concept or breakdown_year %}
+                    <strong>{% trans "Acceso denegado: Permisos insuficientes" %}</strong>
+                {% else %}
+                    <strong>{% trans "No se dispone de información contable" %}</strong>
+                {% endif %}
             </div>
         {% endif %}
     </div>
