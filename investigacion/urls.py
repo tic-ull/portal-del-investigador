@@ -13,8 +13,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^investigacion/$', RedirectView.as_view(
-        url=st.BASE_URL), name='index'),
     url(r'^investigacion/admin/', include(admin.site.urls)),
     url(r'^investigacion/accounts/login/$',
         'django_cas.views.login', name='login'),
@@ -33,6 +31,8 @@ urlpatterns += i18n_patterns(
         template_name='core/faq/question_faq.html', model=FlatPage_i18n),
         name='question_faq'),
     url(r'^investigacion/contabilidad/', include('accounting.urls')),
+    url(r'^investigacion/$', RedirectView.as_view(
+        url=st.BASE_URL), name='index'),
 )
 
 
