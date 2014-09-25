@@ -26,7 +26,7 @@ class SigidiCategories(IntEnum):
 
 
 class SigidiTables(Enum):
-    PROJECTS = 'OBJ_2216'
+    PROYECTOS = 'OBJ_2216'
     CONVENIOS = 'OBJ_2215'
 
 
@@ -73,7 +73,11 @@ class SigidiConnection:
                                  ' from "OBJ_2216" where "IP_ULL"' \
                                  ' in (' + refs_from_dataids + ')'
 
-    projects_permissions = set([
+    entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
+                                 ' from "%(table)s" where "IP_ULL"' \
+                                 ' in (' + refs_from_dataids + ')'
+
+    proyectos_permissions = set([
         SigidiCategories.SUPERUSUARIO,
         SigidiCategories.GESTOR_PROYECTOS,
         SigidiCategories.GESTOR_PROYECTOS_SOLO_LECTURA])
@@ -140,7 +144,7 @@ class SigidiConnection:
         return entities
 
     def _can_view_all_entities(self, entity_type):
-        if entity_type == SigidiTables.PROJECTS:
+        if entity_type == SigidiTables.PROYECTOS:
             return self.can_view_all_projects()
         else:
             return self.can_view_all_convenios()
@@ -185,6 +189,14 @@ class SigidiConnection:
             project[SigidiPermissions.CONTAB_LIST.value] = True
         return projects
 
+    def _get_entity_where_is_ip(self, entity_type):
+        entities = self._make_query_dict(self.entities_where_is_ip_query.format(
+            self.user.profile.documento) % {'table': entity_type})
+        for entity in entities:
+            entity[SigidiPermissions.CONTAB_RES.value] = True
+            entity[SigidiPermissions.CONTAB_LIST.value] = True
+        return entities
+
     def get_project(self, project_id, permission=None):
         # We ask first for the ip, because if the user is the ip
         # then he has all permissions over the project
@@ -192,7 +204,7 @@ class SigidiConnection:
         for project_ip in projects_ip:
             if project_ip['CODIGO'] == project_id:
                 return project_ip
-        project_perm = self._get_entity(project_id, SigidiTables.PROJECTS.value)
+        project_perm = self._get_entity(project_id, SigidiTables.PROYECTOS.value)
         return project_perm
 
     def get_convenio(self, convenio, permission=None):
@@ -210,7 +222,7 @@ class SigidiConnection:
         return set(self._codes_to_categories(roles))
 
     def can_view_all_projects(self):
-        return self._has_any_role(self.projects_permissions)
+        return self._has_any_role(self.proyectos_permissions)
 
     def can_view_all_convenios(self):
         return self._has_any_role(self.convenios_permissions)
@@ -218,7 +230,7 @@ class SigidiConnection:
     def get_all_projects(self):
         if self.can_view_all_projects():
             return self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.PROJECTS.value})
+                'table': SigidiTables.PROYECTOS.value})
         return None
 
     def get_all_convenios(self):
@@ -229,7 +241,7 @@ class SigidiConnection:
 
     def get_user_projects(self):
         projects_permission = self._get_user_entities(
-            SigidiTables.PROJECTS.value)
+            SigidiTables.PROYECTOS.value)
         projects_ip = self._get_projects_where_is_ip()
         for pp in projects_permission:
             for pi in projects_ip:
