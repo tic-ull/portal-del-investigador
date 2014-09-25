@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 14:13+0100\n"
+"POT-Creation-Date: 2014-09-25 10:58+0100\n"
 "PO-Revision-Date: 2014-09-19 14:15-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: tables.py:18 tables.py:132 tables.py:187
@@ -143,6 +143,10 @@ msgid "Convenios y Contratos"
 msgstr "Agreements and Contracts"
 
 #: templates/accounting/index.html:23 templates/accounting/index.html.py:35
+#: templates/accounting/partials/breakdown_year.html:19
+#: templates/accounting/partials/detail.html:15
+#: templates/accounting/partials/summary_concept.html:19
+#: templates/accounting/partials/summary_year.html:19
 msgid "Acceso denegado: Permisos insuficientes"
 msgstr "Access denied: Insufficient permissions"
 
@@ -150,10 +154,10 @@ msgstr "Access denied: Insufficient permissions"
 msgid "Desglose del gasto por anualidades"
 msgstr "Expenses annual breakdown"
 
-#: templates/accounting/partials/breakdown_year.html:18
-#: templates/accounting/partials/detail.html:14
-#: templates/accounting/partials/summary_concept.html:18
-#: templates/accounting/partials/summary_year.html:18
+#: templates/accounting/partials/breakdown_year.html:21
+#: templates/accounting/partials/detail.html:17
+#: templates/accounting/partials/summary_concept.html:21
+#: templates/accounting/partials/summary_year.html:21
 msgid "No se dispone de información contable"
 msgstr "Accounting information not available"
 
