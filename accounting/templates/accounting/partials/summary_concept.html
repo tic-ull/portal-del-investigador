@@ -15,7 +15,11 @@
             {% endif %}
         {% else %}
             <div class="alert alert-warning">
-                <strong>{% trans "No se dispone de información contable" %}</strong>
+                {% if detail %}
+                    <strong>{% trans "Acceso denegado: Permisos insuficientes" %}</strong>
+                {% else %}
+                    <strong>{% trans "No se dispone de información contable" %}</strong>
+                {% endif %}
             </div>
         {% endif %}
     </div>
