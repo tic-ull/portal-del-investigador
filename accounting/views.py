@@ -3,6 +3,7 @@
 from core.ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
+from django.db.utils import OperationalError
 from django.http import Http404
 from django.shortcuts import render
 from django_tables2 import RequestConfig
@@ -10,7 +11,6 @@ from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
                     TotalSummaryYearTable, AccountingTable)
-from django.db.utils import OperationalError
 from utils import total_table, clean_accounting_table
 
 
@@ -20,7 +20,7 @@ def index(request):
     try:
         sigidi = SigidiConnection(request.user)
     except OperationalError:
-        return render(request, 'core/temporary_error.html', context)
+        return render(request, 'core/503.html', context)
     manager_projects = sigidi.can_view_all_projects()
     manager_agreements = sigidi.can_view_all_convenios()
     list_projects = sigidi.get_user_projects()
@@ -48,7 +48,7 @@ def accounting_detail(request, code):
         else:
             entity = SigidiConnection(user=request.user).get_convenio(code)
     except OperationalError:
-        return render(request, 'core/temporary_error.html', context)
+        return render(request, 'core/503.html', context)
 
     if not entity:
         raise Http404
