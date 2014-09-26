@@ -23,6 +23,8 @@ urlpatterns = patterns(
 
 urlpatterns += i18n_patterns(
     '',
+    url(r'^investigacion/$', RedirectView.as_view(
+        url=st.BASE_URL), name='index'),
     url(r'^investigacion/cvn/', include('cvn.urls')),
     url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
@@ -31,8 +33,6 @@ urlpatterns += i18n_patterns(
         template_name='core/faq/question_faq.html', model=FlatPage_i18n),
         name='question_faq'),
     url(r'^investigacion/contabilidad/', include('accounting.urls')),
-    url(r'^investigacion/$', RedirectView.as_view(
-        url=st.BASE_URL), name='index'),
 )
 
 
