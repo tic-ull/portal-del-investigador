@@ -184,7 +184,8 @@ class DetailTable(Table):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'))
+        verbose_name=_(u'Ejercicio'),
+        orderable=False)
 
     numero = tables.Column(
         accessor='numero',
@@ -244,21 +245,43 @@ class DetailTable(Table):
                  'style': 'text-align: left;'}
 
 
-class AccountingTable(Table):
+class AccountingTableProjects(Table):
     URL_TEMPLATE = '''
     <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
     '''
 
-    codigo = tables.Column(
+    codigo_proyecto = tables.Column(
         accessor='CODIGO',
         verbose_name=_(u'Código'))
 
-    nombre = tables.TemplateColumn(
+    nombre_proyecto = tables.TemplateColumn(
         URL_TEMPLATE,
         accessor='NAME',
         verbose_name=_(u'Nombre'))
 
-    claveContable = tables.Column(
+    clave_contable_proyecto = tables.Column(
+        accessor='CONT_KEY',
+        verbose_name=_(u'Clave contable'))
+
+    class Meta:
+        attrs = {'class': 'table table-striped table-condensed'}
+
+
+class AccountingTableAgreements(Table):
+    URL_TEMPLATE = '''
+    <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
+    '''
+
+    codigo_convenio = tables.Column(
+        accessor='CODIGO',
+        verbose_name=_(u'Código'))
+
+    nombre_convenio = tables.TemplateColumn(
+        URL_TEMPLATE,
+        accessor='NAME',
+        verbose_name=_(u'Nombre'))
+
+    clave_contable_convenio = tables.Column(
         accessor='CONT_KEY',
         verbose_name=_(u'Clave contable'))
 

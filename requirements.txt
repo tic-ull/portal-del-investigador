@@ -29,3 +29,5 @@ django-tables2
 redis
 iso3166
 pyvirtualdisplay
+gevent
+greenlet
