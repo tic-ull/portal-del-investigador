@@ -32,7 +32,8 @@ class SigidiTables(Enum):
 
 class SigidiConnection:
 
-    dataid = 'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\''
+    dataid = 'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\'' \
+             ' and "ISACTIVE"=1'
 
     proid = 'select "PROID" from "NIV_PRODUCTS" where "PRODATAID"' \
             ' in (' + dataid + ')'
