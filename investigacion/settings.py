@@ -368,6 +368,7 @@ EMAIL_HOST = 'host.example.com'
 EMAIL_HOST_USER = 'example@example.com'
 EMAIL_HOST_PASSWORD = 'password'
 EMAIL_PORT = ''
+EMAIL_USE_TLS = False
 
 try:
     SETTINGS_LOCAL

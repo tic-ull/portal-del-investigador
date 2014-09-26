@@ -161,24 +161,27 @@ class CVN(models.Model):
 
     def update_status(self):
         status = None
+        email = ''
         if not self._is_valid_identity():
             status = st_cvn.CVNStatus.INVALID_IDENTITY
         elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
-            status = st_cvn.CVNStatus.EXPIRED
+            # status = st_cvn.CVNStatus.EXPIRED
             # ENVIAR CORREO
+            email = str(self.user_profile.user.email)
+
         else:
             status = st_cvn.CVNStatus.UPDATED
-        if self.status != status:
-            self.status = status
-            self.save()
-            Log.objects.create(
-                user_profile=self.user_profile,
-                application=self._meta.app_label.upper(),
-                entry_type=st_core.LogType.CVN_STATUS,
-                date=datetime.datetime.now(),
-                message=st_cvn.CVN_STATUS[self.status][1]
-            )
-
+        # if self.status != status:
+        #     self.status = status
+        #     self.save()
+        #     Log.objects.create(
+        #         user_profile=self.user_profile,
+        #         application=self._meta.app_label.upper(),
+        #         entry_type=st_core.LogType.CVN_STATUS,
+        #         date=datetime.datetime.now(),
+        #         message=st_cvn.CVN_STATUS[self.status][1]
+        #     )
+        return email
 
 class Publicacion(models.Model):
     """
