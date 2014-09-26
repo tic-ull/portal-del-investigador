@@ -184,7 +184,8 @@ class DetailTable(Table):
 
     ejercicio = tables.Column(
         accessor='ejercicio',
-        verbose_name=_(u'Ejercicio'))
+        verbose_name=_(u'Ejercicio'),
+        orderable=False)
 
     numero = tables.Column(
         accessor='numero',
