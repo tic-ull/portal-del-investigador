@@ -52,7 +52,9 @@ class SigidiConnection:
     permission_query_end = '"{0}" in ({1})'
 
     dataids_from_username = 'select "DATAID" from "OBJ_2274"' \
-                            ' where "USERNAME"=\'{0}\''
+                            ' where "USERNAME"=\'{0}\' and "ISACTIVE"=1 and' \
+                            ' ("VALID_FROM" < NOW() or "VALID_FROM" is NULL)' \
+                            ' and ("VALID_TO" > NOW() or "VALID_TO" is NULL)'
 
     product_from_dataids = 'select "PROID" from "NIV_PRODUCTS"' \
                            ' where "PRODATAID"' \
