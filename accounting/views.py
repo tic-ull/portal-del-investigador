@@ -22,27 +22,32 @@ def index(request):
         sigidi = SigidiConnection(request.user)
     except OperationalError:
         return render(request, 'core/503.html', context)
+
     manager_projects = sigidi.can_view_all_projects()
-    manager_agreements = sigidi.can_view_all_convenios()
-    list_projects = sigidi.get_user_projects()
     if manager_projects:
         list_projects = sigidi.get_all_projects()
-    list_agreements = sigidi.get_user_convenios()
-    if manager_agreements:
-        list_agreements = sigidi.get_all_convenios()
+    else:
+        list_projects = sigidi.get_user_projects()
+
     context['projects'] = clean_accounting_table(
         request=request, data=list_projects,
         table_class=AccountingTableProjects, role=manager_projects)
+
+    manager_agreements = sigidi.can_view_all_convenios()
+    if manager_agreements:
+        list_agreements = sigidi.get_all_convenios()
+    else:
+        list_agreements = sigidi.get_user_convenios()
+
     context['agreements'] = clean_accounting_table(
         request=request, data=list_agreements,
         table_class=AccountingTableAgreements, role=manager_agreements)
-    context['proyecto'] = "active"
-    try:
-        if "convenio" in request.GET['sort']:
-            context['convenio'] = "active"
-            context['proyecto'] = ""
-    except KeyError:
-        pass
+
+    context['active_projects'] = "active"
+    if "sort" in request.GET and "convenio" in request.GET['sort']:
+        context['active_agreements'] = "active"
+        context['active_projects'] = ""
+
     return render(request, 'accounting/index.html', context)
 
 
