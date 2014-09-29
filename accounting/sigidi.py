@@ -80,6 +80,16 @@ class SigidiConnection:
                                  ' from "%(table)s" where "IP_ULL"' \
                                  ' in (' + refs_from_dataids + ')'
 
+    ip_from_entity = 'select "IP_ULL" from "%(table)s"' \
+                      ' where "CODIGO"=\'%(codigo)s\''
+
+    niv_values_from_ips = 'select "VRTARGETDATAID" from "NIV_VALUES_REF"' \
+                          ' where "VRID" in (' + ip_from_entity + ')'
+
+    ip_info_from_entity_query = 'select "NAME" from "OBJ_2275"' \
+                                ' where "DATAID"' \
+                                ' in (' + niv_values_from_ips +')'
+
     proyectos_permissions = set([
         SigidiCategories.SUPERUSUARIO,
         SigidiCategories.GESTOR_PROYECTOS,
@@ -209,6 +219,24 @@ class SigidiConnection:
                                                              entity_type)
         return entity_perm
 
+    def _insert_ips_in_entities(self, entities):
+        for entity in entities:
+            ip = self.get_ip(entity['CODIGO'])
+            entity['IP'] = ip
+
+    def get_ip(self, entity):
+        if not entity:
+            return None
+        if entity[0:2] == 'PR':
+            table = SigidiTables.PROYECTOS.value
+        else:
+            table = SigidiTables.CONVENIOS.value
+        ips = self._make_query(self.ip_info_from_entity_query
+                                    % {'table': table, 'codigo': entity})
+        if len(ips):
+            return ips[0][0]
+        return None
+
     def get_project(self, project_id):
         return self._get_entity(project_id, SigidiTables.PROYECTOS.value)
 
@@ -234,24 +262,31 @@ class SigidiConnection:
 
     def get_all_projects(self):
         if self.can_view_all_projects():
-            return self._make_query_dict(self.all_entities_query % {
+            entities = self._make_query_dict(self.all_entities_query % {
                 'table': SigidiTables.PROYECTOS.value})
+            self._insert_ips_in_entities(entities)
+            return entities
         return None
 
     def get_all_convenios(self):
         if self.can_view_all_convenios():
-            return self._make_query_dict(self.all_entities_query % {
+            entities = self._make_query_dict(self.all_entities_query % {
                 'table': SigidiTables.CONVENIOS.value})
+            self._insert_ips_in_entities(entities)
+            return entities
         return None
 
     def _get_user_entities(self, entity_type):
-        entities_permission = self._get_entities_where_has_permission(entity_type)
+        entities_permission = self._get_entities_where_has_permission(
+            entity_type)
         entities_ip = self._get_entities_where_is_ip(entity_type)
         for ep in entities_permission:
             for ei in entities_ip:
                 if ep['CODIGO'] == ei['CODIGO']:
                     entities_permission.remove(ep)
-        return entities_permission + entities_ip
+        entities = entities_permission + entities_ip
+        self._insert_ips_in_entities(entities)
+        return entities
 
     def get_user_projects(self):
         return self._get_user_entities(SigidiTables.PROYECTOS.value)

@@ -245,6 +245,8 @@ class DetailTable(Table):
                  'style': 'text-align: left;'}
 
 
+#
+
 class AccountingTableProjects(Table):
     URL_TEMPLATE = '''
     <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
@@ -252,16 +254,24 @@ class AccountingTableProjects(Table):
 
     codigo_proyecto = tables.Column(
         accessor='CODIGO',
-        verbose_name=_(u'Código'))
+        verbose_name=_(u'Código'),
+        attrs={'th': {'width': '10%'}})
 
     nombre_proyecto = tables.TemplateColumn(
         URL_TEMPLATE,
         accessor='NAME',
-        verbose_name=_(u'Nombre'))
+        verbose_name=_(u'Nombre'),
+        attrs={'th': {'width': '45%'}})
+
+    ip = tables.Column(
+        accessor='IP',
+        verbose_name=_(u'IP'),
+        attrs={'th': {'width': '35%'}})
 
     clave_contable_proyecto = tables.Column(
         accessor='CONT_KEY',
-        verbose_name=_(u'Clave contable'))
+        verbose_name=_(u'Clave contable'),
+        attrs={'th': {'width': '10%'}})
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
@@ -274,16 +284,24 @@ class AccountingTableAgreements(Table):
 
     codigo_convenio = tables.Column(
         accessor='CODIGO',
-        verbose_name=_(u'Código'))
+        verbose_name=_(u'Código'),
+        attrs={'th': {'width': '10%'}})
 
     nombre_convenio = tables.TemplateColumn(
         URL_TEMPLATE,
         accessor='NAME',
-        verbose_name=_(u'Nombre'))
+        verbose_name=_(u'Nombre'),
+        attrs={'th': {'width': '45%'}})
+
+    ip = tables.Column(
+        accessor='IP',
+        verbose_name=_(u'IP'),
+        attrs={'th': {'width': '35%'}})
 
     clave_contable_convenio = tables.Column(
         accessor='CONT_KEY',
-        verbose_name=_(u'Clave contable'))
+        verbose_name=_(u'Clave contable'),
+        attrs={'th': {'width': '10%'}})
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
