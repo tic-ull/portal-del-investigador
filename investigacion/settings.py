@@ -266,7 +266,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-# ****************************** WEB SERVICES ******************************
 
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
 
@@ -286,6 +285,7 @@ except NameError:
     except ImportError:
         pass
 
+# ****************************** WEB SERVICES ******************************
 # All categories
 WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
@@ -368,3 +368,5 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
+# ****************************** WEB SERVICES ******************************
+
