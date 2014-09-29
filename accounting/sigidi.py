@@ -29,6 +29,10 @@ class SigidiTables(Enum):
     PROYECTOS = 'OBJ_2216'
     CONVENIOS = 'OBJ_2215'
 
+class FechaInicioColumn(Enum):
+    PROYECTOS = 'PROP_CONC_FECHA_ACEPT'
+    CONVENIOS = 'FECHA_INICIO'
+
 
 class SigidiConnection:
 
@@ -42,12 +46,15 @@ class SigidiConnection:
            ' in (' + proid + ')'
 
     permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST", "NAME" from "%(table)s" where '
+                       '"ALLOW_CONTAB_LIST", "NAME", "%(fecha_inicio)s"' \
+                       ' from "%(table)s" where '
 
-    all_entities_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
+    all_entities_query = 'select "CODIGO", "CONT_KEY",' \
+                         ' "NAME", "%(fecha_inicio)s"' \
                          ' from "%(table)s" order by "NAME"'
 
-    one_entity_query = 'select "CODIGO", "CONT_KEY", "NAME" from "%(table)s"' \
+    one_entity_query = 'select "CODIGO", "CONT_KEY",' \
+                       ' "NAME", "%(fecha_inicio)s" from "%(table)s"' \
                        'where "CODIGO"=\'%(entity)s\''
 
     permission_query_end = '"{0}" in ({1})'
@@ -152,16 +159,26 @@ class SigidiConnection:
         else:
             return self.can_view_all_convenios()
 
-    def _get_entity_where_has_permission(self, entity, entity_type, permission=None):
+    def _get_entity_where_has_permission(self, entity, entity_type,
+                                         permission=None):
         """
         Gets the specified project if the user has permission. If permission
         is not specified returns project where user has any permission
         """
 
+        # The following lines need a refactor.
+        # With entity_type it should be enough
+
+        if entity[0:2] == 'PR':
+            date_field_name = FechaInicioColumn.PROYECTOS.value
+        else:
+            date_field_name = FechaInicioColumn.CONVENIOS.value
+
         if self._can_view_all_entities(entity_type):
             entities = self._make_query_dict(
                 self.one_entity_query % {'entity': entity,
-                                         'table': entity_type})
+                                         'table': entity_type,
+                                         'fecha_inicio': date_field_name})
             if entities:
                 entity = entities[0]
                 entity[SigidiPermissions.CONTAB_RES.value] = True
@@ -235,13 +252,15 @@ class SigidiConnection:
     def get_all_projects(self):
         if self.can_view_all_projects():
             return self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.PROYECTOS.value})
+                'table': SigidiTables.PROYECTOS.value,
+                'fecha_inicio': FechaInicioColumn.PROYECTOS.value})
         return None
 
     def get_all_convenios(self):
         if self.can_view_all_convenios():
             return self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.CONVENIOS.value})
+                'table': SigidiTables.CONVENIOS.value,
+                'fecha_inicio': FechaInicioColumn.CONVENIOS.value})
         return None
 
     def _get_user_entities(self, entity_type):
