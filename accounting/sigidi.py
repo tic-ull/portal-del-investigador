@@ -280,7 +280,7 @@ class SigidiConnection:
     def get_all_projects(self):
         if self.can_view_all_projects():
             entities = self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.PROYECTOS.value
+                'table': SigidiTables.PROYECTOS.value,
                 'fecha_inicio': FechaInicioColumn.PROYECTOS.value})
             self._insert_ips_in_entities(entities)
             return entities

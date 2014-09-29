@@ -261,12 +261,17 @@ class AccountingTableProjects(Table):
         URL_TEMPLATE,
         accessor='NAME',
         verbose_name=_(u'Nombre'),
-        attrs={'th': {'width': '45%'}})
+        attrs={'th': {'width': '40%'}})
 
     ip = tables.Column(
         accessor='IP',
         verbose_name=_(u'IP'),
-        attrs={'th': {'width': '35%'}})
+        attrs={'th': {'width': '30%'}})
+
+    fecha_inicio = tables.Column(
+        accessor='PROP_CONC_FECHA_ACEPT',
+        verbose_name=_(u'Fecha'),
+        attrs={'th': {'width': '10%'}})
 
     clave_contable_proyecto = tables.Column(
         accessor='CONT_KEY',
@@ -291,12 +296,17 @@ class AccountingTableAgreements(Table):
         URL_TEMPLATE,
         accessor='NAME',
         verbose_name=_(u'Nombre'),
-        attrs={'th': {'width': '45%'}})
+        attrs={'th': {'width': '40%'}})
 
     ip = tables.Column(
         accessor='IP',
         verbose_name=_(u'IP'),
-        attrs={'th': {'width': '35%'}})
+        attrs={'th': {'width': '30%'}})
+
+    fecha_inicio = tables.Column(
+        accessor='FECHA_INICIO',
+        verbose_name=_(u'Fecha'),
+        attrs={'th': {'width': '10%'}})
 
     clave_contable_convenio = tables.Column(
         accessor='CONT_KEY',
