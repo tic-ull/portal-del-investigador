@@ -151,19 +151,18 @@ SIGIDI_DB = {
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
 
-LOG_FILENAME = os.path.join(PROJECT_ROOT, 'cvn.log')
+LOG_FILENAME = os.path.join(PROJECT_ROOT, 'investigacion.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '[%(levelname)s] %(asctime)s \
-                       <%(pathname)> --- %(message)s',
-            'datefmt': '%d-%m-%Y %H:%M:%S'
+            'format': '[%(levelname)s] %(asctime)s <%(pathname)s>: %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S',
         },
-        'standard': {
-            'format': '[%(levelname)s] %(asctime)s --- %(message)s',
-            'datefmt': '%d-%m-%Y %H:%M:%S'
+        'simple': {
+            'format': '[%(levelname)s] %(asctime)s: %(message)s',
+            'datefmt': '%d-%m-%Y %H:%M:%S',
         },
     },
     'filters': {
@@ -172,63 +171,58 @@ LOGGING = {
         }
     },
     'handlers': {
-        # NullHandler, which will pass any DEBUG (or higher)
-        # message to /dev/null.
         'null': {
             'level': 'DEBUG',
             'class': 'logging.NullHandler',
         },
-        # StreamHandler, which will print any DEBUG (or higher)
-        #  message to stderr.
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'standard',
+            'formatter': 'simple',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+            'include_html': True,
         },
         'default': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_FILENAME,
-            'maxBytes': 4096 * 1024 * 1024,        # 4MB para rotar de fichero
+            'maxBytes': 5 * 1024 * 1024,  # 5MB
             'backupCount': 5,
-            'formatter': 'standard'
+            'formatter': 'simple',
         },
         'request_handler': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_FILENAME,
-            'maxBytes': 4096 * 1024 * 1024,
+            'maxBytes': 5 * 1024 * 1024,  # 5MB
             'backupCount': 5,
-            'formatter': 'standard'
-        },
-        'mail_admins': {
-            'level': 'ERROR',             # Errores de la serie 5XX
-            'filters': ['require_debug_false'],  # Only if DEBUG=False
-            'class': 'django.utils.log.AdminEmailHandler',
-            # Incluye la petición y la traza del error en el mail.
-            'include_html': True
+            'formatter': 'simple',
         },
         'find_pairs_handler': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'find_pairs.log'
+            'filename': os.path.join(PROJECT_ROOT, 'find_pairs.log'),
         },
     },
     'loggers': {
-        'cvn': {
-            'handlers': ['default', 'mail_admins'],
-            'level': 'INFO',
-            'propagate': True
-        },
         'django.request': {
             'handlers': ['request_handler'],
             'level': 'ERROR',
-            'propagate': False
+            'propagate': False,
+        },
+        'cvn': {
+            'handlers': ['default', 'mail_admins'],
+            'level': 'INFO',
+            'propagate': True,
         },
         'cvn.management.commands.find_pairs': {
-            'level': 'DEBUG',
             'handlers': ['find_pairs_handler'],
-            'propagate': False
+            'level': 'DEBUG',
+            'propagate': False,
         },
     }
 }
