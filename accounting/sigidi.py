@@ -96,16 +96,6 @@ class SigidiConnection:
                                  'from "%(table)s" where "IP_ULL"' \
                                  ' in (' + refs_from_dataids + ')'
 
-    ip_from_entity = 'select "IP_ULL" from "%(table)s"' \
-                      ' where "CODIGO"=\'%(codigo)s\''
-
-    niv_values_from_ips = 'select "VRTARGETDATAID" from "NIV_VALUES_REF"' \
-                          ' where "VRID" in (' + ip_from_entity + ')'
-
-    ip_info_from_entity_query = 'select "NAME" from "OBJ_2275"' \
-                                ' where "DATAID"' \
-                                ' in (' + niv_values_from_ips +')'
-
     macroquery = 'select entities."CODIGO", entities."CONT_KEY",' \
                  ' "OBJ_2275"."NAME" "IP",' \
                  ' entities."NAME", entities."%(fecha_inicio)s" "DATE"' \
@@ -152,14 +142,16 @@ class SigidiConnection:
             for row in self.cursor.fetchall()
         ]
 
-    def _query_entity(self, permissions, table):
+    def _query_entity(self, permissions, entity_type):
         """Builds dynamically query to get projects for a user"""
         sentence = self.permission_query
         for permission in permissions:
             sentence += self.permission_query_end.format(
                 permission.value, self.user_permissions) + " OR "
         sentence = sentence[:-4]  # Remove the last OR
-        return self._make_query_dict(sentence, table)
+        subquery = sentence % {'table': sigidi_tables[entity_type],
+                               'fecha_inicio': sigidi_dates[entity_type]}
+        return self._do_the_macroquery(subquery, sigidi_dates[entity_type])
 
     def _codes_to_categories(self, codes):
         roles = []
@@ -193,16 +185,13 @@ class SigidiConnection:
         is not specified returns project where user has any permission
         """
 
-        date_field_name = sigidi_dates[entity_type]
+        date_row = sigidi_dates[entity_type]
 
         if self._can_view_all_entities(entity_type):
-            entities = self._make_query_dict(
-                self.one_entity_query % {'entity': entity,
-                                         'table': sigidi_tables[entity_type],
-                                         'fecha_inicio': date_field_name})
-            #subquery = self.one_entity_query % {
-            #    'entity': entity, 'table': sigidi_tables[entity_type],
-            #    'fecha_inicio': date_field_name}
+            subquery = self.one_entity_query % {
+                'entity': entity, 'table': sigidi_tables[entity_type],
+                'fecha_inicio': date_row}
+            entities = self._do_the_macroquery(subquery, date_row)
             if entities:
                 entity = entities[0]
                 entity[SigidiPermissions.CONTAB_RES.value] = True
@@ -245,37 +234,10 @@ class SigidiConnection:
                                                              entity_type)
         return entity_perm
 
-    def _insert_ips_in_entities(self, entities):
-        for entity in entities:
-            ip = self.get_ip(entity['CODIGO'])
-            entity['IP'] = ip
-
-    def _process_dates_in_entities(self, entities):
-        if 'PROP_CONC_FECHA_ACEPT' in entities[0]:
-            date_field_name = 'PROP_CONC_FECHA_ACEPT'
-        else:
-            date_field_name = 'FECHA_INICIO'
-
-        for entity in entities:
-            date = entity.pop(date_field_name)
-            if date != None:
-                date = date.date()
-            entity['DATE'] = date
-
     def _do_the_macroquery(self, subquery, date_format):
         return self._make_query_dict(self.macroquery % {
             'entities_query': subquery,
             'fecha_inicio': date_format})
-
-    def get_ip(self, entity):
-        if not entity:
-            return None
-        table = sigidi_tables[entity]
-        ips = self._make_query(self.ip_info_from_entity_query
-                                    % {'table': table, 'codigo': entity})
-        if len(ips):
-            return ips[0][0]
-        return None
 
     def get_project(self, project_id):
         return self._get_entity(project_id, SigidiEntityType.PROYECTOS)
@@ -327,8 +289,6 @@ class SigidiConnection:
                 if ep['CODIGO'] == ei['CODIGO']:
                     entities_permission.remove(ep)
         entities = entities_permission + entities_ip
-        self._insert_ips_in_entities(entities)
-        self._process_dates_in_entities(entities)
         return entities
 
     def get_user_projects(self):
