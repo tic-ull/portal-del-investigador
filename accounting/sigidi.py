@@ -25,13 +25,17 @@ class SigidiCategories(IntEnum):
     AUXILIAR = 30
 
 
-class SigidiTables(Enum):
-    PROYECTOS = 'OBJ_2216'
-    CONVENIOS = 'OBJ_2215'
+class SigidiEntityType(IntEnum):
+    PROYECTOS = 0
+    CONVENIOS = 1
 
-class FechaInicioColumn(Enum):
-    PROYECTOS = 'PROP_CONC_FECHA_ACEPT'
-    CONVENIOS = 'FECHA_INICIO'
+
+sigidi_tables = {SigidiEntityType.PROYECTOS: 'OBJ_2216',
+                 SigidiEntityType.CONVENIOS: 'OBJ_2215'}
+
+
+sigidi_dates = {SigidiEntityType.PROYECTOS: 'PROP_CONC_FECHA_ACEPT',
+                SigidiEntityType.CONVENIOS: 'FECHA_INICIO'}
 
 
 class SigidiConnection:
@@ -45,15 +49,18 @@ class SigidiConnection:
     vrid = 'select "VRID" from "NIV_VALUES_REF" where "VRTARGETID"' \
            ' in (' + proid + ')'
 
+    # Proyectos/Convenios for user with explicit permissions
     permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST", "NAME", "%(fecha_inicio)s"' \
-                       ' from "%(table)s" where '
+                       '"ALLOW_CONTAB_LIST", "NAME", "%(fecha_inicio)s",' \
+                       ' "IP_ULL" from "%(table)s" where '
 
+    # All Proyectos/Convenios
     all_entities_query = 'select "CODIGO", "CONT_KEY",' \
-                         ' "NAME", "%(fecha_inicio)s"' \
+                         ' "NAME", "%(fecha_inicio)s", "IP_ULL"' \
                          ' from "%(table)s" order by "NAME"'
 
-    one_entity_query = 'select "CODIGO", "CONT_KEY",' \
+    # One Proyecto/Convenio
+    one_entity_query = 'select "CODIGO", "CONT_KEY", "IP_ULL",' \
                        ' "NAME", "%(fecha_inicio)s" from "%(table)s"' \
                        'where "CODIGO"=\'%(entity)s\''
 
@@ -83,8 +90,10 @@ class SigidiConnection:
     #                             ' from "OBJ_2216" where "IP_ULL"' \
     #                             ' in (' + refs_from_dataids + ')'
 
-    entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
-                                 ' from "%(table)s" where "IP_ULL"' \
+    # Proyectos/Convenios where is ip
+    entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME",' \
+                                 ' "IP_ULL", "%(fecha_inicio)s" ' \
+                                 'from "%(table)s" where "IP_ULL"' \
                                  ' in (' + refs_from_dataids + ')'
 
     ip_from_entity = 'select "IP_ULL" from "%(table)s"' \
@@ -96,6 +105,14 @@ class SigidiConnection:
     ip_info_from_entity_query = 'select "NAME" from "OBJ_2275"' \
                                 ' where "DATAID"' \
                                 ' in (' + niv_values_from_ips +')'
+
+    macroquery = 'select entities."CODIGO", entities."CONT_KEY",' \
+                 ' "OBJ_2275"."NAME" "IP",' \
+                 ' entities."NAME", entities."%(fecha_inicio)s" "DATE"' \
+                 ' from "OBJ_2275" right join "NIV_VALUES_REF"' \
+                 ' on "OBJ_2275"."DATAID" = "NIV_VALUES_REF"."VRTARGETDATAID"' \
+                 ' right join (%(entities_query)s) entities' \
+                 ' on "NIV_VALUES_REF"."VRID" = entities."IP_ULL"' \
 
     proyectos_permissions = set([
         SigidiCategories.SUPERUSUARIO,
@@ -164,7 +181,7 @@ class SigidiConnection:
         return entities
 
     def _can_view_all_entities(self, entity_type):
-        if entity_type == SigidiTables.PROYECTOS:
+        if entity_type == SigidiEntityType.PROYECTOS:
             return self.can_view_all_projects()
         else:
             return self.can_view_all_convenios()
@@ -176,19 +193,16 @@ class SigidiConnection:
         is not specified returns project where user has any permission
         """
 
-        # The following lines need a refactor.
-        # With entity_type it should be enough
-
-        if entity[0:2] == 'PR':
-            date_field_name = FechaInicioColumn.PROYECTOS.value
-        else:
-            date_field_name = FechaInicioColumn.CONVENIOS.value
+        date_field_name = sigidi_dates[entity_type]
 
         if self._can_view_all_entities(entity_type):
             entities = self._make_query_dict(
                 self.one_entity_query % {'entity': entity,
-                                         'table': entity_type,
+                                         'table': sigidi_tables[entity_type],
                                          'fecha_inicio': date_field_name})
+            #subquery = self.one_entity_query % {
+            #    'entity': entity, 'table': sigidi_tables[entity_type],
+            #    'fecha_inicio': date_field_name}
             if entities:
                 entity = entities[0]
                 entity[SigidiPermissions.CONTAB_RES.value] = True
@@ -211,17 +225,12 @@ class SigidiConnection:
                 return proj
         return False
 
-    #def _get_projects_where_is_ip(self):
-    #    projects = self._make_query_dict(self.projects_where_is_ip_query.format(
-    #        self.user.profile.documento))
-    #    for project in projects:
-    #        project[SigidiPermissions.CONTAB_RES.value] = True
-    #        project[SigidiPermissions.CONTAB_LIST.value] = True
-    #    return projects
-
     def _get_entities_where_is_ip(self, entity_type):
-        entities = self._make_query_dict(self.entities_where_is_ip_query.format(
-            self.user.profile.documento) % {'table': entity_type})
+        date_row = sigidi_dates[entity_type]
+        subquery = self.entities_where_is_ip_query.format(
+            self.user.profile.documento) % {'table': sigidi_tables[entity_type],
+                                            'fecha_inicio': date_row}
+        entities = self._do_the_macroquery(subquery, date_row)
         for entity in entities:
             entity[SigidiPermissions.CONTAB_RES.value] = True
             entity[SigidiPermissions.CONTAB_LIST.value] = True
@@ -241,13 +250,27 @@ class SigidiConnection:
             ip = self.get_ip(entity['CODIGO'])
             entity['IP'] = ip
 
+    def _process_dates_in_entities(self, entities):
+        if 'PROP_CONC_FECHA_ACEPT' in entities[0]:
+            date_field_name = 'PROP_CONC_FECHA_ACEPT'
+        else:
+            date_field_name = 'FECHA_INICIO'
+
+        for entity in entities:
+            date = entity.pop(date_field_name)
+            if date != None:
+                date = date.date()
+            entity['DATE'] = date
+
+    def _do_the_macroquery(self, subquery, date_format):
+        return self._make_query_dict(self.macroquery % {
+            'entities_query': subquery,
+            'fecha_inicio': date_format})
+
     def get_ip(self, entity):
         if not entity:
             return None
-        if entity[0:2] == 'PR':
-            table = SigidiTables.PROYECTOS.value
-        else:
-            table = SigidiTables.CONVENIOS.value
+        table = sigidi_tables[entity]
         ips = self._make_query(self.ip_info_from_entity_query
                                     % {'table': table, 'codigo': entity})
         if len(ips):
@@ -255,10 +278,10 @@ class SigidiConnection:
         return None
 
     def get_project(self, project_id):
-        return self._get_entity(project_id, SigidiTables.PROYECTOS.value)
+        return self._get_entity(project_id, SigidiEntityType.PROYECTOS)
 
     def get_convenio(self, convenio_id):
-        return self._get_entity(convenio_id, SigidiTables.CONVENIOS.value)
+        return self._get_entity(convenio_id, SigidiEntityType.CONVENIOS)
 
     def can_contab_res(self, project):
         return bool(self.get_project(project, SigidiPermissions.CONTAB_RES))
@@ -279,20 +302,20 @@ class SigidiConnection:
 
     def get_all_projects(self):
         if self.can_view_all_projects():
-            entities = self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.PROYECTOS.value,
-                'fecha_inicio': FechaInicioColumn.PROYECTOS.value})
-            self._insert_ips_in_entities(entities)
-            return entities
+            date_row = sigidi_dates[SigidiEntityType.PROYECTOS]
+            entities_query = self.all_entities_query % {
+                'table': sigidi_tables[SigidiEntityType.PROYECTOS],
+                'fecha_inicio': date_row}
+            return self._do_the_macroquery(entities_query, date_row)
         return None
 
     def get_all_convenios(self):
         if self.can_view_all_convenios():
-            entities = self._make_query_dict(self.all_entities_query % {
-                'table': SigidiTables.CONVENIOS.value,
-                'fecha_inicio': FechaInicioColumn.CONVENIOS.value})
-            self._insert_ips_in_entities(entities)
-            return entities
+            date_row = sigidi_dates[SigidiEntityType.CONVENIOS]
+            entities_query = self.all_entities_query % {
+                'table': sigidi_tables[SigidiEntityType.CONVENIOS],
+                'fecha_inicio': date_row}
+            return self._do_the_macroquery(entities_query, date_row)
         return None
 
     def _get_user_entities(self, entity_type):
@@ -305,10 +328,11 @@ class SigidiConnection:
                     entities_permission.remove(ep)
         entities = entities_permission + entities_ip
         self._insert_ips_in_entities(entities)
+        self._process_dates_in_entities(entities)
         return entities
 
     def get_user_projects(self):
-        return self._get_user_entities(SigidiTables.PROYECTOS.value)
+        return self._get_user_entities(SigidiEntityType.PROYECTOS)
 
     def get_user_convenios(self):
-        return self._get_user_entities(SigidiTables.CONVENIOS.value)
+        return self._get_user_entities(SigidiEntityType.CONVENIOS)

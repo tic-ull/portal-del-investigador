@@ -47,7 +47,6 @@ def index(request):
     if "sort" in request.GET and "convenio" in request.GET['sort']:
         context['active_agreements'] = "active"
         context['active_projects'] = ""
-
     return render(request, 'accounting/index.html', context)
 
 

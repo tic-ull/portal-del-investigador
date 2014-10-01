@@ -269,7 +269,7 @@ class AccountingTableProjects(Table):
         attrs={'th': {'width': '30%'}})
 
     fecha_inicio = tables.Column(
-        accessor='PROP_CONC_FECHA_ACEPT',
+        accessor='DATE',
         verbose_name=_(u'Fecha'),
         attrs={'th': {'width': '10%'}})
 
@@ -304,7 +304,7 @@ class AccountingTableAgreements(Table):
         attrs={'th': {'width': '30%'}})
 
     fecha_inicio = tables.Column(
-        accessor='FECHA_INICIO',
+        accessor='DATE',
         verbose_name=_(u'Fecha'),
         attrs={'th': {'width': '10%'}})
 
