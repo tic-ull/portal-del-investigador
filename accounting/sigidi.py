@@ -55,13 +55,15 @@ class SigidiConnection:
                        ' "IP_ULL" from "%(table)s" where '
 
     # All Proyectos/Convenios
-    all_entities_query = 'select "CODIGO", "CONT_KEY",' \
+    all_entities_query = 'select "CODIGO", "CONT_KEY", 1 "ALLOW_CONTAB_RES",' \
+                         ' 1 "ALLOW_CONTAB_LIST",' \
                          ' "NAME", "%(fecha_inicio)s", "IP_ULL"' \
                          ' from "%(table)s" order by "NAME"'
 
     # One Proyecto/Convenio
     one_entity_query = 'select "CODIGO", "CONT_KEY", "IP_ULL",' \
-                       ' "NAME", "%(fecha_inicio)s" from "%(table)s"' \
+                       ' "NAME", "%(fecha_inicio)s", 1 "ALLOW_CONTAB_RES",' \
+                       ' 1 "ALLOW_CONTAB_LIST" from "%(table)s"' \
                        'where "CODIGO"=\'%(entity)s\''
 
     permission_query_end = '"{0}" in ({1})'
@@ -92,13 +94,16 @@ class SigidiConnection:
 
     # Proyectos/Convenios where is ip
     entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME",' \
-                                 ' "IP_ULL", "%(fecha_inicio)s" ' \
+                                 ' "IP_ULL", "%(fecha_inicio)s",' \
+                                 ' 1 "ALLOW_CONTAB_RES",' \
+                                 ' 1 "ALLOW_CONTAB_LIST" ' \
                                  'from "%(table)s" where "IP_ULL"' \
                                  ' in (' + refs_from_dataids + ')'
 
     macroquery = 'select entities."CODIGO", entities."CONT_KEY",' \
                  ' "OBJ_2275"."NAME" "IP",' \
-                 ' entities."NAME", entities."%(fecha_inicio)s" "DATE"' \
+                 ' entities."NAME", entities."%(fecha_inicio)s" "DATE",' \
+                 ' entities."ALLOW_CONTAB_RES", entities."ALLOW_CONTAB_LIST"' \
                  ' from "OBJ_2275" right join "NIV_VALUES_REF"' \
                  ' on "OBJ_2275"."DATAID" = "NIV_VALUES_REF"."VRTARGETDATAID"' \
                  ' right join (%(entities_query)s) entities' \
@@ -194,8 +199,6 @@ class SigidiConnection:
             entities = self._do_the_macroquery(subquery, date_row)
             if entities:
                 entity = entities[0]
-                entity[SigidiPermissions.CONTAB_RES.value] = True
-                entity[SigidiPermissions.CONTAB_LIST.value] = True
                 return entity
 
         if permission is None:
@@ -220,9 +223,6 @@ class SigidiConnection:
             self.user.profile.documento) % {'table': sigidi_tables[entity_type],
                                             'fecha_inicio': date_row}
         entities = self._do_the_macroquery(subquery, date_row)
-        for entity in entities:
-            entity[SigidiPermissions.CONTAB_RES.value] = True
-            entity[SigidiPermissions.CONTAB_LIST.value] = True
         return entities
 
     def _get_entity(self, entity_id, entity_type):
