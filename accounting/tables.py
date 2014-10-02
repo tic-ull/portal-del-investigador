@@ -269,7 +269,7 @@ class AccountingTableProjects(Table):
         attrs={'th': {'width': '30%'}})
 
     fecha_inicio = tables.Column(
-        accessor='DATE',
+        accessor='DATE.date',
         verbose_name=_(u'Fecha'),
         attrs={'th': {'width': '10%'}})
 
