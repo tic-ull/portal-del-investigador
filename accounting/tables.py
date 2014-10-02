@@ -245,12 +245,16 @@ class DetailTable(Table):
                  'style': 'text-align: left;'}
 
 
-#
+URL_TEMPLATE = '''
+    <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
+'''
+
+DATE_TEMPLATE = '''
+    {{ record.DATE|date:'d-m-Y' }}
+'''
+
 
 class AccountingTableProjects(Table):
-    URL_TEMPLATE = '''
-    <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
-    '''
 
     codigo_proyecto = tables.Column(
         accessor='CODIGO',
@@ -263,29 +267,24 @@ class AccountingTableProjects(Table):
         verbose_name=_(u'Nombre'),
         attrs={'th': {'width': '40%'}})
 
-    ip = tables.Column(
+    ip_proyecto = tables.Column(
         accessor='IP',
-        verbose_name=_(u'IP'),
-        attrs={'th': {'width': '30%'}})
+        verbose_name=_(u'IP'))
 
-    fecha_inicio = tables.Column(
+    fecha_inicio_proyecto = tables.TemplateColumn(
+        DATE_TEMPLATE,
         accessor='DATE.date',
-        verbose_name=_(u'Fecha'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Fecha Aceptación'))
 
     clave_contable_proyecto = tables.Column(
         accessor='CONT_KEY',
-        verbose_name=_(u'Clave contable'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Clave contable'))
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
 
 
 class AccountingTableAgreements(Table):
-    URL_TEMPLATE = '''
-    <a href='{% url 'accounting_detail' record.CODIGO %}'>{{ record.NAME }}</a>
-    '''
 
     codigo_convenio = tables.Column(
         accessor='CODIGO',
@@ -298,20 +297,18 @@ class AccountingTableAgreements(Table):
         verbose_name=_(u'Nombre'),
         attrs={'th': {'width': '40%'}})
 
-    ip = tables.Column(
+    ip_convenio = tables.Column(
         accessor='IP',
-        verbose_name=_(u'IP'),
-        attrs={'th': {'width': '30%'}})
+        verbose_name=_(u'IP'))
 
-    fecha_inicio = tables.Column(
+    fecha_inicio_convenio = tables.TemplateColumn(
+        DATE_TEMPLATE,
         accessor='DATE.date',
-        verbose_name=_(u'Fecha'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Fecha Inicio'))
 
     clave_contable_convenio = tables.Column(
         accessor='CONT_KEY',
-        verbose_name=_(u'Clave contable'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Clave contable'))
 
     class Meta:
         attrs = {'class': 'table table-striped table-condensed'}
