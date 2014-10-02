@@ -81,16 +81,9 @@ class SigidiConnection:
                             ' where "REL_PC_PRODUCTID"' \
                             ' in (' + product_from_dataids + ')'
 
-    #dataids_from_obj_2275 = 'select "DATAID" from "OBJ_2275"' \
-    #                        ' where "DNI"=\'{0}\''
-
     refs_from_dataids = 'select "VRID" from "NIV_VALUES_REF"' \
                         ' where "VRTARGETDATAID"' \
                         ' in (' + dataid + ')'
-
-    #projects_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME"' \
-    #                             ' from "OBJ_2216" where "IP_ULL"' \
-    #                             ' in (' + refs_from_dataids + ')'
 
     # Proyectos/Convenios where is ip
     entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME",' \
