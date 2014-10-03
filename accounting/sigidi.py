@@ -6,6 +6,22 @@ from enum import Enum, IntEnum
 import re
 
 
+def _make_query(cursor, query):
+    """Makes a query and returns the result"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def _make_query_dict(cursor, query):
+    """Makes a query and returns the result in a dictionary"""
+    cursor.execute(query)
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+
 class SigidiPermissions(Enum):
     CONTAB_RES = "ALLOW_CONTAB_RES"
     CONTAB_LIST = "ALLOW_CONTAB_LIST"
@@ -121,6 +137,8 @@ class SigidiConnection:
         self.user = user
         st.DATABASES['sigidi'] = st.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
+        self.cursor.__class__.make_query = _make_query
+        self.cursor.__class__.make_query_dict = _make_query_dict
         self.cursor.execute(Sqry.vrid_query.format(user.profile.documento))
         user_permissions = self.cursor.fetchall()
         user_permissions = re.sub('[\[\]()]|,,', '',
@@ -130,19 +148,6 @@ class SigidiConnection:
             user_permissions = '0'
         self.user_permissions = user_permissions
 
-    def _make_query(self, query, table=None):
-        """Makes a query and returns the result"""
-        self.cursor.execute(query % {'table': table})
-        return self.cursor.fetchall()
-
-    def _make_query_dict(self, query, table=None):
-        """Makes a query and returns the result in a dictionary"""
-        self.cursor.execute(query % {'table': table})
-        desc = self.cursor.description
-        return [
-            dict(zip([col[0] for col in desc], row))
-            for row in self.cursor.fetchall()
-        ]
 
     def _query_entity(self, permissions, entity_type):
         """Builds dynamically query to get projects for a user"""
@@ -228,8 +233,19 @@ class SigidiConnection:
                                                             entity_type)
         return entity_perm
 
+    def _get_user_entities(self, entity_type):
+        entities_permission = self._get_entities_where_has_permission(
+            entity_type)
+        entities_ip = self._get_entities_where_is_ip(entity_type)
+        for ep in entities_permission:
+            for ei in entities_ip:
+                if ep['CODIGO'] == ei['CODIGO']:
+                    entities_permission.remove(ep)
+        entities = entities_permission + entities_ip
+        return entities
+
     def _do_the_macroquery(self, subquery, date_format):
-        return self._make_query_dict(Sqry.macroquery % {
+        return self.cursor.make_query_dict(Sqry.macroquery % {
             'entities_query': subquery,
             'fecha_inicio': date_format})
 
@@ -240,7 +256,7 @@ class SigidiConnection:
         return self._get_entity(convenio_id, SigidiEntityType.CONVENIOS)
 
     def get_user_roles(self):
-        roles = self._make_query(Sqry.user_categories_query.format(
+        roles = self.cursor.make_query(Sqry.user_categories_query.format(
             self.user.username))
         return set(self._codes_to_categories(roles))
 
@@ -267,17 +283,6 @@ class SigidiConnection:
                 'fecha_inicio': date_row}
             return self._do_the_macroquery(entities_query, date_row)
         return None
-
-    def _get_user_entities(self, entity_type):
-        entities_permission = self._get_entities_where_has_permission(
-            entity_type)
-        entities_ip = self._get_entities_where_is_ip(entity_type)
-        for ep in entities_permission:
-            for ei in entities_ip:
-                if ep['CODIGO'] == ei['CODIGO']:
-                    entities_permission.remove(ep)
-        entities = entities_permission + entities_ip
-        return entities
 
     def get_user_projects(self):
         return self._get_user_entities(SigidiEntityType.PROYECTOS)
