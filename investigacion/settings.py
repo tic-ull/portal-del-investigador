@@ -363,12 +363,14 @@ REDIS_PASSWORD = None
 # Seconds
 REDIS_TIMEOUT = 86400  # One Day
 
+
 # Mail settings
-EMAIL_HOST = 'host.example.com'
-EMAIL_HOST_USER = 'example@example.com'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_HOST_USER = 'example@mail.com'
 EMAIL_HOST_PASSWORD = 'password'
-EMAIL_PORT = ''
-EMAIL_USE_TLS = False
+EMAIL_PORT = 'XXX'
+EMAIL_USE_TLS = ''
+
 
 try:
     SETTINGS_LOCAL

@@ -152,3 +152,5 @@ MESSAGES_WAITING = {
 
 # In milliseconds
 TIME_WAITING = 5000
+
+EMAIL_SUBJECT = _(u'Caducidad del CVN')
