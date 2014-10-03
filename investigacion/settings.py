@@ -2,23 +2,26 @@
 
 import os
 
-# Paths -- Build paths like this: os.path.join(BASE_DIR, ...)
+# ******************************* PATHS *************************************
+# Build paths like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
+# ******************************* PATHS *************************************
 
-# URLs
+# ******************************* URLS **************************************
+BASE_URL = 'http://wwwpre.ull.es/portaldeinvestigacion'
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
 LOGIN_URL = 'login'  # Login address for login_required decorator
-BASE_URL = 'http://wwwpre.ull.es/portaldeinvestigacion'
-OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
+OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
+# ******************************* URLS **************************************
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
@@ -26,13 +29,14 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 # Enable translation of strings in this file
 _ = lambda s: s
 
-
+# ******************************* ADMINS *************************************
 ADMINS = (
     ('STIC-Investigacion', 'stic.investigacion@ull.es'),
 )
 MANAGERS = ADMINS
+# ******************************* ADMINS *************************************
 
-# Internationalization
+# ******************************* LANGUAGE ***********************************
 LANGUAGES = (
     ('es', 'Español'),
     ('en', 'English'),
@@ -40,14 +44,15 @@ LANGUAGES = (
 USE_I18N = True
 USE_L10N = True
 LANGUAGE_CODE = 'es'
-TIME_ZONE = 'Atlantic/Canary'
-USE_TZ = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
     os.path.join(BASE_DIR, 'cvn/locale'),
     os.path.join(BASE_DIR, 'statistics/locale'),
     os.path.join(BASE_DIR, 'accounting/locale'),
 )
+TIME_ZONE = 'Atlantic/Canary'
+USE_TZ = True
+# ******************************* LANGUAGE ***********************************
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -104,30 +109,23 @@ DEVEL = True
 # Set ID for flatpages
 SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
 
-# Authentication CAS - ULL
+# ************************* AUTHENTICATION CAS - ULL *************************
 CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
-CAS_ADMIN_PREFIX = 'admin'  # The URL prefix of the Django administration site.
+CAS_ADMIN_PREFIX = 'admin'  # The URL prefix of the Django administration site
 CAS_EXTRA_LOGIN_PARAMS = ''  # Extra parameters for login URL when redirecting
-# If `True`, logging out of the application will always send the user
-# to the URL specified by `CAS_REDIRECT_URL`.
 CAS_IGNORE_REFERER = False
-# If `False`, logging out of the application won't log the user out
-# of CAS as well.
 CAS_LOGOUT_COMPLETELY = True
 CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
-# If `True` and an unknown or invalid ticket is received,
-# the user is redirected back to the login page.
 CAS_RETRY_LOGIN = True
-#  The CAS protocol version to use.
-# `'1'` and `'2'` are supported, with `'2'` being the default.
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
-
+# ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
 
 WSGI_APPLICATION = 'investigacion.wsgi.application'
 
+# ******************************* DATABASES *********************************
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -147,10 +145,12 @@ SIGIDI_DB = {
     'HOST': '',
     'PORT': '',
 }
+# ******************************* DATABASES *********************************
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
 
+# ******************************* LOGGING ************************************
 LOG_FILENAME = os.path.join(PROJECT_ROOT, 'investigacion.log')
 LOGGING = {
     'version': 1,
@@ -228,7 +228,9 @@ LOGGING = {
         },
     }
 }
+# ******************************* LOGGING ************************************
 
+# ************************* TEMPLATES ****************************************
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -253,7 +255,7 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'statistics/templates'),
     os.path.join(BASE_DIR, 'accounting/templates'),
 )
-
+# ************************* TEMPLATES ****************************************
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -262,17 +264,19 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
+# ************************* WEB SERVICES *************************************
+WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+# ************************* WEB SERVICES *************************************
 
-WS_SERVER_URL = 'http://django-pre.stic.ull.es/odin/core/rest/'
-
-# REDIS
+# ************************* REDIS ********************************************
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_PASSWORD = None
-# Seconds
-REDIS_TIMEOUT = 86400  # One Day
+REDIS_TIMEOUT = 86400  # One Day (Seconds)
+# ************************* REDIS ********************************************
 
+# ************************* SETTINGS LOCAL ***********************************
 try:
     SETTINGS_LOCAL
 except NameError:
@@ -280,8 +284,9 @@ except NameError:
         from settings_local import *
     except ImportError:
         pass
+# ************************* SETTINGS LOCAL ***********************************
 
-# ****************************** WEB SERVICES ******************************
+# ************************* WEB SERVICES *************************************
 # All categories
 WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
@@ -364,5 +369,4 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
-# ****************************** WEB SERVICES ******************************
-
+# ************************* WEB SERVICES *************************************
