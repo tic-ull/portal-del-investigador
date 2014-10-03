@@ -26,8 +26,15 @@ OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
-# Enable translation of strings in this file
-_ = lambda s: s
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+DEVEL = True
+
+INTERNAL_IPS = ('127.0.0.1',)
+
+# REQUIRED FOR 'django.contrib.flatpages'
+SITE_ID = 1
 
 # ******************************* ADMINS *************************************
 ADMINS = (
@@ -37,6 +44,10 @@ MANAGERS = ADMINS
 # ******************************* ADMINS *************************************
 
 # ******************************* LANGUAGE ***********************************
+
+# Enable translation of strings in this file
+_ = lambda s: s
+
 LANGUAGES = (
     ('es', 'Español'),
     ('en', 'English'),
@@ -54,6 +65,7 @@ TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = True
 # ******************************* LANGUAGE ***********************************
 
+# ******************************* INSTALLED APPS *****************************
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,14 +87,9 @@ INSTALLED_APPS = (
     'modeltranslation',
     'flatpages_i18n',
 )
+# ******************************* INSTALLED APPS *****************************
 
-COVERAGE_MODULE_EXCLUDES = (
-    'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
-    'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
-    'management$')
-
-INTERNAL_IPS = ('127.0.0.1',)
-
+# ******************************* MIDDLEWARES ********************************
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -95,19 +102,11 @@ MIDDLEWARE_CLASSES = (
     'crequest.middleware.CrequestMiddleware',
     'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
+# ******************************* MIDDLEWARES ********************************
 
 AUTHENTICATION_BACKENDS = (
     'core.backends.CASBackend',
 )
-
-# Development and debugging configuration
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-DEVEL = True
-
-# Set ID for flatpages
-SITE_ID = 1  # REQUIRED FOR 'django.contrib.flatpages'
 
 # ************************* AUTHENTICATION CAS - ULL *************************
 CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
@@ -149,6 +148,11 @@ SIGIDI_DB = {
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
+
+COVERAGE_MODULE_EXCLUDES = (
+    'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
+    'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
+    'management$')
 
 # ******************************* LOGGING ************************************
 LOG_FILENAME = os.path.join(PROJECT_ROOT, 'investigacion.log')
@@ -257,12 +261,14 @@ TEMPLATE_DIRS = (
 )
 # ************************* TEMPLATES ****************************************
 
+# ************************* STATIC FILES *************************************
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+# ************************* STATIC FILES *************************************
 
 # ************************* WEB SERVICES *************************************
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
