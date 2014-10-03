@@ -12,10 +12,7 @@ from forms import UploadCVNForm
 from models import CVN
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
-import logging
 import settings as st_cvn
-
-logger = logging.getLogger(__name__)
 
 
 @login_required
