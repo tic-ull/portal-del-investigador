@@ -13,6 +13,9 @@ from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     TotalSummaryYearTable, AccountingTableProjects,
                     AccountingTableAgreements)
 from utils import total_table, clean_accounting_table
+import logging
+
+logger = logging.getLogger('default')
 
 
 @login_required
@@ -21,6 +24,7 @@ def index(request):
     try:
         sigidi = SigidiConnection(request.user)
     except OperationalError:
+        logger.error('SIGIDI - Servicio no disponible')
         return render(request, 'core/503.html', context)
 
     manager_projects = sigidi.can_view_all_projects()

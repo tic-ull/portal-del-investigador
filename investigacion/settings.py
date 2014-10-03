@@ -214,14 +214,16 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': False,
         },
-        'cvn': {
+        'default': {
             'handlers': ['default', 'mail_admins'],
-            'level': 'INFO',
+            'propagate': True,
+        },
+        'cvn': {
+            'handlers': ['default'],
             'propagate': True,
         },
         'cvn.management.commands.find_pairs': {
             'handlers': ['find_pairs_handler'],
-            'level': 'DEBUG',
             'propagate': False,
         },
     }
@@ -261,7 +263,7 @@ STATICFILES_FINDERS = (
 )
 
 
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_SERVER_URL = 'http://django-pre.stic.ull.es/odin/core/rest/'
 
 # REDIS
 REDIS_HOST = 'localhost'
