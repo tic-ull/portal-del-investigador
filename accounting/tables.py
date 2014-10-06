@@ -258,8 +258,7 @@ class AccountingTableProjects(Table):
 
     codigo_proyecto = tables.Column(
         accessor='CODIGO',
-        verbose_name=_(u'Código'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Código'))
 
     nombre_proyecto = tables.TemplateColumn(
         URL_TEMPLATE,
@@ -269,7 +268,8 @@ class AccountingTableProjects(Table):
 
     ip_proyecto = tables.Column(
         accessor='IP',
-        verbose_name=_(u'IP'))
+        verbose_name=_(u'IP'),
+        attrs={'th': {'width': '25%'}})
 
     fecha_inicio_proyecto = tables.TemplateColumn(
         DATE_TEMPLATE,
@@ -288,8 +288,7 @@ class AccountingTableAgreements(Table):
 
     codigo_convenio = tables.Column(
         accessor='CODIGO',
-        verbose_name=_(u'Código'),
-        attrs={'th': {'width': '10%'}})
+        verbose_name=_(u'Código'))
 
     nombre_convenio = tables.TemplateColumn(
         URL_TEMPLATE,
@@ -299,7 +298,8 @@ class AccountingTableAgreements(Table):
 
     ip_convenio = tables.Column(
         accessor='IP',
-        verbose_name=_(u'IP'))
+        verbose_name=_(u'IP'),
+        attrs={'th': {'width': '25%'}})
 
     fecha_inicio_convenio = tables.TemplateColumn(
         DATE_TEMPLATE,
