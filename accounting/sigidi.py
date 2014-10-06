@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
-from django.db import connections
 from django.conf import settings as st
+from django.db import connections
 from enum import Enum, IntEnum
 import re
 
@@ -47,72 +47,84 @@ class SigidiEntityType(IntEnum):
 
 
 class Sqry:
-    '''Here we store the Sigidi queries'''
+    """Here we store the Sigidi queries"""
 
     # vrid_query gets the ids of the user permissions. The returned values can
     # be on any permission rows (SigidiPermissions)
-    _dataid = 'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\'' \
-             ' and "ISACTIVE"=1'
-    _proid = 'select "PROID" from "NIV_PRODUCTS" where "PRODATAID"' \
-            ' in (' + _dataid + ')'
-    vrid_query = 'select "VRID" from "NIV_VALUES_REF" where "VRTARGETID"' \
-           ' in (' + _proid + ')'
+    _dataid = (
+        'select "DATAID" from "OBJ_2275" where "DNI"=\'{0}\''
+        ' and "ISACTIVE"=1')
+
+    _proid = (
+        'select "PROID" from "NIV_PRODUCTS"'
+        ' where "PRODATAID" in (' + _dataid + ')')
+
+    vrid_query = (
+        'select "VRID" from "NIV_VALUES_REF"'
+        ' where "VRTARGETID" in (' + _proid + ')')
 
     # permission_query Returns Proyectos/Convenios for a user with explicit
     # permissions set (SigidiPermissions)
     permission_query_end = '"{0}" in ({1})'
-    permission_query = 'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", ' \
-                       '"ALLOW_CONTAB_LIST", "NAME", "%(fecha_inicio)s",' \
-                       ' "IP_ULL" from "%(table)s" where '
+
+    permission_query = (
+        'select "CODIGO", "CONT_KEY", "ALLOW_CONTAB_RES", '
+        ' "ALLOW_CONTAB_LIST", "NAME", "%(fecha_inicio)s",'
+        ' "IP_ULL" from "%(table)s" where ')
 
     # all_entities_query gets all Convenios/Proyectos
-    all_entities_query = 'select "CODIGO", "CONT_KEY", 1 "ALLOW_CONTAB_RES",' \
-                         ' 1 "ALLOW_CONTAB_LIST",' \
-                         ' "NAME", "%(fecha_inicio)s", "IP_ULL"' \
-                         ' from "%(table)s" order by "NAME"'
+    all_entities_query = (
+        'select "CODIGO", "CONT_KEY", 1 "ALLOW_CONTAB_RES",'
+        ' 1 "ALLOW_CONTAB_LIST",'
+        ' "NAME", "%(fecha_inicio)s", "IP_ULL"'
+        ' from "%(table)s" order by "NAME"')
 
     # one_entity_query gets one Convenio/Proyecto
-    one_entity_query = 'select "CODIGO", "CONT_KEY", "IP_ULL",' \
-                       ' "NAME", "%(fecha_inicio)s", 1 "ALLOW_CONTAB_RES",' \
-                       ' 1 "ALLOW_CONTAB_LIST" from "%(table)s"' \
-                       'where "CODIGO"=\'%(entity)s\''
+    one_entity_query = (
+        'select "CODIGO", "CONT_KEY", "IP_ULL",'
+        ' "NAME", "%(fecha_inicio)s", 1 "ALLOW_CONTAB_RES",'
+        ' 1 "ALLOW_CONTAB_LIST" from "%(table)s"'
+        ' where "CODIGO"=\'%(entity)s\'')
 
     # user_categories_query gets the categories a user has (SigidiCategories).
     # These categories define what type of gestor the user is
-    _dataids_from_username = 'select "DATAID" from "OBJ_2274"' \
-                            'where "USERNAME"=\'{0}\' and "ISACTIVE"=1 and' \
-                            '(("VALID_FROM" is NULL or "VALID_FROM" < NOW())' \
-                            'and ("VALID_TO" is NULL or "VALID_TO" > NOW()))'
-    _product_from_dataids = 'select "PROID" from "NIV_PRODUCTS"' \
-                           ' where "PRODATAID"' \
-                           ' in (' + _dataids_from_username + ')'
-    user_categories_query = 'select "REL_PC_CATEGORYID" from "NIV_PROCATREL"' \
-                            ' where "REL_PC_PRODUCTID"' \
-                            ' in (' + _product_from_dataids + ')'
+    _dataids_from_username = (
+        'select "DATAID" from "OBJ_2274"'
+        ' where "USERNAME"=\'{0}\' and "ISACTIVE"=1 and'
+        ' (("VALID_FROM" is NULL or "VALID_FROM" < NOW())'
+        ' and ("VALID_TO" is NULL or "VALID_TO" > NOW()))')
+
+    _product_from_dataids = (
+        'select "PROID" from "NIV_PRODUCTS"'
+        ' where "PRODATAID" in (' + _dataids_from_username + ')')
+
+    user_categories_query = (
+        'select "REL_PC_CATEGORYID" from "NIV_PROCATREL"'
+        ' where "REL_PC_PRODUCTID" in (' + _product_from_dataids + ')')
 
     # entities_where_is_ip_query gets Proyectos/Convenios where the user is ip
-    _refs_from_dataids = 'select "VRID" from "NIV_VALUES_REF"' \
-                        ' where "VRTARGETDATAID"' \
-                        ' in (' + _dataid + ')'
-    entities_where_is_ip_query = 'select "CODIGO", "CONT_KEY", "NAME",' \
-                                 ' "IP_ULL", "%(fecha_inicio)s",' \
-                                 ' 1 "ALLOW_CONTAB_RES",' \
-                                 ' 1 "ALLOW_CONTAB_LIST" ' \
-                                 'from "%(table)s" where "IP_ULL"' \
-                                 ' in (' + _refs_from_dataids + ')'
+    _refs_from_dataids = (
+        'select "VRID" from "NIV_VALUES_REF"'
+        ' where "VRTARGETDATAID" in (' + _dataid + ')')
+
+    entities_where_is_ip_query = (
+        'select "CODIGO", "CONT_KEY", "NAME", "IP_ULL", "%(fecha_inicio)s",'
+        ' 1 "ALLOW_CONTAB_RES", 1 "ALLOW_CONTAB_LIST" from "%(table)s"'
+        ' where "IP_ULL" in (' + _refs_from_dataids + ')')
 
     # The macroquery can be combined with any query that returns
     # Proyectos/Convenios (entities_where_is_ip_query, one_entity_query,
     # all_entities_query, permission_query)
     # It appends to the Proyectos/Convenios, the name of their IP.
-    macroquery = 'select entities."CODIGO", entities."CONT_KEY",' \
-                 ' "OBJ_2275"."NAME" "IP",' \
-                 ' entities."NAME", entities."%(fecha_inicio)s" "DATE",' \
-                 ' entities."ALLOW_CONTAB_RES", entities."ALLOW_CONTAB_LIST"' \
-                 ' from "OBJ_2275" right join "NIV_VALUES_REF"' \
-                 ' on "OBJ_2275"."DATAID" = "NIV_VALUES_REF"."VRTARGETDATAID"' \
-                 ' right join (%(entities_query)s) entities' \
-                 ' on "NIV_VALUES_REF"."VRID" = entities."IP_ULL"' \
+    macroquery = (
+        'select entities."CODIGO", entities."CONT_KEY",'
+        ' "OBJ_2275"."NAME" "IP", entities."NAME",'
+        ' entities."%(fecha_inicio)s" "DATE", entities."ALLOW_CONTAB_RES",'
+        ' entities."ALLOW_CONTAB_LIST"'
+        ' from "OBJ_2275" right join "NIV_VALUES_REF"'
+        ' on "OBJ_2275"."DATAID" = "NIV_VALUES_REF"."VRTARGETDATAID"'
+        ' right join (%(entities_query)s) entities'
+        ' on "NIV_VALUES_REF"."VRID" = entities."IP_ULL"')
 
 
 class SigidiConnection:
@@ -147,7 +159,6 @@ class SigidiConnection:
         if user_permissions == '':
             user_permissions = '0'
         self.user_permissions = user_permissions
-
 
     def _query_entity(self, permissions, entity_type):
         """Builds dynamically query to get projects for a user"""
