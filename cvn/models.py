@@ -176,6 +176,7 @@ class CVN(models.Model):
                 context = dict()
                 context['fecha_cvn'] = self.fecha
                 context['fecyt_url'] = st_cvn.EDITOR_FECYT
+                context['BASE_URL'] = st.BASE_URL
                 body = render_to_string(
                     'cvn/emails/email_cvn_expired.html', context)
                 send_mail(
