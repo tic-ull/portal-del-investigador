@@ -16,4 +16,4 @@ def send_mail(subject, body, email_to):
     try:
         msg.send()
     except SMTPRecipientsRefused as e:
-        logger.error('Error en el envío: ' + str(e))
+        logger.error(str(e))
