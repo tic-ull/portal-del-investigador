@@ -284,6 +284,7 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 
 # ************************* EMAIL ********************************************
 SERVER_EMAIL = 'root@localhost'
+DEFAULT_FROM_EMAIL = 'root@localhost'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
