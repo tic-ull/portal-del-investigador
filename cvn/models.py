@@ -2,12 +2,11 @@
 
 from core import settings as st_core
 from core.models import UserProfile, Log
+from core.send_mail import send_mail_from_template
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
-from django.core.mail import EmailMessage
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.template.loader import render_to_string
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
@@ -172,8 +171,13 @@ class CVN(models.Model):
         if self.status != status:
             self.status = status
             if self.status == st_cvn.CVNStatus.EXPIRED:
-                self.send_mail_from_template(self.user_profile.user.email,
-                                             self.fecha)
+                context = {'fecha_cvn': self.fecha,
+                           'fecyt_url': st_cvn.EDITOR_FECYT}
+                send_mail_from_template(subject=u'Caducidad CVN',
+                                        template='cvn/mails/'
+                                                 'email_cvn_expired.html',
+                                        context=context,
+                                        email_to=self.user_profile.user.email)
             self.save()
             Log.objects.create(
                 user_profile=self.user_profile,
@@ -182,17 +186,6 @@ class CVN(models.Model):
                 date=datetime.datetime.now(),
                 message=st_cvn.CVN_STATUS[self.status][1]
             )
-
-    def send_mail_from_template(self, email='', fecha_cvn=''):
-        if email:
-            context = {}
-            context['fecha_cvn'] = fecha_cvn
-            context['fecyt_url'] = st_cvn.EDITOR_FECYT
-            body = render_to_string('cvn/mails/email_cvn_expired.html', context)
-            msg = EmailMessage(st_cvn.EMAIL_SUBJECT, body, st.EMAIL_HOST_USER,
-                               [email])
-            msg.content_subtype = "html"
-            msg.send()
 
 
 class Publicacion(models.Model):
