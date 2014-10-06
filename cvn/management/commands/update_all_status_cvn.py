@@ -13,4 +13,3 @@ class Command(BaseCommand):
                 cvn.update_status()
             except Exception as e:
                 print '%s (%s)' % (e.message, type(e))
-
