@@ -11,8 +11,8 @@ logger = logging.getLogger('default')
 def send_mail(subject, body, email_to):
     if st.EMAIL_DEBUG:
         email_to = st.EMAIL_DEBUG_ADDRESS
-    msg = EmailMessage(subject, body, to=[email_to])
-    msg.content_subtype = "html"
+    msg = EmailMessage(subject=subject, body=body, to=[email_to])
+    msg.content_subtype = "html"  # Main content is now text/html
     try:
         msg.send()
     except SMTPRecipientsRefused as e:
