@@ -2,7 +2,7 @@
 
 import os
 
-# ******************************* PATHS **************************************
+# ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -10,9 +10,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
-# ******************************* PATHS **************************************
+# ******************************* PATHS *************************************
 
-# ******************************* URLS ***************************************
+# ******************************* URLS **************************************
 BASE_URL = 'http://wwwpre.ull.es/portaldeinvestigacion'
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
@@ -21,7 +21,7 @@ LOGIN_URL = 'login'  # Login address for login_required decorator
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
-# ******************************* URLS ***************************************
+# ******************************* URLS **************************************
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
@@ -108,7 +108,7 @@ AUTHENTICATION_BACKENDS = (
     'core.backends.CASBackend',
 )
 
-# ******************************* AUTHENTICATION CAS - ULL *******************
+# ************************* AUTHENTICATION CAS - ULL *************************
 CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
 CAS_ADMIN_PREFIX = 'admin'  # The URL prefix of the Django administration site
 CAS_EXTRA_LOGIN_PARAMS = ''  # Extra parameters for login URL when redirecting
@@ -118,13 +118,13 @@ CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
-# ******************************* AUTHENTICATION CAS - ULL *******************
+# ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
 
 WSGI_APPLICATION = 'investigacion.wsgi.application'
 
-# ******************************* DATABASES **********************************
+# ******************************* DATABASES *********************************
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -144,7 +144,7 @@ SIGIDI_DB = {
     'HOST': '',
     'PORT': '',
 }
-# ******************************* DATABASES **********************************
+# ******************************* DATABASES *********************************
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
@@ -234,7 +234,7 @@ LOGGING = {
 }
 # ******************************* LOGGING ************************************
 
-# ******************************* TEMPLATES **********************************
+# ************************* TEMPLATES ****************************************
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
@@ -259,30 +259,30 @@ TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'statistics/templates'),
     os.path.join(BASE_DIR, 'accounting/templates'),
 )
-# ******************************* TEMPLATES **********************************
+# ************************* TEMPLATES ****************************************
 
-# ******************************* STATIC FILES *******************************
+# ************************* STATIC FILES *************************************
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-# ******************************* STATIC FILES *******************************
+# ************************* STATIC FILES *************************************
 
-# ******************************* WEB SERVICES *******************************
+# ************************* WEB SERVICES *************************************
 WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
-# ******************************* WEB SERVICES *******************************
+# ************************* WEB SERVICES *************************************
 
-# ******************************* REDIS **************************************
+# ************************* REDIS ********************************************
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
 REDIS_PASSWORD = None
 REDIS_TIMEOUT = 86400  # One Day (Seconds)
-# ******************************* REDIS **************************************
+# ************************* REDIS ********************************************
 
-# ******************************* EMAIL **************************************
+# ************************* EMAIL ********************************************
 SERVER_EMAIL = 'root@localhost'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
@@ -291,9 +291,9 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 EMAIL_DEBUG = True
 EMAIL_DEBUG_ADDRESS = 'stic.investigacion@ull.es'
-# ******************************* EMAIL **************************************
+# ************************* EMAIL ********************************************
 
-# ******************************* SETTINGS LOCAL *****************************
+# ************************* SETTINGS LOCAL ***********************************
 try:
     SETTINGS_LOCAL
 except NameError:
@@ -301,9 +301,9 @@ except NameError:
         from settings_local import *
     except ImportError:
         pass
-# ******************************* SETTINGS LOCAL *****************************
+# ************************* SETTINGS LOCAL ***********************************
 
-# ******************************* WEB SERVICES *******************************
+# ************************* WEB SERVICES *************************************
 # All categories
 WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
@@ -386,4 +386,4 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
-# ******************************* WEB SERVICES *******************************
+# ************************* WEB SERVICES *************************************
