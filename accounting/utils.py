@@ -26,6 +26,13 @@ def clean_accounting_table(request, data, table_class, role):
     if len(result):
         result = table_class(result)
         RequestConfig(request, paginate=False).configure(result)
-        if not role:  # CONT_KEY column only for managers and admins
-            result.columns[2].column.visible = False
+        if not role:
+            suffix = 'proyecto'
+            if table_class.__name__ == 'AccountingTableAgreements':
+                suffix = 'convenio'
+            filtered_fields = ['ip_', 'fecha_inicio_', 'clave_contable_']
+            for field in filtered_fields:
+                key = unicode(field + suffix)
+                if key in result.columns.names():
+                    result.columns[key].column.visible = False
     return result

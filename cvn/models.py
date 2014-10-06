@@ -23,7 +23,7 @@ import sys
 import time
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('cvn')
 
 
 class FECYT:
@@ -45,7 +45,7 @@ class FECYT:
         try:
             data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
-            logger.error(u'ERROR: No existe el fichero o directorio:' +
+            logger.error(u'No existe el fichero o directorio:' +
                          u' %s' % file_pdf.name)
             return False
         # Web Service - FECYT
@@ -58,7 +58,7 @@ class FECYT:
                 ws_response = True
             except:
                 logger.warning(
-                    u'WARNING: No hay respuesta del WS' +
+                    u'No hay respuesta del WS' +
                     u' de la FECYT para el fichero' +
                     u' %s' % file_pdf.name)
                 time.sleep(5)
@@ -121,10 +121,10 @@ class CVN(models.Model):
             self.save()
         except IOError:
             if self.xml_file:
-                logger.error((u'ERROR: No existe el fichero' + u' %s') % (
+                logger.error((u'No existe el fichero' + u' %s') % (
                     self.xml_file.name))
             else:
-                logger.warning(u'WARNING: Se requiere de un fichero CVN-XML')
+                logger.warning(u'Se requiere de un fichero CVN-XML')
 
     def remove_producciones(self):
         Articulo.removeByUserProfile(self.user_profile)
