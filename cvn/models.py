@@ -2,9 +2,9 @@
 
 from core import settings as st_core
 from core.models import UserProfile, Log
+from core.send_mail import send_mail
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
-from django.core.mail import EmailMessage
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
@@ -162,7 +162,6 @@ class CVN(models.Model):
         return False
 
     def update_status(self):
-        status = None
         if not self._is_valid_identity():
             status = st_cvn.CVNStatus.INVALID_IDENTITY
         elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
@@ -171,10 +170,19 @@ class CVN(models.Model):
             status = st_cvn.CVNStatus.UPDATED
         if self.status != status:
             self.status = status
-            if self.status == st_cvn.CVNStatus.EXPIRED:
-                self.send_mail_from_template(self.user_profile.user.email,
-                                             self.fecha)
             self.save()
+
+            if self.status == st_cvn.CVNStatus.EXPIRED:
+                context = dict()
+                context['fecha_cvn'] = self.fecha_cvn
+                context['fecyt_url'] = st_cvn.EDITOR_FECYT
+                body = render_to_string(
+                    'cvn/mails/email_cvn_expired.html', context)
+                send_mail(
+                    subject=_(u'Su CVN ha caducado'),
+                    body=body,
+                    email_to=self.user_profile.user.email)
+
             Log.objects.create(
                 user_profile=self.user_profile,
                 application=self._meta.app_label.upper(),
@@ -182,17 +190,6 @@ class CVN(models.Model):
                 date=datetime.datetime.now(),
                 message=st_cvn.CVN_STATUS[self.status][1]
             )
-
-    def send_mail_from_template(self, email='', fecha_cvn=''):
-        if email:
-            context = {}
-            context['fecha_cvn'] = fecha_cvn
-            context['fecyt_url'] = st_cvn.EDITOR_FECYT
-            body = render_to_string('cvn/mails/email_cvn_expired.html', context)
-            msg = EmailMessage(st_cvn.EMAIL_SUBJECT, body, st.EMAIL_HOST_USER,
-                               [email])
-            msg.content_subtype = "html"
-            msg.send()
 
 
 class Publicacion(models.Model):
