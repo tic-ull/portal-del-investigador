@@ -177,7 +177,7 @@ class CVN(models.Model):
                 context['fecha_cvn'] = self.fecha_cvn
                 context['fecyt_url'] = st_cvn.EDITOR_FECYT
                 body = render_to_string(
-                    'cvn/mails/email_cvn_expired.html', context)
+                    'cvn/emails/email_cvn_expired.html', context)
                 send_mail(
                     subject=_(u'Su CVN ha caducado'),
                     body=body,
