@@ -174,7 +174,7 @@ class CVN(models.Model):
 
             if self.status == st_cvn.CVNStatus.EXPIRED:
                 context = dict()
-                context['fecha_cvn'] = self.fecha_cvn
+                context['fecha_cvn'] = self.fecha
                 context['fecyt_url'] = st_cvn.EDITOR_FECYT
                 body = render_to_string(
                     'cvn/emails/email_cvn_expired.html', context)
