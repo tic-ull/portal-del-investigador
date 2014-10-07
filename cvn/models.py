@@ -3,11 +3,11 @@
 from core import settings as st_core
 from core.models import UserProfile, Log
 from core.send_mail import send_mail
-
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
@@ -176,6 +176,7 @@ class CVN(models.Model):
                 context = dict()
                 context['fecha_cvn'] = self.fecha
                 context['fecyt_url'] = st_cvn.EDITOR_FECYT
+                context['BASE_URL'] = st.BASE_URL
                 body = render_to_string(
                     'cvn/emails/email_cvn_expired.html', context)
                 send_mail(
