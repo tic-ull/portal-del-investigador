@@ -4,17 +4,18 @@ django-debug-toolbar
 psycopg2
 ipython
 Pillow
-south							                        # DB migrations
-suds							                        # Web Services
-lxml							                        # Parsing XML
-dateutils						                        # Fecha de caducidad
-python-slugify						                    # filename desde un String
+south
+suds
+lxml
+dateutils
+python-slugify
+-e git+git@gitlab.stic.ull.es:gestion/django_cas#egg=django_cas
 gunicorn
 selenium
 joblib
 reportlab
 django-crequest
-Werkzeug						                        # Werkzeug debugger
+Werkzeug
 simplejson
 factory-boy
 coverage
