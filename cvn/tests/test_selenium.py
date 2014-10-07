@@ -21,9 +21,9 @@ class LoginCAS(test.LiveServerTestCase):
         init()
 
     def setUp(self):
-        display = Display(visible=0, size=(1280, 1024))
-        display.start()
-        self.display = display
+        #display = Display(visible=0, size=(1280, 1024))
+        #display.start()
+        #self.display = display
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         #self.driver.set_page_load_timeout(30)
@@ -36,7 +36,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
@@ -50,7 +50,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invNoCas")
         driver.find_element_by_id("password").clear()
@@ -63,7 +63,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
@@ -84,7 +84,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
@@ -105,7 +105,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invipas")
         driver.find_element_by_id("password").clear()
@@ -133,7 +133,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
@@ -161,7 +161,7 @@ class LoginCAS(test.LiveServerTestCase):
         driver.get(self.base_url +
                    "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2F" +
                    "investigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252F" +
-                   "es%252Finvestigacion%252Fcvn%252F")
+                   "investigacion%252Fcvn%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invbecario")
         driver.find_element_by_id("password").clear()
@@ -202,7 +202,7 @@ class LoginCAS(test.LiveServerTestCase):
 
     def tearDown(self):
         self.driver.quit()
-        self.display.stop()
+        #self.display.stop()
         self.assertEqual([], self.verificationErrors)
 
     @classmethod
