@@ -35,6 +35,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
+SITE_URL = 'http://localhost:8081'
 
 # ******************************* ADMINS *************************************
 ADMINS = (

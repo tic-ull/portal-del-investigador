@@ -1,9 +1,12 @@
+{% load i18n %}
+
 Estimado/a usuario/a,
 <br><br>
 Su <i>Currículum Vitae Normalizado (CVN)</i> con fecha <b>{{ fecha_cvn }}</b> ha caducado.
 <br><br>
 Recuerde que puede actualizar la información de su CVN utilizando el <a href="{{ fecyt_url }}">Editor de CVN de la FECYT.</a>
-Una vez disponga de su nuevo CVN-PDF podrá subirlo al <a href="{{ BASE_URL }}{% url 'cvn' %}">Portal del Investigador.<a>
+
+Una vez disponga de su nuevo CVN-PDF podrá subirlo al <a href="{{ SITE_URL }}{% url 'cvn' %}">Portal del Investigador.</a>
 <br><br>
 Un cordial saludo,
 <br><br>
