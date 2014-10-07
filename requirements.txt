@@ -8,13 +8,14 @@ suds							                        # Web Services
 lxml							                        # Parsing XML
 dateutils						                        # Fecha de caducidad
 python-slugify						                    # filename desde un String
--e git+git@git.ccti.ull.es:django_cas#egg=django_cas    # CAS
+south
+-e git+git@gitlab.stic.ull.es:gestion/django_cas#egg=django_cas
 gunicorn
 selenium
 joblib
 reportlab
 django-crequest
-Werkzeug						                        # Werkzeug debugger
+Werkzeug
 simplejson
 factory-boy
 coverage
@@ -27,3 +28,5 @@ django-tables2
 redis
 iso3166
 pyvirtualdisplay
+gevent
+greenlet

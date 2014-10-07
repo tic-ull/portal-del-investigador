@@ -4,6 +4,9 @@ from django.conf import settings as st
 import json
 import redis
 import urllib
+import logging
+
+logger = logging.getLogger('default')
 
 
 def eval_json(value):
@@ -25,7 +28,7 @@ class CachedWS:
         ws_json = None
         try:
             reply = json.loads(urllib.urlopen(ws).read())
-            if (type(reply) is dict and 'faultcode' in reply):
+            if type(reply) is dict and 'faultcode' in reply:
                 raise KeyError
             ws_json = reply
             if use_redis:
@@ -33,6 +36,8 @@ class CachedWS:
         except:
             if use_redis:
                 ws_json = eval_json(cls._get_redis(ws))
+                logger.error(u'No hay respuesta de ODIN para el WS'
+                             u' %s - Se busca en REDIS' % ws)
         return ws_json
 
     @classmethod

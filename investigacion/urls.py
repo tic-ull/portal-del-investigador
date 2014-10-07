@@ -13,8 +13,6 @@ admin.autodiscover()
 
 urlpatterns = patterns(
     '',
-    url(r'^investigacion/$', RedirectView.as_view(
-        url=st.BASE_URL), name='index'),
     url(r'^investigacion/admin/', include(admin.site.urls)),
     url(r'^investigacion/accounts/login/$',
         'django_cas.views.login', name='login'),

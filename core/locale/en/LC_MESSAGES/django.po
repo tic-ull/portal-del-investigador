@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 14:13+0100\n"
-"PO-Revision-Date: 2014-09-19 14:16-0102\n"
+"POT-Creation-Date: 2014-09-25 13:27+0100\n"
+"PO-Revision-Date: 2014-09-25 13:36-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,38 @@ msgstr "Date"
 #: models.py:42
 msgid "Mensaje"
 msgstr "Message"
+
+#: templates/core/503.html:7
+msgid "Servicio temporalmente no disponible"
+msgstr "Service Temporarily Unavailable"
+
+#: templates/core/503.html:8
+msgid "Rogamos disculpe las molestias"
+msgstr "Sorry for the inconvenience"
+
+#: templates/core/503.html:9
+msgid "Si el problema persiste puede ponerse en contacto con nosotros en"
+msgstr "If the problem persists you can contact us at"
+
+#: templates/core/503.html:10
+msgid "Volver al Portal del Investigador"
+msgstr "Back to Researcher Portal"
+
+#: templates/core/503.html:17
+msgid "Acciones disponibles"
+msgstr "Actions available"
+
+#: templates/core/503.html:20
+msgid "Volver a la página anterior e intentarlo de nuevo"
+msgstr "Back to previous page and try again"
+
+#: templates/core/503.html:21
+msgid "Ir a la página de inicio de la Universidad de La Laguna"
+msgstr "Go to the home page of the University of La Laguna"
+
+#: templates/core/503.html:22
+msgid "Notificar incidencia"
+msgstr "Incidence report"
 
 #: templates/core/base.html:12
 msgid "Universidad de La Laguna - Portal del Investigador"

@@ -3,34 +3,55 @@
 from core.ws_utils import CachedWS as ws
 from django.conf import settings as st
 from django.contrib.auth.decorators import login_required
+from django.db.utils import OperationalError
 from django.http import Http404
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from sigidi import SigidiConnection
 from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     DetailTable, TotalConceptAndBreakdownTable,
-                    TotalSummaryYearTable, AccountingTable)
+                    TotalSummaryYearTable, AccountingTableProjects,
+                    AccountingTableAgreements)
 from utils import total_table, clean_accounting_table
+import logging
+
+logger = logging.getLogger('default')
 
 
 @login_required
 def index(request):
     context = dict()
-    sigidi = SigidiConnection(request.user)
+    try:
+        sigidi = SigidiConnection(request.user)
+    except OperationalError:
+        logger.error('SIGIDI - Servicio no disponible')
+        return render(request, 'core/503.html', context)
+
     manager_projects = sigidi.can_view_all_projects()
-    manager_agreements = sigidi.can_view_all_convenios()
-    list_projects = sigidi.get_user_projects()
     if manager_projects:
         list_projects = sigidi.get_all_projects()
-    list_agreements = sigidi.get_user_convenios()
-    if manager_agreements:
-        list_agreements = sigidi.get_all_convenios()
+    else:
+        list_projects = sigidi.get_user_projects()
+
     context['projects'] = clean_accounting_table(
         request=request, data=list_projects,
-        table_class=AccountingTable, role=manager_projects)
+        table_class=AccountingTableProjects, role=manager_projects)
+
+    manager_agreements = sigidi.can_view_all_convenios()
+    if manager_agreements:
+        list_agreements = sigidi.get_all_convenios()
+    else:
+        list_agreements = sigidi.get_user_convenios()
+
     context['agreements'] = clean_accounting_table(
         request=request, data=list_agreements,
-        table_class=AccountingTable, role=manager_agreements)
+        table_class=AccountingTableAgreements, role=manager_agreements)
+
+    context['active_projects'] = "active"
+    if "sort" in request.GET and "convenio" in request.GET['sort']:
+        context['active_agreements'] = "active"
+        context['active_projects'] = ""
+
     return render(request, 'accounting/index.html', context)
 
 
@@ -38,20 +59,22 @@ def index(request):
 def accounting_detail(request, code):
     context = dict()
     context['code'] = code
-
-    if code.startswith('PR'):
-        entity = SigidiConnection(user=request.user).get_project(code)
-    else:
-        entity = SigidiConnection(user=request.user).get_convenio(code)
+    try:
+        if code.startswith('PR'):
+            entity = SigidiConnection(user=request.user).get_project(code)
+        else:
+            entity = SigidiConnection(user=request.user).get_convenio(code)
+    except OperationalError:
+        return render(request, 'core/503.html', context)
 
     if not entity:
         raise Http404
 
+    if 'NAME' in entity and entity['NAME'] is not None:
+        context['name'] = entity['NAME']
+
     if 'CONT_KEY' in entity and entity['CONT_KEY'] is not None:
         accounting_code = entity['CONT_KEY']
-
-        if 'NAME' in entity and entity['NAME'] is not None:
-            context['name'] = entity['NAME']
 
         if ('ALLOW_CONTAB_RES' in entity and
                 entity['ALLOW_CONTAB_RES'] is not None):

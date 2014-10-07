@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-19 14:13+0100\n"
-"PO-Revision-Date: 2014-09-19 14:15-0102\n"
+"POT-Creation-Date: 2014-09-25 13:27+0100\n"
+"PO-Revision-Date: 2014-09-25 13:36-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -143,6 +143,10 @@ msgid "Convenios y Contratos"
 msgstr "Agreements and Contracts"
 
 #: templates/accounting/index.html:23 templates/accounting/index.html.py:35
+#: templates/accounting/partials/breakdown_year.html:19
+#: templates/accounting/partials/detail.html:15
+#: templates/accounting/partials/summary_concept.html:19
+#: templates/accounting/partials/summary_year.html:19
 msgid "Acceso denegado: Permisos insuficientes"
 msgstr "Access denied: Insufficient permissions"
 
@@ -150,10 +154,10 @@ msgstr "Access denied: Insufficient permissions"
 msgid "Desglose del gasto por anualidades"
 msgstr "Expenses annual breakdown"
 
-#: templates/accounting/partials/breakdown_year.html:18
-#: templates/accounting/partials/detail.html:14
-#: templates/accounting/partials/summary_concept.html:18
-#: templates/accounting/partials/summary_year.html:18
+#: templates/accounting/partials/breakdown_year.html:21
+#: templates/accounting/partials/detail.html:17
+#: templates/accounting/partials/summary_concept.html:21
+#: templates/accounting/partials/summary_year.html:21
 msgid "No se dispone de información contable"
 msgstr "Accounting information not available"
 

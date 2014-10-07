@@ -1,5 +1,7 @@
 .table{
-    margin-bottom:0px
+    margin-bottom:0px;
+    table-layout: fixed;
+    word-wrap: break-word;
 }
 
 .well{
@@ -7,7 +9,7 @@
 }
 
 .panel-group{
-    margin-bottom:0px
+    margin-bottom:0px;
 }
 
 .alert {
