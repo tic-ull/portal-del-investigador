@@ -420,7 +420,7 @@ class Proyecto(models.Model):
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    titulo = models.CharField(_('Denominación del proyecto'),
+    titulo = models.CharField(_(u'Denominación del proyecto'),
                               max_length=1000, blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
         _(u'Número de investigadores/as'), blank=True, null=True)
