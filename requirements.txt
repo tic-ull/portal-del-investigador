@@ -9,7 +9,6 @@ suds							                        # Web Services
 lxml							                        # Parsing XML
 dateutils						                        # Fecha de caducidad
 python-slugify						                    # filename desde un String
--e git+git@gitlab.stic.ull.es:gestion/django_cas.git#egg=django_cas    # CAS
 gunicorn
 selenium
 joblib
