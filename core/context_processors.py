@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from django.conf import settings as st
+from crequest.middleware import CrequestMiddleware
 
 
 def _get_langs_info(languages, current_url):
@@ -22,7 +23,19 @@ def _get_langs_info(languages, current_url):
 
 
 def extra_info(request):
+    request = CrequestMiddleware.get_request()
+    cas_info = None
+    if request and 'attributes' in request.session:
+        cas_info = request.session['attributes']
+    first_name = (cas_info['first_name']
+                  if cas_info and 'first_name' in cas_info
+                  else request.user.first_name)
+    last_name = (cas_info['last_name']
+                 if cas_info and 'last_name' in cas_info
+                 else request.user.last_name)
     return {
         'old_portal': st.OLD_PORTAL_URL,
         'cp_languages': _get_langs_info(st.LANGUAGES, request.path),
+        'first_name': first_name,
+        'last_name': last_name,
     }
