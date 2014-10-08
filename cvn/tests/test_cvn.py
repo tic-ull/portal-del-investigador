@@ -41,7 +41,7 @@ class CVNTestCase(TestCase):
 
     def test_valid_identity_nif_without_letter(self):
         user = UserFactory.create()
-        user.profile.documento = '00000000A'
+        user.profile.documento = '11111111H'
         user.profile.save()
         cvn = UploadCVNForm.CVN(user, os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
