@@ -88,15 +88,15 @@ class Sqry:
 
     # user_categories_query gets the categories a user has (SigidiCategories).
     # These categories define what type of gestor the user is
-    _dataids_from_username = (
+    _dataids_from_dni_gestor = (
         'select "DATAID" from "OBJ_2274"'
-        ' where "USERNAME"=\'{0}\' and "ISACTIVE"=1 and'
+        ' where "DNI"=\'{0}\' and "ISACTIVE"=1 and'
         ' (("VALID_FROM" is NULL or "VALID_FROM" < NOW())'
         ' and ("VALID_TO" is NULL or "VALID_TO" > NOW()))')
 
     _product_from_dataids = (
         'select "PROID" from "NIV_PRODUCTS"'
-        ' where "PRODATAID" in (' + _dataids_from_username + ')')
+        ' where "PRODATAID" in (' + _dataids_from_dni_gestor + ')')
 
     user_categories_query = (
         'select "REL_PC_CATEGORYID" from "NIV_PROCATREL"'
@@ -268,7 +268,7 @@ class SigidiConnection:
 
     def get_user_roles(self):
         roles = self.cursor.make_query(Sqry.user_categories_query.format(
-            self.user.username))
+            self.user.profile.documento))
         return set(self._codes_to_categories(roles))
 
     def can_view_all_projects(self):
