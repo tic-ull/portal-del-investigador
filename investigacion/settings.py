@@ -117,7 +117,7 @@ CAS_LOGOUT_COMPLETELY = True
 CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
-CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
+CAS_TIPO_CUENTA_NOAUT = ['colectivo', ]
 # ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
