@@ -28,6 +28,7 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq/faq.html'), name='faq'),
+    (r'^investigacion/faq/*', include('django.contrib.flatpages.urls')),
     url(r'^investigacion/contabilidad/', include('accounting.urls')),
 )
 

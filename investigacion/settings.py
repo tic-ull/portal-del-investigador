@@ -63,10 +63,12 @@ LOCALE_PATHS = (
 )
 TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = True
+
 # ******************************* LANGUAGE ***********************************
 
 # ******************************* INSTALLED APPS *****************************
 INSTALLED_APPS = (
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,7 +78,6 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.sites',
     'tinymce',
-    #'south',
     'core',
     'cvn',
     'crequest',
@@ -84,8 +85,7 @@ INSTALLED_APPS = (
     'django_coverage',
     'django_tables2',
     'mptt',
-    'modeltranslation',
-    #'flatpages_i18n',
+    'django.contrib.flatpages',
 )
 # ******************************* INSTALLED APPS *****************************
 
