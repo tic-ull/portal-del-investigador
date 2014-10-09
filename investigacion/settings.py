@@ -84,7 +84,6 @@ INSTALLED_APPS = (
     'statistics',
     'django_coverage',
     'django_tables2',
-    'mptt',
     'django.contrib.flatpages',
 )
 # ******************************* INSTALLED APPS *****************************
