@@ -59,7 +59,7 @@ def index(request):
 def download_cvn(request):
     cvn = request.user.profile.cvn
     pdf = open(cvn.cvn_file.path)
-    response = HttpResponse(pdf, mimetype='application/pdf')
+    response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename=%s' % (
         cvn.cvn_file.name.split('/')[-1])
     return response
