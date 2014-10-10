@@ -19,6 +19,7 @@ class FlatPageTranslationOptions(TranslationOptions):
 
 translator.register(FlatPage, FlatPageTranslationOptions)
 
+
 class CustomFlatPageAdmin(TranslationAdmin):
     form = PageForm
     list_editable = []
@@ -30,6 +31,7 @@ class CustomFlatPageAdmin(TranslationAdmin):
 
 FlatPage._meta.verbose_name = _("Preguntas Frecuentes")
 FlatPage._meta.verbose_name_plural = _("Preguntas Frecuentes")
+
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
