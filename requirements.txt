@@ -4,7 +4,7 @@ django-debug-toolbar
 psycopg2
 ipython
 Pillow
-south							                        # DB migrations
+south							                        # DB migrations, deprecated in 1.7
 suds							                        # Web Services
 lxml							                        # Parsing XML
 dateutils						                        # Fecha de caducidad
