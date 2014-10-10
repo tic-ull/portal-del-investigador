@@ -63,7 +63,6 @@ LOCALE_PATHS = (
 )
 TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = True
-
 # ******************************* LANGUAGE ***********************************
 
 # ******************************* INSTALLED APPS *****************************
@@ -88,15 +87,7 @@ INSTALLED_APPS = (
 )
 # ******************************* INSTALLED APPS *****************************
 
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-COVERAGE_MODULE_EXCLUDES = (
-    'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
-    'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
-    'management$')
-
-INTERNAL_IPS = ('127.0.0.1',)
-
+# ******************************* MIDDLEWARES ********************************
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -107,7 +98,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    #'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 # ******************************* MIDDLEWARES ********************************
 
@@ -155,6 +145,8 @@ SIGIDI_DB = {
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 COVERAGE_MODULE_EXCLUDES = (
     'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',

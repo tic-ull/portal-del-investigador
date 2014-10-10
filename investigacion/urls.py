@@ -6,7 +6,6 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
-from django.views.generic.detail import DetailView
 
 admin.autodiscover()
 
@@ -28,7 +27,8 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq/faq.html'), name='faq'),
-    (r'^investigacion/faq/*', include('django.contrib.flatpages.urls')),
+    (r'^investigacion/faq/*', include(
+        'django.contrib.flatpages.urls')),
     url(r'^investigacion/contabilidad/', include('accounting.urls')),
 )
 
