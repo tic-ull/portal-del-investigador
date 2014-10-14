@@ -67,6 +67,7 @@ USE_TZ = True
 
 # ******************************* INSTALLED APPS *****************************
 INSTALLED_APPS = (
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,16 +77,13 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.sites',
     'tinymce',
-    'south',
     'core',
     'cvn',
     'crequest',
     'statistics',
     'django_coverage',
     'django_tables2',
-    'mptt',
-    'modeltranslation',
-    'flatpages_i18n',
+    'django.contrib.flatpages',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -100,7 +98,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 # ******************************* MIDDLEWARES ********************************
 
@@ -148,6 +145,8 @@ SIGIDI_DB = {
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 COVERAGE_MODULE_EXCLUDES = (
     'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',

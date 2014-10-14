@@ -134,9 +134,9 @@ class CVNStatus(IntEnum):
     INVALID_IDENTITY = 2
 
 CVN_STATUS = (
-    (CVNStatus.UPDATED, _(u'Actualizado')),
-    (CVNStatus.EXPIRED, _(u'Caducado')),
-    (CVNStatus.INVALID_IDENTITY, _(u'NIF/NIE Incorrecto')),
+    (CVNStatus.UPDATED.value, _(u'Actualizado')),
+    (CVNStatus.EXPIRED.value, _(u'Caducado')),
+    (CVNStatus.INVALID_IDENTITY.value, _(u'NIF/NIE Incorrecto')),
 )
 
 # Messages for waiting when be upload a new CVN
