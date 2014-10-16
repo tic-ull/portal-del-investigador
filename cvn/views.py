@@ -71,4 +71,8 @@ def ull_report(request):
     context = {}
     user = User.objects.get(username='GesInv-ULL')
     scientific_production_to_context(user.profile, context)
+    try:
+        context['report_date'] = user.profile.cvn.fecha.year - 1
+    except ObjectDoesNotExist:
+        context['report_date'] = _('No disponible')
     return render(request, 'cvn/ull_report.html', context)
