@@ -9,9 +9,10 @@ import os
 _ = lambda s: s
 
 # FECYT webservice configuration
-USER_WS = "cvnPdfULL01"
-PASSWD_WS = "MXz8T9Py7Xhr"
-URL_WS = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
+USER_FECYT = "cvnPdfULL01"
+PASSWORD_FECYT = "MXz8T9Py7Xhr"
+WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
+WS_FECYT_XML2PDF = "https://integraciones.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 
 # Paths
 PDF_ROOT = "cvn/pdf"

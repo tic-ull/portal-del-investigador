@@ -39,7 +39,7 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def getXML(file_pdf):
+    def pdf2xml(file_pdf):
         try:
             data_pdf = base64.encodestring(file_pdf.read())
         except IOError:
@@ -47,12 +47,12 @@ class FECYT:
                          u' %s' % file_pdf.name)
             return False
         # Web Service - FECYT
-        client_ws = suds.client.Client(st_cvn.URL_WS)
+        client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
         ws_response = False
         while not ws_response:
             try:
                 result_xml = client_ws.service.cvnPdf2Xml(
-                    st_cvn.USER_WS, st_cvn.PASSWD_WS, data_pdf)
+                    st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, data_pdf)
                 ws_response = True
             except:
                 logger.warning(
@@ -64,6 +64,17 @@ class FECYT:
         if result_xml.errorCode == 0:
             return base64.decodestring(result_xml.cvnXml), 0
         return False, result_xml.errorCode
+
+    @staticmethod
+    def xml2pdf(xml):
+        client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
+        pdf = client_ws.service.crearPDFBean(st_cvn.USER_FECYT,
+                                             st_cvn.PASSWORD_FECYT, 'cvn', xml,
+                                             'PN2008')
+        if pdf.returnCode == '01':
+            print("Error creating pdf")
+            return None
+        return pdf
 
 
 class CVN(models.Model):
