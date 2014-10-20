@@ -45,22 +45,11 @@ class UploadCVNForm(forms.ModelForm):
 
     @transaction.atomic
     def save(self, commit=True):
+        CVN.remove_pdf_by_userprofile(self.user.profile)
         cvn = super(UploadCVNForm, self).save(commit=False)
-        cvn.cvn_file.name = u'CVN-%s.pdf' % self.user.username
-        try:
-            cvn_old = CVN.objects.get(user_profile=self.user)
-            cvn_old.remove()
-        except ObjectDoesNotExist:
-            pass
-        cvn.user_profile = self.user.profile
-        cvn.xml_file.save(cvn.cvn_file.name.replace('pdf', 'xml'),
-                          ContentFile(self.xml), save=False)
-        tree_xml = etree.XML(self.xml)
-        cvn.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
-        cvn.is_inserted = False
-        cvn.update_status()
-        cvn.save()
-        cvn.xml_file.close()
+        cvn.update_fields(self.user, self.xml)
+        if commit:
+            cvn.save()
         return cvn
 
     @staticmethod

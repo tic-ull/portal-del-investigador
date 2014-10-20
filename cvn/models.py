@@ -7,10 +7,12 @@ from django.core.files.move import file_move_safe
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
+from django.core.files.base import ContentFile
+from django.core.exceptions import ObjectDoesNotExist
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
 from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
-                            parse_nif)
+                            parse_nif, parse_date)
 import base64
 import datetime
 import logging
@@ -101,6 +103,27 @@ class CVN(models.Model):
     def __unicode__(self):
         return '%s ' % self.cvn_file.name.split('/')[-1]
 
+    @staticmethod
+    def create(self):
+        pass
+        # get skeleton xml
+        # insert ull info
+        # connect to fecyt
+
+    def upgrade(self):
+        xml = self.xml_file.read().decode('ISO-8859-15')
+        self.xml_file.close()
+        # TODO: insert ull info
+        pdf = FECYT.xml2pdf(xml)
+
+    @classmethod
+    def remove_pdf_by_userprofile(cls, user_profile):
+        try:
+            cvn_old = cls.objects.get(user_profile=user_profile)
+            cvn_old.remove()
+        except ObjectDoesNotExist:
+            pass
+
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
         self._backup_pdf()
@@ -169,6 +192,17 @@ class CVN(models.Model):
         if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
             return True
         return False
+
+    def update_fields(self, user, xml):
+        self.cvn_file.name = u'CVN-%s.pdf' % user.username
+        self.user_profile = user.profile
+        self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
+                          ContentFile(xml), save=False)
+        self.xml_file.close()
+        tree_xml = etree.XML(xml)
+        self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
+        self.is_inserted = False
+        self.update_status()
 
     def update_status(self):
         status = None
