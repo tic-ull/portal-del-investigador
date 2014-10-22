@@ -43,7 +43,7 @@ def send_department(request, user):
         (dept, dept_json) = Department.get_user_department(
             user.profile.rrhh_code)
         if dept is not None and dept_json is not None:
-            request.session['dept'] = serializers.serialize("json", [dept])
+            request.session['dept'] = dept.name
             request.session['dept_json'] = dept_json
 
 
