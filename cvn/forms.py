@@ -47,25 +47,10 @@ class UploadCVNForm(forms.ModelForm):
     def save(self, commit=True):
         CVN.remove_pdf_by_userprofile(self.user.profile)
         cvn = super(UploadCVNForm, self).save(commit=False)
-        cvn.update_fields(self.user, self.xml)
+        cvn.user_profile = self.user.profile
+        cvn.update_fields(self.xml, commit)
         if commit:
             cvn.save()
-        return cvn
-
-    @staticmethod
-    def CVN(user, pdf_path):
-        upload_file = open(pdf_path)
-        cvn_file = SimpleUploadedFile(
-            upload_file.name, upload_file.read(), content_type=st_cvn.PDF)
-        upload_file.close()
-        try:
-            cvn = CVN.objects.get(user_profile__user=user)
-        except ObjectDoesNotExist:
-            cvn = None
-        form = UploadCVNForm(initial={'cvn_file': cvn_file},
-                             user=user, instance=cvn)
-        if form.is_valid():
-            cvn = form.save()
         return cvn
 
     class Meta:

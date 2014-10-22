@@ -28,14 +28,15 @@ class CVNTestCase(TestCase):
                              'xml/CVN-Test.xml'))
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-        u = UserFactory.create()
-        cvn = UploadCVNForm.CVN(u, os.path.join(
+        us = UserFactory.create()
+        cvn = CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+        cvn.save()
         relative_path = (
             cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
         full_path = os.path.join(st_cvn.OLD_PDF_ROOT, relative_path)
-        UploadCVNForm.CVN(u, os.path.join(
+        CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         self.assertTrue(os.path.isfile(full_path))
 
@@ -43,7 +44,7 @@ class CVNTestCase(TestCase):
         user = UserFactory.create()
         user.profile.documento = '11111111H'
         user.profile.save()
-        cvn = UploadCVNForm.CVN(user, os.path.join(
+        cvn = CVN(user=user, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
         self.assertNotEqual(cvn.status, st_cvn.CVNStatus.INVALID_IDENTITY)
 

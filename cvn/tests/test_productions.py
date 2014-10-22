@@ -31,7 +31,7 @@ class CVNTestCase(TestCase):
         """ Insert the data of XML in the database """
         try:
             user = UserFactory.create()
-            cvn = UploadCVNForm.CVN(user, os.path.join(
+            cvn = CVN(user=user, pdf_path=os.path.join(
                 st_cvn.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
             cvn.insert_xml()
             self.assertEqual(user.profile.articulo_set.count(), 1074)
@@ -193,7 +193,7 @@ class CVNTestCase(TestCase):
 
     def test_productions_no_title(self):
         u = UserFactory.create()
-        cvn = UploadCVNForm.CVN(u, os.path.join(
+        cvn = CVN(user=u, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
         cvn.insert_xml()
         self.assertEqual(len(u.profile.proyecto_set.all()), 3)
@@ -201,7 +201,7 @@ class CVNTestCase(TestCase):
 
     def test_insert_patentes(self):
         u = UserFactory.create()
-        cvn = UploadCVNForm.CVN(u, os.path.join(
+        cvn = CVN(user=u, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/cvn-patentes.pdf'))
         cvn.insert_xml()
         patente = Patente.objects.get(num_solicitud=111111111111111)

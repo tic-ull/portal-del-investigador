@@ -8,6 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
@@ -103,6 +104,24 @@ class CVN(models.Model):
     def __unicode__(self):
         return '%s ' % self.cvn_file.name.split('/')[-1]
 
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        pdf_path = kwargs.pop('pdf_path', None)
+        super(CVN, self).__init__(*args, **kwargs)
+        if pdf_path and user:
+            self.user_profile = user.profile
+            upload_file = open(pdf_path)
+            self.update(upload_file.name, upload_file.read())
+            upload_file.close()
+
+    def update(self, pdf_name, pdf_content):
+        CVN.remove_pdf_by_userprofile(self.user_profile)
+        self.cvn_file = SimpleUploadedFile(
+            pdf_name, pdf_content, content_type=st_cvn.PDF)
+        (xml, error) = FECYT.pdf2xml(self.cvn_file)
+        self.update_fields(xml, commit=False)
+
+
     @staticmethod
     def create(self):
         pass
@@ -114,7 +133,12 @@ class CVN(models.Model):
         xml = self.xml_file.read().decode('ISO-8859-15')
         self.xml_file.close()
         # TODO: insert ull info
-        pdf = FECYT.xml2pdf(xml)
+        #pdf = FECYT.xml2pdf(xml)
+        # Until we have a working xml2pdf we take our own pdf file
+        pdf = self.cvn_file.read()
+        self.cvn_file.close()
+        self.update('CVN-' + self.user_profile.user.username, pdf)
+
 
     @classmethod
     def remove_pdf_by_userprofile(cls, user_profile):
@@ -193,27 +217,25 @@ class CVN(models.Model):
             return True
         return False
 
-    def update_fields(self, user, xml):
-        self.cvn_file.name = u'CVN-%s.pdf' % user.username
-        self.user_profile = user.profile
+    def update_fields(self, xml, commit=True):
+        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
         self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
                           ContentFile(xml), save=False)
         self.xml_file.close()
         tree_xml = etree.XML(xml)
         self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
         self.is_inserted = False
-        self.update_status()
+        self.update_status(commit)
 
-    def update_status(self):
-        status = None
+    def update_status(self, commit=True):
+        status = self.status
         if not self._is_valid_identity():
-            status = st_cvn.CVNStatus.INVALID_IDENTITY
+            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
         elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
-            status = st_cvn.CVNStatus.EXPIRED
+            self.status = st_cvn.CVNStatus.EXPIRED
         else:
-            status = st_cvn.CVNStatus.UPDATED
-        if self.status != status:
-            self.status = status
+            self.status = st_cvn.CVNStatus.UPDATED
+        if self.status != status and commit:
             self.save()
             Log.objects.create(
                 user_profile=self.user_profile,
