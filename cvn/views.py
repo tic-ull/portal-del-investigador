@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm
 from models import CVN
+from statistics.models import Department
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
 import settings as st_cvn
@@ -22,9 +23,7 @@ def index(request):
 
     dept, dept_json = None, None
     if 'dept' and 'dept_json' in request.session:
-        for obj in serializers.deserialize(
-                "json", request.session['dept'], ignorenonexistent=True):
-            dept = obj.object
+        dept = Department.objects.get(name=request.session['dept'])
         dept_json = request.session['dept_json']
         context['department'] = dept
         context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
