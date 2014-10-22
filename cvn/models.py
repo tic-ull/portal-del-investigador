@@ -42,7 +42,7 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def pdf2xml(pdf):
+    def pdf2xml(pdf, pdf_name):
         data_pdf = base64.encodestring(pdf)
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
@@ -56,7 +56,7 @@ class FECYT:
                 logger.warning(
                     u'No hay respuesta del WS' +
                     u' de la FECYT para el fichero' +
-                    u' %s' % file_pdf.name)
+                    u' %s' % pdf_name)
                 time.sleep(5)
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
@@ -102,31 +102,39 @@ class CVN(models.Model):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
+        # We dont want both pdf_path and pdf (content)
         pdf_path = kwargs.pop('pdf_path', None)
+        pdf = kwargs.pop('pdf_path', None)
+
         super(CVN, self).__init__(*args, **kwargs)
-        if pdf_path and user:
+
+        if user:
+            pdf_name = 'CVN-' + user.username
+        if pdf_path:
+            pdf_file = open(pdf_path)
+            pdf_name = pdf_file.name
+            pdf = pdf_file.read()
+
+        if pdf and user:
             self.user_profile = user.profile
-            upload_file = open(pdf_path)
-            self.update(upload_file.name, upload_file.read())
+            self.update(pdf_name, pdf)
 
     def update(self, pdf_name, pdf_content):
         CVN.remove_pdf_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
             pdf_name, pdf_content, content_type=st_cvn.PDF)
         self.cvn_file.open()
-        (xml, error) = FECYT.pdf2xml(self.cvn_file.read())
+        (xml, error) = FECYT.pdf2xml(self.cvn_file.read(), self.cvn_file.name)
         self.update_fields(xml, commit=False)
 
 
     @staticmethod
     def create(self, user):
         pass
-        # xml = skeleton_xml()
+        # TODO: xml_skeleton()
+        # TODO: insert ull info
         # pdf = FECYT.xml2pdf(xml)
-        #cvn = CVN(user=user, )
-        # get skeleton xml
-        # insert ull info
-        # connect to fecyt
+        # cvn = CVN(user=user, pdf=pdf)
 
     def upgrade(self):
         # TODO: insert ull info in xml
