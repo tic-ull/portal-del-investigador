@@ -42,13 +42,8 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def pdf2xml(file_pdf):
-        try:
-            data_pdf = base64.encodestring(file_pdf.read())
-        except IOError:
-            logger.error(u'No existe el fichero o directorio:' +
-                         u' %s' % file_pdf.name)
-            return False
+    def pdf2xml(pdf):
+        data_pdf = base64.encodestring(pdf)
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
         ws_response = False
@@ -70,9 +65,10 @@ class FECYT:
 
     @staticmethod
     def xml2pdf(xml):
+        data_xml = base64.encodestring(xml)
         client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
         pdf = client_ws.service.crearPDFBean(st_cvn.USER_FECYT,
-                                             st_cvn.PASSWORD_FECYT, 'cvn', xml,
+                                             st_cvn.PASSWORD_FECYT, 'cvn', data_xml,
                                              'PN2008')
         if pdf.returnCode == '01':
             print("Error creating pdf")
@@ -112,32 +108,36 @@ class CVN(models.Model):
             self.user_profile = user.profile
             upload_file = open(pdf_path)
             self.update(upload_file.name, upload_file.read())
-            upload_file.close()
 
     def update(self, pdf_name, pdf_content):
         CVN.remove_pdf_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
             pdf_name, pdf_content, content_type=st_cvn.PDF)
-        (xml, error) = FECYT.pdf2xml(self.cvn_file)
+        self.cvn_file.open()
+        (xml, error) = FECYT.pdf2xml(self.cvn_file.read())
         self.update_fields(xml, commit=False)
 
 
     @staticmethod
-    def create(self):
+    def create(self, user):
         pass
+        # xml = skeleton_xml()
+        # pdf = FECYT.xml2pdf(xml)
+        #cvn = CVN(user=user, )
         # get skeleton xml
         # insert ull info
         # connect to fecyt
 
     def upgrade(self):
-        xml = self.xml_file.read().decode('ISO-8859-15')
-        self.xml_file.close()
-        # TODO: insert ull info
-        #pdf = FECYT.xml2pdf(xml)
+        # TODO: insert ull info in xml
+        #self.xml_file.open()
+        #pdf = FECYT.xml2pdf(self.xml_file.read())
         # Until we have a working xml2pdf we take our own pdf file
+        self.cvn_file.open()
         pdf = self.cvn_file.read()
-        self.cvn_file.close()
         self.update('CVN-' + self.user_profile.user.username, pdf)
+        self.save()
+
 
 
     @classmethod
@@ -168,9 +168,7 @@ class CVN(models.Model):
 
     def insert_xml(self):
         try:
-            if self.xml_file.closed:
-                self.xml_file.open()
-            self.xml_file.seek(0)
+            self.xml_file.open()
             cvn_items = etree.parse(self.xml_file).findall('CvnItem')
             self._parse_cvn_items(cvn_items)
             self.is_inserted = True
