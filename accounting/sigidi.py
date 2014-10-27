@@ -306,23 +306,30 @@ class SigidiConnection:
 
     def update_get_all_projects(self):
         object_list = []
-        sigidi_projects = filter(lambda project: project['CODIGO'] is not None,
+        sigidi_projects = filter(lambda project:
+                                 project['CODIGO'] is not None and
+                                 project['CONT_KEY'] is not None,
                                  self.get_all_projects())
         for project in sigidi_projects:
             try:
                 Proyecto.objects.get(codigo=project['CODIGO'])
             except ObjectDoesNotExist:
-                object_list.append(Proyecto(codigo=project['CODIGO']))
+                new_project = Proyecto(codigo=project['CODIGO'])
+                if new_project not in object_list:
+                    object_list.append(Proyecto(codigo=project['CODIGO']))
         Proyecto.objects.bulk_create(object_list)
 
     def update_get_all_convenios(self):
         object_list = []
         sigidi_convenios = filter(lambda convenio: convenio['CODIGO']
+                                  is not None and convenio['CONT_KEY']
                                   is not None,
                                   self.get_all_convenios())
         for convenio in sigidi_convenios:
             try:
                 Convenio.objects.get(codigo=convenio['CODIGO'])
             except ObjectDoesNotExist:
-                object_list.append(Convenio(codigo=convenio['CODIGO']))
+                new_convenio = Proyecto(codigo=project['CODIGO'])
+                if new_convenio not in object_list:
+                    object_list.append(Convenio(codigo=convenio['CODIGO']))
         Convenio.objects.bulk_create(object_list)

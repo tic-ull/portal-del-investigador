@@ -21,6 +21,9 @@ class Entity(models.Model):
     def __unicode__(self):
         return "%s" % self.codigo
 
+    def __eq__(self, other):
+        return self.codigo == other.codigo
+
     class Meta:
         abstract = True
         ordering = ["created_at"]
