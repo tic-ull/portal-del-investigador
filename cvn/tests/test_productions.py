@@ -1,16 +1,17 @@
 # -*- encoding: UTF-8 -*-
 
+import datetime
+import os
+
+from django.test import TestCase
+from lxml import etree
+
 from cvn import settings as st_cvn
 from cvn.models import (CVN, Congreso, Convenio, Proyecto, Patente,
                         TesisDoctoral, Articulo, Libro, Capitulo)
-from cvn.parser_helpers import parse_produccion_type, parse_produccion_subtype
+from cvn.parsers.read import parse_produccion_type, parse_produccion_subtype
 from core.tests.helpers import init, clean
-from django.test import TestCase
 from core.tests.factories import UserFactory
-from lxml import etree
-from cvn.forms import UploadCVNForm
-import datetime
-import os
 
 
 class CVNTestCase(TestCase):

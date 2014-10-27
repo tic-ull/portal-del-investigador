@@ -2,14 +2,10 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from lxml import etree
+
 from models import FECYT, CVN
-from parser_helpers import parse_date
 import settings as st_cvn
 
 

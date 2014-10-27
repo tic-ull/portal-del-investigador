@@ -2,7 +2,7 @@
 
 from iso3166 import countries
 import datetime
-import settings as st_cvn
+import cvn.settings as st_cvn
 import string
 
 

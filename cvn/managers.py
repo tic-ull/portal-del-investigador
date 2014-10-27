@@ -1,12 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
+import datetime
+
 from django.db import models
-from parser_helpers import (parse_scope, parse_authors, parse_places,
+from django.core.exceptions import ObjectDoesNotExist
+
+from cvn.parsers.read import (parse_scope, parse_authors, parse_places,
                             parse_publicacion_location, parse_date,
                             parse_date_interval, parse_economic,
                             parse_entities, parse_produccion_id, parse_title)
-from django.core.exceptions import ObjectDoesNotExist
-import datetime
 import settings as st_cvn
 
 

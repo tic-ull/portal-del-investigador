@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from django.conf import settings as st
-from enum import IntEnum
+from enum import IntEnum, Enum
 import datetime
 import os
 
@@ -12,7 +12,7 @@ _ = lambda s: s
 USER_FECYT = "cvnPdfULL01"
 PASSWORD_FECYT = "MXz8T9Py7Xhr"
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
-WS_FECYT_XML2PDF = "https://integraciones.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
+WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 
 # Paths
 PDF_ROOT = "cvn/pdf"
@@ -22,6 +22,9 @@ PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
 CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
+XML_SKELETON_PATH = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/skeleton.xml')
+XML_2ND_SURNAME = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/second_family_name.xml')
+XML_PROFESSION = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/profession.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
@@ -55,6 +58,10 @@ FECYT_CODE_SUBTYPE = {
     u'112': u'Libro',
     u'100': u'TesisDoctoral',
 }
+
+class FC_OFFICIAL_ID(Enum):
+    DNI = '000.010.000.100'
+    NIE = '000.010.000.110'
 
 FC_PRIORITY_COUNTRY = "050.030.010.120"
 FC_EXTENDED_COUNTRY = "050.030.010.220"

@@ -1,7 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as st_core
-from core.models import UserProfile, Log
+import base64
+import datetime
+import logging
+import os
+import sys
+import time
+
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
 from django.db import models
@@ -10,18 +15,16 @@ from lxml import etree
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ObjectDoesNotExist
+import suds
+
+from core import settings as st_core
+from core.models import UserProfile, Log
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
-from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
+from cvn.parsers.read import (parse_produccion_type, parse_produccion_subtype,
                             parse_nif, parse_date)
-import base64
-import datetime
-import logging
-import os
+from cvn.parsers.write import CvnXmlWriter
 import settings as st_cvn
-import suds
-import sys
-import time
 
 
 logger = logging.getLogger('cvn')
@@ -65,15 +68,18 @@ class FECYT:
 
     @staticmethod
     def xml2pdf(xml):
-        data_xml = base64.encodestring(xml)
+        xml_data = xml.decode('utf8')
         client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
-        pdf = client_ws.service.crearPDFBean(st_cvn.USER_FECYT,
-                                             st_cvn.PASSWORD_FECYT, 'cvn', data_xml,
-                                             'PN2008')
-        if pdf.returnCode == '01':
-            print("Error creating pdf")
+        try:
+            pdf = client_ws.service.crearPDFBean(st_cvn.USER_FECYT,
+                                                 st_cvn.PASSWORD_FECYT, 'cvn',
+                                                 xml_data, 'PN2008')
+        except UnicodeDecodeError as s:
+            print(s.message)
             return None
-        return pdf
+        if pdf.returnCode == '01':
+            return None
+        return base64.decodestring(pdf.dataHandler)
 
 
 class CVN(models.Model):
@@ -104,7 +110,7 @@ class CVN(models.Model):
         user = kwargs.pop('user', None)
         # We dont want both pdf_path and pdf (content)
         pdf_path = kwargs.pop('pdf_path', None)
-        pdf = kwargs.pop('pdf_path', None)
+        pdf = kwargs.pop('pdf', None)
 
         super(CVN, self).__init__(*args, **kwargs)
 
@@ -127,26 +133,24 @@ class CVN(models.Model):
         (xml, error) = FECYT.pdf2xml(self.cvn_file.read(), self.cvn_file.name)
         self.update_fields(xml, commit=False)
 
-
     @staticmethod
-    def create(self, user):
-        pass
-        # TODO: xml_skeleton()
+    def create(user):
+        parser = CvnXmlWriter(user=user)
+        xml = parser.tostring()
         # TODO: insert ull info
-        # pdf = FECYT.xml2pdf(xml)
-        # cvn = CVN(user=user, pdf=pdf)
+        pdf = FECYT.xml2pdf(xml)
+        cvn = CVN(user=user, pdf=pdf)
+        return cvn
 
     def upgrade(self):
+        self.xml_file.open()
+        parser = CvnXmlWriter(user=self.user_profile.user,
+                              xml=self.xml_file.read())
         # TODO: insert ull info in xml
-        #self.xml_file.open()
-        #pdf = FECYT.xml2pdf(self.xml_file.read())
-        # Until we have a working xml2pdf we take our own pdf file
-        self.cvn_file.open()
-        pdf = self.cvn_file.read()
-        self.update('CVN-' + self.user_profile.user.username, pdf)
-        self.save()
-
-
+        pdf = FECYT.xml2pdf(parser.tostring())
+        if pdf is not None:
+            self.update('CVN-' + self.user_profile.user.username, pdf)
+            self.save()
 
     @classmethod
     def remove_pdf_by_userprofile(cls, user_profile):

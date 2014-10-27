@@ -1,12 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
-from django.test import TestCase
 import os
-from cvn.parser_helpers import (parse_date, parse_date_interval,
+import datetime
+
+from django.test import TestCase
+from lxml import etree
+
+from cvn.parsers.read import (parse_date, parse_date_interval,
                                 parse_produccion_id, parse_places)
 from cvn import settings as st_cvn
-from lxml import etree
-import datetime
 
 
 class ParserTestCase(TestCase):
