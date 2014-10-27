@@ -49,10 +49,10 @@ class ProjectAdmin(DataSigidiAdmin):
         return my_urls + urls
 
     def update_view(self, request):
-        print request.path
+        print "Project update_view"
         sigidi = SigidiConnection()
         sigidi.update_get_all_projects()
-        return redirect(request.path)
+        return redirect('/investigacion/admin/accounting/proyecto')
 
 
 class ConvenioAdmin(DataSigidiAdmin):
@@ -62,5 +62,5 @@ class ConvenioAdmin(DataSigidiAdmin):
         return redirect('admin/accounting/convenio/')
 
 admin.site.register(Proyecto, ProjectAdmin)
-#admin.site.register(Convenio, ConvenioAdmin)
+admin.site.register(Convenio, ConvenioAdmin)
 

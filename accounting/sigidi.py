@@ -316,7 +316,7 @@ class SigidiConnection:
             except ObjectDoesNotExist:
                 new_project = Proyecto(codigo=project['CODIGO'])
                 if new_project not in object_list:
-                    object_list.append(Proyecto(codigo=project['CODIGO']))
+                    object_list.append(new_project)
         Proyecto.objects.bulk_create(object_list)
 
     def update_get_all_convenios(self):
@@ -329,7 +329,7 @@ class SigidiConnection:
             try:
                 Convenio.objects.get(codigo=convenio['CODIGO'])
             except ObjectDoesNotExist:
-                new_convenio = Proyecto(codigo=project['CODIGO'])
+                new_convenio = Convenio(codigo=convenio['CODIGO'])
                 if new_convenio not in object_list:
-                    object_list.append(Convenio(codigo=convenio['CODIGO']))
+                    object_list.append(new_convenio)
         Convenio.objects.bulk_create(object_list)
