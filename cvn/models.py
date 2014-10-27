@@ -123,15 +123,21 @@ class CVN(models.Model):
 
         if pdf and user:
             self.user_profile = user.profile
-            self.update(pdf_name, pdf)
+            self.update_from_pdf(pdf, commit=False)
 
-    def update(self, pdf_name, pdf_content):
+    def update_from_pdf(self, pdf_content, commit=True):
         CVN.remove_pdf_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
-            pdf_name, pdf_content, content_type=st_cvn.PDF)
+            'CVN-' + self.user_profile.user.username, pdf_content,
+            content_type=st_cvn.PDF)
         self.cvn_file.open()
         (xml, error) = FECYT.pdf2xml(self.cvn_file.read(), self.cvn_file.name)
-        self.update_fields(xml, commit=False)
+        self.update_fields(xml, commit)
+
+    def update_from_xml(self, xml, commit=True):
+        pdf = FECYT.xml2pdf(xml)
+        if pdf:
+            self.update_from_pdf(pdf, commit)
 
     @staticmethod
     def create(user):
@@ -146,11 +152,8 @@ class CVN(models.Model):
         self.xml_file.open()
         parser = CvnXmlWriter(user=self.user_profile.user,
                               xml=self.xml_file.read())
-        # TODO: insert ull info in xml
-        pdf = FECYT.xml2pdf(parser.tostring())
-        if pdf is not None:
-            self.update('CVN-' + self.user_profile.user.username, pdf)
-            self.save()
+        # TODO: insert ull info
+        self.update_from_xml(parser.tostring())
 
     @classmethod
     def remove_pdf_by_userprofile(cls, user_profile):
