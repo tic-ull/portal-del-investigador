@@ -15,14 +15,14 @@
   </CvnItemID>
   <Title>
     <Name code="010.010.000.170">
-      <Item>Jefe de Personal</Item>
+      <Item>%(profession)s</Item>
     </Name>
     <Type>000</Type>
     <Category>000</Category>
   </Title>
   <Entity>
     <EntityName code="010.010.000.020">
-      <Item>FBI</Item>
+      <Item>%(employer)s</Item>
     </EntityName>
   </Entity>
   <Date>
@@ -31,7 +31,7 @@
     </Moment>
     <StartDate>
       <DayMonthYear code="010.010.000.180">
-        <Item>1999-05-02</Item>
+        <Item>%(start_date)s</Item>
       </DayMonthYear>
     </StartDate>
   </Date>

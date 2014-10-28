@@ -39,6 +39,6 @@
         <Item>%(end_date)s</Item>
       </DayMonthYear>
     </EndDate>
-    <DurationType>010</DurationType>
+  <DurationType>010</DurationType>
   </Date>
 </CvnItem>

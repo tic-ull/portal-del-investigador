@@ -25,6 +25,7 @@ TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
+XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
@@ -67,6 +68,10 @@ FC_PRIORITY_COUNTRY = "050.030.010.120"
 FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
 FC_ENITITY_OPERATOR = "050.030.010.250"
+
+class FC_PROFESSION_CODE(Enum):
+    CURRENT = '010'
+    OLD = '020'
 
 
 # Indicates 'Link' node contains Congreso data
