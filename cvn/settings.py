@@ -25,6 +25,7 @@ TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
+XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)

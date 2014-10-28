@@ -24,7 +24,7 @@ class CvnXmlWriter:
 
             xml = get_xml_fragment(st_cvn.XML_SKELETON_PATH) % {
                 'given_name': user.first_name,
-                'first_family_name':surnames[0],
+                'first_family_name': surnames[0],
                 'id_type':st_cvn.FC_OFFICIAL_ID.DNI.name,
                 'id_type_code': st_cvn.FC_OFFICIAL_ID.DNI.value,
                 'official_id': user.profile.documento,
@@ -52,3 +52,17 @@ class CvnXmlWriter:
                 'end_date': end_date.strftime(self.DATE_FORMAT)
         })
         self.xml.append(profession)
+
+    def add_teaching(self, data):
+        teaching = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_TEACHING) % {
+                'title': data['title'],
+                'university': data['university'],
+                'reading_date': data['reading_date'].strftime(self.DATE_FORMAT),
+                'given_name': data['given_name'],
+                'first_family_name': data['first_family_name'],
+                'second_family_name': data['second_family_name'],
+                'signature': data['signature']
+            }
+        )
+        self.xml.append(teaching)
