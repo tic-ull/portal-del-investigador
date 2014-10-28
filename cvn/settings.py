@@ -22,9 +22,9 @@ PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
 CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
-XML_SKELETON_PATH = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/skeleton.xml')
-XML_2ND_SURNAME = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/second_family_name.xml')
-XML_PROFESSION = os.path.join(st.MEDIA_ROOT, 'cvn/res/xml/profession.xml')
+XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
+XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
+XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)

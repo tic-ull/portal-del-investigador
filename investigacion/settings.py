@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+RES_ROOT = os.path.join(BASE_DIR, 'res')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 # ******************************* PATHS *************************************

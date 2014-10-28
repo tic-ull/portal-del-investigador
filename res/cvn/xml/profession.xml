@@ -1,0 +1,44 @@
+<CvnItem>
+  <CvnItemID>
+    <CVNPK>
+      <Item>010.020.000.000</Item>
+    </CVNPK>
+    <CodeCVNItem>
+      <Item>210</Item>
+    </CodeCVNItem>
+    <ExperienceType>
+      <Item>030</Item>
+    </ExperienceType>
+    <ResultType>
+      <Item>010</Item>
+    </ResultType>
+  </CvnItemID>
+  <Title>
+    <Name code="010.020.000.170">
+      <Item>%(profession)s</Item>
+    </Name>
+    <Type>000</Type>
+    <Category>000</Category>
+  </Title>
+  <Entity>
+    <EntityName code="010.020.000.020">
+      <Item>%(employer)s</Item>
+    </EntityName>
+  </Entity>
+  <Date>
+    <Moment>
+      <Item>OTHERS</Item>
+    </Moment>
+    <StartDate>
+      <DayMonthYear code="010.020.000.180">
+        <Item>%(start_date)s</Item>
+      </DayMonthYear>
+    </StartDate>
+    <EndDate>
+      <DayMonthYear code="010.020.000.310">
+        <Item>%(end_date)s</Item>
+      </DayMonthYear>
+    </EndDate>
+    <DurationType>010</DurationType>
+  </Date>
+</CvnItem>

@@ -1,0 +1,38 @@
+<CvnItem>
+  <CvnItemID>
+    <CVNPK>
+      <Item>010.010.000.000</Item>
+    </CVNPK>
+    <CodeCVNItem>
+      <Item>210</Item>
+    </CodeCVNItem>
+    <ExperienceType>
+      <Item>030</Item>
+    </ExperienceType>
+    <ResultType>
+      <Item>010</Item>
+    </ResultType>
+  </CvnItemID>
+  <Title>
+    <Name code="010.010.000.170">
+      <Item>Jefe de Personal</Item>
+    </Name>
+    <Type>000</Type>
+    <Category>000</Category>
+  </Title>
+  <Entity>
+    <EntityName code="010.010.000.020">
+      <Item>FBI</Item>
+    </EntityName>
+  </Entity>
+  <Date>
+    <Moment>
+      <Item>OTHERS</Item>
+    </Moment>
+    <StartDate>
+      <DayMonthYear code="010.010.000.180">
+        <Item>1999-05-02</Item>
+      </DayMonthYear>
+    </StartDate>
+  </Date>
+</CvnItem>
