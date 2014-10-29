@@ -26,6 +26,7 @@ XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
+XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)

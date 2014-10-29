@@ -55,3 +55,9 @@ class CvnXmlWriter:
             xml_path = st_cvn.XML_CURRENT_PROFESSION
         profession_xml = get_xml_fragment(xml_path) % values_xml
         self.xml.append(etree.fromstring(profession_xml))
+
+    def add_phd(self, titulo, centro, date):
+        phd_xml = get_xml_fragment(st_cvn.XML_TEACHING_PHD) % {
+            'titulo': titulo, 'centro': centro,
+            'date': date.strftime(self.DATE_FORMAT)}
+        self.xml.append(etree.fromstring(phd_xml))
