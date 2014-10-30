@@ -242,7 +242,8 @@ class CVN(models.Model):
         self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
         self.is_inserted = False
         self.update_status(commit)
-        self.save()
+        if commit:
+            self.save()
 
     def update_status(self, commit=True):
         status = self.status
