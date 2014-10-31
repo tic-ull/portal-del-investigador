@@ -116,13 +116,13 @@ class CVN(models.Model):
 
         if user:
             pdf_name = 'CVN-' + user.username
+            self.user_profile = user.profile
         if pdf_path:
             pdf_file = open(pdf_path)
             pdf_name = pdf_file.name
             pdf = pdf_file.read()
 
         if pdf and user:
-            self.user_profile = user.profile
             self.update_from_pdf(pdf, commit=False)
 
     def update_from_pdf(self, pdf_content, commit=True):
