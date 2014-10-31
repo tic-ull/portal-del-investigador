@@ -175,20 +175,20 @@ def parse_produccion_subtype(xml):
     return ''
 
 
-def parse_publicacion_location(tree_xml):
+def parse_publicacion_location(xml):
     """Input: Location node"""
     data = {}
-    if tree_xml:
-        volume = tree_xml.find('Volume/Item')
+    if xml:
+        volume = xml.find('Volume/Item')
         if volume is not None and volume.text is not None:
             data['volumen'] = volume.text.strip()
-        number = tree_xml.find('Number/Item')
+        number = xml.find('Number/Item')
         if number is not None and number.text is not None:
             data['numero'] = number.text.strip()
-        page = tree_xml.find('InitialPage/Item')
+        page = xml.find('InitialPage/Item')
         if page is not None and page.text is not None:
             data['pagina_inicial'] = page.text.strip()
-        page = tree_xml.find('FinalPage/Item')
+        page = xml.find('FinalPage/Item')
         if page is not None and page.text is not None:
             data['pagina_final'] = page.text.strip()
     return data
