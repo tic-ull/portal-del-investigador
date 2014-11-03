@@ -30,3 +30,4 @@ pyvirtualdisplay
 gevent
 greenlet
 django-modeltranslation
+django-object-tools

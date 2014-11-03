@@ -6,8 +6,11 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
+import object_tools
 
 admin.autodiscover()
+object_tools.autodiscover()
+
 
 urlpatterns = patterns(
     '',
@@ -17,6 +20,7 @@ urlpatterns = patterns(
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
     url(r'^investigacion/tinymce/', include('tinymce.urls')),
+    url(r'^investigacion/object-tools/', include(object_tools.tools.urls)),
 )
 
 urlpatterns += i18n_patterns(
