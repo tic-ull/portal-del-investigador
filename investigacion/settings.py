@@ -68,7 +68,6 @@ USE_TZ = True
 # ******************************* INSTALLED APPS *****************************
 INSTALLED_APPS = (
     'modeltranslation',
-    'object_tools',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
