@@ -32,16 +32,22 @@ class CvnXmlWriter:
             }
             self.xml = etree.fromstring(xml.encode('utf8'))
             if len(surnames) == 2:
-                second_surname = etree.fromstring(get_xml_fragment(
-                    st_cvn.XML_2ND_SURNAME) %
-                        {'second_family_name': surnames[1]})
                 first_surname = self.xml.find('Agent/Identification/Personal'
                                               'Identification/FirstFamilyName')
-                pi = first_surname.getparent()
-                pi.insert(pi.index(first_surname) + 1, second_surname)
+                self._append_2nd_surname(first_surname, surnames[1])
 
     def tostring(self):
         return etree.tostring(self.xml)
+
+    @staticmethod
+    def _append_2nd_surname(surname_node, second_surname):
+        second_surname_node = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_2ND_SURNAME) %
+                {'second_family_name': second_surname})
+        pi = surname_node.getparent()
+        pi.insert(pi.index(surname_node) + 1, second_surname_node)
+
+
 
     def add_teaching(self, title, university, reading_date, given_name,
                      first_family_name, second_family_name, signature):
