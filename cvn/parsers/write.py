@@ -43,16 +43,17 @@ class CvnXmlWriter:
     def tostring(self):
         return etree.tostring(self.xml)
 
-    def add_teaching(self, data):
+    def add_teaching(self, title, university, reading_date, given_name,
+                     first_family_name, second_family_name, signature):
         teaching = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING) % {
-                'title': data['title'],
-                'university': data['university'],
-                'reading_date': data['reading_date'].strftime(self.DATE_FORMAT),
-                'given_name': data['given_name'],
-                'first_family_name': data['first_family_name'],
-                'second_family_name': data['second_family_name'],
-                'signature': data['signature']
+                'title': title,
+                'university': university,
+                'reading_date': reading_date.strftime(self.DATE_FORMAT),
+                'given_name': given_name,
+                'first_family_name': first_family_name,
+                'second_family_name': second_family_name,
+                'signature': signature
             }
         )
         self.xml.append(teaching)
@@ -67,20 +68,20 @@ class CvnXmlWriter:
         return u'OTHERS'
 
 
-    def add_bachelor_engineering(self, data):
+    def add_bachelor_engineering(self, title, university, date, type = None):
         others = ''
         try:
-            if data['type'] is not None:
-                code = self._official_title_(data['type'])
+            if type is not None:
+                code = self._official_title_(type)
                 if code == u'OTHERS':
-                    others = data['type']
+                    others = type
         except KeyError:
             code = ''
         academic_education = etree.fromstring(get_xml_fragment(
             st_cvn.XML_BACHELOR_ENGINEERING) % {
-                'title': data['title'],
-                'university': data['university'],
-                'date': data['date'].strftime(self.DATE_FORMAT),
+                'title': title,
+                'university': university,
+                'date': date.strftime(self.DATE_FORMAT),
                 'code': code,
                 'others': others
             }
@@ -93,7 +94,6 @@ class CvnXmlWriter:
         self.xml.append(academic_education)
 
     def add_profession(self, prof_name, employer, start_date, end_date=None):
-
         values_xml = {'profession': prof_name,
                       'employer': employer,
                       'start_date': start_date.strftime(self.DATE_FORMAT)}
