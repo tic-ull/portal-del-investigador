@@ -49,18 +49,15 @@ class FECYT:
         data_pdf = base64.encodestring(pdf)
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
-        ws_response = False
-        while not ws_response:
-            try:
-                result_xml = client_ws.service.cvnPdf2Xml(
-                    st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, data_pdf)
-                ws_response = True
-            except:
-                logger.warning(
-                    u'No hay respuesta del WS' +
-                    u' de la FECYT para el fichero' +
-                    u' %s' % pdf_name)
-                time.sleep(5)
+        try:
+            result_xml = client_ws.service.cvnPdf2Xml(
+                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, data_pdf)
+        except:
+            logger.warning(
+                u'No hay respuesta del WS' +
+                u' de la FECYT para el fichero' +
+                u' %s' % pdf_name)
+            return False, 1
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
             return base64.decodestring(result_xml.cvnXml), 0
