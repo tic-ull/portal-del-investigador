@@ -73,16 +73,14 @@ FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
 FC_ENITITY_OPERATOR = "050.030.010.250"
 
-<<<<<<< HEAD
 class OFFICIAL_TITLE_TYPE(Enum):
     T_DOC = '940'
     T_SUP = '950'
     T_MED = '960'
-=======
+
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
     OLD = '020'
->>>>>>> update_cvn
 
 
 # Indicates 'Link' node contains Congreso data
