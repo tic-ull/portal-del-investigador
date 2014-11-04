@@ -116,13 +116,13 @@ class CVN(models.Model):
 
         if user:
             pdf_name = 'CVN-' + user.username
+            self.user_profile = user.profile
         if pdf_path:
             pdf_file = open(pdf_path)
             pdf_name = pdf_file.name
             pdf = pdf_file.read()
 
         if pdf and user:
-            self.user_profile = user.profile
             self.update_from_pdf(pdf, commit=False)
 
     def update_from_pdf(self, pdf_content, commit=True):
@@ -179,7 +179,10 @@ class CVN(models.Model):
         old_cvn_file = os.path.join(old_path, new_file_name)
         if not os.path.isdir(old_path):
             os.makedirs(old_path)
-        file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        try:
+            file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        except IOError:
+            pass
 
     def insert_xml(self):
         try:
@@ -239,6 +242,8 @@ class CVN(models.Model):
         self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
         self.is_inserted = False
         self.update_status(commit)
+        if commit:
+            self.save()
 
     def update_status(self, commit=True):
         status = self.status

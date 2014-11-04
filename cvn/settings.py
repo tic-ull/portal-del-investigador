@@ -28,6 +28,8 @@ XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT,
                                         'cvn/xml/bachelor_engineering.xml')
+XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
+XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
@@ -71,10 +73,16 @@ FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
 FC_ENITITY_OPERATOR = "050.030.010.250"
 
+<<<<<<< HEAD
 class OFFICIAL_TITLE_TYPE(Enum):
     T_DOC = '940'
     T_SUP = '950'
     T_MED = '960'
+=======
+class FC_PROFESSION_CODE(Enum):
+    CURRENT = '010'
+    OLD = '020'
+>>>>>>> update_cvn
 
 
 # Indicates 'Link' node contains Congreso data

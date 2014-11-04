@@ -43,16 +43,6 @@ class CvnXmlWriter:
     def tostring(self):
         return etree.tostring(self.xml)
 
-    def add_profession(self, profession_name, employer, start_date, end_date):
-        profession = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_PROFESSION) % {
-                'profession': profession_name,
-                'employer': employer,
-                'start_date': start_date.strftime(self.DATE_FORMAT),
-                'end_date': end_date.strftime(self.DATE_FORMAT)
-        })
-        self.xml.append(profession)
-
     def add_teaching(self, data):
         teaching = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING) % {
@@ -101,3 +91,22 @@ class CvnXmlWriter:
         if not code:
             academic_education.remove(node)
         self.xml.append(academic_education)
+
+    def add_profession(self, prof_name, employer, start_date, end_date=None):
+
+        values_xml = {'profession': prof_name,
+                      'employer': employer,
+                      'start_date': start_date.strftime(self.DATE_FORMAT)}
+        if end_date:
+            xml_path = st_cvn.XML_PROFESSION
+            values_xml['end_date'] = end_date.strftime(self.DATE_FORMAT)
+        else:
+            xml_path = st_cvn.XML_CURRENT_PROFESSION
+        profession_xml = get_xml_fragment(xml_path) % values_xml
+        self.xml.append(etree.fromstring(profession_xml))
+
+    def add_phd(self, titulo, centro, date):
+        phd_xml = get_xml_fragment(st_cvn.XML_TEACHING_PHD) % {
+            'titulo': titulo, 'centro': centro,
+            'date': date.strftime(self.DATE_FORMAT)}
+        self.xml.append(etree.fromstring(phd_xml))
