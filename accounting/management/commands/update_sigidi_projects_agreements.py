@@ -10,8 +10,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         sigidi = SigidiConnection()
-        sigidi.update_get_all_projects()
-        sigidi.update_get_all_convenios()
+        sigidi.update_projects()
+        sigidi.update_convenios()
 
 
 

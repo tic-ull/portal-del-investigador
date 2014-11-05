@@ -304,7 +304,7 @@ class SigidiConnection:
     def get_user_convenios(self):
         return self._get_user_entities(SigidiEntityType.CONVENIOS)
 
-    def update_get_all_projects(self):
+    def update_projects(self):
         object_list = []
         sigidi_projects = filter(lambda project:
                                  project['CODIGO'] is not None and
@@ -319,7 +319,7 @@ class SigidiConnection:
                     object_list.append(new_project)
         Proyecto.objects.bulk_create(object_list)
 
-    def update_get_all_convenios(self):
+    def update_convenios(self):
         object_list = []
         sigidi_convenios = filter(lambda convenio: convenio['CODIGO']
                                   is not None and convenio['CONT_KEY']
