@@ -1,14 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
-from accounting.sigidi import SigidiConnection
-from django.conf.urls import patterns #  , url
+#from accounting.sigidi import SigidiConnection
+#from django.conf.urls import patterns
 from django.contrib import admin
 # from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import redirect
-from models import (Proyecto, Convenio,)
+from models import (Proyecto, Convenio)
 
 
-class DataSigidiAdmin(admin.ModelAdmin):
+class AccountingAdmin(admin.ModelAdmin):
 
     list_display = ('codigo', 'igualdad_genero', 'software_libre',)
 
@@ -26,7 +26,7 @@ class DataSigidiAdmin(admin.ModelAdmin):
 
     def get_actions(self, request):
         """ Remove action delete object from list of actions """
-        actions = super(DataSigidiAdmin, self).get_actions(request)
+        actions = super(AccountingAdmin, self).get_actions(request)
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
@@ -39,28 +39,28 @@ class DataSigidiAdmin(admin.ModelAdmin):
     #     return my_urls + urls
 
 
-class ProjectAdmin(DataSigidiAdmin):
+#class ProjectAdmin(DataSigidiAdmin):
     # change_form_template = 'change_form_local.html'
-    def get_urls(self):
-        urls = super(ProjectAdmin, self).get_urls()
-        my_urls = patterns('',
-                           (r'^update/$',
-                            self.admin_site.admin_view(self.update_view)))
-        return my_urls + urls
+    #def get_urls(self):
+    #    urls = super(ProjectAdmin, self).get_urls()
+    #    my_urls = patterns('',
+    #                       (r'^update/$',
+    #                        self.admin_site.admin_view(self.update_view)))
+    #    return my_urls + urls
 
-    def update_view(self, request):
-        print "Project update_view"
-        sigidi = SigidiConnection()
-        sigidi.update_get_all_projects()
-        return redirect('/investigacion/admin/accounting/proyecto')
+    #def update_view(self, request):
+    #    print "Project update_view"
+    #    sigidi = SigidiConnection()
+    #    sigidi.update_get_all_projects()
+    #    return redirect('/investigacion/admin/accounting/proyecto')
 
 
-class ConvenioAdmin(DataSigidiAdmin):
-    def update_view(self):
-        sigidi = SigidiConnection()
-        sigidi.update_get_all_convenios()
-        return redirect('admin/accounting/convenio/')
+#class ConvenioAdmin(DataSigidiAdmin):
+#    def update_view(self):
+#        sigidi = SigidiConnection()
+#        sigidi.update_get_all_convenios()
+#        return redirect('admin/accounting/convenio/')
 
-admin.site.register(Proyecto, ProjectAdmin)
-admin.site.register(Convenio, ConvenioAdmin)
+admin.site.register(Proyecto, AccountingAdmin)
+admin.site.register(Convenio, AccountingAdmin)
 
