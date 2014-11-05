@@ -30,6 +30,7 @@ XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT,
                                         'cvn/xml/bachelor_engineering.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
 XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
+XML_OTHERS_TITLE = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
@@ -73,7 +74,12 @@ FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
 FC_ENITITY_OPERATOR = "050.030.010.250"
 
-class OFFICIAL_TITLE_TYPE(Enum):
+class FC_SURNAME(Enum):
+    APELLIDO = "000.010.000.010"
+    DOCTORANDO = "030.040.000.120"
+
+
+class FC_OFFICIAL_TITLE_TYPE(Enum):
     T_DOC = '940'
     T_SUP = '950'
     T_MED = '960'

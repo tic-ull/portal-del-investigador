@@ -34,23 +34,22 @@ class CvnXmlWriter:
             if len(surnames) == 2:
                 first_surname = self.xml.find('Agent/Identification/Personal'
                                               'Identification/FirstFamilyName')
-                self._append_2nd_surname(first_surname, surnames[1])
+                self._append_2nd_surname(first_surname, surnames[1],
+                                         st_cvn.FC_SURNAME.APELLIDO.value)
 
     def tostring(self):
         return etree.tostring(self.xml)
 
     @staticmethod
-    def _append_2nd_surname(surname_node, second_surname):
+    def _append_2nd_surname(surname_node, second_surname, code):
         second_surname_node = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_2ND_SURNAME) %
-                {'second_family_name': second_surname})
+            st_cvn.XML_2ND_SURNAME) % {
+                'second_family_name': second_surname, 'code': code})
         pi = surname_node.getparent()
         pi.insert(pi.index(surname_node) + 1, second_surname_node)
 
-
-
-    def add_teaching(self, title, university, reading_date, given_name,
-                     first_family_name, second_family_name, signature):
+    def add_teaching(self, title, university, reading_date, signature,
+                     given_name, first_family_name, second_family_name=None):
         teaching = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING) % {
                 'title': title,
@@ -58,45 +57,30 @@ class CvnXmlWriter:
                 'reading_date': reading_date.strftime(self.DATE_FORMAT),
                 'given_name': given_name,
                 'first_family_name': first_family_name,
-                'second_family_name': second_family_name,
                 'signature': signature
             }
         )
+        if second_family_name is not None:
+            first_surname = teaching.find('Author/FirstFamilyName')
+            self._append_2nd_surname(first_surname, second_family_name,
+                                     st_cvn.FC_SURNAME.DOCTORANDO.value)
         self.xml.append(teaching)
 
-    def _official_title_(self, type):
-        if type == u'Doctor':
-            return st_cvn.OFFICIAL_TITLE_TYPE.T_DOC.value
-        if type == u'Licenciado/Ingeniero Superior':
-            return st_cvn.OFFICIAL_TITLE_TYPE.T_SUP.value
-        if type == u'Diplomado/Ingeniero Tecnico':
-            return st_cvn.OFFICIAL_TITLE_TYPE.T_MED.value
-        return u'OTHERS'
-
-
-    def add_bachelor_engineering(self, title, university, date, type = None):
-        others = ''
-        try:
-            if type is not None:
-                code = self._official_title_(type)
-                if code == u'OTHERS':
-                    others = type
-        except KeyError:
-            code = ''
+    def add_bachelor_engineering(self, title, university, date, code,
+                                 title_type = None):
         academic_education = etree.fromstring(get_xml_fragment(
             st_cvn.XML_BACHELOR_ENGINEERING) % {
                 'title': title,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT),
-                'code': code,
-                'others': others
+                'code': code
             }
         )
-        node = academic_education.find('Filter')
-        if code != u'OTHERS':
-            node.remove(node.find('Others'))
-        if not code:
-            academic_education.remove(node)
+        if code == u'OTHERS':
+            others_node = etree.fromstring(get_xml_fragment(
+                st_cvn.XML_OTHERS_TITLE) % {'others': title_type}
+            )
+            academic_education.find('Filter').append(others_node)
         self.xml.append(academic_education)
 
     def add_profession(self, prof_name, employer, start_date, end_date=None):
