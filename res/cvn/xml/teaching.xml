@@ -41,7 +41,7 @@
     </GivenName>
     <FirstFamilyName code="030.040.000.120">
       <Item>%(first_family_name)s</Item>
-    </FirstFamilyName>    
+    </FirstFamilyName>
     <Signature code="030.040.000.120">
       <Item>%(signature)s</Item>
     </Signature>
