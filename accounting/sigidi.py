@@ -304,32 +304,51 @@ class SigidiConnection:
     def get_user_convenios(self):
         return self._get_user_entities(SigidiEntityType.CONVENIOS)
 
-    def update_projects(self):
+    def update_entities(self, entity_type):
         object_list = []
-        sigidi_projects = filter(lambda project:
-                                 project['CODIGO'] is not None and
-                                 project['CONT_KEY'] is not None,
-                                 self.get_all_projects())
-        for project in sigidi_projects:
+        entities = (self.get_all_convenios() if entity_type == Convenio
+                    else self.get_all_projects())
+        sigidi_entities = filter(lambda entity:
+                                 entity['CODIGO'] is not None and
+                                 entity['CONT_KEY'] is not None,
+                                 entities)
+        for entity in sigidi_entities:
             try:
-                Proyecto.objects.get(codigo=project['CODIGO'])
+                entity_type.objects.get(codigo=entity['CODIGO'])
             except ObjectDoesNotExist:
-                new_project = Proyecto(codigo=project['CODIGO'])
-                if new_project not in object_list:
-                    object_list.append(new_project)
-        Proyecto.objects.bulk_create(object_list)
+                new_entity = entity_type(codigo=entity['CODIGO'])
+                if new_entity not in object_list:
+                    object_list.append(new_entity)
+        entity_type.objects.bulk_create(object_list)
+
+    def update_projects(self):
+        self.update_entities(Proyecto)
+        #object_list = []
+        #sigidi_projects = filter(lambda project:
+        #                         project['CODIGO'] is not None and
+        #                         project['CONT_KEY'] is not None,
+        #                         self.get_all_projects())
+        #for project in sigidi_projects:
+        #    try:
+        #        Proyecto.objects.get(codigo=project['CODIGO'])
+        #    except ObjectDoesNotExist:
+        #        new_project = Proyecto(codigo=project['CODIGO'])
+        #        if new_project not in object_list:
+        #            object_list.append(new_project)
+        #Proyecto.objects.bulk_create(object_list)
 
     def update_convenios(self):
-        object_list = []
-        sigidi_convenios = filter(lambda convenio: convenio['CODIGO']
-                                  is not None and convenio['CONT_KEY']
-                                  is not None,
-                                  self.get_all_convenios())
-        for convenio in sigidi_convenios:
-            try:
-                Convenio.objects.get(codigo=convenio['CODIGO'])
-            except ObjectDoesNotExist:
-                new_convenio = Convenio(codigo=convenio['CODIGO'])
-                if new_convenio not in object_list:
-                    object_list.append(new_convenio)
-        Convenio.objects.bulk_create(object_list)
+        self.update_entities(Convenio)
+        #object_list = []
+        #sigidi_convenios = filter(lambda convenio: convenio['CODIGO']
+        #                          is not None and convenio['CONT_KEY']
+        #                          is not None,
+        #                          self.get_all_convenios())
+        #for convenio in sigidi_convenios:
+        #    try:
+        #        Convenio.objects.get(codigo=convenio['CODIGO'])
+        #    except ObjectDoesNotExist:
+        #        new_convenio = Convenio(codigo=convenio['CODIGO'])
+        #        if new_convenio not in object_list:
+        #            object_list.append(new_convenio)
+        #Convenio.objects.bulk_create(object_list)

@@ -12,12 +12,3 @@ class Command(BaseCommand):
         sigidi = SigidiConnection()
         sigidi.update_projects()
         sigidi.update_convenios()
-
-
-
-
-
-
-
-
-
