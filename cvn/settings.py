@@ -83,6 +83,7 @@ class FC_OFFICIAL_TITLE_TYPE(Enum):
     T_DOC = '940'
     T_SUP = '950'
     T_MED = '960'
+    OTHER = 'OTHER'
 
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
