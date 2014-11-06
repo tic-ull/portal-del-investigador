@@ -66,8 +66,9 @@ class CvnXmlWriter:
                                      st_cvn.FC_SURNAME.DOCTORANDO.value)
         self.xml.append(teaching)
 
-    def add_bachelor_engineering(self, title, university, date, code,
+    def add_learning(self, title, university, date, code,
                                  title_type = None):
+        '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
         academic_education = etree.fromstring(get_xml_fragment(
             st_cvn.XML_BACHELOR_ENGINEERING) % {
                 'title': title,
@@ -96,6 +97,7 @@ class CvnXmlWriter:
         self.xml.append(etree.fromstring(profession_xml))
 
     def add_phd(self, titulo, centro, date):
+        '''PhD (Doctor)'''
         phd_xml = get_xml_fragment(st_cvn.XML_TEACHING_PHD) % {
             'titulo': titulo, 'centro': centro,
             'date': date.strftime(self.DATE_FORMAT)}
