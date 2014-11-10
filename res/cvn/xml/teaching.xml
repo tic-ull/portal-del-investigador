@@ -1,10 +1,10 @@
 <CvnItem>
   <CvnItemID>
     <CVNPK>
-      <Item>030.040.000.000</Item>
+      <Item>030.010.000.000</Item>
     </CVNPK>
     <CodeCVNItem>
-      <Item>010</Item>
+      <Item>040</Item>
     </CodeCVNItem>
     <ExperienceType>
       <Item>000</Item>
@@ -14,37 +14,84 @@
     </ResultType>
   </CvnItemID>
   <Title>
-    <Name code="030.040.000.030">
+    <Name code="030.010.000.160">
       <Item>%(title)s</Item>
     </Name>
     <Type>000</Type>
-    <Category>000</Category>
+    <Category>OTHERS</Category>
   </Title>
+  <Filter>
+    <Type code="030.010.000.140">
+      <Item>100</Item>
+    </Type>
+    <Value code="030.010.000.140">
+      <Item>470</Item>
+    </Value>
+  </Filter>
+  <Edition>
+    <Text code="030.010.000.200">
+      <Item>%(course)s</Item>
+    </Text>
+    <Type code="030.010.000.200">
+      <Item>000</Item>
+    </Type>
+  </Edition>
+  <Link>
+    <CvnItemID>
+      <CodeCVNItem>
+        <Item>000</Item>
+      </CodeCVNItem>
+    </CvnItemID>
+    <Title>
+      <Name code="030.010.000.020">
+        <Item>%(qualification)s</Item>
+      </Name>
+      <Identification code="030.010.000.020">
+        <Item>OTHERS</Item>
+      </Identification>
+      <Type>010</Type>
+      <Category>000</Category>
+    </Title>
+  </Link>
   <Entity>
-    <EntityName code="030.040.000.080">
-      <Item>%(university)s</Item>
+    <Type code="030.010.000.110">
+      <Item>000</Item>
+    </Type>
+    <EntityName code="030.010.000.080">
+      <Item>Universidad de La Laguna</Item>
+     </EntityName>
+    <EntityID>
+      <CVNPK code="030.010.000.080">
+        <Item>8435246600011002700000001438700</Item>
+      </CVNPK>
+    </EntityID>
+  </Entity>
+  <Entity>
+    <EntityName code="030.010.000.130">
+      <Item>%(department)s</Item>
+    </EntityName>
+  </Entity>
+  <Entity>
+    <EntityName code="030.010.000.540">
+      <Item>%(faculty)s</Item>
     </EntityName>
   </Entity>
   <Date>
     <Moment>
       <Item>OTHERS</Item>
     </Moment>
-    <OnlyDate>
-      <DayMonthYear code="030.040.000.140">
-        <Item>%(reading_date)s</Item>
-      </DayMonthYear>
-    </OnlyDate>
+    <StartDate>
+      <Year code="030.010.000.550">
+        <Item>%(start_date)s</Item>
+      </Year>
+    </StartDate>
   </Date>
-  <Author>
-    <GivenName code="030.040.000.120">
-      <Item>%(given_name)s</Item>
-    </GivenName>
-    <FirstFamilyName code="030.040.000.120">
-      <Item>%(first_family_name)s</Item>
-    </FirstFamilyName>
-    <Signature code="030.040.000.120">
-      <Item>%(signature)s</Item>
-    </Signature>
-    <Roll>010</Roll>
-  </Author>
+  <PhysicalDimension>
+    <Value code="030.010.000.220">
+      <Item>%(number_credits)s</Item>
+    </Value>
+    <Type code="030.010.000.210">
+      <Item>000</Item>
+    </Type>
+  </PhysicalDimension>
 </CvnItem>

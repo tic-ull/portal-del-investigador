@@ -102,3 +102,6 @@ class CvnXmlWriter:
             'titulo': titulo, 'centro': centro,
             'date': date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(phd_xml))
+
+    def add_teaching(self):
+        pass
