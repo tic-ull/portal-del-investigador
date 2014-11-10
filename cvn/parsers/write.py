@@ -48,7 +48,7 @@ class CvnXmlWriter:
         pi = surname_node.getparent()
         pi.insert(pi.index(surname_node) + 1, second_surname_node)
 
-    def add_teaching(self, title, university, reading_date, signature,
+    def add_teaching_phd(self, title, university, reading_date, signature,
                      given_name, first_family_name, second_family_name=None):
         teaching = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING) % {
@@ -96,7 +96,7 @@ class CvnXmlWriter:
         profession_xml = get_xml_fragment(xml_path) % values_xml
         self.xml.append(etree.fromstring(profession_xml))
 
-    def add_phd(self, titulo, centro, date):
+    def add_learning_phd(self, titulo, centro, date):
         '''PhD (Doctor)'''
         phd_xml = get_xml_fragment(st_cvn.XML_TEACHING_PHD) % {
             'titulo': titulo, 'centro': centro,
