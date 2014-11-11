@@ -79,7 +79,10 @@ class CvnXmlWriter:
         )
         if code == u'OTHERS':
             others_node = etree.fromstring(get_xml_fragment(
-                st_cvn.XML_OTHERS_TITLE) % {'others': title_type}
+                st_cvn.XML_OTHERS_TITLE) % {
+                    'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
+                    'others': title_type
+                }
             )
             academic_education.find('Filter').append(others_node)
         self.xml.append(academic_education)
@@ -103,5 +106,32 @@ class CvnXmlWriter:
             'date': date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(phd_xml))
 
-    def add_teaching(self):
-        pass
+    def add_teaching(self, subject, program_type, subject_type, course,
+                     qualification, department, faculty, start_date,
+                     number_credits, other_program=None, other_subject=None):
+        teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
+            'subject': subject,
+            'program_type': program_type,
+            'subject_type': subject_type,
+            'course': course,
+            'qualification': qualification,
+            'department': department,
+            'faculty': faculty,
+            'start_date': start_date,
+            'numer_credits': number_credits
+        }
+        if other_program is not None:
+            others_node = etree.fromstring(get_xml_fragment(
+                st_cvn.XML_OTHERS_TITLE) % {
+                    'code_others': st_cvn.FC_PROGRAM_TYPE_OTHERS,
+                    'others': other_program
+                }
+            )
+            teaching.find()
+        if other_subject is not None:
+            others_node = etree.fromstring(get_xml_fragment(
+                st_cvn.XML_OTHERS_TITLE) % {
+                    'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
+                    'others': other_subject
+                }
+            )

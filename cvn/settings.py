@@ -74,6 +74,7 @@ FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
 FC_ENITITY_OPERATOR = "050.030.010.250"
 
+
 class FC_SURNAME(Enum):
     APELLIDO = "000.010.000.010"
     DOCTORANDO = "030.040.000.120"
@@ -85,10 +86,35 @@ class FC_OFFICIAL_TITLE_TYPE(Enum):
     T_MED = '960'
     OTHER = 'OTHER'
 
+FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS = "020.010.010.020"
+
+
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
     OLD = '020'
 
+FC_PROGRAM_TYPE_OTHERS = "030.010.000.150"
+
+FC_PROGRAM_TYPE = {
+    u"Arquitecto": u"020",
+    u"Arquitecto técnico": u"030",
+    u"Diplomado": u"240",
+    u"Doctorado": u"250",
+    u"Ingeniero": u"420",
+    u"Ingeniero técnico": u"430",
+    u"Licenciado": u"470",
+    u"Máster oficial": u"480",
+}
+
+FC_SUBJECT_TYPE_OTHERS = "030.010.000.430"
+
+FC_SUBJECT_TYPE = {
+    u"Troncal": u"000",
+    u"Obligatoria": u"010",
+    u"Optativa": u"020",
+    u"Libre configuración": u"030",
+    u"Doctorado": u"050",
+}
 
 # Indicates 'Link' node contains Congreso data
 DATA_CONGRESO = u"110"

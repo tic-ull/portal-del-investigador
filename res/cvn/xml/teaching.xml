@@ -15,7 +15,7 @@
   </CvnItemID>
   <Title>
     <Name code="030.010.000.160">
-      <Item>%(title)s</Item>
+      <Item>%(subject)s</Item>
     </Name>
     <Type>000</Type>
     <Category>OTHERS</Category>
@@ -25,7 +25,15 @@
       <Item>100</Item>
     </Type>
     <Value code="030.010.000.140">
-      <Item>470</Item>
+      <Item>%(type_program)s</Item>
+    </Value>
+  </Filter>
+  <Filter>
+    <Type code="030.010.000.190">
+      <Item>070</Item>
+    </Type>
+    <Value code="030.010.000.190">
+      <Item>%(type_subject)s</Item>
     </Value>
   </Filter>
   <Edition>
