@@ -12,14 +12,13 @@ from statistics.models import Department
 def create_profile(sender, instance, created, **kwargs):
     if not created:
         return
-    profile = UserProfile.objects.create(user=instance)
+    # Django cas login backend makes sure documento exists before creating
+    # the user
     request = CrequestMiddleware.get_request()
-    if request and 'attributes' in request.session:
-        cas_info = request.session['attributes']
-        if 'NumDocumento' in cas_info:
-            profile.documento = cas_info['NumDocumento']
-            profile.update_rrhh_code()
-            profile.save()
+    cas_info = request.session['attributes']
+    documento = cas_info['NumDocumento']
+    profile = UserProfile.objects.create(user=instance, documento=documento)
+    profile.update_rrhh_code()
 
 post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 
