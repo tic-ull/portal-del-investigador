@@ -18,7 +18,6 @@ import os
 import settings as st_cvn
 import suds
 import sys
-import time
 
 
 logger = logging.getLogger('cvn')
