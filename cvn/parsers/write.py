@@ -102,3 +102,11 @@ class CvnXmlWriter:
             'titulo': titulo, 'centro': centro,
             'date': date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(phd_xml))
+
+    def add_learning_other(self, type, title, duration, start_date, end_date):
+        other_xml = get_xml_fragment(st_cvn.XML_LEARNING_OTHER) % {
+            'title': type + ': ' + title,
+            'duration': duration,
+            'start_date': start_date.strftime(self.DATE_FORMAT),
+            'end_date': end_date.strftime(self.DATE_FORMAT)}
+        self.xml.append(etree.fromstring(other_xml))

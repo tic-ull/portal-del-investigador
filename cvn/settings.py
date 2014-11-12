@@ -22,15 +22,25 @@ PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
 CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
+
+
+# XML Files for XML parser (to create or modify cvn-xml)
+
+# Base xml-cvn
 XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
-XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
+
+# CVN Items
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
-XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
-XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT,
-                                        'cvn/xml/bachelor_engineering.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
+XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
+XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT, 'cvn/xml/bachelor_engineering.xml')
+XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
+
+# Optional fragments
+XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_OTHERS_TITLE = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
+
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
