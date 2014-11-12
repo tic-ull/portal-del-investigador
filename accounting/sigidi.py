@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from models import Proyecto, Convenio
+from .models import Project, Agreement
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
@@ -306,7 +306,7 @@ class SigidiConnection:
 
     def update_entities(self, entity_type):
         object_list = []
-        entities = (self.get_all_convenios() if entity_type == Convenio
+        entities = (self.get_all_convenios() if entity_type == Agreement
                     else self.get_all_projects())
         sigidi_entities = filter(lambda entity:
                                  entity['CODIGO'] is not None and
@@ -314,41 +314,15 @@ class SigidiConnection:
                                  entities)
         for entity in sigidi_entities:
             try:
-                entity_type.objects.get(codigo=entity['CODIGO'])
+                entity_type.objects.get(code=entity['CODIGO'])
             except ObjectDoesNotExist:
-                new_entity = entity_type(codigo=entity['CODIGO'])
+                new_entity = entity_type(code=entity['CODIGO'])
                 if new_entity not in object_list:
                     object_list.append(new_entity)
         entity_type.objects.bulk_create(object_list)
 
     def update_projects(self):
-        self.update_entities(Proyecto)
-        #object_list = []
-        #sigidi_projects = filter(lambda project:
-        #                         project['CODIGO'] is not None and
-        #                         project['CONT_KEY'] is not None,
-        #                         self.get_all_projects())
-        #for project in sigidi_projects:
-        #    try:
-        #        Proyecto.objects.get(codigo=project['CODIGO'])
-        #    except ObjectDoesNotExist:
-        #        new_project = Proyecto(codigo=project['CODIGO'])
-        #        if new_project not in object_list:
-        #            object_list.append(new_project)
-        #Proyecto.objects.bulk_create(object_list)
+        self.update_entities(Project)
 
-    def update_convenios(self):
-        self.update_entities(Convenio)
-        #object_list = []
-        #sigidi_convenios = filter(lambda convenio: convenio['CODIGO']
-        #                          is not None and convenio['CONT_KEY']
-        #                          is not None,
-        #                          self.get_all_convenios())
-        #for convenio in sigidi_convenios:
-        #    try:
-        #        Convenio.objects.get(codigo=convenio['CODIGO'])
-        #    except ObjectDoesNotExist:
-        #        new_convenio = Convenio(codigo=convenio['CODIGO'])
-        #        if new_convenio not in object_list:
-        #            object_list.append(new_convenio)
-        #Convenio.objects.bulk_create(object_list)
+    def update_agreements(self):
+        self.update_entities(Agreement)

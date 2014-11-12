@@ -1,22 +1,19 @@
 # -*- encoding: UTF-8 -*-
 
-#from accounting.sigidi import SigidiConnection
-#from django.conf.urls import patterns
 from django.contrib import admin
-# from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import redirect
-from models import (Proyecto, Convenio)
+from .models import Project, Agreement
 
 
+@admin.register(Project, Agreement)
 class AccountingAdmin(admin.ModelAdmin):
 
-    list_display = ('codigo', 'igualdad_genero', 'software_libre',)
+    list_display = ('code', 'gender_equality', 'free_software',)
 
-    list_filter = ('igualdad_genero', 'software_libre',)
+    list_filter = ('gender_equality', 'free_software',)
 
-    search_fields = ['codigo']
+    search_fields = ('code', )
 
-    readonly_fields = ('codigo',)
+    readonly_fields = ('code',)
 
     def has_add_permission(self, request):
         return False
@@ -30,37 +27,3 @@ class AccountingAdmin(admin.ModelAdmin):
         if 'delete_selected' in actions:
             del actions['delete_selected']
         return actions
-
-    # def get_urls(self):
-    #     urls = super(DataSigidiAdmin, self).get_urls()
-    #     my_urls = patterns('',
-    #                        (r'^update/$',
-    #                         self.admin_site.admin_view(self.update_view)))
-    #     return my_urls + urls
-
-
-#class ProjectAdmin(DataSigidiAdmin):
-    # change_form_template = 'change_form_local.html'
-    #def get_urls(self):
-    #    urls = super(ProjectAdmin, self).get_urls()
-    #    my_urls = patterns('',
-    #                       (r'^update/$',
-    #                        self.admin_site.admin_view(self.update_view)))
-    #    return my_urls + urls
-
-    #def update_view(self, request):
-    #    print "Project update_view"
-    #    sigidi = SigidiConnection()
-    #    sigidi.update_get_all_projects()
-    #    return redirect('/investigacion/admin/accounting/proyecto')
-
-
-#class ConvenioAdmin(DataSigidiAdmin):
-#    def update_view(self):
-#        sigidi = SigidiConnection()
-#        sigidi.update_get_all_convenios()
-#        return redirect('admin/accounting/convenio/')
-
-admin.site.register(Proyecto, AccountingAdmin)
-admin.site.register(Convenio, AccountingAdmin)
-
