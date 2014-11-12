@@ -4,7 +4,6 @@ from models import UserProfile
 from crequest.middleware import CrequestMiddleware
 from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in
-from django.core import serializers
 from django.db.models.signals import post_save
 from statistics.models import Department
 
