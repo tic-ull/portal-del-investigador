@@ -7,8 +7,6 @@ from django_cas.backends import _verify
 import datetime
 import django_cas
 import settings as st_core
-from django.shortcuts import render
-from django.utils.translation import ugettext_lazy as _
 
 
 class CASBackend(django_cas.backends.CASBackend):
