@@ -84,8 +84,9 @@ class CvnXmlWriter:
             academic_education.find('Filter').append(others_node)
         self.xml.append(academic_education)
 
-    def add_profession(self, prof_name, employer, start_date, end_date=None):
-        values_xml = {'profession': prof_name,
+    def add_profession(self, title, employer, start_date, end_date=None,
+                       centre=None, department=None, full_time=None):
+        values_xml = {'title': title,
                       'employer': employer,
                       'start_date': start_date.strftime(self.DATE_FORMAT)}
         if end_date:
@@ -94,7 +95,19 @@ class CvnXmlWriter:
         else:
             xml_path = st_cvn.XML_CURRENT_PROFESSION
         profession_xml = get_xml_fragment(xml_path) % values_xml
-        self.xml.append(etree.fromstring(profession_xml))
+        profession = etree.fromstring(profession_xml)
+
+        # If it is specified if the job is full or partial time
+        if full_time is not None:
+            dedication_type = (st_cvn.FC_DEDICATION_TYPE.TOTAL.value
+                               if full_time else
+                               st_cvn.FC_DEDICATION_TYPE.PARTIAL.value)
+            full_time_xml = get_xml_fragment(st_cvn.XML_DEDIACTION) % {
+                'type': dedication_type
+            }
+            profession.append(etree.fromstring(full_time_xml))
+
+        self.xml.append(profession)
 
     def add_learning_phd(self, titulo, centro, date):
         '''PhD (Doctor)'''

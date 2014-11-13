@@ -40,6 +40,7 @@ XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 # Optional fragments
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_OTHERS_TITLE = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
+XML_DEDIACTION = os.path.join(st.RES_ROOT, 'cvn/xml/dedication.xml')
 
 
 # URLs
@@ -88,6 +89,11 @@ class FC_SURNAME(Enum):
     APELLIDO = "000.010.000.010"
     DOCTORANDO = "030.040.000.120"
 
+class FC_ENTITY(Enum):
+    EMPLOYER = "010.020.000.020"
+    CENTRE = "010.020.000.060"
+    DEPARTMENT = "010.020.000.080"
+
 
 class FC_OFFICIAL_TITLE_TYPE(Enum):
     T_DOC = '940'
@@ -98,6 +104,10 @@ class FC_OFFICIAL_TITLE_TYPE(Enum):
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
     OLD = '020'
+
+class FC_DEDICATION_TYPE(Enum):
+    TOTAL = '020'
+    PARTIAL = '030'
 
 
 # Indicates 'Link' node contains Congreso data
