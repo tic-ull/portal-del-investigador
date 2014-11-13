@@ -26,16 +26,17 @@ class Entity(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["created_at"]
 
 
 class Project(Entity):
 
     class Meta:
         verbose_name_plural = _(u'Proyectos')
+        ordering = ['-code']
 
 
 class Agreement(Entity):
 
     class Meta:
         verbose_name_plural = _(u'Convenios')
+        ordering = ['-code']
