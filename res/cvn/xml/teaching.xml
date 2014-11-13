@@ -25,7 +25,7 @@
       <Item>100</Item>
     </Type>
     <Value code="030.010.000.140">
-      <Item>%(type_program)s</Item>
+      <Item>%(program_type)s</Item>
     </Value>
   </Filter>
   <Filter>
@@ -33,7 +33,7 @@
       <Item>070</Item>
     </Type>
     <Value code="030.010.000.190">
-      <Item>%(type_subject)s</Item>
+      <Item>%(subject_type)s</Item>
     </Value>
   </Filter>
   <Edition>
