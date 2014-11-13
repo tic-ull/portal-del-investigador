@@ -118,7 +118,7 @@ class CvnXmlWriter:
         })
 
     def _add_other_node(self, xml, code, node):
-        value_node = xml.xpath('//Value[@code="' + code + '"]')[0]
+        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
         pi = value_node.getparent()
         pi.insert(pi.index(value_node) + 1, node)
 
