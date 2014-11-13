@@ -41,6 +41,7 @@ XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_OTHERS_TITLE = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 XML_DEDIACTION = os.path.join(st.RES_ROOT, 'cvn/xml/dedication.xml')
+XML_ENTITY = os.path.join(st.RES_ROOT, 'cvn/xml/entity.xml')
 
 
 # URLs
@@ -91,8 +92,11 @@ class FC_SURNAME(Enum):
 
 class FC_ENTITY(Enum):
     EMPLOYER = "010.020.000.020"
+    CURRENT_EMPLOYER = "010.010.000.020"
     CENTRE = "010.020.000.060"
+    CURRENT_CENTRE = "010.010.000.060"
     DEPARTMENT = "010.020.000.080"
+    CURRENT_DEPARTMENT = "010.010.000.080"
 
 
 class FC_OFFICIAL_TITLE_TYPE(Enum):
@@ -104,6 +108,8 @@ class FC_OFFICIAL_TITLE_TYPE(Enum):
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
     OLD = '020'
+    CURRENT_TRIMMED = '10'
+    OLD_TRIMMED = '20'
 
 class FC_DEDICATION_TYPE(Enum):
     TOTAL = '020'

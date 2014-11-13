@@ -103,9 +103,33 @@ class CvnXmlWriter:
                                if full_time else
                                st_cvn.FC_DEDICATION_TYPE.PARTIAL.value)
             full_time_xml = get_xml_fragment(st_cvn.XML_DEDIACTION) % {
-                'type': dedication_type
-            }
+                'code': (st_cvn.FC_PROFESSION_CODE.CURRENT_TRIMMED.value
+                         if end_date is None else
+                         st_cvn.FC_PROFESSION_CODE.OLD_TRIMMED.value),
+                'type': dedication_type}
             profession.append(etree.fromstring(full_time_xml))
+
+        entity_pos = profession.index(profession.find('Entity')) + 1
+
+        # If it is specified the department where the job takes place
+        if department is not None:
+            entity_type = (st_cvn.FC_ENTITY.CURRENT_DEPARTMENT.value
+                           if end_date is None else
+                           st_cvn.FC_ENTITY.DEPARTMENT.value)
+            department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
+                'code': entity_type,
+                'name': department}
+            profession.insert(entity_pos, etree.fromstring(department_xml))
+
+        # If it is specified the centre (building) where the job takes place
+        if centre is not None:
+            entity_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
+                           if end_date is None else
+                           st_cvn.FC_ENTITY.CENTRE.value)
+            centre_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
+                'code': entity_type,
+                'name': centre}
+            profession.insert(entity_pos, etree.fromstring(centre_xml))
 
         self.xml.append(profession)
 
