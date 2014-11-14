@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated')),
             ],
             options={
+                'ordering': ['-code'],
                 'verbose_name_plural': 'Agreements',
             },
             bases=(models.Model,),
@@ -36,6 +37,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated')),
             ],
             options={
+                'ordering': ['-code'],
                 'verbose_name_plural': 'Projects',
             },
             bases=(models.Model,),
