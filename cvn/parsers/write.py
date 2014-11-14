@@ -128,7 +128,7 @@ class CvnXmlWriter:
             'qualification': qualification,
             'department': department,
             'faculty': faculty,
-            'start_date': start_date,
+            'start_date': start_date.strftime(self.DATE_FORMAT),
             'number_credits': number_credits
         }
         self.xml.append(etree.fromstring(teaching))

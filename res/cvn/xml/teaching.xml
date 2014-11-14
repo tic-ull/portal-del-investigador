@@ -89,9 +89,9 @@
       <Item>OTHERS</Item>
     </Moment>
     <StartDate>
-      <Year code="030.010.000.550">
+      <DayMonthYear code="030.010.000.550">
         <Item>%(start_date)s</Item>
-      </Year>
+      </DayMonthYear>
     </StartDate>
   </Date>
   <PhysicalDimension>
