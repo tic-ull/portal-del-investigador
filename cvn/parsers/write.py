@@ -68,7 +68,7 @@ class CvnXmlWriter:
 
     def add_learning(self, title_name, university, date, title_type):
         '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
-        code = self._get_code_teaching(st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type)
+        code = self._get_code(st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type)
         academic_education = etree.fromstring(get_xml_fragment(
             st_cvn.XML_BACHELOR_ENGINEERING) % {
                 'title': title_name,
@@ -103,18 +103,12 @@ class CvnXmlWriter:
             'date': date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(phd_xml))
 
-    def _get_code_teaching(self, dic, data_type):
+    def _get_code(self, dic, data_type):
         try:
             code = dic[data_type]
         except KeyError:
             code = u'OTHERS'
         return code
-
-    def _create_other_node(self, xml_skeleton, code_others, others):
-        return etree.fromstring(get_xml_fragment(xml_skeleton) % {
-            'code_others': code_others,
-            'others': others
-        })
 
     def _add_other_node(self, xml, code, node):
         value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
@@ -124,10 +118,8 @@ class CvnXmlWriter:
     def add_teaching(self, subject, program_type, subject_type, course,
                      qualification, department, faculty, start_date,
                      number_credits):
-        program_code = self._get_code_teaching(st_cvn.FC_PROGRAM_TYPE,
-                                               program_type)
-        subject_code = self._get_code_teaching(st_cvn.FC_SUBJECT_TYPE,
-                                               subject_type)
+        program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
+        subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
             'subject': subject,
             'program_type': program_code,
