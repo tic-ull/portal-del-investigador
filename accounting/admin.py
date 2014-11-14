@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from django.contrib import admin
+from django.contrib.admin import helpers
 from .models import Project, Agreement
 from django.utils.translation import ugettext_lazy as _
 from .sigidi import SigidiConnection
@@ -41,5 +42,14 @@ class AccountingAdmin(admin.ModelAdmin):
             self.message_user(
                 request, _(u'SIGIDI - Servicio no disponible'), 'error')
     reload.short_description = 'Actualizar listado desde SIGIDI'
+
+    def changelist_view(self, request, extra_context=None):
+        if 'action' in request.POST and request.POST['action'] == 'reload':
+            if not request.POST.getlist(helpers.ACTION_CHECKBOX_NAME):
+                post = request.POST.copy()
+                post.update({helpers.ACTION_CHECKBOX_NAME: None})
+                request._set_post(post)
+        return super(AccountingAdmin, self).changelist_view(
+            request, extra_context)
 
     actions = ('reload', )
