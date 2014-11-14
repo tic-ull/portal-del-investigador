@@ -1,14 +1,36 @@
 # -*- encoding: UTF-8 -*-
 
-from forms import PageForm
 from models import UserProfile, Log
-from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.contrib import admin
+from django.contrib.flatpages.admin import FlatPageAdmin
+from core.forms import PageForm
+from modeltranslation.admin import TranslationAdmin
+from django.contrib.flatpages.models import FlatPage
+from modeltranslation.translator import translator, TranslationOptions
 from django.utils.translation import ugettext_lazy as _
-from flatpages_i18n.admin import FlatPageAdmin
-from flatpages_i18n.models import FlatPage_i18n, MenuItem
+
+
+# Options for the flatpages (faq)
+class FlatPageTranslationOptions(TranslationOptions):
+        fields = ('title', 'content',)
+
+translator.register(FlatPage, FlatPageTranslationOptions)
+
+
+class CustomFlatPageAdmin(TranslationAdmin):
+    form = PageForm
+    list_editable = []
+    list_display = ('url', 'title', )
+    list_filter = ()
+    fieldsets = (
+        (None, {'fields': ('title', 'content')}),
+    )
+
+FlatPage._meta.verbose_name = _("Preguntas Frecuentes")
+FlatPage._meta.verbose_name_plural = _("Preguntas Frecuentes")
 
 
 class UserProfileInline(admin.StackedInline):
@@ -50,26 +72,9 @@ class LogAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         return tuple(Log._meta.get_all_field_names())
 
-
-FlatPage_i18n._meta.verbose_name = _("Preguntas Frecuentes")
-FlatPage_i18n._meta.verbose_name_plural = _("Preguntas Frecuentes")
-FlatPage_i18n._meta.app_name_ = "FlatPage"
-
-
-class PageAdmin(FlatPageAdmin):
-    form = PageForm
-    list_editable = []
-    list_display = ('url', 'title', )
-    list_filter = ()
-    fieldsets = (
-        (None, {'fields': ('title', 'content')}),
-    )
-
-
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Log, LogAdmin)
-admin.site.unregister(FlatPage_i18n)
-admin.site.register(FlatPage_i18n, PageAdmin)
-admin.site.unregister(MenuItem)
+admin.site.unregister(FlatPage)
+admin.site.register(FlatPage, CustomFlatPageAdmin)
 admin.site.unregister(Site)

@@ -11,6 +11,7 @@ from lxml import etree
 from models import FECYT, CVN
 from parser_helpers import parse_date
 import settings as st_cvn
+import mimetypes
 
 
 class UploadCVNForm(forms.ModelForm):
@@ -35,7 +36,7 @@ class UploadCVNForm(forms.ModelForm):
             cvn_file = self.cleaned_data['cvn_file']
         except:
             cvn_file = self.data['cvn_file']
-        if cvn_file.content_type != st_cvn.PDF:
+        if mimetypes.guess_type(cvn_file.name)[0] != st_cvn.PDF:
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
         (self.xml, error) = FECYT.getXML(cvn_file)

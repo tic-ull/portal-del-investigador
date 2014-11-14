@@ -68,6 +68,7 @@ USE_TZ = True
 
 # ******************************* INSTALLED APPS *****************************
 INSTALLED_APPS = (
+    'modeltranslation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,16 +78,13 @@ INSTALLED_APPS = (
     'django_extensions',
     'django.contrib.sites',
     'tinymce',
-    'south',
     'core',
     'cvn',
     'crequest',
     'statistics',
     'django_coverage',
     'django_tables2',
-    'mptt',
-    'modeltranslation',
-    'flatpages_i18n',
+    'django.contrib.flatpages',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -101,7 +99,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
-    'flatpages_i18n.middleware.FlatpageFallbackMiddleware',
 )
 # ******************************* MIDDLEWARES ********************************
 
@@ -118,7 +115,7 @@ CAS_LOGOUT_COMPLETELY = True
 CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
-CAS_GRUPOS_NOAUT = ['INSTITUCIONAL']
+CAS_TIPO_CUENTA_NOAUT = ['colectivo', ]
 # ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
@@ -149,6 +146,8 @@ SIGIDI_DB = {
 
 SOUTH_TESTS_MIGRATE = False
 SKIP_SOUTH_TESTS = True
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 COVERAGE_MODULE_EXCLUDES = (
     'tests$', 'settings$', 'urls$', 'locale$', 'common.views.test', '__init__',
@@ -388,4 +387,4 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
-# ************************* WEB SERVICES *************************************
+# ****************************** WEB SERVICES ******************************

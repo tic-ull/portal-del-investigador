@@ -3,13 +3,13 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core import serializers
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm
 from models import CVN
+from statistics.models import Department
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
 import settings as st_cvn
@@ -22,9 +22,7 @@ def index(request):
 
     dept, dept_json = None, None
     if 'dept' and 'dept_json' in request.session:
-        for obj in serializers.deserialize(
-                "json", request.session['dept'], ignorenonexistent=True):
-            dept = obj.object
+        dept = Department.objects.get(name=request.session['dept'])
         dept_json = request.session['dept_json']
         context['department'] = dept
         context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
@@ -59,7 +57,7 @@ def index(request):
 def download_cvn(request):
     cvn = request.user.profile.cvn
     pdf = open(cvn.cvn_file.path)
-    response = HttpResponse(pdf, mimetype='application/pdf')
+    response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename=%s' % (
         cvn.cvn_file.name.split('/')[-1])
     return response
@@ -71,4 +69,8 @@ def ull_report(request):
     context = {}
     user = User.objects.get(username='GesInv-ULL')
     scientific_production_to_context(user.profile, context)
+    try:
+        context['report_date'] = user.profile.cvn.fecha.year - 1
+    except ObjectDoesNotExist:
+        context['report_date'] = _('No disponible')
     return render(request, 'cvn/ull_report.html', context)

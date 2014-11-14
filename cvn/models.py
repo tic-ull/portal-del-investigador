@@ -20,7 +20,6 @@ import os
 import settings as st_cvn
 import suds
 import sys
-import time
 
 
 logger = logging.getLogger('cvn')
@@ -50,18 +49,15 @@ class FECYT:
             return False
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.URL_WS)
-        ws_response = False
-        while not ws_response:
-            try:
-                result_xml = client_ws.service.cvnPdf2Xml(
-                    st_cvn.USER_WS, st_cvn.PASSWD_WS, data_pdf)
-                ws_response = True
-            except:
-                logger.warning(
-                    u'No hay respuesta del WS' +
-                    u' de la FECYT para el fichero' +
-                    u' %s' % file_pdf.name)
-                time.sleep(5)
+        try:
+            result_xml = client_ws.service.cvnPdf2Xml(
+                st_cvn.USER_WS, st_cvn.PASSWD_WS, data_pdf)
+        except:
+            logger.warning(
+                u'No hay respuesta del WS' +
+                u' de la FECYT para el fichero' +
+                u' %s' % file_pdf.name)
+            return False, 1
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
             return base64.decodestring(result_xml.cvnXml), 0
@@ -434,7 +430,7 @@ class Proyecto(models.Model):
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
-    titulo = models.CharField(_('Denominación del proyecto'),
+    titulo = models.CharField(_(u'Denominación del proyecto'),
                               max_length=1000, blank=True, null=True)
     numero_de_investigadores = models.IntegerField(
         _(u'Número de investigadores/as'), blank=True, null=True)

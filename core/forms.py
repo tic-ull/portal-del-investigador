@@ -2,10 +2,9 @@
 
 from django import forms
 from django.conf import settings as st
+from django.contrib.flatpages.forms import FlatpageForm
 from django.contrib.sites.models import Site
 from django.forms.widgets import HiddenInput, MultipleHiddenInput
-from flatpages_i18n.forms import FlatpageForm
-import settings as st_core
 
 
 class PageForm(FlatpageForm):
@@ -15,10 +14,13 @@ class PageForm(FlatpageForm):
     sites = forms.ModelMultipleChoiceField(queryset=Site.objects.all(),
                                            required=False, label='')
 
+    template_name = forms.CharField(label='', max_length=100, required=False)
+
     def __init__(self, *args, **kwargs):
         super(FlatpageForm, self).__init__(*args, **kwargs)
-        self.fields['url'].initial = st_core.BASE_URL_FLATPAGES
+        self.fields['url'].initial = ''
         self.fields['url'].widget = HiddenInput()
+        self.fields['template_name'].widget = HiddenInput()
         self.fields['sites'].widget = MultipleHiddenInput()
         content_field = 'content_' + st.LANGUAGE_CODE
         self.fields[content_field].required = True
@@ -29,7 +31,8 @@ class PageForm(FlatpageForm):
     def save(self, commit=True):
         flatpage = super(PageForm, self).save(commit=False)
         flatpage.save()
-        flatpage.url = st_core.BASE_URL_FLATPAGES + str(flatpage.id) + '/'
+        flatpage.url = '/' + str(flatpage.id) + '/'
+        flatpage.template_name = 'core/faq/question_faq.html'
         flatpage.sites.add(Site.objects.get(id=st.SITE_ID))
         return flatpage
 
