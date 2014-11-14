@@ -287,6 +287,6 @@ def parse_entities(node_list):
         entity_name = item.find("EntityName")
         if entity_name.attrib['code'] == st_cvn.FC_ENTITY_OWNER:
             main_entity = entity_name.find("Item").text
-        elif entity_name.attrib['code'] == st_cvn.FC_ENITITY_OPERATOR:
+        elif entity_name.attrib['code'] == st_cvn.FC_ENTITY_OPERATOR:
             extended_entities += entity_name.find("Item").text + "; "
     return main_entity, extended_entities.strip('; ')

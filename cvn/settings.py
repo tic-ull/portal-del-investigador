@@ -72,7 +72,7 @@ class FC_OFFICIAL_ID(Enum):
 FC_PRIORITY_COUNTRY = "050.030.010.120"
 FC_EXTENDED_COUNTRY = "050.030.010.220"
 FC_ENTITY_OWNER = "050.030.010.300"
-FC_ENITITY_OPERATOR = "050.030.010.250"
+FC_ENTITY_OPERATOR = "050.030.010.250"
 
 
 class FC_SURNAME(Enum):
@@ -80,11 +80,11 @@ class FC_SURNAME(Enum):
     DOCTORANDO = "030.040.000.120"
 
 
-class FC_OFFICIAL_TITLE_TYPE(Enum):
-    T_DOC = '940'
-    T_SUP = '950'
-    T_MED = '960'
-    OTHER = 'OTHER'
+FC_OFFICIAL_TITLE_TYPE = {
+    u"Doctor": u'940',
+    u"Licenciado/Ingeniero Superior": u'950',
+    u"Diplomado/Ingeniero Tecnico": u'960'
+}
 
 FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS = "020.010.010.020"
 
