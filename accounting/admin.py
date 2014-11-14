@@ -1,10 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
+from .models import Project, Agreement
+from .sigidi import SigidiConnection
 from django.contrib import admin
 from django.contrib.admin import helpers
-from .models import Project, Agreement
 from django.utils.translation import ugettext_lazy as _
-from .sigidi import SigidiConnection
 
 
 @admin.register(Project, Agreement)
