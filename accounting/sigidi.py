@@ -304,22 +304,24 @@ class SigidiConnection:
     def get_user_convenios(self):
         return self._get_user_entities(SigidiEntityType.CONVENIOS)
 
-    def update_entities(self, entity_type):
-        object_list = []
-        entities = (self.get_all_convenios() if entity_type == Agreement
-                    else self.get_all_projects())
-        sigidi_entities = filter(lambda entity:
-                                 entity['CODIGO'] is not None and
-                                 entity['CONT_KEY'] is not None,
-                                 entities)
-        for entity in sigidi_entities:
-            try:
-                entity_type.objects.get(code=entity['CODIGO'])
-            except ObjectDoesNotExist:
-                new_entity = entity_type(code=entity['CODIGO'])
-                if new_entity not in object_list:
-                    object_list.append(new_entity)
-        entity_type.objects.bulk_create(object_list)
+    def update_entities(self, *argv):
+        for entity in argv:
+            objects = []
+            if entity == Agreement:
+                objects = self.get_all_convenios()
+            if entity == Project:
+                objects = self.get_all_projects()
+
+            sigidi_objects = filter(
+                lambda obj: obj['CODIGO'] is not None and obj['CONT_KEY'] is not None, objects)
+
+            object_list = []
+            for sigidi_obj in sigidi_objects:
+                obj, created = entity.objects.get_or_create(
+                    code=sigidi_obj['CODIGO'])
+                if created:
+                    object_list.append(obj)
+            entity.objects.bulk_create(object_list)
 
     def update_projects(self):
         self.update_entities(Project)

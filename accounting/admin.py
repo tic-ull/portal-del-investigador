@@ -34,8 +34,7 @@ class AccountingAdmin(admin.ModelAdmin):
     def reload(self, request, queryset):
         try:
             sigidi = SigidiConnection()
-            sigidi.update_projects()
-            sigidi.update_agreements()
+            sigidi.update_entities(Project, Agreement)
             self.message_user(
                 request, _(u'Se ha actualizado el listado con éxito'))
         except:
