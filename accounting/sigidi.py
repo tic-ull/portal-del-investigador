@@ -311,20 +311,14 @@ class SigidiConnection:
                 objects = self.get_all_convenios()
             if entity == Project:
                 objects = self.get_all_projects()
-
             sigidi_objects = filter(
                 lambda obj: obj['CODIGO'] is not None and obj['CONT_KEY'] is not None, objects)
-
             object_list = []
             for sigidi_obj in sigidi_objects:
-                obj, created = entity.objects.get_or_create(
-                    code=sigidi_obj['CODIGO'])
-                if created:
-                    object_list.append(obj)
+                try:
+                    entity.objects.get(code=sigidi_obj['CODIGO'])
+                except ObjectDoesNotExist:
+                    obj = entity(code=sigidi_obj['CODIGO'])
+                    if obj not in object_list:
+                        object_list.append(obj)
             entity.objects.bulk_create(object_list)
-
-    def update_projects(self):
-        self.update_entities(Project)
-
-    def update_agreements(self):
-        self.update_entities(Agreement)
