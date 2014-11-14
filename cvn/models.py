@@ -75,6 +75,7 @@ class FECYT:
             print(s.message)
             return None
         if pdf.returnCode == '01':
+            print base64.decodestring(pdf.dataHandler)
             return None
         return base64.decodestring(pdf.dataHandler)
 

@@ -78,10 +78,9 @@ class CvnXmlWriter:
             }
         )
         if code == u'OTHERS':
-            node = self._create_other_node(
-                st_cvn.XML_OTHERS_TITLE,
-                st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
-                title_name)
+            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
+                'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
+                'others': title_type})
             academic_education.find('Filter').append(node)
         self.xml.append(academic_education)
 
@@ -142,12 +141,12 @@ class CvnXmlWriter:
         }
         self.xml.append(etree.fromstring(teaching))
         if program_code == u'OTHERS':
-            node = self._create_other_node(st_cvn.XML_OTHERS_TITLE,
-                                           st_cvn.FC_PROGRAM_TYPE_OTHERS,
-                                           program_type)
+            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
+                'code_others': st_cvn.FC_PROGRAM_TYPE_OTHERS,
+                'others': program_type})
             self._add_other_node(self.xml, st_cvn.FC_PROGRAM, node)
         if subject_code == u'OTHERS':
-            node = self._create_other_node(st_cvn.XML_OTHERS_TITLE,
-                                           st_cvn.FC_SUBJECT_TYPE_OTHERS,
-                                           subject_type)
+            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
+                'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
+                'others': subject_type})
             self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)

@@ -30,7 +30,7 @@ XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT,
                                         'cvn/xml/bachelor_engineering.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
 XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
-XML_OTHERS_TITLE = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
+XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
