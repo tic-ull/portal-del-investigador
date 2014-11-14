@@ -38,7 +38,7 @@ SITE_ID = 1
 
 # ******************************* ADMINS *************************************
 ADMINS = (
-    ('STIC-Investigacion', 'stic.investigacion@ull.es'),
+    ('STIC-Investigacion', 'stic.becariosinvestigacion.info@ull.edu.es'),
 )
 MANAGERS = ADMINS
 # ******************************* ADMINS *************************************
@@ -282,6 +282,19 @@ REDIS_PASSWORD = None
 REDIS_TIMEOUT = 86400  # One Day (Seconds)
 # ************************* REDIS ********************************************
 
+# ************************* EMAIL ********************************************
+SERVER_EMAIL = 'root@localhost'
+DEFAULT_FROM_EMAIL = 'root@localhost'
+EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 25
+EMAIL_SUBJECT_PREFIX = '[Django - STIC Investigacion]'
+EMAIL_USE_TLS = True
+EMAIL_DEBUG = True
+EMAIL_DEBUG_ADDRESS = 'stic.becariosinvestigacion.info@ull.edu.es'
+# ************************* EMAIL ********************************************
+
 # ************************* SETTINGS LOCAL ***********************************
 try:
     SETTINGS_LOCAL
@@ -375,4 +388,4 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
-# ************************* WEB SERVICES *************************************
+# ****************************** WEB SERVICES ******************************
