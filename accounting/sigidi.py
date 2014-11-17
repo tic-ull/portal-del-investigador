@@ -313,12 +313,12 @@ class SigidiConnection:
                 objects = self.get_all_projects()
             sigidi_objects = filter(
                 lambda obj: obj['CODIGO'] is not None and obj['CONT_KEY'] is not None, objects)
-            object_list = []
+            object_hash = {}
             for sigidi_obj in sigidi_objects:
                 try:
                     entity.objects.get(code=sigidi_obj['CODIGO'])
                 except ObjectDoesNotExist:
                     obj = entity(code=sigidi_obj['CODIGO'])
-                    if obj not in object_list:
-                        object_list.append(obj)
-            entity.objects.bulk_create(object_list)
+                    if obj.code not in object_hash:
+                        object_hash[obj.code] = obj
+            entity.objects.bulk_create(object_hash.values())

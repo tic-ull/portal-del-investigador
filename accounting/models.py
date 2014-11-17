@@ -21,9 +21,6 @@ class Entity(models.Model):
     def __unicode__(self):
         return u'%s' % self.code
 
-    def __eq__(self, other):
-        return self.code == other.code
-
     class Meta:
         abstract = True
 
