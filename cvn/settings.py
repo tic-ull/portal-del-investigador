@@ -39,10 +39,9 @@ XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 
 # Optional fragments
 XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
-XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 XML_DEDIACTION = os.path.join(st.RES_ROOT, 'cvn/xml/dedication.xml')
 XML_ENTITY = os.path.join(st.RES_ROOT, 'cvn/xml/entity.xml')
-
+XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 
 
 # URLs

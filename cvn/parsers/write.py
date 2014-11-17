@@ -187,4 +187,3 @@ class CvnXmlWriter:
             'start_date': start_date.strftime(self.DATE_FORMAT),
             'end_date': end_date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(other_xml))
-
