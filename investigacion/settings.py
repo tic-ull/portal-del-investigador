@@ -33,13 +33,14 @@ TEMPLATE_DEBUG = DEBUG
 DEVEL = True
 
 INTERNAL_IPS = ('127.0.0.1',)
+ALLOWED_HOSTS = ['*']
 
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
 
 # ******************************* ADMINS *************************************
 ADMINS = (
-    ('STIC-Investigacion', 'stic.investigacion@ull.es'),
+    ('STIC-Investigacion', 'stic.becariosinvestigacion.info@ull.edu.es'),
 )
 MANAGERS = ADMINS
 # ******************************* ADMINS *************************************
@@ -85,6 +86,7 @@ INSTALLED_APPS = (
     'django_coverage',
     'django_tables2',
     'django.contrib.flatpages',
+    'accounting',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -271,7 +273,7 @@ STATICFILES_FINDERS = (
 # ************************* STATIC FILES *************************************
 
 # ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_SERVER_URL = 'https://wwwpre.ull.es/odin/core/rest/'
 # ************************* WEB SERVICES *************************************
 
 # ************************* REDIS ********************************************
@@ -281,6 +283,14 @@ REDIS_DB = 0
 REDIS_PASSWORD = None
 REDIS_TIMEOUT = 86400  # One Day (Seconds)
 # ************************* REDIS ********************************************
+
+# ************************* EMAIL ********************************************
+import socket
+
+EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
+SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
+
+# ************************* EMAIL ********************************************
 
 # ************************* SETTINGS LOCAL ***********************************
 try:
@@ -375,4 +385,4 @@ WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
-# ************************* WEB SERVICES *************************************
+# ****************************** WEB SERVICES ******************************

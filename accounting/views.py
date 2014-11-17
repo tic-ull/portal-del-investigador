@@ -13,6 +13,7 @@ from tables import (SummaryYearTable, SummaryConceptTable, BreakdownYearTable,
                     TotalSummaryYearTable, AccountingTableProjects,
                     AccountingTableAgreements)
 from utils import total_table, clean_accounting_table
+from django.utils.translation import ugettext as _
 import logging
 
 logger = logging.getLogger('default')
@@ -25,7 +26,10 @@ def index(request):
         sigidi = SigidiConnection(request.user)
     except OperationalError:
         logger.error('SIGIDI - Servicio no disponible')
-        return render(request, 'core/503.html', context)
+        context['title'] = _('Servicio temporalmente no disponible')
+        context['contact'] = _('Si el problema persiste puede ponerse en '
+                               'contacto con nosotros en')
+        return render(request, 'core/error.html', context)
 
     manager_projects = sigidi.can_view_all_projects()
     if manager_projects:
@@ -65,7 +69,10 @@ def accounting_detail(request, code):
         else:
             entity = SigidiConnection(user=request.user).get_convenio(code)
     except OperationalError:
-        return render(request, 'core/503.html', context)
+        context['title'] = _('Servicio temporalmente no disponible')
+        context['contact'] = _('Si el problema persiste puede ponerse en '
+                               'contacto con nosotros en')
+        return render(request, 'core/error.html', context)
 
     if not entity:
         raise Http404

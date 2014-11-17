@@ -1,6 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
+from .models import Project, Agreement
 from django.conf import settings as st
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
 from enum import Enum, IntEnum
 import re
@@ -145,20 +147,21 @@ class SigidiConnection:
         SigidiCategories.GESTOR_CONVENIOS_Y_CONTRATOS,
         SigidiCategories.GESTOR_CONVENIOS_Y_CONTRATOS_SOLO_LECTURA}
 
-    def __init__(self, user):
-        self.user = user
+    def __init__(self, user=None):
         st.DATABASES['sigidi'] = st.SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.__class__.make_query = _make_query
         self.cursor.__class__.make_query_dict = _make_query_dict
-        self.cursor.execute(Sqry.vrid_query.format(user.profile.documento))
-        user_permissions = self.cursor.fetchall()
-        user_permissions = re.sub('[\[\]()]|,,', '',
-                                  str(user_permissions)).strip(',')
-        user_permissions = re.sub(',,', ',', user_permissions)
-        if user_permissions == '':
-            user_permissions = '0'
-        self.user_permissions = user_permissions
+        self.user = user
+        if user:
+            self.cursor.execute(Sqry.vrid_query.format(user.profile.documento))
+            user_permissions = self.cursor.fetchall()
+            user_permissions = re.sub('[\[\]()]|,,', '',
+                                      str(user_permissions)).strip(',')
+            user_permissions = re.sub(',,', ',', user_permissions)
+            if user_permissions == '':
+                user_permissions = '0'
+            self.user_permissions = user_permissions
 
     def _query_entity(self, permissions, entity_type):
         """Builds dynamically query to get projects for a user"""
@@ -278,7 +281,7 @@ class SigidiConnection:
         return self._has_any_role(self._convenios_permissions)
 
     def get_all_projects(self):
-        if self.can_view_all_projects():
+        if self.user is None or self.can_view_all_projects():
             date_row = self._ent_dates[SigidiEntityType.PROYECTOS]
             entities_query = Sqry.all_entities_query % {
                 'table': self._ent_tables[SigidiEntityType.PROYECTOS],
@@ -287,7 +290,7 @@ class SigidiConnection:
         return None
 
     def get_all_convenios(self):
-        if self.can_view_all_convenios():
+        if self.user is None or self.can_view_all_convenios():
             date_row = self._ent_dates[SigidiEntityType.CONVENIOS]
             entities_query = Sqry.all_entities_query % {
                 'table': self._ent_tables[SigidiEntityType.CONVENIOS],
@@ -300,3 +303,22 @@ class SigidiConnection:
 
     def get_user_convenios(self):
         return self._get_user_entities(SigidiEntityType.CONVENIOS)
+
+    def update_entities(self, *argv):
+        for entity in argv:
+            objects = []
+            if entity == Agreement:
+                objects = self.get_all_convenios()
+            if entity == Project:
+                objects = self.get_all_projects()
+            sigidi_objects = filter(
+                lambda obj: obj['CODIGO'] is not None and obj['CONT_KEY'] is not None, objects)
+            object_hash = {}
+            for sigidi_obj in sigidi_objects:
+                try:
+                    entity.objects.get(code=sigidi_obj['CODIGO'])
+                except ObjectDoesNotExist:
+                    obj = entity(code=sigidi_obj['CODIGO'])
+                    if obj.code not in object_hash:
+                        object_hash[obj.code] = obj
+            entity.objects.bulk_create(object_hash.values())

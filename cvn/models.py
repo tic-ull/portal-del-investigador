@@ -1,31 +1,28 @@
 # -*- encoding: UTF-8 -*-
 
+from core import settings as st_core
+from core.models import UserProfile, Log
+from cvn import settings as st_cvn
+from cvn.parsers.read import (parse_produccion_type, parse_produccion_subtype,
+                              parse_nif, parse_date)
+from cvn.parsers.write import CvnXmlWriter
+from django.conf import settings as st
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
+from django.core.files.move import file_move_safe
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+from lxml import etree
+from managers import (PublicacionManager, CongresoManager, ProyectoManager,
+                      ConvenioManager, TesisDoctoralManager, PatenteManager)
+
 import base64
 import datetime
 import logging
 import os
-import sys
-import time
-
-from django.conf import settings as st
-from django.core.files.move import file_move_safe
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from lxml import etree
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.exceptions import ObjectDoesNotExist
 import suds
-
-from core import settings as st_core
-from core.models import UserProfile, Log
-from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager, PatenteManager)
-from cvn.parsers.read import (parse_produccion_type, parse_produccion_subtype,
-                            parse_nif, parse_date)
-from cvn.parsers.write import CvnXmlWriter
-import settings as st_cvn
-
+import sys
 
 logger = logging.getLogger('cvn')
 

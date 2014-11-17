@@ -14,6 +14,10 @@ class CASBackend(django_cas.backends.CASBackend):
     def authenticate(self, ticket, service, request):
         """Verifies CAS ticket and gets or creates User object"""
         username, attributes = _verify(ticket, service)
+        if (not attributes or not 'NumDocumento' in attributes
+                or not attributes['NumDocumento']):
+            st.CAS_RETRY_LOGIN = False
+            return None
         if attributes and 'TipoCuenta' in attributes:
             if attributes['TipoCuenta'] in st.CAS_TIPO_CUENTA_NOAUT:
                 st.CAS_RETRY_LOGIN = False
