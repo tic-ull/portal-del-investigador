@@ -32,6 +32,7 @@ TEMPLATE_DEBUG = DEBUG
 DEVEL = True
 
 INTERNAL_IPS = ('127.0.0.1',)
+ALLOWED_HOSTS = ['*']
 
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
@@ -271,7 +272,7 @@ STATICFILES_FINDERS = (
 # ************************* STATIC FILES *************************************
 
 # ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'http://django1-pre.stic.ull.es/odin/core/rest/'
+WS_SERVER_URL = 'https://wwwpre.ull.es/odin/core/rest/'
 # ************************* WEB SERVICES *************************************
 
 # ************************* REDIS ********************************************
@@ -283,16 +284,11 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 # ************************* REDIS ********************************************
 
 # ************************* EMAIL ********************************************
-SERVER_EMAIL = 'root@localhost'
-DEFAULT_FROM_EMAIL = 'root@localhost'
-EMAIL_HOST = 'localhost'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_PORT = 25
-EMAIL_SUBJECT_PREFIX = '[Django - STIC Investigacion]'
-EMAIL_USE_TLS = True
-EMAIL_DEBUG = True
-EMAIL_DEBUG_ADDRESS = 'stic.becariosinvestigacion.info@ull.edu.es'
+import socket
+
+EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
+SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
+
 # ************************* EMAIL ********************************************
 
 # ************************* SETTINGS LOCAL ***********************************
