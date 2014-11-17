@@ -142,7 +142,7 @@ class CvnXmlWriter:
 
     def _get_code(self, dic, data_type):
         try:
-            code = dic[data_type]
+            code = dic[data_type.upper()]
         except KeyError:
             code = u'OTHERS'
         return code

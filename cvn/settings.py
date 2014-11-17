@@ -101,9 +101,9 @@ class FC_ENTITY(Enum):
 
 
 FC_OFFICIAL_TITLE_TYPE = {
-    u"Doctor": u'940',
-    u"Licenciado/Ingeniero Superior": u'950',
-    u"Diplomado/Ingeniero Tecnico": u'960'
+    u"DOCTOR": u'940',
+    u"LICENCIADDO/INGENIERO SUPERIOR": u'950',
+    u"DIPLOMADO/INGENIERO TÉCNICO": u'960'
 }
 
 FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS = "020.010.010.020"
@@ -123,25 +123,25 @@ FC_PROGRAM = "030.010.000.140"
 FC_PROGRAM_TYPE_OTHERS = "030.010.000.150"
 
 FC_PROGRAM_TYPE = {
-    u"Arquitecto": u"020",
-    u"Arquitecto técnico": u"030",
-    u"Diplomado": u"240",
-    u"Doctorado": u"250",
-    u"Ingeniero": u"420",
-    u"Ingeniero técnico": u"430",
-    u"Licenciado": u"470",
-    u"Máster oficial": u"480",
+    u"ARQUITECTO": u"020",
+    u"ARQUITECTO TÉCNICO": u"030",
+    u"DIPLOMADO": u"240",
+    u"DOCTORADO": u"250",
+    u"INGENIERO": u"420",
+    u"INGENIERO TÉCNICO": u"430",
+    u"LICENCIADO": u"470",
+    u"MÁSTER OFICIAL": u"480",
 }
 
 FC_SUBJECT = "030.010.000.190"
 FC_SUBJECT_TYPE_OTHERS = "030.010.000.430"
 
 FC_SUBJECT_TYPE = {
-    u"Troncal": u"000",
-    u"Obligatoria": u"010",
-    u"Optativa": u"020",
-    u"Libre configuración": u"030",
-    u"Doctorado": u"050",
+    u"TRONCAL": u"000",
+    u"OBLIGATORIA": u"010",
+    u"OPTATIVA": u"020",
+    u"LIBRE CONFIGURACIÓN": u"030",
+    u"DOCTORADO": u"050",
 }
 
 # Indicates 'Link' node contains Congreso data
