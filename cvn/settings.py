@@ -13,6 +13,8 @@ USER_FECYT = "cvnPdfULL01"
 PASSWORD_FECYT = "MXz8T9Py7Xhr"
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
+NAME_CVN = 'CVN'
+TIPO_PLANTILLA = 'PN2008'
 
 # Paths
 PDF_ROOT = "cvn/pdf"
@@ -77,6 +79,7 @@ FECYT_CODE_SUBTYPE = {
     u'100': u'TesisDoctoral',
 }
 
+
 class FC_OFFICIAL_ID(Enum):
     DNI = '000.010.000.100'
     NIE = '000.010.000.110'
@@ -90,6 +93,7 @@ FC_ENTITY_OPERATOR = "050.030.010.250"
 class FC_SURNAME(Enum):
     APELLIDO = "000.010.000.010"
     DOCTORANDO = "030.040.000.120"
+
 
 class FC_ENTITY(Enum):
     EMPLOYER = "010.020.000.020"
@@ -114,6 +118,7 @@ class FC_PROFESSION_CODE(Enum):
     OLD = '020'
     CURRENT_TRIMMED = '10'
     OLD_TRIMMED = '20'
+
 
 class FC_DEDICATION_TYPE(Enum):
     TOTAL = '020'
@@ -206,6 +211,11 @@ ERROR_CODES = {
     16: _(u'El XML está vacío.'),
     17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha '
           'fallado.')
+}
+
+RETURN_CODE = {
+    '00': _(u'CVN-PDF generado correctamente.'),
+    '01': _(u'No se ha podido generar el CVN-PDF.')
 }
 
 REGULAR_DATE_CODE = '040'

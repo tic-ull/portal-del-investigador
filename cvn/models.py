@@ -43,8 +43,14 @@ class FECYT:
 
     @staticmethod
     def pdf2xml(cvn_file):
-        cvn_file.open()
-        content = base64.encodestring(cvn_file.read())
+        try:
+            if cvn_file.closed:
+                cvn_file.open()
+            content = base64.encodestring(cvn_file.read())
+        except IOError:
+            logger.error(u'No existe el fichero o directorio:' +
+                         u' %s' % cvn_file.name)
+            return False
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
         try:
@@ -63,17 +69,19 @@ class FECYT:
 
     @staticmethod
     def xml2pdf(xml):
-        xml_data = xml.decode('utf8')
+        content = xml.decode('utf8')
+        # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
         try:
-            pdf = client_ws.service.crearPDFBean(st_cvn.USER_FECYT,
-                                                 st_cvn.PASSWORD_FECYT, 'cvn',
-                                                 xml_data, 'PN2008')
-        except UnicodeDecodeError as s:
-            print(s.message)
+            pdf = client_ws.service.crearPDFBean(
+                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT,
+                st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
+        except UnicodeDecodeError as e:
+            logger.error(e.message)
             return None
         if pdf.returnCode == '01':
-            print base64.decodestring(pdf.dataHandler)
+            logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u': ' +
+                         base64.decodestring(pdf.dataHandler))
             return None
         return base64.decodestring(pdf.dataHandler)
 
@@ -182,7 +190,9 @@ class CVN(models.Model):
         return cvn
 
     def upgrade(self):
-        self.xml_file.open()
+        if self.xml_file.closed:
+            self.xml_file.open()
+        self.xml_file.seek(0)
         parser = CvnXmlWriter(user=self.user_profile.user,
                               xml=self.xml_file.read())
         # TODO: insert ull info
@@ -229,7 +239,9 @@ class CVN(models.Model):
 
     def insert_xml(self):
         try:
-            self.xml_file.open()
+            if self.xml_file.closed:
+                self.xml_file.open()
+            self.xml_file.seek(0)
             cvn_items = etree.parse(self.xml_file).findall('CvnItem')
             self._parse_cvn_items(cvn_items)
             self.is_inserted = True
