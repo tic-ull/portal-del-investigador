@@ -49,14 +49,14 @@ class CVNTestCase(TestCase):
         us = UserFactory.create()
         cvn = CVN(user=us)
         pdf_file = file(os.path.join(st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
-        cvn.initialize_from_pdf(pdf_file.read())
+        cvn.update_from_pdf(pdf_file.read())
         self.assertTrue(cvn.xml_file and cvn.cvn_file)
 
     def test_update_from_xml(self):
         us = UserFactory.create()
         cvn = CVN(user=us)
         xml_file = file(os.path.join(st_cvn.TEST_ROOT, 'xml/CVN-Test.xml'))
-        cvn.initialize_from_xml(xml_file.read())
+        cvn.update_from_xml(xml_file.read())
         self.assertTrue(cvn.xml_file and cvn.cvn_file)
 
     @classmethod

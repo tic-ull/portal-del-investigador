@@ -80,8 +80,9 @@ class FECYT:
             logger.error(e.message)
             return None
         if pdf.returnCode == '01':
-            logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u': ' +
-                         base64.decodestring(pdf.dataHandler))
+            xml_error = open(base64.decodestring(pdf.dataHandler))
+            logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u'\n' +
+                         xml_error.read())
             return None
         return base64.decodestring(pdf.dataHandler)
 
@@ -119,22 +120,22 @@ class CVN(models.Model):
             pdf = pdf_file.read()
 
         if pdf and user:
-            self.initialize_from_pdf(pdf, commit=False)
+            self.update_from_pdf(pdf, commit=False)
 
-    def initialize_from_pdf(self, pdf, commit=True):
+    def update_from_pdf(self, pdf, commit=True):
         CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
             'CVN-' + self.user_profile.user.username, pdf,
             content_type=st_cvn.PDF)
         (xml, error) = FECYT.pdf2xml(self.cvn_file)
-        self.initialize_fields(xml, commit)
+        self.update_fields(xml, commit)
 
-    def initialize_from_xml(self, xml, commit=True):
+    def update_from_xml(self, xml, commit=True):
         pdf = FECYT.xml2pdf(xml)
         if pdf:
-            self.initialize_from_pdf(pdf, commit)
+            self.update_from_pdf(pdf, commit)
 
-    def initialize_fields(self, xml, commit=True):
+    def update_fields(self, xml, commit=True):
         self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
         self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
                            ContentFile(xml), save=False)
@@ -196,7 +197,7 @@ class CVN(models.Model):
         parser = CvnXmlWriter(user=self.user_profile.user,
                               xml=self.xml_file.read())
         # TODO: insert ull info
-        self.initialize_from_xml(parser.tostring())
+        self.update_from_xml(parser.tostring())
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):

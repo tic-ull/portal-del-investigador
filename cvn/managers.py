@@ -1,15 +1,14 @@
 # -*- encoding: UTF-8 -*-
 
-import datetime
-
-from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
-
 from cvn.parsers.read import (parse_scope, parse_authors, parse_places,
-                            parse_publicacion_location, parse_date,
-                            parse_date_interval, parse_economic,
-                            parse_entities, parse_produccion_id, parse_title)
-import settings as st_cvn
+                              parse_publicacion_location, parse_date,
+                              parse_date_interval, parse_economic,
+                              parse_entities, parse_produccion_id, parse_title)
+from cvn import settings as st_cvn
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
+
+import datetime
 
 
 class ProduccionManager(models.Manager):

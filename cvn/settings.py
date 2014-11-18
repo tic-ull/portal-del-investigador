@@ -13,6 +13,7 @@ USER_FECYT = "cvnPdfULL01"
 PASSWORD_FECYT = "MXz8T9Py7Xhr"
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
+WS_FECYT_VERSION = "1.3.0"
 NAME_CVN = 'CVN'
 TIPO_PLANTILLA = 'PN2008'
 
@@ -40,7 +41,6 @@ XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT, 'cvn/xml/bachelor_engineeri
 XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 
 # Optional fragments
-XML_2ND_SURNAME = os.path.join(st.RES_ROOT, 'cvn/xml/second_family_name.xml')
 XML_DEDIACTION = os.path.join(st.RES_ROOT, 'cvn/xml/dedication.xml')
 XML_ENTITY = os.path.join(st.RES_ROOT, 'cvn/xml/entity.xml')
 XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')

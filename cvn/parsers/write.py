@@ -1,7 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
-import cvn.settings as st_cvn
+from cvn import settings as st_cvn
 from lxml import etree
+
+import time
 
 
 def get_xml_fragment(path):
@@ -19,34 +21,28 @@ class CvnXmlWriter:
         xml = kwargs.pop('xml', None)
         if xml is not None:
             self.xml = etree.fromstring(xml)
+            self.xml.find(
+                'Version/VersionID/Date/Item'
+            ).text = time.strftime(self.DATE_FORMAT)
         else:
-            surnames = user.last_name.split(' ')
-
+            if user.profile.documento[0].isdigit():
+                documento = st_cvn.FC_OFFICIAL_ID.DNI
+            else:
+                documento = st_cvn.FC_OFFICIAL_ID.NIE
             xml = get_xml_fragment(st_cvn.XML_SKELETON_PATH) % {
+                'today': time.strftime(self.DATE_FORMAT),
+                'version': st_cvn.WS_FECYT_VERSION,
                 'given_name': user.first_name,
-                'first_family_name': surnames[0],
-                'id_type': st_cvn.FC_OFFICIAL_ID.DNI.name,
-                'id_type_code': st_cvn.FC_OFFICIAL_ID.DNI.value,
+                'first_family_name': user.last_name,
+                'id_type': documento.name,
+                'id_type_code': documento.value,
                 'official_id': user.profile.documento,
                 'internet_email_address': user.email
             }
             self.xml = etree.fromstring(xml.encode('utf8'))
-            if len(surnames) == 2:
-                first_surname = self.xml.find('Agent/Identification/Personal'
-                                              'Identification/FirstFamilyName')
-                self._append_2nd_surname(first_surname, surnames[1],
-                                         st_cvn.FC_SURNAME.APELLIDO.value)
 
     def tostring(self):
         return etree.tostring(self.xml)
-
-    @staticmethod
-    def _append_2nd_surname(surname_node, second_surname, code):
-        second_surname_node = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_2ND_SURNAME) % {
-                'second_family_name': second_surname, 'code': code})
-        pi = surname_node.getparent()
-        pi.insert(pi.index(surname_node) + 1, second_surname_node)
 
     def add_teaching_phd(self, title, university, reading_date, signature,
                      given_name, first_family_name, second_family_name=None):
@@ -60,10 +56,6 @@ class CvnXmlWriter:
                 'signature': signature
             }
         )
-        if second_family_name is not None:
-            first_surname = teaching.find('Author/FirstFamilyName')
-            self._append_2nd_surname(first_surname, second_family_name,
-                                     st_cvn.FC_SURNAME.DOCTORANDO.value)
         self.xml.append(teaching)
 
     def add_learning(self, title_name, university, date, title_type):

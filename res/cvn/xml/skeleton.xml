@@ -3,10 +3,10 @@
   <Version>
     <VersionID>
       <Date code="000.020.000.020">
-        <Item>2014-10-23</Item>
+        <Item>%(today)s</Item>
       </Date>
       <CodificationVersion code="000.020.000.080">
-        <Item>1.3.0</Item>
+        <Item>%(version)s</Item>
       </CodificationVersion>
     </VersionID>
   </Version>

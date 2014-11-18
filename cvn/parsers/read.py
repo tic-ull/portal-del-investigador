@@ -1,8 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as st_cvn
 from iso3166 import countries
+
 import datetime
-import cvn.settings as st_cvn
 import string
 
 
@@ -53,8 +54,7 @@ def _parse_unitary_date(xml):
 def _enddate_to_duration(node, fecha_inicio):
     duration = None
     fecha_fin = _parse_segregated_date(node)
-    if (fecha_inicio is not None and
-            fecha_fin is not None):
+    if fecha_inicio is not None and fecha_fin is not None:
         delta = fecha_fin - fecha_inicio
         duration = delta.days
     return fecha_fin, duration
@@ -62,10 +62,8 @@ def _enddate_to_duration(node, fecha_inicio):
 
 def _duration_to_enddate(node, fecha_inicio):
     duration = _parse_duration(node)
-    if (fecha_inicio is not None and
-            duration is not None):
-        fecha_fin = (fecha_inicio +
-                     datetime.timedelta(days=duration))
+    if fecha_inicio is not None and duration is not None:
+        fecha_fin = (fecha_inicio + datetime.timedelta(days=duration))
         return fecha_fin, duration
     return None, None
 
