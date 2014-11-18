@@ -183,8 +183,8 @@ class CVN(models.Model):
     @staticmethod
     def create(user):
         parser = CvnXmlWriter(user=user)
-        xml = parser.tostring()
         # TODO: insert ull info
+        xml = parser.tostring()
         pdf = FECYT.xml2pdf(xml)
         cvn = CVN(user=user, pdf=pdf)
         return cvn
