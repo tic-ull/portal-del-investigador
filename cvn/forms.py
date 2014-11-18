@@ -1,12 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as st_cvn
 from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-
 from models import FECYT, CVN
-import settings as st_cvn
 import mimetypes
 
 
@@ -35,18 +34,17 @@ class UploadCVNForm(forms.ModelForm):
         if mimetypes.guess_type(cvn_file.name)[0] != st_cvn.PDF:
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
-        cvn_file.open()
-        (self.xml, error) = FECYT.pdf2xml(cvn_file.read(), cvn_file.name)
+        (self.xml, error) = FECYT.pdf2xml(cvn_file)
         if not self.xml:
             raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
         return cvn_file
 
     @transaction.atomic
     def save(self, commit=True):
-        CVN.remove_pdf_by_userprofile(self.user.profile)
+        CVN.remove_cvn_by_userprofile(self.user.profile)
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.user_profile = self.user.profile
-        cvn.update_fields(self.xml, commit)
+        cvn.initialize_fields(self.xml, commit)
         if commit:
             cvn.save()
         return cvn

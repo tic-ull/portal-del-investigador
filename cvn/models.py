@@ -42,18 +42,19 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def pdf2xml(pdf, pdf_name):
-        data_pdf = base64.encodestring(pdf)
+    def pdf2xml(cvn_file):
+        cvn_file.open()
+        content = base64.encodestring(cvn_file.read())
         # Web Service - FECYT
         client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
         try:
             result_xml = client_ws.service.cvnPdf2Xml(
-                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, data_pdf)
+                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, content)
         except:
             logger.warning(
                 u'No hay respuesta del WS' +
                 u' de la FECYT para el fichero' +
-                u' %s' % pdf_name)
+                u' %s' % cvn_file.name)
             return False, 1
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
@@ -95,44 +96,81 @@ class CVN(models.Model):
 
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
-    class Meta:
-        verbose_name_plural = _(u'Currículum Vitae Normalizado')
-
-    def __unicode__(self):
-        return '%s ' % self.cvn_file.name.split('/')[-1]
-
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
-        # We dont want both pdf_path and pdf (content)
         pdf_path = kwargs.pop('pdf_path', None)
         pdf = kwargs.pop('pdf', None)
 
         super(CVN, self).__init__(*args, **kwargs)
 
         if user:
-            pdf_name = 'CVN-' + user.username
             self.user_profile = user.profile
+
         if pdf_path:
             pdf_file = open(pdf_path)
-            pdf_name = pdf_file.name
             pdf = pdf_file.read()
 
         if pdf and user:
-            self.update_from_pdf(pdf, commit=False)
+            self.initialize_from_pdf(pdf, commit=False)
 
-    def update_from_pdf(self, pdf_content, commit=True):
-        CVN.remove_pdf_by_userprofile(self.user_profile)
+    def initialize_from_pdf(self, pdf, commit=True):
+        CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
-            'CVN-' + self.user_profile.user.username, pdf_content,
+            'CVN-' + self.user_profile.user.username, pdf,
             content_type=st_cvn.PDF)
-        self.cvn_file.open()
-        (xml, error) = FECYT.pdf2xml(self.cvn_file.read(), self.cvn_file.name)
-        self.update_fields(xml, commit)
+        (xml, error) = FECYT.pdf2xml(self.cvn_file)
+        self.initialize_fields(xml, commit)
 
-    def update_from_xml(self, xml, commit=True):
+    def initialize_from_xml(self, xml, commit=True):
         pdf = FECYT.xml2pdf(xml)
         if pdf:
-            self.update_from_pdf(pdf, commit)
+            self.initialize_from_pdf(pdf, commit)
+
+    def initialize_fields(self, xml, commit=True):
+        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
+        self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
+                           ContentFile(xml), save=False)
+        tree_xml = etree.XML(xml)
+        self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
+        self.is_inserted = False
+        self.update_status(commit)
+        self.xml_file.close()
+        if commit:
+            self.save()
+
+    def update_status(self, commit=True):
+        status = self.status
+        if not self._is_valid_identity():
+            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
+        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
+            self.status = st_cvn.CVNStatus.EXPIRED
+        else:
+            self.status = st_cvn.CVNStatus.UPDATED
+        if self.status != status and commit:
+            self.save()
+            Log.objects.create(
+                user_profile=self.user_profile,
+                application=self._meta.app_label.upper(),
+                entry_type=st_core.LogType.CVN_STATUS,
+                date=datetime.datetime.now(),
+                message=st_cvn.CVN_STATUS[self.status][1]
+            )
+
+    def _is_valid_identity(self):
+        try:
+            if self.xml_file.closed:
+                self.xml_file.open()
+        except IOError:
+            return False
+        xml_tree = etree.parse(self.xml_file)
+        self.xml_file.seek(0)
+        nif = parse_nif(xml_tree)
+        self.xml_file.close()
+        if nif.upper() == self.user_profile.documento.upper():
+            return True
+        if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
+            return True
+        return False
 
     @staticmethod
     def create(user):
@@ -148,10 +186,10 @@ class CVN(models.Model):
         parser = CvnXmlWriter(user=self.user_profile.user,
                               xml=self.xml_file.read())
         # TODO: insert ull info
-        self.update_from_xml(parser.tostring())
+        self.initialize_from_xml(parser.tostring())
 
     @classmethod
-    def remove_pdf_by_userprofile(cls, user_profile):
+    def remove_cvn_by_userprofile(cls, user_profile):
         try:
             cvn_old = cls.objects.get(user_profile=user_profile)
             cvn_old.remove()
@@ -179,6 +217,16 @@ class CVN(models.Model):
         except IOError:
             pass
 
+    def remove_producciones(self):
+        Articulo.removeByUserProfile(self.user_profile)
+        Libro.removeByUserProfile(self.user_profile)
+        Capitulo.removeByUserProfile(self.user_profile)
+        Congreso.objects.removeByUserProfile(self.user_profile)
+        Proyecto.objects.removeByUserProfile(self.user_profile)
+        Convenio.objects.removeByUserProfile(self.user_profile)
+        TesisDoctoral.objects.removeByUserProfile(self.user_profile)
+        Patente.objects.removeByUserProfile(self.user_profile)
+
     def insert_xml(self):
         try:
             self.xml_file.open()
@@ -193,16 +241,6 @@ class CVN(models.Model):
             else:
                 logger.warning(u'Se requiere de un fichero CVN-XML')
 
-    def remove_producciones(self):
-        Articulo.removeByUserProfile(self.user_profile)
-        Libro.removeByUserProfile(self.user_profile)
-        Capitulo.removeByUserProfile(self.user_profile)
-        Congreso.objects.removeByUserProfile(self.user_profile)
-        Proyecto.objects.removeByUserProfile(self.user_profile)
-        Convenio.objects.removeByUserProfile(self.user_profile)
-        TesisDoctoral.objects.removeByUserProfile(self.user_profile)
-        Patente.objects.removeByUserProfile(self.user_profile)
-
     def _parse_cvn_items(self, cvn_items):
         for CVNItem in cvn_items:
             code = parse_produccion_type(CVNItem)
@@ -212,51 +250,11 @@ class CVN(models.Model):
                 continue
             produccion.objects.create(CVNItem, self.user_profile)
 
-    def _is_valid_identity(self):
-        try:
-            if self.xml_file.closed:
-                self.xml_file.open()
-        except IOError:
-            return False
-        xml_tree = etree.parse(self.xml_file)
-        self.xml_file.seek(0)
-        nif = parse_nif(xml_tree)
-        self.xml_file.close()
-        if nif.upper() == self.user_profile.documento.upper():
-            return True
-        if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
-            return True
-        return False
+    def __unicode__(self):
+        return '%s ' % self.cvn_file.name.split('/')[-1]
 
-    def update_fields(self, xml, commit=True):
-        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
-        self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
-                          ContentFile(xml), save=False)
-        self.xml_file.close()
-        tree_xml = etree.XML(xml)
-        self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
-        self.is_inserted = False
-        self.update_status(commit)
-        if commit:
-            self.save()
-
-    def update_status(self, commit=True):
-        status = self.status
-        if not self._is_valid_identity():
-            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
-        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
-            self.status = st_cvn.CVNStatus.EXPIRED
-        else:
-            self.status = st_cvn.CVNStatus.UPDATED
-        if self.status != status and commit:
-            self.save()
-            Log.objects.create(
-                user_profile=self.user_profile,
-                application=self._meta.app_label.upper(),
-                entry_type=st_core.LogType.CVN_STATUS,
-                date=datetime.datetime.now(),
-                message=st_cvn.CVN_STATUS[self.status][1]
-            )
+    class Meta:
+        verbose_name_plural = _(u'Currículum Vitae Normalizado')
 
 
 class Publicacion(models.Model):
