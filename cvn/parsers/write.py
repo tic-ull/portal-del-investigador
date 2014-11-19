@@ -6,11 +6,11 @@ from lxml import etree
 import time
 
 
-def get_xml_fragment(path):
-    f = open(path)
-    xml = f.read()
-    f.close()
-    return xml
+def get_xml_fragment(filepath):
+    xml = open(filepath)
+    content = xml.read()
+    xml.close()
+    return content
 
 
 class CvnXmlWriter:
@@ -44,19 +44,33 @@ class CvnXmlWriter:
     def tostring(self):
         return etree.tostring(self.xml)
 
-    def add_teaching_phd(self, title, university, reading_date, signature,
-                     given_name, first_family_name, second_family_name=None):
-        teaching = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_TEACHING) % {
+    def add_teaching_phd(self, title, reading_date, university,
+                         author_first_name, author_last_name,
+                         codirector_first_name=None, codirector_last_name=None,
+                         author_signature=None, codirector_signature=None):
+        """ Doctoral Thesis Directed """
+        teaching_phd = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_TEACHING_PHD) % {
                 'title': title,
-                'university': university,
                 'reading_date': reading_date.strftime(self.DATE_FORMAT),
-                'given_name': given_name,
-                'first_family_name': first_family_name,
-                'signature': signature
+                'university': university,
+                'first_name': author_first_name,
+                'last_name': author_last_name,
+                'signature': author_signature,
             }
         )
-        self.xml.append(teaching)
+
+        if codirector_first_name is not None:
+            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
+            codirector = get_xml_fragment(
+                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
+                    'codirector_first_name': codirector_first_name,
+                    'codirector_last_name': codirector_last_name,
+                    'codirector_signature': codirector_signature,
+                }
+            teaching_phd.insert(title_pos, etree.fromstring(codirector))
+
+        self.xml.append(teaching_phd)
 
     def add_learning(self, title_name, university, date, title_type):
         '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''

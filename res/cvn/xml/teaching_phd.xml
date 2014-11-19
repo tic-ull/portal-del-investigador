@@ -37,10 +37,10 @@
   </Date>
   <Author>
     <GivenName code="030.040.000.120">
-      <Item>%(given_name)s</Item>
+      <Item>%(first_name)s</Item>
     </GivenName>
     <FirstFamilyName code="030.040.000.120">
-      <Item>%(first_family_name)s</Item>
+      <Item>%(last_name)s</Item>
     </FirstFamilyName>
     <Signature code="030.040.000.120">
       <Item>%(signature)s</Item>
