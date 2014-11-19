@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 import os
+import js
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -18,8 +19,8 @@ STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
 LOGIN_URL = 'login'  # Login address for login_required decorator
-TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
-TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
+TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
+TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 # ******************************* URLS **************************************
 
@@ -78,7 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.sites',
-    'tinymce',
     'core',
     'cvn',
     'crequest',
@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django_tables2',
     'django.contrib.flatpages',
     'accounting',
+    'mailing',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -264,7 +265,9 @@ TEMPLATE_DIRS = (
 # ************************* TEMPLATES ****************************************
 
 # ************************* STATIC FILES *************************************
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),
+                    ('js', js.__path__[0] + ''),
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
