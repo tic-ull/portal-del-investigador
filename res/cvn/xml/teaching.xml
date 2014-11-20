@@ -20,6 +20,9 @@
     <Type>000</Type>
     <Category>OTHERS</Category>
   </Title>
+  <Description code="030.010.000.270">
+    <Item>%(professional_category)s</Item>
+  </Description>
   <Filter>
     <Type code="030.010.000.140">
       <Item>100</Item>
@@ -89,9 +92,9 @@
       <Item>OTHERS</Item>
     </Moment>
     <StartDate>
-      <DayMonthYear code="030.010.000.550">
-        <Item>%(start_date)s</Item>
-      </DayMonthYear>
+      <Year code="030.010.000.550">
+        <Item>%(school_year)s</Item>
+      </Year>
     </StartDate>
   </Date>
   <PhysicalDimension>

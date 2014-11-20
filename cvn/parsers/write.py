@@ -72,6 +72,50 @@ class CvnXmlWriter:
 
         self.xml.append(teaching_phd)
 
+    def add_teaching(self, subject, professional_category, program_type,
+                     subject_type, course, qualification, department,
+                     faculty, school_year, number_credits):
+        program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
+        subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
+        teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
+            'subject': subject,
+            'professional_category': professional_category,
+            'program_type': program_code,
+            'subject_type': subject_code,
+            'course': course,
+            'qualification': qualification,
+            'department': department,
+            'faculty': faculty,
+            'school_year': school_year,
+            'number_credits': number_credits,
+        }
+
+        self.xml.append(etree.fromstring(teaching))
+
+        if program_code == u'OTHERS':
+            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
+                'code_others': st_cvn.FC_PROGRAM_TYPE_OTHERS,
+                'others': program_type})
+            self._add_other_node(self.xml, st_cvn.FC_PROGRAM, node)
+
+        if subject_code == u'OTHERS':
+            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
+                'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
+                'others': subject_type})
+            self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
+
+    def _get_code(self, dic, key):
+        try:
+            code = dic[key.upper()]
+        except KeyError:
+            code = u'OTHERS'
+        return code
+
+    def _add_other_node(self, xml, code, node):
+        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
+        parent = value_node.getparent()
+        parent.insert(parent.index(value_node) + 1, node)
+
     def add_learning(self, title_name, university, date, title_type):
         '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
         code = self._get_code(st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type)
@@ -145,46 +189,6 @@ class CvnXmlWriter:
             'titulo': titulo, 'centro': centro,
             'date': date.strftime(self.DATE_FORMAT)}
         self.xml.append(etree.fromstring(phd_xml))
-
-    def _get_code(self, dic, data_type):
-        try:
-            code = dic[data_type.upper()]
-        except KeyError:
-            code = u'OTHERS'
-        return code
-
-    def _add_other_node(self, xml, code, node):
-        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
-        pi = value_node.getparent()
-        pi.insert(pi.index(value_node) + 1, node)
-
-    def add_teaching(self, subject, program_type, subject_type, course,
-                     qualification, department, faculty, start_date,
-                     number_credits):
-        program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
-        subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
-        teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
-            'subject': subject,
-            'program_type': program_code,
-            'subject_type': subject_code,
-            'course': course,
-            'qualification': qualification,
-            'department': department,
-            'faculty': faculty,
-            'start_date': start_date.strftime(self.DATE_FORMAT),
-            'number_credits': number_credits
-        }
-        self.xml.append(etree.fromstring(teaching))
-        if program_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_PROGRAM_TYPE_OTHERS,
-                'others': program_type})
-            self._add_other_node(self.xml, st_cvn.FC_PROGRAM, node)
-        if subject_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
-                'others': subject_type})
-            self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
 
     def add_learning_other(self, type, title, duration, start_date, end_date):
         other_xml = get_xml_fragment(st_cvn.XML_LEARNING_OTHER) % {
