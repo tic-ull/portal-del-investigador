@@ -2,12 +2,12 @@
 
 from core import settings as st_core
 from core.models import UserProfile, Log
-from core.send_mail import send_mail
+from mailing.send_mail import send_mail
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.template.loader import render_to_string
+import mailing.settings as st_mail
 from lxml import etree
 from managers import (PublicacionManager, CongresoManager, ProyectoManager,
                       ConvenioManager, TesisDoctoralManager, PatenteManager)
@@ -169,15 +169,8 @@ class CVN(models.Model):
             self.save()
 
             if self.status == st_cvn.CVNStatus.EXPIRED:
-                context = dict()
-                context['fecha_cvn'] = self.fecha
-                context['fecyt_url'] = st_cvn.EDITOR_FECYT
-                context['SITE_URL'] = st.SITE_URL
-                body = render_to_string(
-                    'cvn/emails/email_cvn_expired.html', context)
                 send_mail(
-                    subject=_(u'Su CVN ha caducado'),
-                    body=body,
+                    email_code=st_mail.MailType.EXPIRED,
                     email_to=self.user_profile.user.email)
 
             Log.objects.create(
