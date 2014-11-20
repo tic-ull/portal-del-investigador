@@ -80,9 +80,9 @@ class FECYT:
             logger.error(e.message)
             return None
         if pdf.returnCode == '01':
-            xml_error = open(base64.decodestring(pdf.dataHandler))
+            xml_error = base64.decodestring(pdf.dataHandler)
             logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u'\n' +
-                         xml_error.read())
+                         xml_error.decode('iso-8859-10'))
             return None
         return base64.decodestring(pdf.dataHandler)
 
@@ -182,12 +182,16 @@ class CVN(models.Model):
         return False
 
     @staticmethod
-    def create(user):
-        parser = CvnXmlWriter(user=user)
-        # TODO: insert ull info
-        xml = parser.tostring()
+    def create(user, xml=None):
+        if not xml:
+            parser = CvnXmlWriter(user=user)
+            # TODO: insert ull info
+            xml = parser.tostring()
         pdf = FECYT.xml2pdf(xml)
+        if pdf is None:
+            return None
         cvn = CVN(user=user, pdf=pdf)
+        cvn.save()
         return cvn
 
     def upgrade(self):
