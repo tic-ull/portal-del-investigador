@@ -1,7 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from django.contrib.auth.models import User
+from core.models import UserProfile
 import factory
+from random import randint
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -9,6 +11,14 @@ class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: 'juan{0}'.format(n))
     first_name = 'Juan'
     last_name = 'Doe'
+    email = 'juan@gemail.com.mailtest'
+
+    @factory.post_generation
+    def create_profile(self, *args, **kwargs):
+        NIF = 'TRWAGMYFPDXBNJZSQVHLCKE'
+        dni = randint(10000000, 99999999)
+        UserProfile.objects.create(user=self,
+                                   documento=str(dni) + NIF[dni % 23])
 
 
 class AdminFactory(factory.django.DjangoModelFactory):
