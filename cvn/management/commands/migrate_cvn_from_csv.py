@@ -25,9 +25,11 @@ class Command(BaseCommand):
                     password='',
                     first_name=line[3].decode('utf-8'),
                     last_name=line[4].decode('utf-8'))[0]
-                UserProfile.objects.get_or_create(user=user)[0]
-                user.profile.documento = unicode(line[1])
-                user.profile.save()
+                profile = UserProfile.objects.get_or_create(user=user)[0]
+                profile.documento = unicode(line[1])
+                profile.save()
+                # Reload user to have profile updated
+                user = User.objects.get(pk=user.pk)
                 try:
                     upload_file = open(import_path + line[2])
                 except IOError:
