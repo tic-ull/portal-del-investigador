@@ -69,13 +69,8 @@
       <Item>000</Item>
     </Type>
     <EntityName code="030.010.000.080">
-      <Item>Universidad de La Laguna</Item>
+      <Item>%(university)s</Item>
      </EntityName>
-    <EntityID>
-      <CVNPK code="030.010.000.080">
-        <Item>8435246600011002700000001438700</Item>
-      </CVNPK>
-    </EntityID>
   </Entity>
   <Entity>
     <EntityName code="030.010.000.130">

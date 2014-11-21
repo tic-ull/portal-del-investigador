@@ -246,3 +246,6 @@ MESSAGES_WAITING = {
 
 # In milliseconds
 TIME_WAITING = 5000
+
+# CVN Entity
+UNIVERSITY = _(u'Universidad de La Laguna')

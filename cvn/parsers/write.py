@@ -44,8 +44,9 @@ class CvnXmlWriter:
     def tostring(self):
         return etree.tostring(self.xml)
 
-    def add_teaching_phd(self, title, reading_date, university,
+    def add_teaching_phd(self, title, reading_date,
                          author_first_name, author_last_name,
+                         university=st_cvn.UNIVERSITY,
                          codirector_first_name=None, codirector_last_name=None,
                          author_signature=None, codirector_signature=None):
         """ Doctoral Thesis Directed """
@@ -74,7 +75,8 @@ class CvnXmlWriter:
 
     def add_teaching(self, subject, professional_category, program_type,
                      subject_type, course, qualification, department,
-                     faculty, school_year, number_credits):
+                     faculty, school_year, number_credits,
+                     university=st_cvn.UNIVERSITY,):
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
@@ -88,6 +90,7 @@ class CvnXmlWriter:
             'faculty': faculty,
             'school_year': school_year,
             'number_credits': number_credits,
+            'university': university,
         }
 
         self.xml.append(etree.fromstring(teaching))
