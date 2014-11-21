@@ -2,6 +2,7 @@
 
 from cvn import settings as st_cvn
 from lxml import etree
+from datetime import datetime
 
 import time
 
@@ -119,23 +120,26 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
-    def add_learning(self, title_name, university, date, title_type):
-        '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
-        code = self._get_code(st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type)
-        academic_education = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_BACHELOR_ENGINEERING) % {
-                'title': title_name,
+    def add_learning(self, title_name, title_type, university=None, date=None):
+        title_code = self._get_code(
+            st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type.upper())
+        learning = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_LEARNING) % {
+                'title_name': title_name,
+                'title_code': title_code,
                 'university': university,
-                'date': date.strftime(self.DATE_FORMAT),
-                'code': code
+                'date': datetime.strptime(date, '%d/%m/%y').strftime(
+                    self.DATE_FORMAT) if date else '2014-01-01',
             }
         )
-        if code == u'OTHERS':
+
+        if title_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
                 'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
                 'others': title_type})
-            academic_education.find('Filter').append(node)
-        self.xml.append(academic_education)
+            learning.find('Filter').append(node)
+
+        self.xml.append(learning)
 
     def add_profession(self, title, employer, start_date, end_date=None,
                        centre=None, department=None, full_time=None):

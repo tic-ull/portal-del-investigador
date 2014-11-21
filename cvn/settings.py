@@ -37,7 +37,7 @@ XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
 XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/teaching_phd.xml')
-XML_BACHELOR_ENGINEERING = os.path.join(st.RES_ROOT, 'cvn/xml/bachelor_engineering.xml')
+XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
 XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 
 # Optional fragments
@@ -107,8 +107,8 @@ class FC_ENTITY(Enum):
 
 FC_OFFICIAL_TITLE_TYPE = {
     u"DOCTOR": u'940',
-    u"LICENCIADDO/INGENIERO SUPERIOR": u'950',
-    u"DIPLOMADO/INGENIERO TÉCNICO": u'960'
+    u"LICENCIADO/INGENIERO SUPERIOR": u'950',
+    u"DIPLOMADO/INGENIERO TECNICO": u'960'
 }
 
 FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS = "020.010.010.020"
