@@ -32,11 +32,6 @@ class Command(BaseCommand):
                 # Reload user to have profile updated
                 user = User.objects.get(pk=user.pk)
                 try:
-                    user.profile.cvn.remove()
-                    user.profile.cvn.delete()
-                except ObjectDoesNotExist:
-                    pass
-                try:
                     upload_file = open(import_path + line[2])
                 except IOError:
                     print u'[%s] \t \t ERROR: CVN No encontrado (%s - %s)' % (
@@ -47,6 +42,11 @@ class Command(BaseCommand):
                     upload_file.read(),
                     content_type=st_cvn.PDF)
                 upload_file.close()
+                try:
+                    user.profile.cvn.remove()
+                    user.profile.cvn.delete()
+                except ObjectDoesNotExist:
+                    pass
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
                     cvn = form.save()
