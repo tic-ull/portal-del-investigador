@@ -7,6 +7,7 @@ from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ObjectDoesNotExist
 import csv
 import os
 
@@ -28,6 +29,11 @@ class Command(BaseCommand):
                 UserProfile.objects.get_or_create(user=user)[0]
                 user.profile.documento = unicode(line[1])
                 user.profile.save()
+                try:
+                    user.profile.cvn.remove()
+                    user.profile.cvn.delete()
+                except ObjectDoesNotExist:
+                    pass
                 try:
                     upload_file = open(import_path + line[2])
                 except IOError:
