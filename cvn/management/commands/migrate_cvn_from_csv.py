@@ -7,6 +7,7 @@ from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
+from django.core.exceptions import ObjectDoesNotExist
 import csv
 import os
 
@@ -25,9 +26,11 @@ class Command(BaseCommand):
                     password='',
                     first_name=line[3].decode('utf-8'),
                     last_name=line[4].decode('utf-8'))[0]
-                UserProfile.objects.get_or_create(user=user)[0]
-                user.profile.documento = unicode(line[1])
-                user.profile.save()
+                profile = UserProfile.objects.get_or_create(user=user)[0]
+                profile.documento = unicode(line[1])
+                profile.save()
+                # Reload user to have profile updated
+                user = User.objects.get(pk=user.pk)
                 try:
                     upload_file = open(import_path + line[2])
                 except IOError:
@@ -39,6 +42,11 @@ class Command(BaseCommand):
                     upload_file.read(),
                     content_type=st_cvn.PDF)
                 upload_file.close()
+                try:
+                    user.profile.cvn.remove()
+                    user.profile.cvn.delete()
+                except ObjectDoesNotExist:
+                    pass
                 form = UploadCVNForm(initial={'cvn_file': cvn_file}, user=user)
                 if form.is_valid():
                     cvn = form.save()
