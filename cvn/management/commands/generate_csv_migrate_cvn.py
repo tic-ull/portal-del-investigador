@@ -43,7 +43,7 @@ class Command(BaseCommand):
             open(os.path.join(MIGRATION_ROOT, 'users_to_migrate.csv'), 'wb'),
             delimiter=';')
         lines = 0
-        for cvn in CVN.objects.filter(created_at__gte=creation_date):
+        for cvn in CVN.objects.filter(updated_at__gte=creation_date):
             lines += 1
             try:
                 shutil.copyfile(
@@ -64,4 +64,3 @@ class Command(BaseCommand):
                     cvn.user_profile.user.username,
                     cvn.cvn_file.name)
                 print e
-                continue
