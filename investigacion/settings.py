@@ -127,7 +127,15 @@ WSGI_APPLICATION = 'investigacion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'memviinv',
+        'NAME': 'investigacion',
+        'USER': '<user>',
+        'PASSWORD': '<password>',
+        'HOST': '',
+        'PORT': '',
+    },
+    'historica': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'investigacion_historica',
         'USER': '<user>',
         'PASSWORD': '<password>',
         'HOST': '',
