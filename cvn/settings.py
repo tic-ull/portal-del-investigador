@@ -25,6 +25,7 @@ PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
 CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
+MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
 
 
 # XML Files for XML parser (to create or modify cvn-xml)

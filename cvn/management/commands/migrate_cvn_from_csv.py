@@ -3,7 +3,6 @@
 from core.models import UserProfile
 from cvn import settings as st_cvn
 from cvn.forms import UploadCVNForm
-from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
@@ -16,9 +15,8 @@ class Command(BaseCommand):
     help = u'Migración de usuarios con su CVN desde un CSV del viejo portal'
 
     def handle(self, *args,  **options):
-        import_path = os.path.join(st.BASE_DIR, 'importCVN/')
-        csv_file = import_path + 'users_to_migrate.csv'
-        with open(csv_file, 'rb') as csvfile:
+        cvn_file = os.path.join(st_cvn.MIGRATION_ROOT, 'users_to_migrate.csv')
+        with open(cvn_file, 'rb') as csvfile:
             lines = csv.reader(csvfile, delimiter=';')
             for line in lines:
                 user = User.objects.get_or_create(
@@ -32,7 +30,8 @@ class Command(BaseCommand):
                 # Reload user to have profile updated
                 user = User.objects.get(pk=user.pk)
                 try:
-                    upload_file = open(import_path + line[2])
+                    pdf_file = os.path.join(st_cvn.MIGRATION_ROOT, line[2])
+                    upload_file = open(pdf_file)
                 except IOError:
                     print u'[%s] \t \t ERROR: CVN No encontrado (%s - %s)' % (
                         lines.line_num, line[0], line[2])
