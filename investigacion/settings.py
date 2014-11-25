@@ -221,14 +221,17 @@ LOGGING = {
         },
         'default': {
             'handlers': ['default', 'mail_admins'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'cvn': {
             'handlers': ['default'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'cvn.management.commands.find_pairs': {
             'handlers': ['find_pairs_handler'],
+            'level': 'DEBUG',
             'propagate': False,
         },
     }
