@@ -19,16 +19,21 @@ class Command(BaseCommand):
         with open(cvn_file, 'rb') as csvfile:
             lines = csv.reader(csvfile, delimiter=';')
             for line in lines:
-                user = User.objects.get_or_create(
-                    username=unicode(line[0]),
-                    password='',
-                    first_name=line[3].decode('utf-8'),
-                    last_name=line[4].decode('utf-8'))[0]
-                profile = UserProfile.objects.get_or_create(user=user)[0]
+                try:
+                    profile = UserProfile.objects.get(
+                        documento=unicode(line[1]))
+                except ObjectDoesNotExist:
+                    user, created = User.objects.get_or_create(
+                        username=unicode(line[0]),
+                        password='',
+                        first_name=line[3].decode('utf-8'),
+                        last_name=line[4].decode('utf-8'))
+                    profile, created = UserProfile.objects.get_or_create(
+                        user=user)
                 profile.documento = unicode(line[1])
                 profile.save()
                 # Reload user to have profile updated
-                user = User.objects.get(pk=user.pk)
+                user = User.objects.get(pk=profile.user.pk)
                 try:
                     pdf_file = os.path.join(st_cvn.MIGRATION_ROOT, line[2])
                     upload_file = open(pdf_file)
