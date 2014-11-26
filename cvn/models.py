@@ -102,7 +102,10 @@ class CVN(models.Model):
         old_cvn_file = os.path.join(old_path, new_file_name)
         if not os.path.isdir(old_path):
             os.makedirs(old_path)
-        file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        try:
+            file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        except IOError:
+            pass
 
     def insert_xml(self):
         try:
