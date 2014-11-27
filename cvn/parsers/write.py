@@ -128,8 +128,7 @@ class CvnXmlWriter:
                 'title_name': title_name,
                 'title_code': title_code,
                 'university': university,
-                'date': datetime.strptime(date, '%d/%m/%y').strftime(
-                    self.DATE_FORMAT) if date else None,
+                'date': date,
             }
         )
 
