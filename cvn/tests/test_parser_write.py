@@ -24,7 +24,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_cargos(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT,'csv/cargos.csv'))
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/cargos.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:
@@ -85,6 +85,30 @@ class ParserWriterTestCase(TestCase):
             parser.add_profession(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
+
+    def test_parse_titulacion(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
+        reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
+        for row in reader:
+            try:
+                row['date'] = datetime.datetime.strptime(row['date'],
+                                                         '%d/%m/%y').date()
+            except ValueError:
+                pass
+            parsers.add_learning(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+    def test_parse_docencia(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/docencia.csv'))
+        reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
+        for row in reader:
+            print row
+            pass
 
     @classmethod
     def tearDownClass(cls):
