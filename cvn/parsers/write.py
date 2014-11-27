@@ -129,9 +129,13 @@ class CvnXmlWriter:
                 'title_code': title_code,
                 'university': university,
                 'date': datetime.strptime(date, '%d/%m/%y').strftime(
-                    self.DATE_FORMAT) if date else '2014-01-01',
+                    self.DATE_FORMAT) if date else None,
             }
         )
+
+        if date is None:
+            node = learning.find('Date')
+            learning.remove(node)
 
         if title_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
