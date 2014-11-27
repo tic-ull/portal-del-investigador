@@ -12,7 +12,7 @@
       <Item>%(codirector_last_name)s</Item>
     </FirstFamilyName>
     <Signature code="030.040.000.180">
-      <Item>%(codirector_signature)s</Item>
+      <Item/>
     </Signature>
     <Roll>190</Roll>
   </Author>
