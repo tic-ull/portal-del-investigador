@@ -141,7 +141,8 @@ DATABASES = {
         'PASSWORD': '<password>',
         'HOST': '',
         'PORT': '',
-    },
+        'TEST_MIRROR': 'default',
+    }
 }
 
 SIGIDI_DB = {
