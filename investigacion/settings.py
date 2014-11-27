@@ -133,15 +133,15 @@ DATABASES = {
         'HOST': '',
         'PORT': '',
     },
-}
-
-HISTORICA_DB = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'investigacion_historica',
-    'USER': '<user>',
-    'PASSWORD': '<password>',
-    'HOST': '',
-    'PORT': '',
+    'historica': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'investigacion_historica',
+        'USER': '<user>',
+        'PASSWORD': '<password>',
+        'HOST': '',
+        'PORT': '',
+        'TEST_MIRROR': 'default',
+    }
 }
 
 SIGIDI_DB = {
