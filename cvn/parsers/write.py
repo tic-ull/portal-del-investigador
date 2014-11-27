@@ -102,7 +102,7 @@ class CvnXmlWriter:
             'department': department,
             'faculty': faculty,
             'school_year': school_year,
-            'number_credits': number_credits,
+            'number_credits': number_credits.replace(',', '.'),
             'university': university,
         }
 
@@ -128,7 +128,7 @@ class CvnXmlWriter:
                 'title_name': title_name,
                 'title_code': title_code,
                 'university': university,
-                'date': date,
+                'date': date.strftime(self.DATE_FORMAT) if date else None,
             }
         )
 
