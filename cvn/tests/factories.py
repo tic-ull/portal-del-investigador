@@ -1,7 +1,5 @@
 # -*- encoding: UTF-8 -*-
 
-from core.models import UserProfile
-from django.contrib.auth.models import User
 from random import randint
 from factory.fuzzy import FuzzyDate
 import random
@@ -34,7 +32,7 @@ class TeachingPhdFactory:
         d = {'title': 'Titulo ' + randint(0, 100),
              'reading_date': fd.start_date,
              'author_first_name': random.choice(['Cacerolo', 'Espinacia',
-                                                 'Caralampio', 'Diodora'])
+                                                 'Caralampio', 'Diodora']),
              'author_last_name': u'Rodríguez' + random.choice([u' Martín', ''])}
 
         if random.choice([True, False]):
@@ -56,4 +54,14 @@ class LearningOtherFactory:
              'title': 'Titulo #' + randint(0, 100),
              'duration': randint(1, 100),
              'start_date': fd.start_date,
-             'end_date' : fd.end_date}
+             'end_date': fd.end_date}
+
+
+class LearningPhdFactory:
+
+    @staticmethod
+    def create():
+        fd = FuzzyDate()
+        return {'title': 'Titulo #' + randint(0, 100),
+             'university': 'Universidad #' + randint(0, 100),
+             'date': fd.start_date}

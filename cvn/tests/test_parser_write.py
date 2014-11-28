@@ -9,6 +9,8 @@ from core.tests.factories import UserFactory
 import datetime
 from cvn.models import CVN
 from core.tests.helpers import init, clean
+from factories import (LearningOtherFactory, LearningPhdFactory,
+                       ProfessionFactory, TeachingPhdFactory)
 
 class ParserWriterTestCase(TestCase):
 
@@ -20,6 +22,25 @@ class ParserWriterTestCase(TestCase):
     def utf_8_encoder(unicode_csv_data):
         for line in unicode_csv_data:
             yield line.decode('iso-8859-10').encode('utf-8')
+
+    def test_profession_factory(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(1, 10):
+            d = ProfessionFactory.create()
+            parser.add_profession(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+
+    def test_teaching_phd_factory(self):
+        pass
+
+    def test_learning_other_factory(self):
+        pass
+
+    def test_learning_phd_factory(self):
+        pass
 
     def test_parse_formrecv(self):
         user = UserFactory.create()
