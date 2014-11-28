@@ -95,20 +95,20 @@ class ParserWriterTestCase(TestCase):
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
-    # def test_parse_titulacion(self):
-    #     user = UserFactory.create()
-    #     parser = CvnXmlWriter(user)
-    #     f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
-    #     reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
-    #     for row in reader:
-    #         # try:
-    #         #     row['date'] = datetime.datetime.strptime(row['date'],
-    #         #                                              '%d/%m/%y').date()
-    #         # except ValueError:
-    #         #     pass
-    #         parser.add_learning(**row)
-    #     cvn = CVN.create(user, parser.tostring())
-    #     self.assertNotEqual(cvn, None)
+    def test_parse_titulacion(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
+        reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
+        for row in reader:
+            try:
+                row['date'] = datetime.datetime.strptime(row['date'],
+                                                         '%d/%m/%y').date()
+            except ValueError:
+                pass
+            parser.add_learning(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
 
     def test_parse_docencia(self):
         user = UserFactory.create()
