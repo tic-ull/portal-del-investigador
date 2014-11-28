@@ -21,6 +21,15 @@ class ParserWriterTestCase(TestCase):
         for line in unicode_csv_data:
             yield line.decode('iso-8859-10').encode('utf-8')
 
+    @staticmethod
+    def hash_to_unicode(dict):
+        # Change the format of floating number
+        # to make it compatible with the FECYT
+        dict['number_credits'] = dict['number_credits'].replace(",", ".")
+        for key in dict:
+            dict[key] = dict[key].decode('utf-8')
+
+
     def test_parse_cargos(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
@@ -86,29 +95,32 @@ class ParserWriterTestCase(TestCase):
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
-    def test_parse_titulacion(self):
-        user = UserFactory.create()
-        parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
-        reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
-        for row in reader:
-            try:
-                row['date'] = datetime.datetime.strptime(row['date'],
-                                                         '%d/%m/%y').date()
-            except ValueError:
-                pass
-            parsers.add_learning(**row)
-        cvn = CVN.create(user, parser.tostring())
-        self.assertNotEqual(cvn, None)
+    # def test_parse_titulacion(self):
+    #     user = UserFactory.create()
+    #     parser = CvnXmlWriter(user)
+    #     f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
+    #     reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
+    #     for row in reader:
+    #         # try:
+    #         #     row['date'] = datetime.datetime.strptime(row['date'],
+    #         #                                              '%d/%m/%y').date()
+    #         # except ValueError:
+    #         #     pass
+    #         parser.add_learning(**row)
+    #     cvn = CVN.create(user, parser.tostring())
+    #     self.assertNotEqual(cvn, None)
 
     def test_parse_docencia(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
         f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/docencia.csv'))
-        reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
+        reader = csv.DictReader(f, delimiter='|')
         for row in reader:
-            print row
-            pass
+            self.hash_to_unicode(row)
+            parser.add_teaching(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
 
     @classmethod
     def tearDownClass(cls):
