@@ -225,7 +225,7 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['request_handler'],
+            'handlers': ['request_handler', 'mail_admins'],
             'level': 'ERROR',
             'propagate': False,
         },
@@ -235,12 +235,12 @@ LOGGING = {
             'propagate': True,
         },
         'cvn': {
-            'handlers': ['default'],
+            'handlers': ['default', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'cvn.management.commands.find_pairs': {
-            'handlers': ['find_pairs_handler'],
+            'handlers': ['find_pairs_handler', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': False,
         },
