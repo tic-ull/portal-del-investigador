@@ -105,7 +105,7 @@ class ParserWriterTestCase(TestCase):
                 row['date'] = datetime.datetime.strptime(row['date'],
                                                          '%d/%m/%y').date()
             except ValueError:
-                pass
+                row['date'] = None
             parser.add_learning(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)

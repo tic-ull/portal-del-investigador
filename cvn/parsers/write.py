@@ -120,12 +120,12 @@ class CvnXmlWriter:
                 'others': subject_type})
             self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
 
-    def add_learning(self, title_name, title_type, university=None, date=None):
+    def add_learning(self, title, title_type, university=None, date=None):
         title_code = self._get_code(
             st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type.upper())
         learning = etree.fromstring(get_xml_fragment(
             st_cvn.XML_LEARNING) % {
-                'title_name': title_name,
+                'title': title,
                 'title_code': title_code,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT) if date else None,
@@ -141,7 +141,6 @@ class CvnXmlWriter:
                 'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
                 'others': title_type})
             learning.find('Filter').append(node)
-
         self.xml.append(learning)
 
     def add_profession(self, title, employer, start_date, end_date=None,

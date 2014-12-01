@@ -15,7 +15,7 @@
   </CvnItemID>
   <Title>
     <Name code="020.010.010.030">
-      <Item>%(title_name)s</Item>
+      <Item>%(title)s</Item>
     </Name>
     <Type>010</Type>
     <Category>000</Category>
