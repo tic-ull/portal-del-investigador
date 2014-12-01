@@ -75,6 +75,7 @@
                                     <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
                                     <td align='center'>{{ cvn.fecha }}</td>
                                 </tr>
+                                {% comment %}
                                 {% if department %}
                                     <tr id="dept">
                                         <td colspan=2>
@@ -96,6 +97,7 @@
                                         </td>
                                     </tr>
                                 {% endif %}
+                                {% endcomment %}
                             </tbody>
                         </table>
                         <br>
