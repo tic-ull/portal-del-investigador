@@ -9,6 +9,8 @@ from core.tests.factories import UserFactory
 import datetime
 from cvn.models import CVN
 from core.tests.helpers import init, clean
+from factories import (LearningOtherFactory, LearningPhdFactory,
+                       ProfessionFactory, TeachingPhdFactory)
 
 class ParserWriterTestCase(TestCase):
 
@@ -29,6 +31,49 @@ class ParserWriterTestCase(TestCase):
         for key in dict:
             dict[key] = dict[key].decode('utf-8')
 
+    def test_profession_factory(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = ProfessionFactory.create()
+            parser.add_profession(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+    def test_teaching_phd_factory(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = TeachingPhdFactory.create()
+            parser.add_teaching_phd(**d)
+        cvn = CVN.create(user, parser.tostring())
+        import pdb; pdb.set_trace()
+        self.assertNotEqual(cvn, None)
+
+    def test_learning_other_factory(self):
+        pass
+
+    def test_learning_phd_factory(self):
+        pass
+
+    def test_parse_formrecv(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT,'csv/formacionrecv.csv'))
+        reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
+        now = datetime.datetime.now().date()
+        for row in reader:
+            # Remove what identifies the user
+            del(row['NIF'])
+            # Transform the dates into datetime.date objects. We expect them
+            # to be datetime.date objects in the ws.
+            row['end_date'] = datetime.datetime.strptime(row['end_date'],
+                                                         '%Y-%m-%d').date()
+            row['start_date'] = datetime.datetime.strptime(row['start_date'],
+                                                           '%Y-%m-%d').date()
+            parser.add_learning_other(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
 
     def test_parse_cargos(self):
         user = UserFactory.create()
