@@ -56,7 +56,7 @@ class LearningOtherFactory:
     @staticmethod
     def create():
         fd = fuzzy_date()
-        return {'type': random.choice(['Curso', 'Conferencia', 'Taller']),
+        return {'learning_type': random.choice(['Curso', 'Conferencia', 'Taller']),
              'title': 'Titulo #' + str(randint(0, 100)),
              'duration': str(randint(1, 100)),
              'start_date': fd[0],

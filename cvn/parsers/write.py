@@ -48,7 +48,7 @@ class CvnXmlWriter:
     def add_teaching_phd(self, title, reading_date,
                          author_first_name, author_last_name,
                          university=st_cvn.UNIVERSITY,
-                         codirector_first_name=None, codirector_last_name=None):
+                         codirector_first_name=None, codirector_last_name=''):
         """ Doctoral Thesis Directed """
         teaching_phd = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING_PHD) % {

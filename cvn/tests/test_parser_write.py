@@ -39,14 +39,25 @@ class ParserWriterTestCase(TestCase):
             d = TeachingPhdFactory.create()
             parser.add_teaching_phd(**d)
         cvn = CVN.create(user, parser.tostring())
-        import pdb; pdb.set_trace()
         self.assertNotEqual(cvn, None)
 
     def test_learning_other_factory(self):
-        pass
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = LearningOtherFactory.create()
+            parser.add_learning_other(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
 
     def test_learning_phd_factory(self):
-        pass
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = LearningPhdFactory.create()
+            parser.add_learning_phd(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
 
     def test_parse_formrecv(self):
         user = UserFactory.create()
