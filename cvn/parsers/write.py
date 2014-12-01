@@ -144,18 +144,20 @@ class CvnXmlWriter:
 
         self.xml.append(learning)
 
-    def add_profession(self, title, employer, start_date, end_date=None,
-                       centre=None, department=None, full_time=None):
-        values_xml = {'title': title,
-                      'employer': employer,
-                      'start_date': start_date.strftime(self.DATE_FORMAT)}
-        if end_date:
+    def add_profession(self, title, start_date, employer=st_cvn.UNIVERSITY,
+                       end_date=None, centre=None, department=None,
+                       full_time=None):
+        values = {'title': title,
+                  'employer': employer,
+                  'start_date': start_date.strftime(self.DATE_FORMAT)}
+
+        if end_date is not None:
+            values['end_date'] = end_date.strftime(self.DATE_FORMAT)
             xml_path = st_cvn.XML_PROFESSION
-            values_xml['end_date'] = end_date.strftime(self.DATE_FORMAT)
         else:
             xml_path = st_cvn.XML_CURRENT_PROFESSION
-        profession_xml = get_xml_fragment(xml_path) % values_xml
-        profession = etree.fromstring(profession_xml)
+
+        profession = etree.fromstring(get_xml_fragment(xml_path) % values)
 
         # If it is specified if the job is full or partial time
         if full_time is not None:
@@ -169,27 +171,27 @@ class CvnXmlWriter:
                 'type': dedication_type}
             profession.append(etree.fromstring(full_time_xml))
 
-        entity_pos = profession.index(profession.find('Entity')) + 1
+        employer_pos = profession.index(profession.find('Entity')) + 1
 
         # If it is specified the department where the job takes place
         if department is not None:
-            entity_type = (st_cvn.FC_ENTITY.CURRENT_DEPARTMENT.value
-                           if end_date is None else
-                           st_cvn.FC_ENTITY.DEPARTMENT.value)
+            department_type = (st_cvn.FC_ENTITY.CURRENT_DEPARTMENT.value
+                               if end_date is None else
+                               st_cvn.FC_ENTITY.DEPARTMENT.value)
             department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': entity_type,
+                'code': department_type,
                 'name': department}
-            profession.insert(entity_pos, etree.fromstring(department_xml))
+            profession.insert(employer_pos, etree.fromstring(department_xml))
 
         # If it is specified the centre (building) where the job takes place
         if centre is not None:
-            entity_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
+            centre_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
                            if end_date is None else
                            st_cvn.FC_ENTITY.CENTRE.value)
             centre_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': entity_type,
+                'code': centre_type,
                 'name': centre}
-            profession.insert(entity_pos, etree.fromstring(centre_xml))
+            profession.insert(employer_pos, etree.fromstring(centre_xml))
 
         self.xml.append(profession)
 
