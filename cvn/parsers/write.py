@@ -100,7 +100,7 @@ class CvnXmlWriter:
             'department': department,
             'faculty': faculty,
             'school_year': school_year,
-            'number_credits': number_credits.replace(',', '.'),
+            'number_credits': number_credits,
             'university': university,
         }
 

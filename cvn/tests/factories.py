@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from random import randint
+from cvn import settings as st_cvn
 import random
 import datetime
 
@@ -69,5 +70,35 @@ class LearningPhdFactory:
     def create():
         fd = fuzzy_date()
         return {'title': 'Titulo #' + str(randint(0, 100)),
-             'university': 'Universidad #' + str(randint(0, 100)),
-             'date': fd[0]}
+                'university': 'Universidad #' + str(randint(0, 100)),
+                'date': fd[0]}
+
+
+class TeachingFactory:
+
+    @staticmethod
+    def create():
+        program_type = u'Titulación #' + str(randint(0, 100))
+        if random.choice([True, False]):
+            program_type = random.choice(st_cvn.FC_PROGRAM_TYPE.keys())
+        subject_type = 'Tipo asignatura #' + str(randint(0, 100))
+        if random.choice([True, False]):
+            subject_type = random.choice(st_cvn.FC_SUBJECT_TYPE.keys())
+        return {'subject': 'Asignatura #' + str(randint(0, 100)),
+                'professional_category': u'Profesión #' + str(randint(0, 100)),
+                'program_type': program_type,
+                'subject_type': subject_type,
+                'course': randint(0, 5),
+                'qualification': random.choice(['',
+                                                u'Titulación #' +
+                                                str(randint(0, 100))]),
+                'department': random.choice(['', 'Departamento #' +
+                                             str(randint(0, 100))]),
+                'faculty': random.choice(['', 'Facultad #' +
+                                          str(randint(0, 100))]),
+                'school_year': randint(1990, 2020),
+                'number_credits': format(random.uniform(0, 20), '.1f'),
+                'university': random.choice(['', st_cvn.UNIVERSITY,
+                                             'Universidad #' +
+                                             str(randint(0, 100))]),
+                }

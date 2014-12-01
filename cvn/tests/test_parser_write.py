@@ -10,7 +10,8 @@ import datetime
 from cvn.models import CVN
 from core.tests.helpers import init, clean
 from factories import (LearningOtherFactory, LearningPhdFactory,
-                       ProfessionFactory, TeachingPhdFactory)
+                       ProfessionFactory, TeachingPhdFactory,
+                       TeachingFactory)
 
 class ParserWriterTestCase(TestCase):
 
@@ -47,7 +48,6 @@ class ParserWriterTestCase(TestCase):
             d = TeachingPhdFactory.create()
             parser.add_teaching_phd(**d)
         cvn = CVN.create(user, parser.tostring())
-        import pdb; pdb.set_trace()
         self.assertNotEqual(cvn, None)
 
     def test_learning_other_factory(self):
@@ -166,6 +166,17 @@ class ParserWriterTestCase(TestCase):
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
+    def test_teaching_factory(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = TeachingFactory.create()
+            parser.add_teaching(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+    def test_learning_factory(self):
+        pass
 
     @classmethod
     def tearDownClass(cls):
