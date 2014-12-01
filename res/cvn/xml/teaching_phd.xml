@@ -43,7 +43,7 @@
       <Item>%(last_name)s</Item>
     </FirstFamilyName>
     <Signature code="030.040.000.120">
-      <Item>%(signature)s</Item>
+      <Item/>
     </Signature>
     <Roll>010</Roll>
   </Author>
