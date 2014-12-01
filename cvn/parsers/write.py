@@ -2,7 +2,6 @@
 
 from cvn import settings as st_cvn
 from lxml import etree
-from datetime import datetime
 
 import time
 
@@ -57,37 +56,11 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
-    def add_teaching_phd(self, title, reading_date,
-                         author_first_name, author_last_name,
-                         university=st_cvn.UNIVERSITY,
-                         codirector_first_name=None, codirector_last_name=''):
-        """ Doctoral Thesis Directed """
-        teaching_phd = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_TEACHING_PHD) % {
-                'title': title,
-                'reading_date': reading_date.strftime(self.DATE_FORMAT),
-                'university': university,
-                'first_name': author_first_name,
-                'last_name': author_last_name,
-            }
-        )
-
-        if codirector_first_name is not None:
-            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
-            codirector = get_xml_fragment(
-                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
-                    'codirector_first_name': codirector_first_name,
-                    'codirector_last_name': codirector_last_name,
-                }
-            teaching_phd.insert(title_pos, etree.fromstring(codirector))
-
-        self.xml.append(teaching_phd)
-
     def add_teaching(self, subject, professional_category, program_type,
                      subject_type, course, qualification, department,
                      faculty, school_year, number_credits,
                      university=st_cvn.UNIVERSITY,):
-        '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
+        """Graduate, postgraduate (bachelor's degree, master, engineering...)"""
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
@@ -193,8 +166,34 @@ class CvnXmlWriter:
 
         self.xml.append(profession)
 
+    def add_teaching_phd(self, title, reading_date,
+                         author_first_name, author_last_name,
+                         university=st_cvn.UNIVERSITY,
+                         codirector_first_name=None, codirector_last_name=''):
+        """ Doctoral Thesis Directed """
+        teaching_phd = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_TEACHING_PHD) % {
+                'title': title,
+                'reading_date': reading_date.strftime(self.DATE_FORMAT),
+                'university': university,
+                'first_name': author_first_name,
+                'last_name': author_last_name,
+            }
+        )
+
+        if codirector_first_name is not None:
+            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
+            codirector = get_xml_fragment(
+                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
+                    'codirector_first_name': codirector_first_name,
+                    'codirector_last_name': codirector_last_name,
+                }
+            teaching_phd.insert(title_pos, etree.fromstring(codirector))
+
+        self.xml.append(teaching_phd)
+
     def add_learning_phd(self, title, university, date):
-        '''PhD (Doctor)'''
+        """PhD (Doctor)"""
         phd_xml = get_xml_fragment(st_cvn.XML_LEARNING_PHD) % {
             'titulo': title, 'centro': university,
             'date': date.strftime(self.DATE_FORMAT)}
