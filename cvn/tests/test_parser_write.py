@@ -26,15 +26,21 @@ class ParserWriterTestCase(TestCase):
     def test_profession_factory(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        for i in range(1, 10):
+        for i in range(0, 10):
             d = ProfessionFactory.create()
             parser.add_profession(**d)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
-
     def test_teaching_phd_factory(self):
-        pass
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = TeachingPhdFactory.create()
+            parser.add_teaching_phd(**d)
+        cvn = CVN.create(user, parser.tostring())
+        import pdb; pdb.set_trace()
+        self.assertNotEqual(cvn, None)
 
     def test_learning_other_factory(self):
         pass
