@@ -45,6 +45,18 @@ class CvnXmlWriter:
     def tostring(self):
         return etree.tostring(self.xml)
 
+    def _get_code(self, dic, key):
+        try:
+            code = dic[key.upper()]
+        except KeyError:
+            code = u'OTHERS'
+        return code
+
+    def _add_other_node(self, xml, code, node):
+        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
+        parent = value_node.getparent()
+        parent.insert(parent.index(value_node) + 1, node)
+
     def add_teaching_phd(self, title, reading_date,
                          author_first_name, author_last_name,
                          university=st_cvn.UNIVERSITY,
@@ -88,7 +100,7 @@ class CvnXmlWriter:
             'department': department,
             'faculty': faculty,
             'school_year': school_year,
-            'number_credits': number_credits,
+            'number_credits': number_credits.replace(',', '.'),
             'university': university,
         }
 
@@ -106,18 +118,6 @@ class CvnXmlWriter:
                 'others': subject_type})
             self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
 
-    def _get_code(self, dic, key):
-        try:
-            code = dic[key.upper()]
-        except KeyError:
-            code = u'OTHERS'
-        return code
-
-    def _add_other_node(self, xml, code, node):
-        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
-        parent = value_node.getparent()
-        parent.insert(parent.index(value_node) + 1, node)
-
     def add_learning(self, title_name, title_type, university=None, date=None):
         title_code = self._get_code(
             st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type.upper())
@@ -126,10 +126,13 @@ class CvnXmlWriter:
                 'title_name': title_name,
                 'title_code': title_code,
                 'university': university,
-                'date': datetime.strptime(date, '%d/%m/%y').strftime(
-                    self.DATE_FORMAT) if date else '2014-01-01',
+                'date': date.strftime(self.DATE_FORMAT) if date else None,
             }
         )
+
+        if date is None:
+            node = learning.find('Date')
+            learning.remove(node)
 
         if title_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
