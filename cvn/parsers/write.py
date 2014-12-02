@@ -170,7 +170,7 @@ class CvnXmlWriter:
 
         # If it is specified the department where the job takes place
         if department is not None:
-            entity_type = (st_cvn.FC_ENTITY.CURRENT_DEPARTMENT.value
+            entity_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
                            if end_date is None else
                            st_cvn.FC_ENTITY.DEPARTMENT.value)
             department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {

@@ -3,7 +3,9 @@
 from random import randint
 import random
 import datetime
+import itertools
 
+it = itertools.count()
 
 def fuzzy_date():
     start = datetime.date(randint(1940, 2040), randint(1, 12), randint(1, 28))
@@ -11,12 +13,13 @@ def fuzzy_date():
                         randint(start.day, 28))
     return [start, end]
 
+
 class ProfessionFactory:
 
     @staticmethod
     def create():
         fd = fuzzy_date()
-        d = {'title': 'Titulo ' + str(randint(0, 100)),
+        d = {'title': 'Trabajo #' + str(it.next()),
              'employer': 'Empresa ' + str(randint(0, 100)),
              'start_date': fd[0]}
         if random.choice([True, False]):
@@ -35,7 +38,7 @@ class TeachingPhdFactory:
     @staticmethod
     def create():
         fd = fuzzy_date()
-        d = {'title': 'Titulo ' + str(randint(0, 100)),
+        d = {'title': 'PHD dirigido #' + str(it.next()),
              'reading_date': fd[0],
              'author_first_name': random.choice(['Cacerolo', 'Espinacia',
                                                  'Caralampio', 'Diodora']),
@@ -56,11 +59,13 @@ class LearningOtherFactory:
     @staticmethod
     def create():
         fd = fuzzy_date()
-        return {'learning_type': random.choice(['Curso', 'Conferencia', 'Taller']),
-             'title': 'Titulo #' + str(randint(0, 100)),
-             'duration': str(randint(1, 100)),
-             'start_date': fd[0],
-             'end_date': fd[1]}
+        return {
+            'learning_type': random.choice(['Curso', 'Conferencia', 'Taller']),
+            'title': 'Cursillo #' + str(it.next()),
+            'duration': str(randint(1, 100)),
+            'start_date': fd[0],
+            'end_date': fd[1]
+        }
 
 
 class LearningPhdFactory:
@@ -68,6 +73,6 @@ class LearningPhdFactory:
     @staticmethod
     def create():
         fd = fuzzy_date()
-        return {'title': 'Titulo #' + str(randint(0, 100)),
+        return {'title': 'PHD recibido #' + str(it.next()),
              'university': 'Universidad #' + str(randint(0, 100)),
              'date': fd[0]}

@@ -289,14 +289,6 @@ def parse_entities(node_list):
             extended_entities += entity_name.find("Item").text + "; "
     return main_entity, extended_entities.strip('; ')
 
-        #d = {'title': 'Titulo ' + str(randint(0, 100)),
-        #     'employer': 'Empresa ' + str(randint(0, 100)),
-        #     'start_date': fd[0]}
-        #if random.choice([True, False]):
-        #    d['end_date'] = fd[1]
-        #if random.choice([True, False]):
-        #    d['full_time'] = random.choice([True, False])
-
 
 def _parse_dedication_type(node):
     if node is not None:
@@ -306,21 +298,41 @@ def _parse_dedication_type(node):
         return None
 
 
-def parse_cvnitem_profession(node):
+def _parse_cvnitem_profession(node):
     date = parse_date_interval(node.find('Date'))
     item = {'title': node.find('Title/Name/Item').text,
-            'start_date': date[0],
-            'end_date': date[1]}
+            'start_date': date[0]}
+    if date[1] is not None:
+        item['end_date'] = date[1]
     full_time = _parse_dedication_type(node.find('Dedication/Item'))
     if full_time is not None:
         item['full_time'] = full_time
     entities = node.findall('Entity/EntityName')
-    for entity in entities:
-        if entity.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value:
-            item['employer'] = entity.find('Item').text
-        elif entity.attrib['code'] == st_cvn.FC_ENTITY.CENTRE.value:
-            item['centre'] = entity.find('Item').text
-        elif entity.attrib['code'] == st_cvn.FC_ENTITY.DEPARTMENT.value:
-            item['department'] = entity.find('Item').text
+    for ent in entities:
+        if (ent.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value):
+            item['employer'] = ent.find('Item').text
+        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.CENTRE.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_CENTRE.value):
+            item['centre'] = ent.find('Item').text
+        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.DEPARTMENT.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_DEPT.value):
+            item['department'] = ent.find('Item').text
+    return item
 
-def parse_cvnitem_current_profession
+
+def parse_cvnitem_profession_current(node):
+    return _parse_cvnitem_profession(node)
+
+
+def parse_cvnitem_profession_former(node):
+    return _parse_cvnitem_profession(node)
+
+
+def parse_cvnitem(node):
+    cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
+    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
+        cvnitem = parse_cvnitem_profession_current(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
+        cvnitem = parse_cvnitem_profession_former(node)
+    return cvnitem
