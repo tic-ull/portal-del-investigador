@@ -11,6 +11,9 @@ from cvn.models import CVN
 from core.tests.helpers import init, clean
 from factories import (LearningOtherFactory, LearningPhdFactory,
                        ProfessionFactory, TeachingPhdFactory)
+from cvn.parsers.read import parse_cvnitem_profession
+from lxml import etree
+
 
 class ParserWriterTestCase(TestCase):
 
@@ -30,6 +33,14 @@ class ParserWriterTestCase(TestCase):
             d = ProfessionFactory.create()
             parser.add_profession(**d)
         cvn = CVN.create(user, parser.tostring())
+        cvn.xml_file.open()
+        cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
+        for item in cvn_items:
+            cvn_key = item.find('CvnItemID/CVNPK/Item').text.strip()
+            if cvn_key == "010.020.000.000":
+                profession = parse_cvnitem_profession(item)
+            elif cvn_key == "010.010.000.000":
+                pass
         self.assertNotEqual(cvn, None)
 
     def test_teaching_phd_factory(self):

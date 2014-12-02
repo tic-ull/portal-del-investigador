@@ -2,7 +2,6 @@
 
 from cvn import settings as st_cvn
 from lxml import etree
-from datetime import datetime
 
 import time
 
@@ -16,7 +15,7 @@ def get_xml_fragment(filepath):
 
 class CvnXmlWriter:
 
-    DATE_FORMAT = '%Y-%m-%d'
+    DATE_FORMAT = st_cvn.XML_CVN_DATE_FORMAT
 
     def __init__(self, user, *args, **kwargs):
         xml = kwargs.pop('xml', None)

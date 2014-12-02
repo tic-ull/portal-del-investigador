@@ -28,6 +28,8 @@ TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
 
 
+# Date format for writing to the CVN-XML files
+XML_CVN_DATE_FORMAT = '%Y-%m-%d'
 # XML Files for XML parser (to create or modify cvn-xml)
 
 # Base xml-cvn
@@ -167,6 +169,16 @@ FECYT_CODE = {
     # Actividad docente
     u"030.040.000.000": u'TesisDoctoral',
 }
+
+class CVNITEM_CODE(Enum):
+    CURRENT_PROFESSION = '010.010.000.000'
+    PROFESSION = '010.020.000.000'
+    LEARNING = '020.010.010.000'
+    LEARNING_OTHER = '020.050.000.000'
+    TEACHING = '030.010.000.000'
+    TEACHING_PHD = '030.040.000.000'
+
+
 
 # FECYT codes for economic information of Proyecto
 ECONOMIC_DIMENSION = {

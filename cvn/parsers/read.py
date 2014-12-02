@@ -288,3 +288,39 @@ def parse_entities(node_list):
         elif entity_name.attrib['code'] == st_cvn.FC_ENTITY_OPERATOR:
             extended_entities += entity_name.find("Item").text + "; "
     return main_entity, extended_entities.strip('; ')
+
+        #d = {'title': 'Titulo ' + str(randint(0, 100)),
+        #     'employer': 'Empresa ' + str(randint(0, 100)),
+        #     'start_date': fd[0]}
+        #if random.choice([True, False]):
+        #    d['end_date'] = fd[1]
+        #if random.choice([True, False]):
+        #    d['full_time'] = random.choice([True, False])
+
+
+def _parse_dedication_type(node):
+    if node is not None:
+        return (st_cvn.FC_DEDICATION_TYPE(node.text)
+                == st_cvn.FC_DEDICATION_TYPE.TOTAL)
+    else:
+        return None
+
+
+def parse_cvnitem_profession(node):
+    date = parse_date_interval(node.find('Date'))
+    item = {'title': node.find('Title/Name/Item').text,
+            'start_date': date[0],
+            'end_date': date[1]}
+    full_time = _parse_dedication_type(node.find('Dedication/Item'))
+    if full_time is not None:
+        item['full_time'] = full_time
+    entities = node.findall('Entity/EntityName')
+    for entity in entities:
+        if entity.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value:
+            item['employer'] = entity.find('Item').text
+        elif entity.attrib['code'] == st_cvn.FC_ENTITY.CENTRE.value:
+            item['centre'] = entity.find('Item').text
+        elif entity.attrib['code'] == st_cvn.FC_ENTITY.DEPARTMENT.value:
+            item['department'] = entity.find('Item').text
+
+def parse_cvnitem_current_profession
