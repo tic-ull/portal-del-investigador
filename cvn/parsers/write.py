@@ -130,6 +130,10 @@ class CvnXmlWriter:
             }
         )
 
+        if university is None:
+            node = learning.find('Entity')
+            learning.remove(node)
+
         if date is None:
             node = learning.find('Date')
             learning.remove(node)

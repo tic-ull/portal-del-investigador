@@ -110,4 +110,10 @@ class LearningFactory:
     def create():
         fd = fuzzy_date()
         fd.append(None)
-        pass
+        return {'title': u'Título #' + str(randint(0, 100)),
+                'title_type': random.choice(
+                    st_cvn.FC_OFFICIAL_TITLE_TYPE.keys()),
+                'university': random.choice([
+                    None, 'Universidad #' + str(randint(0, 100))]),
+                'date': random.choice(fd),
+                }

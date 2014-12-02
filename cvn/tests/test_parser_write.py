@@ -11,7 +11,7 @@ from cvn.models import CVN
 from core.tests.helpers import init, clean
 from factories import (LearningOtherFactory, LearningPhdFactory,
                        ProfessionFactory, TeachingPhdFactory,
-                       TeachingFactory)
+                       TeachingFactory, LearningFactory)
 
 class ParserWriterTestCase(TestCase):
 
@@ -176,7 +176,14 @@ class ParserWriterTestCase(TestCase):
         self.assertNotEqual(cvn, None)
 
     def test_learning_factory(self):
-        pass
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        for i in range(0, 10):
+            d = LearningFactory.create()
+            print d
+            parser.add_learning(**d)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
 
     @classmethod
     def tearDownClass(cls):
