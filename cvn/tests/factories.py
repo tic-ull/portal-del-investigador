@@ -102,3 +102,12 @@ class TeachingFactory:
                                              'Universidad #' +
                                              str(randint(0, 100))]),
                 }
+
+
+class LearningFactory:
+
+    @staticmethod
+    def create():
+        fd = fuzzy_date()
+        fd.append(None)
+        pass
