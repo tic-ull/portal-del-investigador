@@ -85,17 +85,15 @@ class TeachingFactory:
         if random.choice([True, False]):
             subject_type = random.choice(st_cvn.FC_SUBJECT_TYPE.keys())
         return {'subject': 'Asignatura #' + str(randint(0, 100)),
-                'professional_category': u'Profesión #' + str(randint(0, 100)),
+                'professional_category': random.choice(
+                    ['', u'Profesión #' + str(randint(0, 100))]),
                 'program_type': program_type,
                 'subject_type': subject_type,
-                'course': randint(0, 5),
-                'qualification': random.choice(['',
-                                                u'Titulación #' +
-                                                str(randint(0, 100))]),
+                'course': random.choice(['', str(randint(0, 5))]),
+                'qualification': u'Titulación #' + str(randint(0, 100)),
                 'department': random.choice(['', 'Departamento #' +
                                              str(randint(0, 100))]),
-                'faculty': random.choice(['', 'Facultad #' +
-                                          str(randint(0, 100))]),
+                'faculty': 'Facultad #' + str(randint(0, 100)),
                 'school_year': randint(1990, 2020),
                 'number_credits': format(random.uniform(0, 20), '.1f'),
                 'university': random.choice(['', st_cvn.UNIVERSITY,
