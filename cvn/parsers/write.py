@@ -56,37 +56,11 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
-    def add_teaching_phd(self, title, reading_date,
-                         author_first_name, author_last_name,
-                         university=st_cvn.UNIVERSITY,
-                         codirector_first_name=None, codirector_last_name=''):
-        """ Doctoral Thesis Directed """
-        teaching_phd = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_TEACHING_PHD) % {
-                'title': title,
-                'reading_date': reading_date.strftime(self.DATE_FORMAT),
-                'university': university,
-                'first_name': author_first_name,
-                'last_name': author_last_name,
-            }
-        )
-
-        if codirector_first_name is not None:
-            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
-            codirector = get_xml_fragment(
-                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
-                    'codirector_first_name': codirector_first_name,
-                    'codirector_last_name': codirector_last_name,
-                }
-            teaching_phd.insert(title_pos, etree.fromstring(codirector))
-
-        self.xml.append(teaching_phd)
-
     def add_teaching(self, subject, professional_category, program_type,
                      subject_type, course, qualification, department,
                      faculty, school_year, number_credits,
                      university=st_cvn.UNIVERSITY,):
-        '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
+        """Graduate, postgraduate (bachelor's degree, master, engineering...)"""
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
@@ -141,18 +115,36 @@ class CvnXmlWriter:
 
         self.xml.append(learning)
 
-    def add_profession(self, title, employer, start_date, end_date=None,
-                       centre=None, department=None, full_time=None):
-        values_xml = {'title': title,
-                      'employer': employer,
-                      'start_date': start_date.strftime(self.DATE_FORMAT)}
-        if end_date:
+    def add_learning_phd(self, title, date, university=st_cvn.UNIVERSITY):
+        """ PhD (Doctor) """
+        learning_phd = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_LEARNING_PHD) % {
+                'title': title,
+                'university': university,
+                'date': date.strftime(self.DATE_FORMAT) if date else None,
+            }
+        )
+
+        if date is None:
+            node = learning_phd.find('Date')
+            learning_phd.remove(node)
+
+        self.xml.append(learning_phd)
+
+    def add_profession(self, title, start_date, employer=st_cvn.UNIVERSITY,
+                       end_date=None, centre=None, department=None,
+                       full_time=None):
+        values = {'title': title,
+                  'employer': employer,
+                  'start_date': start_date.strftime(self.DATE_FORMAT)}
+
+        if end_date is not None:
+            values['end_date'] = end_date.strftime(self.DATE_FORMAT)
             xml_path = st_cvn.XML_PROFESSION
-            values_xml['end_date'] = end_date.strftime(self.DATE_FORMAT)
         else:
             xml_path = st_cvn.XML_CURRENT_PROFESSION
-        profession_xml = get_xml_fragment(xml_path) % values_xml
-        profession = etree.fromstring(profession_xml)
+
+        profession = etree.fromstring(get_xml_fragment(xml_path) % values)
 
         # If it is specified if the job is full or partial time
         if full_time is not None:
@@ -166,36 +158,55 @@ class CvnXmlWriter:
                 'type': dedication_type}
             profession.append(etree.fromstring(full_time_xml))
 
-        entity_pos = profession.index(profession.find('Entity')) + 1
+        employer_pos = profession.index(profession.find('Entity')) + 1
 
         # If it is specified the department where the job takes place
         if department is not None:
-            entity_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
-                           if end_date is None else
-                           st_cvn.FC_ENTITY.DEPARTMENT.value)
+            department_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
+                               if end_date is None else
+                               st_cvn.FC_ENTITY.DEPARTMENT.value)
             department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': entity_type,
+                'code': department_type,
                 'name': department}
-            profession.insert(entity_pos, etree.fromstring(department_xml))
+            profession.insert(employer_pos, etree.fromstring(department_xml))
 
         # If it is specified the centre (building) where the job takes place
         if centre is not None:
-            entity_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
+            centre_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
                            if end_date is None else
                            st_cvn.FC_ENTITY.CENTRE.value)
             centre_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': entity_type,
+                'code': centre_type,
                 'name': centre}
-            profession.insert(entity_pos, etree.fromstring(centre_xml))
+            profession.insert(employer_pos, etree.fromstring(centre_xml))
 
         self.xml.append(profession)
 
-    def add_learning_phd(self, title, university, date):
-        '''PhD (Doctor)'''
-        phd_xml = get_xml_fragment(st_cvn.XML_LEARNING_PHD) % {
-            'titulo': title, 'centro': university,
-            'date': date.strftime(self.DATE_FORMAT)}
-        self.xml.append(etree.fromstring(phd_xml))
+    def add_teaching_phd(self, title, reading_date,
+                         author_first_name, author_last_name,
+                         university=st_cvn.UNIVERSITY,
+                         codirector_first_name=None, codirector_last_name=''):
+        """ Doctoral Thesis Directed """
+        teaching_phd = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_TEACHING_PHD) % {
+                'title': title,
+                'reading_date': reading_date.strftime(self.DATE_FORMAT),
+                'university': university,
+                'first_name': author_first_name,
+                'last_name': author_last_name,
+            }
+        )
+
+        if codirector_first_name is not None:
+            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
+            codirector = get_xml_fragment(
+                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
+                    'codirector_first_name': codirector_first_name,
+                    'codirector_last_name': codirector_last_name,
+                }
+            teaching_phd.insert(title_pos, etree.fromstring(codirector))
+
+        self.xml.append(teaching_phd)
 
     def add_learning_other(self, learning_type, title, duration, start_date,
                            end_date):

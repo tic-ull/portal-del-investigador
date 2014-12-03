@@ -15,7 +15,7 @@
   </CvnItemID>
   <Title>
     <Name code="020.010.020.010">
-      <Item>%(titulo)s</Item>
+      <Item>%(title)s</Item>
     </Name>
     <Identification code="020.010.020.010">
       <Item>OTHERS</Item>
@@ -25,7 +25,7 @@
   </Title>
   <Entity>
     <EntityName code="020.010.020.100">
-      <Item>%(centro)s</Item>
+      <Item>%(university)s</Item>
     </EntityName>
   </Entity>
   <Date>
