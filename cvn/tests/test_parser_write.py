@@ -9,8 +9,7 @@ from core.tests.factories import UserFactory
 import datetime
 from cvn.models import CVN
 from core.tests.helpers import init, clean
-from factories import (LearningOtherFactory, LearningPhdFactory,
-                       ProfessionFactory, TeachingPhdFactory)
+from factories import (LearningPhdFactory, ProfessionFactory)
 from cvn.parsers.read import parse_cvnitem
 from lxml import etree
 
