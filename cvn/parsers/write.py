@@ -181,38 +181,3 @@ class CvnXmlWriter:
             profession.insert(employer_pos, etree.fromstring(centre_xml))
 
         self.xml.append(profession)
-
-    def add_teaching_phd(self, title, reading_date,
-                         author_first_name, author_last_name,
-                         university=st_cvn.UNIVERSITY,
-                         codirector_first_name=None, codirector_last_name=''):
-        """ Doctoral Thesis Directed """
-        teaching_phd = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_TEACHING_PHD) % {
-                'title': title,
-                'reading_date': reading_date.strftime(self.DATE_FORMAT),
-                'university': university,
-                'first_name': author_first_name,
-                'last_name': author_last_name,
-            }
-        )
-
-        if codirector_first_name is not None:
-            title_pos = teaching_phd.index(teaching_phd.find('Title')) + 1
-            codirector = get_xml_fragment(
-                st_cvn.XML_TEACHING_PHD_CODIRECTOR) % {
-                    'codirector_first_name': codirector_first_name,
-                    'codirector_last_name': codirector_last_name,
-                }
-            teaching_phd.insert(title_pos, etree.fromstring(codirector))
-
-        self.xml.append(teaching_phd)
-
-    def add_learning_other(self, learning_type, title, duration, start_date,
-                           end_date):
-        other_xml = get_xml_fragment(st_cvn.XML_LEARNING_OTHER) % {
-            'title': learning_type + ': ' + title,
-            'duration': duration,
-            'start_date': start_date.strftime(self.DATE_FORMAT),
-            'end_date': end_date.strftime(self.DATE_FORMAT)}
-        self.xml.append(etree.fromstring(other_xml))
