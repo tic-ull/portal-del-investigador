@@ -117,11 +117,19 @@ class CvnXmlWriter:
 
     def add_learning_phd(self, title, date, university=st_cvn.UNIVERSITY):
         """ PhD (Doctor) """
-        phd_xml = get_xml_fragment(st_cvn.XML_LEARNING_PHD) % {
-            'title': title,
-            'university': university,
-            'date': date.strftime(self.DATE_FORMAT)}
-        self.xml.append(etree.fromstring(phd_xml))
+        learning_phd = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_LEARNING_PHD) % {
+                'title': title,
+                'university': university,
+                'date': date.strftime(self.DATE_FORMAT) if date else None,
+            }
+        )
+
+        if date is None:
+            node = learning_phd.find('Date')
+            learning_phd.remove(node)
+
+        self.xml.append(learning_phd)
 
     def add_profession(self, title, start_date, employer=st_cvn.UNIVERSITY,
                        end_date=None, centre=None, department=None,
