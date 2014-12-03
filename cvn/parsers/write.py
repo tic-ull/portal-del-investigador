@@ -115,7 +115,7 @@ class CvnXmlWriter:
 
         self.xml.append(learning)
 
-    def add_learning_phd(self, title, date, university=st_cvn.UNIVERSITY):
+    def add_learning_phd(self, title, date=None, university=st_cvn.UNIVERSITY):
         """ PhD (Doctor) """
         learning_phd = etree.fromstring(get_xml_fragment(
             st_cvn.XML_LEARNING_PHD) % {
