@@ -38,6 +38,8 @@ class LearningPhdFactory:
     @staticmethod
     def create():
         fd = fuzzy_date()
-        return {'title': 'PHD recibido #' + str(it.next()),
-             'university': 'Universidad #' + str(randint(0, 100)),
-             'date': fd[0]}
+        d = {'title': 'PHD recibido #' + str(it.next()),
+             'university': 'Universidad #' + str(randint(0, 100))}
+        if random.choice([True, False]):
+            d['date'] = fd[0]
+        return d

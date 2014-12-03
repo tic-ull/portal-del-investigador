@@ -329,10 +329,22 @@ def parse_cvnitem_profession_former(node):
     return _parse_cvnitem_profession(node)
 
 
+def parse_cvnitem_learning_phd(node):
+    item = {'title': node.find('Title/Name/Item').text,
+            'university': node.find('Entity/EntityName/Item').text}
+    date = parse_date(node.find('Date'))
+    if date is not None:
+        item['date'] = date
+    return item
+
+
 def parse_cvnitem(node):
     cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
+    cvnitem = None
     if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
         cvnitem = parse_cvnitem_profession_current(node)
     elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
         cvnitem = parse_cvnitem_profession_former(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
+        cvnitem = parse_cvnitem_learning_phd(node)
     return cvnitem

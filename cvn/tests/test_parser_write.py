@@ -29,11 +29,16 @@ class ParserWriterTestCase(TestCase):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
         cvnitem_dict = {}
-
+        # Insert old and new professions in the CVN
         for i in range(0, 10):
             d = ProfessionFactory.create()
             cvnitem_dict[d['title']] = d
             parser.add_profession(**d)
+        # Insert Phd the researcher has received
+        for i in range(0, 10):
+            d = LearningPhdFactory.create()
+            cvnitem_dict[d['title']] = d
+            parser.add_learning_phd(**d)
 
         cvn = CVN.create(user, parser.tostring())
         cvn.xml_file.open()
@@ -42,15 +47,6 @@ class ParserWriterTestCase(TestCase):
             profession = parse_cvnitem(item)
             self.assertEqual(cmp(profession,
                                  cvnitem_dict[profession['title']]), 0)
-        self.assertNotEqual(cvn, None)
-
-    def test_learning_phd_factory(self):
-        user = UserFactory.create()
-        parser = CvnXmlWriter(user)
-        for i in range(0, 10):
-            d = LearningPhdFactory.create()
-            parser.add_learning_phd(**d)
-        cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
     def test_parse_cargos(self):
