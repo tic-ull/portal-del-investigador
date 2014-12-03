@@ -39,10 +39,8 @@ XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
-XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/teaching_phd.xml')
 XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
 XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
-XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
 
 # Optional fragments
 XML_TEACHING_PHD_CODIRECTOR = os.path.join(st.RES_ROOT, 'cvn/xml/codirector.xml')
