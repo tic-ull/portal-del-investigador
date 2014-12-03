@@ -26,17 +26,23 @@ class ParserWriterTestCase(TestCase):
         for line in unicode_csv_data:
             yield line.decode('iso-8859-10').encode('utf-8')
 
-    def test_profession_factory(self):
+    def test_cvnitem_factories(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
+        cvnitem_dict = {}
+
         for i in range(0, 10):
             d = ProfessionFactory.create()
+            cvnitem_dict[d['title']] = d
             parser.add_profession(**d)
+
         cvn = CVN.create(user, parser.tostring())
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in cvn_items:
             profession = parse_cvnitem(item)
+            self.assertEqual(cmp(profession,
+                                 cvnitem_dict[profession['title']]), 0)
         self.assertNotEqual(cvn, None)
 
     def test_teaching_phd_factory(self):
