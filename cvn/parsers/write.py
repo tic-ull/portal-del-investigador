@@ -107,6 +107,10 @@ class CvnXmlWriter:
             node = learning.find('Date')
             learning.remove(node)
 
+        if university is None:
+            node = learning.find('Entity')
+            learning.remove(node)
+
         if title_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
                 'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
@@ -127,6 +131,10 @@ class CvnXmlWriter:
 
         if date is None:
             node = learning_phd.find('Date')
+            learning_phd.remove(node)
+
+        if university is None:
+            node = learning_phd.find('Entity')
             learning_phd.remove(node)
 
         self.xml.append(learning_phd)
