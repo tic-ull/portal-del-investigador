@@ -56,10 +56,15 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
+    def _remove_node(self, xml, node):
+        node = xml.find(node)
+        xml.remove(node)
+
     def add_teaching(self, subject, subject_type, program_type, qualification,
                      faculty, number_credits, school_year, course,
                      professional_category=None, department=None,
                      university=st_cvn.UNIVERSITY):
+
         """Graduate, postgraduate (bachelor's degree, master, engineering...)"""
 
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
@@ -117,8 +122,10 @@ class CvnXmlWriter:
             learning.remove(node)
 
         if date is None:
-            node = learning.find('Date')
-            learning.remove(node)
+            self._remove_node(learning, 'Date')
+
+        if university is None:
+            self._remove_node(learning, 'Entity')
 
         if title_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
@@ -138,8 +145,10 @@ class CvnXmlWriter:
         )
 
         if date is None:
-            node = learning_phd.find('Date')
-            learning_phd.remove(node)
+            self._remove_node(learning_phd, 'Date')
+
+        if university is None:
+            self._remove_node(learning_phd, 'Entity')
 
         self.xml.append(learning_phd)
 
