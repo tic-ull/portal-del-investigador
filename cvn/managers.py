@@ -238,8 +238,9 @@ class PatenteManager(ProduccionManager):
         (data_cvn['lugar_prioritario'], data_cvn['lugares']) = parse_places(
             item.findall("Place"))
         data_cvn[u'autores'] = parse_authors(item.findall('Author'))
-        (data_cvn['entidad_titular'], data_cvn['empresas']) = parse_entities(
-            item.findall("Entity"))
+        entities = parse_entities(item.findall("Entity"))
+        data_cvn['entidad_titular'] = entities[st_cvn.FC_ENTITY.OWNER.value]
+        data_cvn['empresas'] = entities[st_cvn.FC_ENTITY.OPERATOR.value]
         return super(PatenteManager, self)._create(data_cvn, user_profile)
 
     def removeByUserProfile(self, user_profile):
