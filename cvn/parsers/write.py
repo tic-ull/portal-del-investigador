@@ -164,7 +164,7 @@ class CvnXmlWriter:
         if department is not None:
             department_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
                                if end_date is None else
-                               st_cvn.FC_ENTITY.DEPARTMENT.value)
+                               st_cvn.FC_ENTITY.DEPT.value)
             department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
                 'code': department_type,
                 'name': department}
