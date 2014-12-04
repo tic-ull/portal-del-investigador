@@ -9,7 +9,8 @@ from core.tests.factories import UserFactory
 import datetime
 from cvn.models import CVN
 from core.tests.helpers import init, clean
-from factories import (LearningPhdFactory, ProfessionFactory)
+from factories import (LearningPhdFactory, ProfessionFactory,
+                       TeachingFactory, LearningFactory,)
 from cvn.parsers.read import parse_cvnitem
 from lxml import etree
 
@@ -122,7 +123,7 @@ class ParserWriterTestCase(TestCase):
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
-   def test_parse_titulacion(self):
+    def test_parse_titulacion(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
         f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))

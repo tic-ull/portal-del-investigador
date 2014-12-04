@@ -90,7 +90,7 @@ class CvnXmlWriter:
 
         if professional_category is None:
             node = teaching.xpath('//*[@code="030.010.000.270"]')[-1]
-            teaching.remove(node.getparent())
+            teaching.remove(node)
 
         self.xml.append(teaching)
 
