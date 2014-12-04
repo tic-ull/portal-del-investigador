@@ -338,6 +338,30 @@ def parse_cvnitem_learning_phd(node):
     return item
 
 
+def parse_cvnitem_teaching(node):
+
+    item = {'title': node.find('Title/Name/Item').text,
+            'course': node.find('Edition/Text/Item').text,
+            'qualification': node.find('Link/Title/Name/Item').text,
+
+            'school_year': node.find('Date/StartDate/Year/Item').text,
+            'number_credits': node.find('PhysicalDimension/Value/Item').text}
+    entities = node.findall('Filter/Value') + node.findall('Entity/EntityName')
+    for ent in entities:
+        if ent.attrib['code'] == st_cvn.FC_PROGRAM:
+            item['program_type'] = ent.find('Item').text
+        if ent.attrib['code'] == st_cvn.FC_SUBJECT:
+            item['subject_type'] = ent.find('Item').text
+        if ent.attrib['code'] == st_cvn.TEACHING_UNIVERSITY.value:
+            item['university'] = ent.find('Item').text
+
+    professional_category = node.find('Description/Item').text
+    if professional_category is not None:
+        item['professional_category'] = professional_category
+
+    return item
+
+
 def parse_cvnitem(node):
     cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
     cvnitem = None

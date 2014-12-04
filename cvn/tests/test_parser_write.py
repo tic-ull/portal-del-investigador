@@ -158,6 +158,7 @@ class ParserWriterTestCase(TestCase):
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
+
     def test_learning_factory(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)

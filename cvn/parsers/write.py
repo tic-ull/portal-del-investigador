@@ -56,12 +56,6 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
-    # def _remove_node(self, xml, data, code):
-    #     if data is None:
-    #         node = xml.xpath('//*[@code="' + code + '"]')[-1]
-    #         parent_node = node.getparent()
-    #         xml.remove(parent_node)
-
     def add_teaching(self, subject, subject_type, program_type, qualification,
                      faculty, number_credits, school_year, course,
                      professional_category=None, department=None,
