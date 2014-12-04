@@ -107,7 +107,7 @@ class FC_ENTITY(Enum):
     CURRENT_DEPT = "010.010.000.080"
     # Merge warning
     UNIVERSITY = "030.010.000.080"
-    FACULTY =
+    FACULTY = "030.010.000.540"
 
 
 FC_OFFICIAL_TITLE_TYPE = {

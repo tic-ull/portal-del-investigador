@@ -5,7 +5,8 @@ from cvn import settings as st_cvn
 import random
 import datetime
 import factory
-from factory.fuzzy import (FuzzyChoice, FuzzyDate, FuzzyAttribute)
+from factory.fuzzy import (FuzzyChoice, FuzzyDate, FuzzyAttribute,
+                           FuzzyInteger, FuzzyFloat)
 
 d = datetime.date(1940, 1, 1)
 
@@ -31,46 +32,34 @@ class LearningPhdFactory(factory.Factory):
     date = FuzzyAttribute(lambda: random.choice([None, FuzzyDate(d).fuzz()]))
 
 
-class TeachingFactory:
-
-    @staticmethod
-    def create():
-        program_type = u'Titulación #' + str(randint(0, 100))
-        if random.choice([True, False]):
-            program_type = random.choice(st_cvn.FC_PROGRAM_TYPE.keys())
-        subject_type = 'Tipo asignatura #' + str(randint(0, 100))
-        if random.choice([True, False]):
-            subject_type = random.choice(st_cvn.FC_SUBJECT_TYPE.keys())
-        d = {'subject': 'Asignatura #' + str(randint(0, 100)),
-             'program_type': program_type,
-             'subject_type': subject_type,
-             'course': str(randint(0, 5)),
-             'qualification': u'Titulación #' + str(randint(0, 100)),
-             'faculty': 'Facultad #' + str(randint(0, 100)),
-             'school_year': randint(1990, 2020),
-             'number_credits': format(random.uniform(0, 20), '.1f'),
-            }
-        # Optional data
-        if random.choice([True, False]):
-            d['department'] = 'Departamento #' + str(randint(0, 100))
-        if random.choice([True, False]):
-            d['professional_category'] = u'Profesión #' + str(randint(0, 100))
-        if random.choice([True, False]):
-            d['university'] = random.choice(
-                [st_cvn.UNIVERSITY, 'Universidad #' + str(randint(0, 100))])
-        return d
+class TeachingFactory(factory.Factory):
+    FACTORY_FOR = dict
+    subject = factory.Sequence(lambda n: 'Asignatura #{0}'.format(n))
+    professional_category = FuzzyAttribute(lambda: random.choice(
+        [None, u'Profesión #' + str(randint(0, 100))]))
+    program_type = FuzzyAttribute(lambda: random.choice(
+        st_cvn.FC_SUBJECT_TYPE.keys() +
+        [u'Titulación #' + str(randint(0, 100))]))
+    subject_type = FuzzyAttribute(lambda: random.choice(
+        st_cvn.FC_SUBJECT_TYPE.keys() +
+        ['Tipo asignatura #' + str(randint(0, 100))]))
+    course = FuzzyInteger(1, 5)
+    qualification = factory.Sequence(lambda n: u'Titulación #{0}'.format(n))
+    university = FuzzyAttribute(lambda: random.choice(
+        [st_cvn.UNIVERSITY, 'Universidad #' + str(randint(0, 100))]))
+    department = FuzzyAttribute(lambda: random.choice(
+        [None, 'Departamento #' + str(randint(0, 100))]))
+    faculty = FuzzyAttribute(lambda: 'Facultad #' + str(randint(0, 100)))
+    school_year = FuzzyInteger(1990, 2020)
+    number_credits = FuzzyFloat(0.5, 15)
 
 
-class LearningFactory:
-
-    @staticmethod
-    def create():
-        fd = fuzzy_date()
-        fd.append(None)
-        return {'title': u'Título #' + str(randint(0, 100)),
-                'title_type': random.choice(
-                    st_cvn.FC_OFFICIAL_TITLE_TYPE.keys()),
-                'university': random.choice([
-                    None, 'Universidad #' + str(randint(0, 100))]),
-                'date': random.choice(fd),
-                }
+class LearningFactory(factory.Factory):
+    FACTORY_FOR = dict
+    title = factory.Sequence(lambda n: u'Título #{0}'.format(n))
+    title_type = FuzzyAttribute(lambda: random.choice(
+        st_cvn.FC_OFFICIAL_TITLE_TYPE.keys() + ['GRADO', 'FP']))
+    university = FuzzyAttribute(lambda: random.choice(
+        [None, 'Universidad #' + str(randint(0, 100))]))
+    date = FuzzyAttribute(lambda: random.choice(
+        [None, FuzzyDate(d).fuzz()]))
