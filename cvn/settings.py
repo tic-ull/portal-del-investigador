@@ -28,19 +28,19 @@ TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
 
 
+# Date format for writing to the CVN-XML files
+XML_CVN_DATE_FORMAT = '%Y-%m-%d'
 # XML Files for XML parser (to create or modify cvn-xml)
 
 # Base xml-cvn
 XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 
 # CVN Items
-XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
+XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
-XML_TEACHING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/teaching_phd.xml')
 XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
-XML_LEARNING_OTHER = os.path.join(st.RES_ROOT, 'cvn/xml/learning_other.xml')
-XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/doctor.xml')
+XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
 
 # Optional fragments
 XML_TEACHING_PHD_CODIRECTOR = os.path.join(st.RES_ROOT, 'cvn/xml/codirector.xml')
@@ -104,7 +104,7 @@ class FC_ENTITY(Enum):
     CENTRE = "010.020.000.060"
     CURRENT_CENTRE = "010.010.000.060"
     DEPARTMENT = "010.020.000.080"
-    CURRENT_DEPARTMENT = "010.010.000.080"
+    CURRENT_DEPT = "010.010.000.080"
 
 
 FC_OFFICIAL_TITLE_TYPE = {
@@ -167,6 +167,27 @@ FECYT_CODE = {
     # Actividad docente
     u"030.040.000.000": u'TesisDoctoral',
 }
+
+class CVNITEM_CODE(Enum):
+    # Professional activity
+    PROFESSION_CURRENT = '010.010.000.000'
+    PROFESSION_FORMER = '010.020.000.000'
+    # Learning activity
+    LEARNING_DEGREE = '020.010.010.000'
+    LEARNING_PHD = '020.010.020.000'
+    LEARNING_OTHER = '020.050.000.000'
+    # Teaching activity
+    TEACHING_SUBJECT = '030.010.000.000'
+    TEACHING_PHD = '030.040.000.000'
+    # Scientific experience
+    SCIENTIFICEXP_PROJECT = '050.020.010.000'
+    SCIENTIFICEXP_AGREEMENT = '050.020.020.000'
+    SCIENTIFICEXP_PROPERTY = '050.030.010.000'
+    # Scientific activity
+    SCIENTIFICACT_PRODUCTION = '060.010.010.000'
+    SCIENTIFICACT_CONGRESS = '060.010.020.000'
+
+
 
 # FECYT codes for economic information of Proyecto
 ECONOMIC_DIMENSION = {

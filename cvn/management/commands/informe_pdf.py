@@ -328,7 +328,10 @@ class InformePDF:
                     t.universidad_que_titula
                 )
             if t.user_profile:
-                text += u"Director: %s" % t.user_profile
+                text += u"Director: %s" % u",".join(
+                    [u.user.first_name + u" " + u.user.last_name
+                     for u in t.user_profile.all()])
+                text += u"<br/>"
             if t.codirector:
                 text += u"Codirector: %s" % t.codirector
             if t.fecha:

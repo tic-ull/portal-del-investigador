@@ -288,3 +288,63 @@ def parse_entities(node_list):
         elif entity_name.attrib['code'] == st_cvn.FC_ENTITY_OPERATOR:
             extended_entities += entity_name.find("Item").text + "; "
     return main_entity, extended_entities.strip('; ')
+
+
+def _parse_dedication_type(node):
+    if node is not None:
+        return (st_cvn.FC_DEDICATION_TYPE(node.text)
+                == st_cvn.FC_DEDICATION_TYPE.TOTAL)
+    else:
+        return None
+
+
+def _parse_cvnitem_profession(node):
+    date = parse_date_interval(node.find('Date'))
+    item = {'title': node.find('Title/Name/Item').text,
+            'start_date': date[0]}
+    if date[1] is not None:
+        item['end_date'] = date[1]
+    full_time = _parse_dedication_type(node.find('Dedication/Item'))
+    if full_time is not None:
+        item['full_time'] = full_time
+    entities = node.findall('Entity/EntityName')
+    for ent in entities:
+        if (ent.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value):
+            item['employer'] = ent.find('Item').text
+        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.CENTRE.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_CENTRE.value):
+            item['centre'] = ent.find('Item').text
+        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.DEPARTMENT.value or
+                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_DEPT.value):
+            item['department'] = ent.find('Item').text
+    return item
+
+
+def parse_cvnitem_profession_current(node):
+    return _parse_cvnitem_profession(node)
+
+
+def parse_cvnitem_profession_former(node):
+    return _parse_cvnitem_profession(node)
+
+
+def parse_cvnitem_learning_phd(node):
+    item = {'title': node.find('Title/Name/Item').text,
+            'university': node.find('Entity/EntityName/Item').text}
+    date = parse_date(node.find('Date'))
+    if date is not None:
+        item['date'] = date
+    return item
+
+
+def parse_cvnitem(node):
+    cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
+    cvnitem = None
+    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
+        cvnitem = parse_cvnitem_profession_current(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
+        cvnitem = parse_cvnitem_profession_former(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
+        cvnitem = parse_cvnitem_learning_phd(node)
+    return cvnitem
