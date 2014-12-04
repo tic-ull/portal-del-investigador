@@ -180,7 +180,6 @@ class ParserWriterTestCase(TestCase):
         parser = CvnXmlWriter(user)
         for i in range(0, 10):
             d = LearningFactory.create()
-            print d
             parser.add_learning(**d)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)

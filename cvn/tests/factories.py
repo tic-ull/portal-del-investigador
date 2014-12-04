@@ -84,22 +84,24 @@ class TeachingFactory:
         subject_type = 'Tipo asignatura #' + str(randint(0, 100))
         if random.choice([True, False]):
             subject_type = random.choice(st_cvn.FC_SUBJECT_TYPE.keys())
-        return {'subject': 'Asignatura #' + str(randint(0, 100)),
-                'professional_category': random.choice(
-                    ['', u'Profesión #' + str(randint(0, 100))]),
-                'program_type': program_type,
-                'subject_type': subject_type,
-                'course': random.choice(['', str(randint(0, 5))]),
-                'qualification': u'Titulación #' + str(randint(0, 100)),
-                'department': random.choice(['', 'Departamento #' +
-                                             str(randint(0, 100))]),
-                'faculty': 'Facultad #' + str(randint(0, 100)),
-                'school_year': randint(1990, 2020),
-                'number_credits': format(random.uniform(0, 20), '.1f'),
-                'university': random.choice(['', st_cvn.UNIVERSITY,
-                                             'Universidad #' +
-                                             str(randint(0, 100))]),
-                }
+        d = {'subject': 'Asignatura #' + str(randint(0, 100)),
+             'program_type': program_type,
+             'subject_type': subject_type,
+             'course': str(randint(0, 5)),
+             'qualification': u'Titulación #' + str(randint(0, 100)),
+             'faculty': 'Facultad #' + str(randint(0, 100)),
+             'school_year': randint(1990, 2020),
+             'number_credits': format(random.uniform(0, 20), '.1f'),
+            }
+        # Optional data
+        if random.choice([True, False]):
+            d['department'] = 'Departamento #' + str(randint(0, 100))
+        if random.choice([True, False]):
+            d['professional_category'] = u'Profesión #' + str(randint(0, 100))
+        if random.choice([True, False]):
+            d['university'] = random.choice(
+                [st_cvn.UNIVERSITY, 'Universidad #' + str(randint(0, 100))])
+        return d
 
 
 class LearningFactory:

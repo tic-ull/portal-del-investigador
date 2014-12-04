@@ -57,6 +57,12 @@ class CvnXmlWriter:
         parent = value_node.getparent()
         parent.insert(parent.index(value_node) + 1, node)
 
+    # def _remove_node(self, xml, data, code):
+    #     if data is None:
+    #         node = xml.xpath('//*[@code="' + code + '"]')[-1]
+    #         parent_node = node.getparent()
+    #         xml.remove(parent_node)
+
     def add_teaching_phd(self, title, reading_date,
                          author_first_name, author_last_name,
                          university=st_cvn.UNIVERSITY,
@@ -83,14 +89,14 @@ class CvnXmlWriter:
 
         self.xml.append(teaching_phd)
 
-    def add_teaching(self, subject, professional_category, program_type,
-                     subject_type, course, qualification, department,
-                     faculty, school_year, number_credits,
-                     university=st_cvn.UNIVERSITY,):
+    def add_teaching(self, subject, subject_type, program_type, qualification,
+                     faculty, number_credits, school_year, course,
+                     professional_category=None, department=None,
+                     university=st_cvn.UNIVERSITY):
         '''Graduate, postgraduate (bachelor's degree, master, engineering...)'''
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
-        teaching = get_xml_fragment(st_cvn.XML_TEACHING) % {
+        teaching = etree.fromstring(get_xml_fragment(st_cvn.XML_TEACHING) % {
             'subject': subject,
             'professional_category': professional_category,
             'program_type': program_code,
@@ -102,9 +108,17 @@ class CvnXmlWriter:
             'school_year': school_year,
             'number_credits': number_credits,
             'university': university,
-        }
+        })
 
-        self.xml.append(etree.fromstring(teaching))
+        if department is None:
+            node = teaching.xpath('//*[@code="030.010.000.130"]')[-1]
+            teaching.remove(node.getparent())
+
+        if professional_category is None:
+            node = teaching.xpath('//*[@code="030.010.000.270"]')[-1]
+            teaching.remove(node.getparent())
+
+        self.xml.append(teaching)
 
         if program_code == u'OTHERS':
             node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
@@ -117,6 +131,7 @@ class CvnXmlWriter:
                 'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
                 'others': subject_type})
             self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
+
 
     def add_learning(self, title, title_type, university=None, date=None):
         title_code = self._get_code(
