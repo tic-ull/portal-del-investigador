@@ -21,8 +21,6 @@ def cvn_to_context(user, context):
             user.cvn.xml_file.close()
             if nif is not '':
                 context['nif_invalid'] = nif.upper()
-            else:
-                context['nif_invalid'] = _(u'Desconocido')
     except ObjectDoesNotExist:
         return
 
