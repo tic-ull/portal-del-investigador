@@ -60,36 +60,50 @@ class CvnXmlWriter:
         node = xml.find(node)
         xml.remove(node)
 
-    def add_teaching(self, subject, subject_type, program_type, qualification,
-                     faculty, number_credits, school_year, course,
-                     professional_category=None, department=None,
-                     university=st_cvn.UNIVERSITY):
+    def _remove_node_by_code(self, xml, node, code):
+        nodes = xml.xpath('//%s[@code="%s"]' % (node, code))
+        if len(nodes):
+            node = nodes[0].getparent()
+            xml.remove(node)
 
+    def add_teaching(self, subject, professional_category, program_type,
+                     subject_type, course, qualification, department,
+                     faculty, school_year, number_credits,
+                     university=st_cvn.UNIVERSITY,):
         """Graduate, postgraduate (bachelor's degree, master, engineering...)"""
 
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
-        teaching = etree.fromstring(get_xml_fragment(st_cvn.XML_TEACHING) % {
-            'subject': subject,
-            'professional_category': professional_category,
-            'program_type': program_code,
-            'subject_type': subject_code,
-            'course': course,
-            'qualification': qualification,
-            'department': department,
-            'faculty': faculty,
-            'school_year': school_year,
-            'number_credits': number_credits,
-            'university': university,
-        })
+        teaching = etree.fromstring(get_xml_fragment(
+            st_cvn.XML_TEACHING) % {
+                'subject': subject,
+                'professional_category': professional_category,
+                'program_type': program_code,
+                'subject_type': subject_code,
+                'course': course,
+                'qualification': qualification,
+                'department': department,
+                'faculty': faculty,
+                'school_year': school_year,
+                'number_credits': number_credits.replace(',', '.'),
+                'university': university,
+            }
+        )
+
+        if university is None:
+            self._remove_node_by_code(
+                xml=teaching, node='EntityName',
+                code=st_cvn.FC_ENTITY.UNIVERSITY.value)
 
         if department is None:
-            node = teaching.xpath('//*[@code="030.010.000.130"]')[-1]
-            teaching.remove(node.getparent())
+            self._remove_node_by_code(
+                xml=teaching, node='EntityName',
+                code=st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value)
 
-        if professional_category is None:
-            node = teaching.xpath('//*[@code="030.010.000.270"]')[-1]
-            teaching.remove(node)
+        if faculty is None:
+            self._remove_node_by_code(
+                xml=teaching, node='EntityName',
+                code=st_cvn.FC_ENTITY.FACULTY.value)
 
         self.xml.append(teaching)
 
@@ -185,7 +199,7 @@ class CvnXmlWriter:
         if department is not None:
             department_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
                                if end_date is None else
-                               st_cvn.FC_ENTITY.DEPARTMENT.value)
+                               st_cvn.FC_ENTITY.DEPT.value)
             department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
                 'code': department_type,
                 'name': department}

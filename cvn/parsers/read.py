@@ -279,15 +279,20 @@ def parse_places(node_list):
 
 
 def parse_entities(node_list):
-    main_entity = None
-    extended_entities = u""
+    operators = u""
+    entities = {i.value: None for i in st_cvn.FC_ENTITY}
     for item in node_list:
         entity_name = item.find("EntityName")
-        if entity_name.attrib['code'] == st_cvn.FC_ENTITY_OWNER:
-            main_entity = entity_name.find("Item").text
-        elif entity_name.attrib['code'] == st_cvn.FC_ENTITY_OPERATOR:
-            extended_entities += entity_name.find("Item").text + "; "
-    return main_entity, extended_entities.strip('; ')
+        # Most entities come once, so we just save the content to a dict key
+        if entity_name.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
+            entities[entity_name.attrib['code']] = entity_name.find("Item").text
+        # The entity operator (an entity that operates a patent) can come
+        # more than once, so we concatenate the occurrence.
+        else:
+            operators += entity_name.find("Item").text + "; "
+    if operators:
+        entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
+    return entities
 
 
 def _parse_dedication_type(node):
@@ -304,20 +309,16 @@ def _parse_cvnitem_profession(node):
             'start_date': date[0],
             'end_date': date[1],
             'full_time': _parse_dedication_type(node.find('Dedication/Item'))}
-    entities = node.findall('Entity/EntityName')
-    item['employer'] = None
-    item['centre'] = None
-    item['department'] = None
-    for ent in entities:
-        if (ent.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value or
-                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value):
-            item['employer'] = ent.find('Item').text
-        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.CENTRE.value or
-                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_CENTRE.value):
-            item['centre'] = ent.find('Item').text
-        elif (ent.attrib['code'] == st_cvn.FC_ENTITY.DEPARTMENT.value or
-                ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_DEPT.value):
-            item['department'] = ent.find('Item').text
+    entities = parse_entities(node.findall('Entity'))
+    item['employer'] = (entities[st_cvn.FC_ENTITY.EMPLOYER.value]
+                        if entities[st_cvn.FC_ENTITY.EMPLOYER.value] is not None
+                        else entities[st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value])
+    item['centre'] = (entities[st_cvn.FC_ENTITY.CENTRE.value]
+                      if entities[st_cvn.FC_ENTITY.CENTRE.value] is not None
+                      else entities[st_cvn.FC_ENTITY.CURRENT_CENTRE.value])
+    item['department'] = (entities[st_cvn.FC_ENTITY.DEPT.value]
+                          if entities[st_cvn.FC_ENTITY.DEPT.value] is not None
+                          else entities[st_cvn.FC_ENTITY.CURRENT_DEPT.value])
     return item
 
 

@@ -65,9 +65,6 @@
     </Title>
   </Link>
   <Entity>
-    <Type code="030.010.000.110">
-      <Item>000</Item>
-    </Type>
     <EntityName code="030.010.000.080">
       <Item>%(university)s</Item>
      </EntityName>
