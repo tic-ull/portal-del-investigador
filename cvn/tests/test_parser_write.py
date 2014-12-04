@@ -44,9 +44,8 @@ class ParserWriterTestCase(TestCase):
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in cvn_items:
-            profession = parse_cvnitem(item)
-            self.assertEqual(cmp(profession,
-                                 cvnitem_dict[profession['title']]), 0)
+            cvnitem = parse_cvnitem(item)
+            self.assertEqual(cmp(cvnitem, cvnitem_dict[cvnitem['title']]), 0)
         self.assertNotEqual(cvn, None)
 
     def test_parse_cargos(self):
