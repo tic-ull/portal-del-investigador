@@ -301,13 +301,13 @@ def _parse_dedication_type(node):
 def _parse_cvnitem_profession(node):
     date = parse_date_interval(node.find('Date'))
     item = {'title': node.find('Title/Name/Item').text,
-            'start_date': date[0]}
-    if date[1] is not None:
-        item['end_date'] = date[1]
-    full_time = _parse_dedication_type(node.find('Dedication/Item'))
-    if full_time is not None:
-        item['full_time'] = full_time
+            'start_date': date[0],
+            'end_date': date[1],
+            'full_time': _parse_dedication_type(node.find('Dedication/Item'))}
     entities = node.findall('Entity/EntityName')
+    item['employer'] = None
+    item['centre'] = None
+    item['department'] = None
     for ent in entities:
         if (ent.attrib['code'] == st_cvn.FC_ENTITY.EMPLOYER.value or
                 ent.attrib['code'] == st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value):
@@ -331,10 +331,8 @@ def parse_cvnitem_profession_former(node):
 
 def parse_cvnitem_learning_phd(node):
     item = {'title': node.find('Title/Name/Item').text,
-            'university': node.find('Entity/EntityName/Item').text}
-    date = parse_date(node.find('Date'))
-    if date is not None:
-        item['date'] = date
+            'university': node.find('Entity/EntityName/Item').text,
+            'date': parse_date(node.find('Date'))}
     return item
 
 
