@@ -175,8 +175,12 @@ class CVN(models.Model):
         self.xml_file.seek(0)
         nif = parse_nif(xml_tree)
         self.xml_file.close()
+        for character in [' ', '-']:
+            if character in nif:
+                nif = nif.replace(character, '')
         if nif.upper() == self.user_profile.documento.upper():
             return True
+        # NIF/NIE without final letter
         if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
             return True
         return False

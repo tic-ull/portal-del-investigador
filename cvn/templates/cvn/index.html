@@ -58,7 +58,10 @@
                         <table class="table table-bordered">
                             <tbody>
                                 <tr>
-                                    <th style="vertical-align: middle;"><strong>{% trans 'Estado' %}</strong></th>
+                                    <th style="vertical-align: middle;">
+                                        <strong>{% trans 'Estado' %}</strong>
+                                        <a href="{% url 'faq' %}3/"><i class="fa fa-info-circle"></i></a>
+                                    </th>
                                     {% if cvn_status == "Actualizado" %}
                                         <td class="alert alert-success align-center"><b>{% trans cvn_status %}</b></td>
                                     {% else %}
@@ -66,13 +69,18 @@
                                             <b>{% trans cvn_status %}</b>
                                             {% if cvn_status == "NIF/NIE Incorrecto" %}
                                                 <br>
-                                                {{ user.profile.documento }} - {{ nif_invalid }}
+                                                {% if nif_invalid %}
+                                                    {% trans 'El NIF/NIE de su CVN' %} ({{ nif_invalid }})
+                                                    {% trans 'no coincide con el de su usuario' %} ({{ user.profile.documento }})
+                                                {% else %}
+                                                    {% trans 'No ha especificado su NIF/NIE en su CVN' %}
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     {% endif %}
                                 </tr>
                                 <tr>
-                                    <th><strong>{% trans 'Fecha del Documento' %}</strong></th>
+                                    <th><strong>{% trans 'Fecha del documento' %}</strong></th>
                                     <td align='center'>{{ cvn.fecha }}</td>
                                 </tr>
                                 {% comment %}
