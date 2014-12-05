@@ -25,6 +25,16 @@
       <Item>%(employer)s</Item>
     </EntityName>
   </Entity>
+  <Entity>
+    <EntityName code="010.020.000.060">
+      <Item>%(centre)s</Item>
+    </EntityName>
+  </Entity>
+  <Entity>
+    <EntityName code="010.020.000.080">
+      <Item>%(department)s</Item>
+    </EntityName>
+  </Entity>
   <Date>
     <Moment>
       <Item>OTHERS</Item>
@@ -41,4 +51,7 @@
     </EndDate>
     <DurationType>010</DurationType>
   </Date>
+  <Dedication code="010.0%(dedication_code)s.000.2%(dedication_code)s">
+    <Item>%(dedication_type)s</Item>
+  </Dedication>
 </CvnItem>

@@ -1,5 +1,0 @@
-<Entity>
-  <EntityName code="%(code)s">
-    <Item>%(name)s</Item>
-  </EntityName>
-</Entity>

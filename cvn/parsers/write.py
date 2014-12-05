@@ -167,49 +167,48 @@ class CvnXmlWriter:
                        end_date=None, centre=None, department=None,
                        full_time=None):
         values = {'title': title,
+                  'start_date': start_date.strftime(self.DATE_FORMAT),
                   'employer': employer,
-                  'start_date': start_date.strftime(self.DATE_FORMAT)}
+                  'centre': centre,
+                  'department': department,
+                  'full_time': full_time,
+                  'dedication_code': None,
+                  'dedication_type': None,
+                  }
 
+        if full_time is not None:
+            values['dedication_code'] = (
+                st_cvn.FC_PROFESSION_CODE.CURRENT_TRIMMED.value
+                if end_date is None else
+                st_cvn.FC_PROFESSION_CODE.OLD_TRIMMED.value)
+
+            values['dedication_type'] = (
+                st_cvn.FC_DEDICATION_TYPE.TOTAL.value
+                if full_time else
+                st_cvn.FC_DEDICATION_TYPE.PARTIAL.value)
+
+        xml = st_cvn.XML_CURRENT_PROFESSION
         if end_date is not None:
             values['end_date'] = end_date.strftime(self.DATE_FORMAT)
-            xml_path = st_cvn.XML_PROFESSION
-        else:
-            xml_path = st_cvn.XML_CURRENT_PROFESSION
+            xml = st_cvn.XML_PROFESSION
 
-        profession = etree.fromstring(get_xml_fragment(xml_path) % values)
+        profession = etree.fromstring(get_xml_fragment(xml) % values)
 
-        # If it is specified if the job is full or partial time
-        if full_time is not None:
-            dedication_type = (st_cvn.FC_DEDICATION_TYPE.TOTAL.value
-                               if full_time else
-                               st_cvn.FC_DEDICATION_TYPE.PARTIAL.value)
-            full_time_xml = get_xml_fragment(st_cvn.XML_DEDIACTION) % {
-                'code': (st_cvn.FC_PROFESSION_CODE.CURRENT_TRIMMED.value
-                         if end_date is None else
-                         st_cvn.FC_PROFESSION_CODE.OLD_TRIMMED.value),
-                'type': dedication_type}
-            profession.append(etree.fromstring(full_time_xml))
-
-        employer_pos = profession.index(profession.find('Entity')) + 1
-
-        # If it is specified the department where the job takes place
-        if department is not None:
-            department_type = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
-                               if end_date is None else
-                               st_cvn.FC_ENTITY.DEPT.value)
-            department_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': department_type,
-                'name': department}
-            profession.insert(employer_pos, etree.fromstring(department_xml))
-
-        # If it is specified the centre (building) where the job takes place
-        if centre is not None:
-            centre_type = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
+        if centre is None:
+            centre_code = (st_cvn.FC_ENTITY.CURRENT_CENTRE.value
                            if end_date is None else
                            st_cvn.FC_ENTITY.CENTRE.value)
-            centre_xml = get_xml_fragment(st_cvn.XML_ENTITY) % {
-                'code': centre_type,
-                'name': centre}
-            profession.insert(employer_pos, etree.fromstring(centre_xml))
+            self._remove_parent_node_by_code(
+                xml=profession, node='EntityName', code=centre_code)
+
+        if department is None:
+            department_code = (st_cvn.FC_ENTITY.CURRENT_DEPT.value
+                               if end_date is None else
+                               st_cvn.FC_ENTITY.DEPT.value)
+            self._remove_parent_node_by_code(
+                xml=profession, node='EntityName', code=department_code)
+
+        if full_time is None:
+            self._remove_node(xml=profession, node='Dedication')
 
         self.xml.append(profession)

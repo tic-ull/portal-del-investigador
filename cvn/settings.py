@@ -44,8 +44,6 @@ XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
 
 # Optional fragments
 XML_TEACHING_PHD_CODIRECTOR = os.path.join(st.RES_ROOT, 'cvn/xml/codirector.xml')
-XML_DEDIACTION = os.path.join(st.RES_ROOT, 'cvn/xml/dedication.xml')
-XML_ENTITY = os.path.join(st.RES_ROOT, 'cvn/xml/entity.xml')
 XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
 
 
