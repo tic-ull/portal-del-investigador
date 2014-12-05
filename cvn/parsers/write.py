@@ -52,15 +52,16 @@ class CvnXmlWriter:
         return code
 
     def _add_other_node(self, xml, code, node):
-        value_node = xml.xpath('//Value[@code="' + code + '"]')[-1]
-        parent = value_node.getparent()
-        parent.insert(parent.index(value_node) + 1, node)
+        value_node = xml.xpath('//Value[@code="' + code + '"]')
+        if len(value_node):
+            parent = value_node[-1].getparent()
+            parent.insert(parent.index(value_node[-1]) + 1, node)
 
     def _remove_node(self, xml, node):
         node = xml.find(node)
         xml.remove(node)
 
-    def _remove_node_by_code(self, xml, node, code):
+    def _remove_parent_node_by_code(self, xml, node, code):
         nodes = xml.xpath('//%s[@code="%s"]' % (node, code))
         if len(nodes):
             node = nodes[0].getparent()
@@ -91,17 +92,17 @@ class CvnXmlWriter:
         )
 
         if university is None:
-            self._remove_node_by_code(
+            self._remove_parent_node_by_code(
                 xml=teaching, node='EntityName',
                 code=st_cvn.FC_ENTITY.UNIVERSITY.value)
 
         if department is None:
-            self._remove_node_by_code(
+            self._remove_parent_node_by_code(
                 xml=teaching, node='EntityName',
                 code=st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value)
 
         if faculty is None:
-            self._remove_node_by_code(
+            self._remove_parent_node_by_code(
                 xml=teaching, node='EntityName',
                 code=st_cvn.FC_ENTITY.FACULTY.value)
 
