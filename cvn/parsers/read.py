@@ -350,6 +350,51 @@ def parse_cvnitem_scientificexp_agreement(node):
     return _parse_cvnitem_scientificexp(node)
 
 
+def parse_cvnitem_scientificact_production(node):
+    item = {'titulo': parse_title(node),
+            'autores': parse_authors(node.findall('Author')),
+            'fecha': parse_date(node.find('Date')),
+            'issn': parse_produccion_id(node.findall('ExternalPK'),
+                                        st_cvn.PRODUCCION_ID_CODE['ISSN']),
+            'isbn': parse_produccion_id(node.findall('ExternalPK'),
+                                        st_cvn.PRODUCCION_ID_CODE['ISBN']),
+            'deposito_legal': (parse_produccion_id(node.findall('ExternalPK'),
+                               st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']))}
+
+    if (node.find('Link/Title/Name') and
+            node.find('Link/Title/Name/Item').text):
+        item[u'nombre_publicacion'] = unicode(node.find(
+            'Link/Title/Name/Item').text.strip())
+    item.update(parse_publicacion_location(node.find('Location')))
+
+    return item
+
+
+def parse_cvnitem_scientificact_congress(node):
+    item = {'titulo': parse_title(node),
+            'autores': parse_authors(node.findall('Author'))}
+
+    for itemXML in node.findall('Link'):
+        if itemXML.find(
+            'CvnItemID/CodeCVNItem/Item'
+        ).text.strip() == st_cvn.DATA_CONGRESO:
+            if (itemXML.find('Title/Name') and
+                itemXML.find('Title/Name/Item').text):
+                item[u'nombre_del_congreso'] = unicode(itemXML.find(
+                    'Title/Name/Item').text.strip())
+
+            date_node = itemXML.find('Date')
+            (item['fecha_de_inicio'], item['fecha_de_fin'],
+                duracion) = parse_date_interval(date_node)
+
+            if itemXML.find('Place/City'):
+                item[u'ciudad_de_realizacion'] = unicode(itemXML.find(
+                    'Place/City/Item').text.strip())
+            # Ámbito
+            item.update(parse_scope(itemXML.find('Scope')))
+    return item
+
+
 def parse_cvnitem_teaching_phd(node):
     entities = parse_entities(node.findall('Entity'))
     item = {'titulo': parse_title(node),
