@@ -275,3 +275,7 @@ TIME_WAITING = 5000
 
 # CVN Entity
 UNIVERSITY = _(u'Universidad de La Laguna')
+
+class FC_FILTER(Enum):
+    PROGRAM = "030.010.000.140"
+    SUBJECT = "030.010.000.190"

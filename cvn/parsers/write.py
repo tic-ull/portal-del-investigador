@@ -67,7 +67,7 @@ class CvnXmlWriter:
             node = nodes[0].getparent()
             xml.remove(node)
 
-    def add_teaching(self, subject, professional_category, program_type,
+    def add_teaching(self, title, professional_category, program_type,
                      subject_type, course, qualification, department,
                      faculty, school_year, number_credits,
                      university=st_cvn.UNIVERSITY,):
@@ -77,7 +77,7 @@ class CvnXmlWriter:
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = etree.fromstring(get_xml_fragment(
             st_cvn.XML_TEACHING) % {
-                'subject': subject,
+                'subject': title,
                 'professional_category': professional_category,
                 'program_type': program_code,
                 'subject_type': subject_code,
