@@ -1,13 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.parsers.read import (parse_scope, parse_authors,
-                              parse_publicacion_location, parse_date,
-                              parse_date_interval,
-                              parse_produccion_id, parse_title,
-                              parse_cvnitem_scientificexp_property,
+from cvn.parsers.read import (parse_cvnitem_scientificexp_property,
                               parse_cvnitem_scientificexp_agreement,
                               parse_cvnitem_scientificexp_project,
-                              parse_cvnitem_teaching_phd)
+                              parse_cvnitem_teaching_phd,
+                              parse_cvnitem_scientificact_congress,
+                              parse_cvnitem_scientificact_production)
 from cvn import settings as st_cvn
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -61,51 +59,14 @@ class ProduccionManager(models.Manager):
 class PublicacionManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        if (item.find('Link/Title/Name') and
-           item.find('Link/Title/Name/Item').text):
-            data_cvn[u'nombre_publicacion'] = unicode(item.find(
-                'Link/Title/Name/Item').text.strip())
-        data_cvn[u'autores'] = parse_authors(item.findall(
-            'Author'))
-        data_cvn.update(parse_publicacion_location(item.find('Location')))
-        data_cvn['fecha'] = parse_date(item.find('Date'))
-        data_cvn['issn'] = parse_produccion_id(
-            item.findall('ExternalPK'),
-            st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        data_cvn['isbn'] = parse_produccion_id(
-            item.findall('ExternalPK'),
-            st_cvn.PRODUCCION_ID_CODE['ISBN'])
-        data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
-            'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
+        data_cvn = parse_cvnitem_scientificact_production(item)
         return super(PublicacionManager, self)._create(data_cvn, user_profile)
 
 
 class CongresoManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        for itemXML in item.findall('Link'):
-            if itemXML.find(
-                'CvnItemID/CodeCVNItem/Item'
-            ).text.strip() == st_cvn.DATA_CONGRESO:
-                if (itemXML.find('Title/Name') and
-                   itemXML.find('Title/Name/Item').text):
-                    data_cvn[u'nombre_del_congreso'] = unicode(itemXML.find(
-                        'Title/Name/Item').text.strip())
-
-                date_node = itemXML.find('Date')
-                (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
-                    duracion) = parse_date_interval(date_node)
-
-                if itemXML.find('Place/City'):
-                    data_cvn[u'ciudad_de_realizacion'] = unicode(itemXML.find(
-                        'Place/City/Item').text.strip())
-                # Ámbito
-                data_cvn.update(parse_scope(itemXML.find('Scope')))
-        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        data_cvn = parse_cvnitem_scientificact_congress(item)
         return super(CongresoManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
