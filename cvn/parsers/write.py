@@ -61,6 +61,10 @@ class CvnXmlWriter:
         node = xml.find(node)
         xml.remove(node)
 
+    def _remove_child_node(self, xml, parent, child):
+        node = xml.xpath("%s/%s" % (parent, child))[0]
+        node.getparent().remove(node)
+
     def _remove_parent_node_by_code(self, xml, node, code):
         nodes = xml.xpath('//%s[@code="%s"]' % (node, code))
         if len(nodes):
@@ -128,6 +132,7 @@ class CvnXmlWriter:
                 'title_code': title_code,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT) if date else None,
+                'others': title_type,
             }
         )
 
@@ -137,11 +142,8 @@ class CvnXmlWriter:
         if university is None:
             self._remove_node(learning, 'Entity')
 
-        if title_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
-                'others': title_type})
-            learning.find('Filter').append(node)
+        if title_code != u'OTHERS':
+            self._remove_child_node(learning, 'Filter', 'Others')
 
         self.xml.append(learning)
 
