@@ -239,16 +239,17 @@ def parse_date_interval(xml):
     return fecha_inicio, fecha_fin, duracion
 
 
-def parse_produccion_id(id_list, code_type):
-    """Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
-       different identifiers for produccion nodes. code_type is what
-       type of id you want to get: ISSN, ISBN, etc. (PRODUCCION_ID_CODE)
+def parse_produccion_id(node_list):
+    """Input: node_list is a list of ExternalPK nodes (ExternalPK nodes contain
+       different identifiers for produccion nodes.
+       Output: A dictionary with the PRODUCCION_ID_CODEs found
     """
-    for node in id_list:
-        if node.find('Type/Item').text != code_type:
-            continue
-        return node.find('Code/Item').text
-    return None
+    prods = {i: None for i in st_cvn.PRODUCCION_ID_CODE.values()}
+
+    for node in node_list:
+        prods[node.find('Type/Item').text] = node.find('Code/Item').text
+
+    return prods
 
 
 def parse_economic(node_list):
@@ -351,16 +352,13 @@ def parse_cvnitem_scientificexp_agreement(node):
 
 
 def parse_cvnitem_scientificact_production(node):
+    pids = parse_produccion_id(node.findall('ExternalPK'))
     item = {'titulo': parse_title(node),
             'autores': parse_authors(node.findall('Author')),
             'fecha': parse_date(node.find('Date')),
-            'issn': parse_produccion_id(node.findall('ExternalPK'),
-                                        st_cvn.PRODUCCION_ID_CODE['ISSN']),
-            'isbn': parse_produccion_id(node.findall('ExternalPK'),
-                                        st_cvn.PRODUCCION_ID_CODE['ISBN']),
-            'deposito_legal': (parse_produccion_id(node.findall('ExternalPK'),
-                               st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']))}
-
+            'issn': pids[st_cvn.PRODUCCION_ID_CODE['ISSN']],
+            'isbn': pids[st_cvn.PRODUCCION_ID_CODE['ISBN']],
+            'deposito_legal': pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]}
     if (node.find('Link/Title/Name') and
             node.find('Link/Title/Name/Item').text):
         item[u'nombre_publicacion'] = unicode(node.find(
@@ -410,9 +408,8 @@ def parse_cvnitem_scientificexp_property(node):
 
     places = parse_places(node.findall("Place"))
     entities = parse_entities(node.findall("Entity"))
-    num_solicitud = parse_produccion_id(node.findall('ExternalPK'),
-                                        st_cvn.PRODUCCION_ID_CODE['SOLICITUD'])
-
+    num_solicitud = parse_produccion_id(
+        node.findall('ExternalPK'))[st_cvn.PRODUCCION_ID_CODE['SOLICITUD']]
     item = {'titulo': parse_title(node),
             'num_solicitud': num_solicitud,
             'lugar_prioritario': places[0],
