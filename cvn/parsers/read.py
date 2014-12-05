@@ -337,6 +337,38 @@ def parse_cvnitem_learning_phd(node):
     return item
 
 
+def parse_cvnitem(node):
+    cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
+    cvnitem = None
+    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
+        cvnitem = parse_cvnitem_profession_current(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
+        cvnitem = parse_cvnitem_profession_former(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
+        cvnitem = parse_cvnitem_learning_phd(node)
+    return cvnitem
+
+
+def parse_filters(node_list):
+    """
+    :param node_list:
+    :return hash:
+    """
+    operators = u""
+    entities = {i.value: None for i in st_cvn.FC_ENTITY}
+    for item in node_list:
+        entity_name = item.find("Value")
+        # Most entities come once, so we just save the content to a dict key
+        if entity_name.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
+            entities[entity_name.attrib['code']] = entity_name.find("Item").text
+        # The entity operator (an entity that operates a patent) can come
+        # more than once, so we concatenate the occurrence.
+        else:
+            operators += entity_name.find("Item").text + "; "
+    if operators:
+        entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
+    return entities
+
 def parse_cvnitem_teaching(node):
 
     item = {'title': node.find('Title/Name/Item').text,
@@ -345,7 +377,8 @@ def parse_cvnitem_teaching(node):
 
             'school_year': node.find('Date/StartDate/Year/Item').text,
             'number_credits': node.find('PhysicalDimension/Value/Item').text}
-    entities = node.findall('Filter/Value') + node.findall('Entity/EntityName')
+    entities = parse_entities(node.findall('Entity'))
+    entities = node.findall('Filter/Value')
     for ent in entities:
         if ent.attrib['code'] == st_cvn.FC_PROGRAM:
             item['program_type'] = ent.find('Item').text
@@ -359,15 +392,3 @@ def parse_cvnitem_teaching(node):
         item['professional_category'] = professional_category
 
     return item
-
-
-def parse_cvnitem(node):
-    cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
-    cvnitem = None
-    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
-        cvnitem = parse_cvnitem_profession_current(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
-        cvnitem = parse_cvnitem_profession_former(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
-        cvnitem = parse_cvnitem_learning_phd(node)
-    return cvnitem

@@ -92,7 +92,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_categorias(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT,'csv/categorias.csv'))
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/categorias.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:

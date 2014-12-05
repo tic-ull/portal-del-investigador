@@ -85,7 +85,7 @@ class CvnXmlWriter:
                 'department': department,
                 'faculty': faculty,
                 'school_year': school_year,
-                'number_credits': number_credits.replace(',', '.'),
+                'number_credits': number_credits,
                 'university': university,
             }
         )
@@ -130,10 +130,6 @@ class CvnXmlWriter:
                 'date': date.strftime(self.DATE_FORMAT) if date else None,
             }
         )
-
-        if university is None:
-            node = learning.find('Entity')
-            learning.remove(node)
 
         if date is None:
             self._remove_node(learning, 'Date')
