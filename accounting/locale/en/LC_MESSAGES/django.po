@@ -8,15 +8,52 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-25 13:27+0100\n"
-"PO-Revision-Date: 2014-09-25 13:36-0102\n"
-"Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
+"POT-Creation-Date: 2014-12-04 14:29+0000\n"
+"PO-Revision-Date: 2014-12-04 14:36-0102\n"
+"Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
+
+#: admin.py:39
+msgid "Se ha actualizado el listado con éxito"
+msgstr "The list has been updated successfully"
+
+#: admin.py:42
+msgid "SIGIDI - Servicio no disponible"
+msgstr "SIGIDI - Service unavailable"
+
+#: models.py:9 tables.py:261 tables.py:291
+msgid "Código"
+msgstr "Code"
+
+#: models.py:12
+msgid "Igualdad de género"
+msgstr "Gender equality"
+
+#: models.py:15
+msgid "Software Libre"
+msgstr "Open Source Software"
+
+#: models.py:17
+msgid "Creado"
+msgstr "Created"
+
+#: models.py:19
+msgid "Actualizado"
+msgstr "Updated"
+
+#: models.py:31 templates/accounting/index.html:12
+msgid "Proyectos"
+msgstr "Projects"
+
+#: models.py:38
+#| msgid "Convenios y Contratos"
+msgid "Convenios"
+msgstr "Agreements"
 
 #: tables.py:18 tables.py:132 tables.py:187
 msgid "Ejercicio"
@@ -54,7 +91,7 @@ msgstr "Total Obligations"
 msgid "Saldo disponible"
 msgstr "Available balance"
 
-#: tables.py:90 tables.py:137 tables.py:210
+#: tables.py:90 tables.py:137 tables.py:211
 msgid "Concepto"
 msgstr "Concept"
 
@@ -82,61 +119,65 @@ msgstr "Total A balance"
 msgid "Saldo total D"
 msgstr "Total D balance"
 
-#: tables.py:191
+#: tables.py:192
 msgid "Número"
 msgstr "Number"
 
-#: tables.py:195
+#: tables.py:196
 msgid "Tipo"
 msgstr "Type"
 
-#: tables.py:200
+#: tables.py:201
 msgid "Proveedor"
 msgstr "Provider"
 
-#: tables.py:205
+#: tables.py:206
 msgid "Descripción"
 msgstr "Description"
 
-#: tables.py:216
+#: tables.py:217
 msgid "Variaciones"
 msgstr "Variations"
 
-#: tables.py:223
+#: tables.py:224
 msgid "Gastos"
 msgstr "Expenses"
 
-#: tables.py:229
+#: tables.py:230
 msgid "Asiento"
 msgstr "Seating"
 
-#: tables.py:234
+#: tables.py:235
 msgid "Validación"
 msgstr "Validation"
 
-#: tables.py:239
+#: tables.py:240
 msgid "Pago"
 msgstr "Payment"
 
-#: tables.py:254
-msgid "Código"
-msgstr "Code"
-
-#: tables.py:259
+#: tables.py:266 tables.py:296
 msgid "Nombre"
 msgstr "Name"
 
-#: tables.py:263
+#: tables.py:271 tables.py:301
+msgid "IP"
+msgstr "Main Researcher"
+
+#: tables.py:277
+msgid "Fecha Aceptación"
+msgstr "Approval Date"
+
+#: tables.py:281 tables.py:311
 msgid "Clave contable"
 msgstr "Accounting Key"
+
+#: tables.py:307
+msgid "Fecha Inicio"
+msgstr "Start Date"
 
 #: templates/accounting/base.html:6 templates/accounting/index.html:8
 msgid "Contabilidad"
 msgstr "Accounting"
-
-#: templates/accounting/index.html:12
-msgid "Proyectos"
-msgstr "Projects"
 
 #: templates/accounting/index.html:13
 msgid "Convenios y Contratos"
@@ -172,3 +213,11 @@ msgstr "Concept expenses summary"
 #: templates/accounting/partials/summary_year.html:7
 msgid "Resumen de contabilidad por anualidades"
 msgstr "Accounting summary by year"
+
+#: views.py:29 views.py:72
+msgid "Servicio temporalmente no disponible"
+msgstr "Service temporarily unavailable"
+
+#: views.py:30 views.py:73
+msgid "Si el problema persiste puede ponerse en contacto con nosotros en"
+msgstr "If the problem persists, you can contact us at"
