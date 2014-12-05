@@ -30,6 +30,9 @@
     <Value code="030.010.000.140">
       <Item>%(program_type)s</Item>
     </Value>
+    <Others code="030.010.000.150">
+      <Item>%(program_others)s</Item>
+    </Others>
   </Filter>
   <Filter>
     <Type code="030.010.000.190">
@@ -38,6 +41,9 @@
     <Value code="030.010.000.190">
       <Item>%(subject_type)s</Item>
     </Value>
+    <Others code="030.010.000.430">
+      <Item>%(subject_others)s</Item>
+    </Others>
   </Filter>
   <Edition>
     <Text code="030.010.000.200">
