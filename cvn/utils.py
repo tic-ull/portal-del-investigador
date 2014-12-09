@@ -1,11 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import ugettext as _
 from lxml import etree
-
-from models import Articulo, Capitulo, Libro
-from cvn.parsers.read import parse_nif
+from cvn.parsers.read_helpers import parse_nif
 import settings as st_cvn
 
 

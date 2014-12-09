@@ -6,7 +6,6 @@ from cvn.parsers.read import (parse_cvnitem_scientificexp_property,
                               parse_cvnitem_teaching_phd,
                               parse_cvnitem_scientificact_congress,
                               parse_cvnitem_scientificact_production)
-from cvn import settings as st_cvn
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 

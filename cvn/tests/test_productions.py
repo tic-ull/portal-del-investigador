@@ -9,7 +9,8 @@ from lxml import etree
 from cvn import settings as st_cvn
 from cvn.models import (CVN, Congreso, Convenio, Proyecto, Patente,
                         TesisDoctoral, Articulo, Libro, Capitulo)
-from cvn.parsers.read import parse_produccion_type, parse_produccion_subtype
+from cvn.parsers.read_helpers import (parse_produccion_type,
+                                      parse_produccion_subtype)
 from core.tests.helpers import init, clean
 from core.tests.factories import UserFactory
 

@@ -3,8 +3,8 @@
 from core import settings as st_core
 from core.models import UserProfile, Log
 from cvn import settings as st_cvn
-from cvn.parsers.read import (parse_produccion_type, parse_produccion_subtype,
-                              parse_nif, parse_date)
+from cvn.parsers.read_helpers import (parse_produccion_type, parse_date,
+                                      parse_produccion_subtype, parse_nif)
 from cvn.parsers.write import CvnXmlWriter
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
