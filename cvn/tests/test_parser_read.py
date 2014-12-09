@@ -88,12 +88,11 @@ class ParserTestCase(TestCase):
         xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
                                             'xml/externalpks.xml'))
         ids = etree.parse(xml_externalpks).findall('ExternalPK')
-        issn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        isbn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISBN'])
-        financiadora = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
-            'FINANCIADORA'])
-        deposito_legal = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
-            'DEPOSITO_LEGAL'])
+        pids = parse_produccion_id(ids)
+        issn = pids[st_cvn.PRODUCCION_ID_CODE['ISSN']]
+        isbn = pids[st_cvn.PRODUCCION_ID_CODE['ISBN']]
+        financiadora = pids[st_cvn.PRODUCCION_ID_CODE['FINANCIADORA']]
+        deposito_legal = pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]
         self.assertEqual(issn, '0395-2037')
         self.assertEqual(isbn, '1-56619-909-1')
         self.assertEqual(financiadora, 'Cod. segun financiadora')
