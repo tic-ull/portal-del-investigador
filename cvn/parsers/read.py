@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as st
+from cvn import settings as st_cvn
 from iso3166 import countries
 
 import datetime
@@ -88,7 +88,7 @@ def parse_scope(tree_xml):
     """
     data_cvn = {}
     if tree_xml:
-        data_cvn['ambito'] = unicode(st.SCOPE[tree_xml.find(
+        data_cvn['ambito'] = unicode(st_cvn.SCOPE[tree_xml.find(
             'Type/Item').text.strip()])
         if data_cvn['ambito'] == u'Otros' and tree_xml.find('Others/Item'):
             data_cvn['otro_ambito'] = unicode(tree_xml.find(
@@ -155,9 +155,9 @@ def parse_produccion_type(xml):
     if xml is None:
         return ''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
-    if cvn_key not in st.FECYT_CODE:
+    if cvn_key not in st_cvn.FECYT_CODE:
         return ''
-    return st.FECYT_CODE[cvn_key]
+    return st_cvn.FECYT_CODE[cvn_key]
 
 
 def parse_produccion_subtype(xml):
@@ -168,8 +168,8 @@ def parse_produccion_subtype(xml):
     if subtype is None:
         return ''
     subtype = subtype.text.strip()
-    if subtype in st.FECYT_CODE_SUBTYPE:
-        return st.FECYT_CODE_SUBTYPE[subtype]
+    if subtype in st_cvn.FECYT_CODE_SUBTYPE:
+        return st_cvn.FECYT_CODE_SUBTYPE[subtype]
     return ''
 
 
@@ -257,7 +257,7 @@ def parse_economic(node_list):
     data_cvn = {}
     for item in node_list:
         economic = item.find('Value').attrib['code']
-        data_cvn[st.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
+        data_cvn[st_cvn.ECONOMIC_DIMENSION[economic]] = unicode(item.find(
             'Value/Item').text.strip())
     return data_cvn
 
@@ -272,34 +272,34 @@ def parse_places(node_list):
     extended_place = u""
     for item in node_list:
         country = item.find("CountryCode")
-        if country.attrib['code'] == st.FC_PRIORITY_COUNTRY:
+        if country.attrib['code'] == st_cvn.FC_PRIORITY_COUNTRY:
             main_place = _parse_place(item)
-        elif country.attrib['code'] == st.FC_EXTENDED_COUNTRY:
+        elif country.attrib['code'] == st_cvn.FC_EXTENDED_COUNTRY:
             extended_place += _parse_place(item) + "; "
     return main_place, extended_place.strip('; ')
 
 
 def parse_entities(node_list):
     operators = u""
-    entities = {i.value: None for i in st.FC_ENTITY}
+    entities = {i.value: None for i in st_cvn.FC_ENTITY}
     for item in node_list:
         entity = item.find("EntityName")
         # Most entities come once, so we just save the content to a dict key
-        if entity.attrib['code'] != st.FC_ENTITY.OPERATOR.value:
+        if entity.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
             entities[entity.attrib['code']] = entity.find("Item").text
         # The entity operator (an entity that operates a patent) can come
         # more than once, so we concatenate the occurrence.
         else:
             operators += entity.find("Item").text + "; "
     if operators:
-        entities[st.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
+        entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
     return entities
 
 
 def _parse_dedication_type(node):
     if node is not None:
-        return (st.FC_DEDICATION_TYPE(node.text)
-                == st.FC_DEDICATION_TYPE.TOTAL)
+        return (st_cvn.FC_DEDICATION_TYPE(node.text)
+                == st_cvn.FC_DEDICATION_TYPE.TOTAL)
     else:
         return None
 
@@ -312,15 +312,15 @@ def _parse_cvnitem_profession(node):
             'end_date': date[1],
             'full_time': _parse_dedication_type(node.find('Dedication/Item'))}
     entities = parse_entities(node.findall('Entity'))
-    item['employer'] = (entities[st.FC_ENTITY.EMPLOYER.value]
-                        if entities[st.FC_ENTITY.EMPLOYER.value] is not None
-                        else entities[st.FC_ENTITY.CURRENT_EMPLOYER.value])
-    item['centre'] = (entities[st.FC_ENTITY.CENTRE.value]
-                      if entities[st.FC_ENTITY.CENTRE.value] is not None
-                      else entities[st.FC_ENTITY.CURRENT_CENTRE.value])
-    item['department'] = (entities[st.FC_ENTITY.DEPT.value]
-                          if entities[st.FC_ENTITY.DEPT.value] is not None
-                          else entities[st.FC_ENTITY.CURRENT_DEPT.value])
+    item['employer'] = (entities[st_cvn.FC_ENTITY.EMPLOYER.value]
+                        if entities[st_cvn.FC_ENTITY.EMPLOYER.value] is not None
+                        else entities[st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value])
+    item['centre'] = (entities[st_cvn.FC_ENTITY.CENTRE.value]
+                      if entities[st_cvn.FC_ENTITY.CENTRE.value] is not None
+                      else entities[st_cvn.FC_ENTITY.CURRENT_CENTRE.value])
+    item['department'] = (entities[st_cvn.FC_ENTITY.DEPT.value]
+                          if entities[st_cvn.FC_ENTITY.DEPT.value] is not None
+                          else entities[st_cvn.FC_ENTITY.CURRENT_DEPT.value])
     return item
 
 
@@ -356,9 +356,9 @@ def parse_cvnitem_scientificact_production(node):
     item = {'titulo': parse_title(node),
             'autores': parse_authors(node.findall('Author')),
             'fecha': parse_date(node.find('Date')),
-            'issn': pids[st.PRODUCCION_ID_CODE['ISSN']],
-            'isbn': pids[st.PRODUCCION_ID_CODE['ISBN']],
-            'deposito_legal': pids[st.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]}
+            'issn': pids[st_cvn.PRODUCCION_ID_CODE['ISSN']],
+            'isbn': pids[st_cvn.PRODUCCION_ID_CODE['ISBN']],
+            'deposito_legal': pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]}
     if (node.find('Link/Title/Name') and
             node.find('Link/Title/Name/Item').text):
         item[u'nombre_publicacion'] = unicode(node.find(
@@ -375,7 +375,7 @@ def parse_cvnitem_scientificact_congress(node):
     for itemXML in node.findall('Link'):
         if itemXML.find(
             'CvnItemID/CodeCVNItem/Item'
-        ).text.strip() == st.DATA_CONGRESO:
+        ).text.strip() == st_cvn.DATA_CONGRESO:
             if (itemXML.find('Title/Name') and
                     itemXML.find('Title/Name/Item').text):
                 item[u'nombre_del_congreso'] = unicode(itemXML.find(
@@ -400,7 +400,7 @@ def parse_cvnitem_teaching_phd(node):
             'codirector': parse_authors(node.findall('Link/Author')),
             'fecha': parse_date(node.find('Date')),
             'universidad_que_titula': entities[
-                st.FC_ENTITY.PHD_UNIVERSITY.value]}
+                st_cvn.FC_ENTITY.PHD_UNIVERSITY.value]}
     return item
 
 
@@ -409,20 +409,20 @@ def parse_cvnitem_scientificexp_property(node):
     places = parse_places(node.findall("Place"))
     entities = parse_entities(node.findall("Entity"))
     num_solicitud = parse_produccion_id(
-        node.findall('ExternalPK'))[st.PRODUCCION_ID_CODE['SOLICITUD']]
+        node.findall('ExternalPK'))[st_cvn.PRODUCCION_ID_CODE['SOLICITUD']]
     item = {'titulo': parse_title(node),
             'num_solicitud': num_solicitud,
             'lugar_prioritario': places[0],
             'lugares': places[1],
             'autores': parse_authors(node.findall('Author')),
-            'entidad_titular': entities[st.FC_ENTITY.OWNER.value],
-            'empresas': entities[st.FC_ENTITY.OPERATOR.value]}
+            'entidad_titular': entities[st_cvn.FC_ENTITY.OWNER.value],
+            'empresas': entities[st_cvn.FC_ENTITY.OPERATOR.value]}
 
     dates = node.findall('Date')
     for date in dates:                              # There can be 2 dates
         parsed_date = parse_date(date)
         date_type = date.find("Moment/Item").text
-        if date_type == st.REGULAR_DATE_CODE:   # Date of request
+        if date_type == st_cvn.REGULAR_DATE_CODE:   # Date of request
             item['fecha'] = parsed_date
         else:                                       # And date of granting
             item['fecha_concesion'] = parsed_date
@@ -448,10 +448,10 @@ def parse_cvnitem_learning_phd(node):
 def parse_cvnitem(node):
     cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
     cvnitem = None
-    if cvn_key == st.CVNITEM_CODE.PROFESSION_CURRENT.value:
+    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
         cvnitem = parse_cvnitem_profession_current(node)
-    elif cvn_key == st.CVNITEM_CODE.PROFESSION_FORMER.value:
+    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
         cvnitem = parse_cvnitem_profession_former(node)
-    elif cvn_key == st.CVNITEM_CODE.LEARNING_PHD.value:
+    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
         cvnitem = parse_cvnitem_learning_phd(node)
     return cvnitem
