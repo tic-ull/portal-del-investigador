@@ -244,7 +244,7 @@ def parse_produccion_id(node_list):
        different identifiers for produccion nodes.
        Output: A dictionary with the PRODUCCION_ID_CODEs found
     """
-    prods = {i: None for i in st.PRODUCCION_ID_CODE.values()}
+    prods = {i: None for i in st_cvn.PRODUCCION_ID_CODE.values()}
 
     for node in node_list:
         prods[node.find('Type/Item').text] = node.find('Code/Item').text
