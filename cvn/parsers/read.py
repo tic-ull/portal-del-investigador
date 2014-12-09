@@ -212,4 +212,16 @@ def parse_cvnitem(node):
         cvnitem = parse_cvnitem_teaching_subject(node)
     elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_DEGREE.value:
         cvnitem = parse_cvnitem_learning_degree(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_PROPERTY.value:
+        cvnitem = parse_cvnitem_scientificexp_property(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_AGREEMENT.value:
+        cvnitem = parse_cvnitem_scientificexp_agreement(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_PROJECT.value:
+        cvnitem = parse_cvnitem_scientificexp_project(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.TEACHING_PHD.value:
+        cvnitem = parse_cvnitem_teaching_phd(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICACT_CONGRESS.value:
+        cvnitem = parse_cvnitem_scientificact_congress(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICACT_PRODUCTION.value:
+        cvnitem = parse_cvnitem_scientificact_production(node)
     return cvnitem
