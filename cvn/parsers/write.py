@@ -69,7 +69,7 @@ class CvnXmlWriter:
             node = nodes[0].getparent()
             xml.remove(node)
 
-    def add_teaching(self, subject, professional_category, program_type,
+    def add_teaching(self, title, professional_category, program_type,
                      subject_type, course, qualification, department,
                      faculty, school_year, number_credits,
                      university=st_cvn.UNIVERSITY,):
@@ -78,7 +78,7 @@ class CvnXmlWriter:
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
         teaching = etree.fromstring(
             get_xml_fragment(st_cvn.XML_TEACHING) % {
-                'subject': subject,
+                'subject': title,
                 'professional_category': professional_category,
                 'program_type': program_code,
                 'program_others': program_type,
@@ -89,7 +89,7 @@ class CvnXmlWriter:
                 'department': department,
                 'faculty': faculty,
                 'school_year': school_year,
-                'number_credits': number_credits.replace(',', '.'),
+                'number_credits': number_credits,
                 'university': university,
             }
         )
@@ -121,12 +121,12 @@ class CvnXmlWriter:
 
         self.xml.append(teaching)
 
-    def add_learning(self, title_name, title_type, university=None, date=None):
+    def add_learning(self, title, title_type, university=None, date=None):
         title_code = self._get_code(
             st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type.upper())
         learning = etree.fromstring(
             get_xml_fragment(st_cvn.XML_LEARNING) % {
-                'title_name': title_name,
+                'title': title,
                 'title_code': title_code,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT) if date else None,

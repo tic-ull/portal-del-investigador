@@ -454,4 +454,78 @@ def parse_cvnitem(node):
         cvnitem = parse_cvnitem_profession_former(node)
     elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
         cvnitem = parse_cvnitem_learning_phd(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.TEACHING_SUBJECT.value:
+        cvnitem = parse_cvnitem_teaching(node)
+    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_DEGREE.value:
+        cvnitem = parse_cvnitem_learning(node)
     return cvnitem
+
+
+def parse_filters(node_list):
+    """
+    :param node_list:
+    :return hash:
+    """
+    filters = {i.value: None for i in st_cvn.FC_FILTER}
+    for item in node_list:
+        filter_name = item.find("Value")
+        data = filter_name.find("Item").text
+        filters[filter_name.attrib['code']] = data
+        if data == 'OTHERS':
+            filters[filter_name.attrib['code']] = item.find("Others/Item").text
+        else:  # Get the key of corresponding hash
+            dict = st_cvn.FC_SUBJECT_TYPE
+            if filter_name.attrib['code'] == st_cvn.FC_FILTER.PROGRAM.value:
+                dict = st_cvn.FC_PROGRAM_TYPE
+            filters[filter_name.attrib['code']] = dict.keys()[
+                dict.values().index(unicode(data))]
+
+    return filters
+
+def parse_cvnitem_teaching(node):
+
+    entities = parse_entities(node.findall('Entity'))
+    filters = parse_filters(node.findall('Filter'))
+    item = {'title': node.find('Title/Name/Item').text,
+            'course': node.find('Edition/Text/Item').text,
+            'qualification': node.find('Link/Title/Name/Item').text,
+            'school_year': node.find('Date/StartDate/Year/Item').text,
+            'number_credits': node.find('PhysicalDimension/Value/Item').text,
+            'university': entities[st_cvn.FC_ENTITY.UNIVERSITY.value],
+            'department': entities[st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value],
+            'faculty': entities[st_cvn.FC_ENTITY.FACULTY.value],
+            'program_type': filters[st_cvn.FC_FILTER.PROGRAM.value],
+            'subject_type': filters[st_cvn.FC_FILTER.SUBJECT.value]}
+
+    professional_category = node.find('Description/Item').text
+    if professional_category is not None:
+        item['professional_category'] = professional_category
+
+    return item
+
+
+def parse_cvnitem_learning(node):
+
+    title_type = node.find('Filter/Value/Item').text
+    if title_type == 'OTHERS':
+        title_type = node.find('Filter/Others/Item').text
+    else:
+        title_type = st_cvn.FC_OFFICIAL_TITLE_TYPE.keys()[
+            st_cvn.FC_OFFICIAL_TITLE_TYPE.values().index(unicode(title_type))]
+    university = (node.find('Entity/EntityName/Item').text
+                  if node.find('Entity/EntityName/Item') is not None
+                  else None)
+    date = (node.find('Date/OnlyDate/DayMonthYear/Item').text
+            if node.find('Date/OnlyDate/DayMonthYear/Item') is not None
+            else None)
+    try:
+        date = datetime.datetime.strptime(date,
+                                          st_cvn.XML_CVN_DATE_FORMAT).date()
+    except TypeError:
+        pass
+    item = {'title': node.find('Title/Name/Item').text,
+            'title_type': title_type,
+            'university': university,
+            'date': date}
+
+    return item

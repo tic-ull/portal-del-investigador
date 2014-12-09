@@ -103,6 +103,7 @@ class FC_ENTITY(Enum):
     OPERATOR = "050.030.010.250"
     OWNER = "050.030.010.300"
 
+
 FC_OFFICIAL_TITLE_TYPE = {
     u"DOCTOR": u'940',
     u"LICENCIADO/INGENIERO SUPERIOR": u'950',
@@ -263,3 +264,7 @@ TIME_WAITING = 5000
 
 # CVN Entity
 UNIVERSITY = _(u'Universidad de La Laguna')
+
+class FC_FILTER(Enum):
+    PROGRAM = "030.010.000.140"
+    SUBJECT = "030.010.000.190"

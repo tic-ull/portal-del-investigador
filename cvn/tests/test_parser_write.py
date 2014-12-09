@@ -7,7 +7,8 @@ from cvn.models import CVN
 from cvn.parsers.read import parse_cvnitem
 from cvn.parsers.write import CvnXmlWriter
 from django.test import TestCase
-from factories import (LearningPhdFactory, ProfessionFactory)
+from factories import (LearningPhdFactory, ProfessionFactory,
+                       TeachingFactory, LearningFactory,)
 from lxml import etree
 
 import csv
@@ -26,6 +27,14 @@ class ParserWriterTestCase(TestCase):
         for line in unicode_csv_data:
             yield line.decode('iso-8859-10').encode('utf-8')
 
+    @staticmethod
+    def hash_to_unicode(dict_row):
+        for key in dict_row:
+            try:
+                dict_row[key] = dict_row[key].decode('utf-8')
+            except AttributeError:
+                pass
+
     def test_cvnitem_factories(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
@@ -40,7 +49,16 @@ class ParserWriterTestCase(TestCase):
             d = LearningPhdFactory.create()
             cvnitem_dict[d['title']] = d
             parser.add_learning_phd(**d)
-
+        # Insert teaching data
+        for i in range(0, 10):
+            d = TeachingFactory.create()
+            cvnitem_dict[d['title']] = d
+            parser.add_teaching(**d)
+        # Insert bachelor, degree...data
+        for i in range(0, 10):
+            d = LearningFactory.create()
+            cvnitem_dict[d['title']] = d
+            parser.add_learning(**d)
         cvn = CVN.create(user, parser.tostring())
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -111,6 +129,36 @@ class ParserWriterTestCase(TestCase):
             # Universidad de La Laguna
             row['employer'] = 'Universidad de La Laguna'
             parser.add_profession(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+    def test_parse_titulacion(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
+        reader = csv.DictReader(f, delimiter=',')
+        for row in reader:
+            try:
+                row['date'] = datetime.datetime.strptime(row['date'],
+                                                         '%d/%m/%y').date()
+            except ValueError:
+                row['date'] = None
+            self.hash_to_unicode(row)
+            parser.add_learning(**row)
+        cvn = CVN.create(user, parser.tostring())
+        self.assertNotEqual(cvn, None)
+
+    def test_parse_docencia(self):
+        user = UserFactory.create()
+        parser = CvnXmlWriter(user)
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/docencia.csv'))
+        reader = csv.DictReader(f, delimiter='|')
+        for row in reader:
+            # Change the format of floating number to make it compatible
+            # with the FECYT if the number_credits key exists
+            row['number_credits'] = row['number_credits'].replace(",", ".")
+            self.hash_to_unicode(row)
+            parser.add_teaching(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
