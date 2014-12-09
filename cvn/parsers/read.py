@@ -478,7 +478,7 @@ def parse_filters(node_list):
             filters[filter_name.attrib['code']] = item.find("Others/Item").text
         else:  # Get the key of corresponding hash
             dict = st_cvn.FC_SUBJECT_TYPE
-            if filter_name.attrib['code'] == st_cvn.FC_PROGRAM:
+            if filter_name.attrib['code'] == st_cvn.FC_FILTER.PROGRAM.value:
                 dict = st_cvn.FC_PROGRAM_TYPE
             filters[filter_name.attrib['code']] = dict.keys()[
                 dict.values().index(unicode(data))]
