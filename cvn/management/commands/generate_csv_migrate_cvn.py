@@ -46,8 +46,9 @@ class Command(BaseCommand):
         for cvn in CVN.objects.filter(updated_at__gte=creation_date):
             lines += 1
             try:
+                output = MIGRATION_ROOT + '/' + cvn.cvn_file.name
                 shutil.copyfile(
-                    cvn.cvn_file.path, MIGRATION_ROOT + '/' + cvn.cvn_file.name)
+                    cvn.cvn_file.path, output)
                 csv_file.writerow([
                     cvn.user_profile.user.username,
                     cvn.user_profile.documento,

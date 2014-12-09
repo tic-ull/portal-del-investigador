@@ -283,14 +283,14 @@ def parse_entities(node_list):
     operators = u""
     entities = {i.value: None for i in st_cvn.FC_ENTITY}
     for item in node_list:
-        entity_name = item.find("EntityName")
+        entity = item.find("EntityName")
         # Most entities come once, so we just save the content to a dict key
-        if entity_name.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
-            entities[entity_name.attrib['code']] = entity_name.find("Item").text
+        if entity.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
+            entities[entity.attrib['code']] = entity.find("Item").text
         # The entity operator (an entity that operates a patent) can come
         # more than once, so we concatenate the occurrence.
         else:
-            operators += entity_name.find("Item").text + "; "
+            operators += entity.find("Item").text + "; "
     if operators:
         entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
     return entities
@@ -377,7 +377,7 @@ def parse_cvnitem_scientificact_congress(node):
             'CvnItemID/CodeCVNItem/Item'
         ).text.strip() == st_cvn.DATA_CONGRESO:
             if (itemXML.find('Title/Name') and
-                itemXML.find('Title/Name/Item').text):
+                    itemXML.find('Title/Name/Item').text):
                 item[u'nombre_del_congreso'] = unicode(itemXML.find(
                     'Title/Name/Item').text.strip())
 
