@@ -397,7 +397,7 @@ def parse_cvnitem_teaching(node):
 
 
 def parse_cvnitem_learning(node):
-    import pdb; pdb.set_trace()
+
     title_type = node.find('Filter/Value/Item').text
     if title_type == 'OTHERS':
         title_type = node.find('Filter/Others/Item').text
@@ -410,7 +410,11 @@ def parse_cvnitem_learning(node):
     date = (node.find('Date/OnlyDate/DayMonthYear/Item').text
             if node.find('Date/OnlyDate/DayMonthYear/Item') is not None
             else None)
-    # datetime.datetime.strptime('2004-01-28', '%Y-%m-%d')
+    try:
+        date = datetime.datetime.strptime(date,
+                                          st_cvn.XML_CVN_DATE_FORMAT).date()
+    except TypeError:
+        pass
     item = {'title': node.find('Title/Name/Item').text,
             'title_type': title_type,
             'university': university,

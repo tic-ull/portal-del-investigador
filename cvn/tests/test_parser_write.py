@@ -53,6 +53,11 @@ class ParserWriterTestCase(TestCase):
             d = TeachingFactory.create()
             cvnitem_dict[d['title']] = d
             parser.add_teaching(**d)
+        # Insert bachelor, degree...data
+        for i in range(0, 10):
+            d = LearningFactory.create()
+            cvnitem_dict[d['title']] = d
+            parser.add_learning(**d)
         cvn = CVN.create(user, parser.tostring())
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -151,23 +156,6 @@ class ParserWriterTestCase(TestCase):
             parser.add_teaching(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
-
-    # def test_learning_factory(self):
-    #     user = UserFactory.create()
-    #     parser = CvnXmlWriter(user)
-    #     cvnitem_dict = {}
-    #     for i in range(0, 10):
-    #         d = LearningFactory.create()
-    #         cvnitem_dict[d['title']] = d
-    #         parser.add_learning(**d)
-    #     cvn = CVN.create(user, parser.tostring())
-    #     cvn.xml_file.open()
-    #     cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
-    #     for item in cvn_items:
-    #         cvnitem = parse_cvnitem(item)
-    #         self.assertEqual(cmp(cvnitem, cvnitem_dict[cvnitem['title']]), 0)
-    #     self.assertNotEqual(cvn, None)
-
 
     @classmethod
     def tearDownClass(cls):
