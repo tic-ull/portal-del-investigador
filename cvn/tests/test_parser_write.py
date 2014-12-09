@@ -144,7 +144,11 @@ class ParserWriterTestCase(TestCase):
             except ValueError:
                 row['date'] = None
             self.hash_to_unicode(row)
-            parser.add_learning(**row)
+            if row['title_type'] == 'Doctor':
+                del(row['title_type'])
+                parser.add_learning_phd(**row)
+            else:
+                parser.add_learning(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
 
