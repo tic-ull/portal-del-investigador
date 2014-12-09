@@ -1,17 +1,18 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.parsers.write import CvnXmlWriter
-import csv
-import os
-import cvn.settings as st_cvn
-from django.test import TestCase
 from core.tests.factories import UserFactory
-import datetime
-from cvn.models import CVN
 from core.tests.helpers import init, clean
-from factories import (LearningPhdFactory, ProfessionFactory)
+from cvn import settings as st_cvn
+from cvn.models import CVN
 from cvn.parsers.read import parse_cvnitem
+from cvn.parsers.write import CvnXmlWriter
+from django.test import TestCase
+from factories import (LearningPhdFactory, ProfessionFactory)
 from lxml import etree
+
+import csv
+import datetime
+import os
 
 
 class ParserWriterTestCase(TestCase):
@@ -51,7 +52,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_cargos(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT,'csv/cargos.csv'))
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/cargos.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:
@@ -63,16 +64,16 @@ class ParserWriterTestCase(TestCase):
             # Transform the dates into datetime.date objects. We expect them
             # to be datetime.date objects in the ws.
             try:
-                end_date = datetime.datetime.strptime(row['end_date'],
-                                                             '%d/%m/%Y').date()
+                end_date = datetime.datetime.strptime(
+                    row['end_date'], '%d/%m/%Y').date()
                 if end_date < now:
                     row['end_date'] = end_date
                 else:
                     del(row['end_date'])
             except ValueError:
                 del(row['end_date'])
-            row['start_date'] = datetime.datetime.strptime(row['start_date'],
-                                                         '%d/%m/%Y').date()
+            row['start_date'] = datetime.datetime.strptime(
+                row['start_date'], '%d/%m/%Y').date()
             # We add the employer. It is not sent because it always is
             # Universidad de La Laguna
             row['employer'] = 'Universidad de La Laguna'
@@ -83,7 +84,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_categorias(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT,'csv/categorias.csv'))
+        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/categorias.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:
@@ -96,16 +97,16 @@ class ParserWriterTestCase(TestCase):
             # Transform the dates into datetime.date objects. We expect them
             # to be datetime.date objects in the ws.
             try:
-                end_date = datetime.datetime.strptime(row['end_date'],
-                                                             '%d/%m/%y').date()
+                end_date = datetime.datetime.strptime(
+                    row['end_date'], '%d/%m/%y').date()
                 if end_date < now:
                     row['end_date'] = end_date
                 else:
                     del(row['end_date'])
             except ValueError:
                 del(row['end_date'])
-            row['start_date'] = datetime.datetime.strptime(row['start_date'],
-                                                         '%d/%m/%y').date()
+            row['start_date'] = datetime.datetime.strptime(
+                row['start_date'], '%d/%m/%y').date()
             # We add the employer. It is not sent because it always is
             # Universidad de La Laguna
             row['employer'] = 'Universidad de La Laguna'

@@ -160,6 +160,7 @@ FECYT_CODE = {
     u"030.040.000.000": u'TesisDoctoral',
 }
 
+
 class CVNITEM_CODE(Enum):
     # Professional activity
     PROFESSION_CURRENT = '010.010.000.000'
@@ -178,8 +179,6 @@ class CVNITEM_CODE(Enum):
     # Scientific activity
     SCIENTIFICACT_PRODUCTION = '060.010.010.000'  # Producción científica
     SCIENTIFICACT_CONGRESS = '060.010.020.000'  # Congreso
-
-
 
 # FECYT codes for economic information of Proyecto
 ECONOMIC_DIMENSION = {
