@@ -51,15 +51,17 @@ class CvnXmlWriter:
             code = u'OTHERS'
         return code
 
-    def _add_other_node(self, xml, code, node):
-        value_node = xml.xpath('//Value[@code="' + code + '"]')
-        if len(value_node):
-            parent = value_node[-1].getparent()
-            parent.insert(parent.index(value_node[-1]) + 1, node)
-
     def _remove_node(self, xml, node):
         node = xml.find(node)
         xml.remove(node)
+
+    def _remove_child_node(self, xml, parent, child):
+        node = xml.xpath("%s/%s" % (parent, child))[0]
+        node.getparent().remove(node)
+
+    def _remove_child_node_by_code(self, xml, parent, child, code):
+        node = xml.xpath('%s/%s[@code="%s"]' % (parent, child, code))[0]
+        node.getparent().remove(node)
 
     def _remove_parent_node_by_code(self, xml, node, code):
         nodes = xml.xpath('//%s[@code="%s"]' % (node, code))
@@ -79,7 +81,9 @@ class CvnXmlWriter:
                 'subject': subject,
                 'professional_category': professional_category,
                 'program_type': program_code,
+                'program_others': program_type,
                 'subject_type': subject_code,
+                'subject_others': subject_type,
                 'course': course,
                 'qualification': qualification,
                 'department': department,
@@ -105,19 +109,17 @@ class CvnXmlWriter:
                 xml=teaching, node='EntityName',
                 code=st_cvn.FC_ENTITY.FACULTY.value)
 
+        if program_code != u'OTHERS':
+            self._remove_child_node_by_code(
+                xml=teaching, parent='Filter',
+                child='Others', code=st_cvn.FC_PROGRAM_TYPE_OTHERS)
+
+        if subject_code != u'OTHERS':
+            self._remove_child_node_by_code(
+                xml=teaching, parent='Filter',
+                child='Others', code=st_cvn.FC_SUBJECT_TYPE_OTHERS)
+
         self.xml.append(teaching)
-
-        if program_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_PROGRAM_TYPE_OTHERS,
-                'others': program_type})
-            self._add_other_node(self.xml, st_cvn.FC_PROGRAM, node)
-
-        if subject_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_SUBJECT_TYPE_OTHERS,
-                'others': subject_type})
-            self._add_other_node(self.xml, st_cvn.FC_SUBJECT, node)
 
     def add_learning(self, title_name, title_type, university=None, date=None):
         title_code = self._get_code(
@@ -128,6 +130,7 @@ class CvnXmlWriter:
                 'title_code': title_code,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT) if date else None,
+                'others': title_type,
             }
         )
 
@@ -137,11 +140,9 @@ class CvnXmlWriter:
         if university is None:
             self._remove_node(learning, 'Entity')
 
-        if title_code == u'OTHERS':
-            node = etree.fromstring(get_xml_fragment(st_cvn.XML_OTHERS) % {
-                'code_others': st_cvn.FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS,
-                'others': title_type})
-            learning.find('Filter').append(node)
+        if title_code != u'OTHERS':
+            self._remove_child_node(
+                xml=learning, parent='Filter', child='Others')
 
         self.xml.append(learning)
 

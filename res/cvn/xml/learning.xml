@@ -27,6 +27,9 @@
     <Value code="020.010.010.010">
       <Item>%(title_code)s</Item>
     </Value>
+    <Others code="020.010.010.020">
+      <Item>%(others)s</Item>
+    </Others>
   </Filter>
   <Entity>
     <EntityName code="020.010.010.090">

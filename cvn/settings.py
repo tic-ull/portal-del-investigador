@@ -42,11 +42,6 @@ XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
 XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
 
-# Optional fragments
-XML_TEACHING_PHD_CODIRECTOR = os.path.join(st.RES_ROOT, 'cvn/xml/codirector.xml')
-XML_OTHERS = os.path.join(st.RES_ROOT, 'cvn/xml/others.xml')
-
-
 # URLs
 URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
 URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)
@@ -114,8 +109,6 @@ FC_OFFICIAL_TITLE_TYPE = {
     u"DIPLOMADO/INGENIERO TECNICO": u'960'
 }
 
-FC_OFFICIAL_UNIVERSITY_TITLE_OTHERS = "020.010.010.020"
-
 
 class FC_PROFESSION_CODE(Enum):
     CURRENT = '010'
@@ -128,7 +121,6 @@ class FC_DEDICATION_TYPE(Enum):
     TOTAL = '020'
     PARTIAL = '030'
 
-FC_PROGRAM = "030.010.000.140"
 FC_PROGRAM_TYPE_OTHERS = "030.010.000.150"
 
 FC_PROGRAM_TYPE = {
@@ -142,7 +134,6 @@ FC_PROGRAM_TYPE = {
     u"MÁSTER OFICIAL": u"480",
 }
 
-FC_SUBJECT = "030.010.000.190"
 FC_SUBJECT_TYPE_OTHERS = "030.010.000.430"
 
 FC_SUBJECT_TYPE = {
