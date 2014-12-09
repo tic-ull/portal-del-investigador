@@ -1,9 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.parsers.read import (parse_scope, parse_authors, parse_places,
-                              parse_publicacion_location, parse_date,
-                              parse_date_interval, parse_economic,
-                              parse_entities, parse_produccion_id, parse_title)
+from cvn.parsers.read import (parse_cvnitem_scientificexp_property,
+                              parse_cvnitem_scientificexp_agreement,
+                              parse_cvnitem_scientificexp_project,
+                              parse_cvnitem_teaching_phd,
+                              parse_cvnitem_scientificact_congress,
+                              parse_cvnitem_scientificact_production)
 from cvn import settings as st_cvn
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -57,51 +59,14 @@ class ProduccionManager(models.Manager):
 class PublicacionManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        if (item.find('Link/Title/Name') and
-           item.find('Link/Title/Name/Item').text):
-            data_cvn[u'nombre_publicacion'] = unicode(item.find(
-                'Link/Title/Name/Item').text.strip())
-        data_cvn[u'autores'] = parse_authors(item.findall(
-            'Author'))
-        data_cvn.update(parse_publicacion_location(item.find('Location')))
-        data_cvn['fecha'] = parse_date(item.find('Date'))
-        data_cvn['issn'] = parse_produccion_id(
-            item.findall('ExternalPK'),
-            st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        data_cvn['isbn'] = parse_produccion_id(
-            item.findall('ExternalPK'),
-            st_cvn.PRODUCCION_ID_CODE['ISBN'])
-        data_cvn['deposito_legal'] = parse_produccion_id(item.findall(
-            'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL'])
+        data_cvn = parse_cvnitem_scientificact_production(item)
         return super(PublicacionManager, self)._create(data_cvn, user_profile)
 
 
 class CongresoManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        for itemXML in item.findall('Link'):
-            if itemXML.find(
-                'CvnItemID/CodeCVNItem/Item'
-            ).text.strip() == st_cvn.DATA_CONGRESO:
-                if (itemXML.find('Title/Name') and
-                   itemXML.find('Title/Name/Item').text):
-                    data_cvn[u'nombre_del_congreso'] = unicode(itemXML.find(
-                        'Title/Name/Item').text.strip())
-
-                date_node = itemXML.find('Date')
-                (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
-                    duracion) = parse_date_interval(date_node)
-
-                if itemXML.find('Place/City'):
-                    data_cvn[u'ciudad_de_realizacion'] = unicode(itemXML.find(
-                        'Place/City/Item').text.strip())
-                # Ámbito
-                data_cvn.update(parse_scope(itemXML.find('Scope')))
-        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
+        data_cvn = parse_cvnitem_scientificact_congress(item)
         return super(CongresoManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
@@ -119,16 +84,7 @@ class CongresoManager(ProduccionManager):
 class TesisDoctoralManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        node = item.find('Entity/EntityName/Item')
-        if node is not None:
-            data_cvn[u'universidad_que_titula'] = unicode(node.text.strip())
-        data_cvn[u'autor'] = parse_authors(
-            item.findall('Author'))
-        data_cvn[u'codirector'] = parse_authors(
-            item.findall('Link/Author'))
-        data_cvn['fecha'] = parse_date(item.find('Date'))
+        data_cvn = parse_cvnitem_teaching_phd(item)
         return super(TesisDoctoralManager, self)._create(
             data_cvn, user_profile)
 
@@ -141,19 +97,7 @@ class TesisDoctoralManager(ProduccionManager):
 class ProyectoManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        date_node = item.find('Date')
-        (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
-            data_cvn['duracion']) = parse_date_interval(date_node)
-        # Autores
-        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
-        data_cvn.update(parse_economic(item.findall('EconomicDimension')))
-        if item.find('ExternalPK/Code'):
-            data_cvn[u'cod_segun_financiadora'] = unicode(item.find(
-                'ExternalPK/Code/Item').text.strip())
-        # Ámbito
-        data_cvn.update(parse_scope(item.find('Scope')))
+        data_cvn = parse_cvnitem_scientificexp_project(item)
         return super(ProyectoManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
@@ -182,19 +126,7 @@ class ProyectoManager(ProduccionManager):
 class ConvenioManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        date_node = item.find('Date')
-        (data_cvn['fecha_de_inicio'], data_cvn['fecha_de_fin'],
-            data_cvn['duracion']) = parse_date_interval(date_node)
-        # Autores
-        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
-        data_cvn.update(parse_economic(item.findall('EconomicDimension')))
-        if item.find('ExternalPK/Code'):
-            data_cvn[u'cod_segun_financiadora'] = unicode(item.find(
-                'ExternalPK/Code/Item').text.strip())
-        # Ámbito
-        data_cvn.update(parse_scope(item.find('Scope')))
+        data_cvn = parse_cvnitem_scientificexp_agreement(item)
         return super(ConvenioManager, self)._create(data_cvn, user_profile)
 
     def byUsuariosYear(self, usuarios, year):
@@ -223,24 +155,7 @@ class ConvenioManager(ProduccionManager):
 class PatenteManager(ProduccionManager):
 
     def create(self, item, user_profile):
-        data_cvn = dict()
-        data_cvn['titulo'] = parse_title(item)
-        dates = item.findall('Date')
-        for date in dates:                              # There can be 2 dates
-            parsed_date = parse_date(date)
-            date_type = date.find("Moment/Item").text
-            if date_type == st_cvn.REGULAR_DATE_CODE:   # Date of request
-                data_cvn['fecha'] = parsed_date
-            else:                                       # And date of granting
-                data_cvn['fecha_concesion'] = parsed_date
-        data_cvn['num_solicitud'] = parse_produccion_id(item.findall(
-            'ExternalPK'), st_cvn.PRODUCCION_ID_CODE['SOLICITUD'])
-        (data_cvn['lugar_prioritario'], data_cvn['lugares']) = parse_places(
-            item.findall("Place"))
-        data_cvn[u'autores'] = parse_authors(item.findall('Author'))
-        entities = parse_entities(item.findall("Entity"))
-        data_cvn['entidad_titular'] = entities[st_cvn.FC_ENTITY.OWNER.value]
-        data_cvn['empresas'] = entities[st_cvn.FC_ENTITY.OPERATOR.value]
+        data_cvn = parse_cvnitem_scientificexp_property(item)
         return super(PatenteManager, self)._create(data_cvn, user_profile)
 
     def removeByUserProfile(self, user_profile):
