@@ -73,12 +73,11 @@ class CvnXmlWriter:
                      subject_type, course, qualification, department,
                      faculty, school_year, number_credits,
                      university=st_cvn.UNIVERSITY,):
-        """Graduate, postgraduate (bachelor's degree, master, engineering...)"""
-
+        """Graduate, postgraduate (bachelor's degree, master, engineering)"""
         program_code = self._get_code(st_cvn.FC_PROGRAM_TYPE, program_type)
         subject_code = self._get_code(st_cvn.FC_SUBJECT_TYPE, subject_type)
-        teaching = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_TEACHING) % {
+        teaching = etree.fromstring(
+            get_xml_fragment(st_cvn.XML_TEACHING) % {
                 'subject': title,
                 'professional_category': professional_category,
                 'program_type': program_code,
@@ -125,8 +124,8 @@ class CvnXmlWriter:
     def add_learning(self, title, title_type, university=None, date=None):
         title_code = self._get_code(
             st_cvn.FC_OFFICIAL_TITLE_TYPE, title_type.upper())
-        learning = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_LEARNING) % {
+        learning = etree.fromstring(
+            get_xml_fragment(st_cvn.XML_LEARNING) % {
                 'title': title,
                 'title_code': title_code,
                 'university': university,
@@ -149,8 +148,8 @@ class CvnXmlWriter:
 
     def add_learning_phd(self, title, date=None, university=st_cvn.UNIVERSITY):
         """ PhD (Doctor) """
-        learning_phd = etree.fromstring(get_xml_fragment(
-            st_cvn.XML_LEARNING_PHD) % {
+        learning_phd = etree.fromstring(
+            get_xml_fragment(st_cvn.XML_LEARNING_PHD) % {
                 'title': title,
                 'university': university,
                 'date': date.strftime(self.DATE_FORMAT) if date else None,
