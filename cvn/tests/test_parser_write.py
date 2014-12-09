@@ -28,12 +28,12 @@ class ParserWriterTestCase(TestCase):
             yield line.decode('iso-8859-10').encode('utf-8')
 
     @staticmethod
-    def hash_to_unicode(dict):
-        # Change the format of floating number
-        # to make it compatible with the FECYT
-        dict['number_credits'] = dict['number_credits'].replace(",", ".")
-        for key in dict:
-            dict[key] = dict[key].decode('utf-8')
+    def hash_to_unicode(dict_row):
+        for key in dict_row:
+            try:
+                dict_row[key] = dict_row[key].decode('utf-8')
+            except AttributeError:
+                pass
 
     def test_cvnitem_factories(self):
         user = UserFactory.create()
@@ -136,13 +136,14 @@ class ParserWriterTestCase(TestCase):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
         f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
-        reader = csv.DictReader(self.utf_8_encoder(f), delimiter=',')
+        reader = csv.DictReader(f, delimiter=',')
         for row in reader:
             try:
                 row['date'] = datetime.datetime.strptime(row['date'],
                                                          '%d/%m/%y').date()
             except ValueError:
                 row['date'] = None
+            self.hash_to_unicode(row)
             parser.add_learning(**row)
         cvn = CVN.create(user, parser.tostring())
         self.assertNotEqual(cvn, None)
@@ -153,6 +154,9 @@ class ParserWriterTestCase(TestCase):
         f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/docencia.csv'))
         reader = csv.DictReader(f, delimiter='|')
         for row in reader:
+            # Change the format of floating number to make it compatible
+            # with the FECYT if the number_credits key exists
+            row['number_credits'] = row['number_credits'].replace(",", ".")
             self.hash_to_unicode(row)
             parser.add_teaching(**row)
         cvn = CVN.create(user, parser.tostring())
