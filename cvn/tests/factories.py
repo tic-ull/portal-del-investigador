@@ -5,8 +5,8 @@ from cvn import settings as st_cvn
 import random
 import datetime
 import factory
-from factory.fuzzy import (FuzzyChoice, FuzzyDate, FuzzyAttribute, FuzzyFloat)
-                           # FuzzyInteger, FuzzyFloat)
+from factory.fuzzy import (FuzzyChoice, FuzzyDate, FuzzyAttribute)
+
 
 d = datetime.date(1940, 1, 1)
 
@@ -43,7 +43,6 @@ class TeachingFactory(factory.Factory):
     subject_type = FuzzyAttribute(lambda: random.choice(
         st_cvn.FC_SUBJECT_TYPE.keys() +
         ['Tipo asignatura #' + str(randint(0, 100))]))
-    #course = FuzzyInteger(1, 5)
     course = FuzzyAttribute(lambda: str(randint(1, 5)))
     qualification = factory.Sequence(lambda n: u'Titulación #{0}'.format(n))
     university = FuzzyAttribute(lambda: random.choice(
@@ -52,9 +51,7 @@ class TeachingFactory(factory.Factory):
         [None, 'Departamento #' + str(randint(0, 100))]))
     faculty = FuzzyAttribute(lambda: random.choice(
         [None, 'Facultad #' + str(randint(0, 100))]))
-    #school_year = FuzzyInteger(1990, 2020)
     school_year = FuzzyAttribute(lambda: str(randint(1990, 2020)))
-    #number_credits = FuzzyFloat(0.5, 15)
     number_credits = FuzzyAttribute(lambda: str(round(uniform(0.5, 15.5), 2)))
 
 
