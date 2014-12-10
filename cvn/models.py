@@ -14,8 +14,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
-from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager, PatenteManager)
+from managers import CongresoManager, ScientificExpManager, CvnItemManager
 
 import base64
 import datetime
@@ -237,14 +236,14 @@ class CVN(models.Model):
             pass
 
     def remove_producciones(self):
-        Articulo.removeByUserProfile(self.user_profile)
-        Libro.removeByUserProfile(self.user_profile)
-        Capitulo.removeByUserProfile(self.user_profile)
-        Congreso.objects.removeByUserProfile(self.user_profile)
-        Proyecto.objects.removeByUserProfile(self.user_profile)
-        Convenio.objects.removeByUserProfile(self.user_profile)
-        TesisDoctoral.objects.removeByUserProfile(self.user_profile)
-        Patente.objects.removeByUserProfile(self.user_profile)
+        Articulo.remove_by_userprofile(self.user_profile)
+        Libro.remove_by_userprofile(self.user_profile)
+        Capitulo.remove_by_userprofile(self.user_profile)
+        Congreso.remove_by_userprofile(self.user_profile)
+        Proyecto.remove_by_userprofile(self.user_profile)
+        Convenio.remove_by_userprofile(self.user_profile)
+        TesisDoctoral.remove_by_userprofile(self.user_profile)
+        Patente.remove_by_userprofile(self.user_profile)
 
     def insert_xml(self):
         try:
@@ -371,13 +370,13 @@ class Publicacion(models.Model):
 
 class Articulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.articulo_set.remove(
             *user_profile.articulo_set.all())
-        Articulo.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Artículos')
@@ -385,13 +384,13 @@ class Articulo(Publicacion):
 
 class Libro(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.libro_set.remove(
             *user_profile.libro_set.all())
-        Libro.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Libros')
@@ -399,13 +398,13 @@ class Libro(Publicacion):
 
 class Capitulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.capitulo_set.remove(
             *user_profile.capitulo_set.all())
-        Capitulo.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Capítulos de Libros')
@@ -502,6 +501,12 @@ class Congreso(models.Model):
     #                                        max_length=500,
     #                                        blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.congreso_set.remove(
+            *user_profile.congreso_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return "%s" % self.titulo
 
@@ -515,7 +520,7 @@ class Proyecto(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale\
         =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDIComp
     """
-    objects = ProyectoManager()
+    objects = ScientificExpManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -615,6 +620,12 @@ class Proyecto(models.Model):
     #     max_length=2048, blank=True, null=True
     # )
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.proyecto_set.remove(
+            *user_profile.proyecto_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return u'%s' % self.titulo
 
@@ -628,7 +639,7 @@ class Convenio(models.Model):
     https://cvn.fecyt.es/editor/cvn.html?locale\
     =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDINoComp
     """
-    objects = ConvenioManager()
+    objects = ScientificExpManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -723,6 +734,12 @@ class Convenio(models.Model):
     # palabras_clave = models.CharField(_(u'Describir con palabras clave'),
     #                                   max_length=500, blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.convenio_set.remove(
+            *user_profile.convenio_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return u'%s' % self.titulo
 
@@ -735,7 +752,7 @@ class TesisDoctoral(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE
     """
-    objects = TesisDoctoralManager()
+    objects = CvnItemManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -782,6 +799,12 @@ class TesisDoctoral(models.Model):
     #                                          max_length=500,
     #                                          blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.tesisdoctoral_set.remove(
+            *user_profile.tesisdoctoral_set.all())
+        cls.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return "%s" % self.titulo
 
@@ -794,7 +817,7 @@ class Patente(models.Model):
     """
     https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
     """
-    objects = PatenteManager()
+    objects = CvnItemManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -819,6 +842,12 @@ class Patente(models.Model):
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.patente_set.remove(
+            *user_profile.patente_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     def __unicode__(self):
         return "%s" % self.titulo
