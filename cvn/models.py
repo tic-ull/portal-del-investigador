@@ -803,7 +803,7 @@ class TesisDoctoral(models.Model):
     def remove_by_userprofile(cls, user_profile):
         user_profile.tesisdoctoral_set.remove(
             *user_profile.tesisdoctoral_set.all())
-        cls.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     def __unicode__(self):
         return "%s" % self.titulo
