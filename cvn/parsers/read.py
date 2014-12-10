@@ -17,9 +17,11 @@ def _parse_cvnitem_profession(node):
             'end_date': date[1],
             'full_time': parse_dedication_type(node.find('Dedication/Item'))}
     entities = parse_entities(node.findall('Entity'))
-    item['employer'] = (entities[st_cvn.FC_ENTITY.EMPLOYER.value]
-                        if entities[st_cvn.FC_ENTITY.EMPLOYER.value] is not None
-                        else entities[st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value])
+    item['employer'] = (
+        entities[st_cvn.FC_ENTITY.EMPLOYER.value]
+        if entities[st_cvn.FC_ENTITY.EMPLOYER.value] is not None
+        else entities[st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value]
+    )
     item['centre'] = (entities[st_cvn.FC_ENTITY.CENTRE.value]
                       if entities[st_cvn.FC_ENTITY.CENTRE.value] is not None
                       else entities[st_cvn.FC_ENTITY.CURRENT_CENTRE.value])
@@ -58,12 +60,14 @@ def parse_cvnitem_scientificexp_agreement(node):
 
 def parse_cvnitem_scientificact_production(node):
     pids = parse_produccion_id(node.findall('ExternalPK'))
-    item = {'titulo': parse_title(node),
-            'autores': parse_authors(node.findall('Author')),
-            'fecha': parse_date(node.find('Date')),
-            'issn': pids[st_cvn.PRODUCCION_ID_CODE['ISSN']],
-            'isbn': pids[st_cvn.PRODUCCION_ID_CODE['ISBN']],
-            'deposito_legal': pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]}
+    item = {
+        'titulo': parse_title(node),
+        'autores': parse_authors(node.findall('Author')),
+        'fecha': parse_date(node.find('Date')),
+        'issn': pids[st_cvn.PRODUCCION_ID_CODE['ISSN']],
+        'isbn': pids[st_cvn.PRODUCCION_ID_CODE['ISBN']],
+        'deposito_legal': pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]
+    }
     if (node.find('Link/Title/Name') and
             node.find('Link/Title/Name/Item').text):
         item[u'nombre_publicacion'] = unicode(node.find(
@@ -147,16 +151,18 @@ def parse_cvnitem_teaching_subject(node):
 
     entities = parse_entities(node.findall('Entity'))
     filters = parse_filters(node.findall('Filter'))
-    item = {'title': node.find('Title/Name/Item').text,
-            'course': node.find('Edition/Text/Item').text,
-            'qualification': node.find('Link/Title/Name/Item').text,
-            'school_year': node.find('Date/StartDate/Year/Item').text,
-            'number_credits': node.find('PhysicalDimension/Value/Item').text,
-            'university': entities[st_cvn.FC_ENTITY.UNIVERSITY.value],
-            'department': entities[st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value],
-            'faculty': entities[st_cvn.FC_ENTITY.FACULTY.value],
-            'program_type': filters[st_cvn.FC_FILTER.PROGRAM.value],
-            'subject_type': filters[st_cvn.FC_FILTER.SUBJECT.value]}
+    item = {
+        'title': node.find('Title/Name/Item').text,
+        'course': node.find('Edition/Text/Item').text,
+        'qualification': node.find('Link/Title/Name/Item').text,
+        'school_year': node.find('Date/StartDate/Year/Item').text,
+        'number_credits': node.find('PhysicalDimension/Value/Item').text,
+        'university': entities[st_cvn.FC_ENTITY.UNIVERSITY.value],
+        'department': entities[st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value],
+        'faculty': entities[st_cvn.FC_ENTITY.FACULTY.value],
+        'program_type': filters[st_cvn.FC_FILTER.PROGRAM.value],
+        'subject_type': filters[st_cvn.FC_FILTER.SUBJECT.value]
+    }
 
     professional_category = node.find('Description/Item').text
     if professional_category is not None:
