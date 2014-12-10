@@ -12,7 +12,7 @@ from models import CVN
 from statistics.models import Department
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
-import settings as st_cvn
+from cvn import settings as st_cvn
 
 
 @login_required

@@ -3,7 +3,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 from cvn.parsers.read_helpers import parse_nif
-import settings as st_cvn
+from cvn import settings as st_cvn
 
 
 def cvn_to_context(user, context):
