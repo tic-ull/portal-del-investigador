@@ -7,6 +7,7 @@ from django.template import Template, Context
 import logging
 from mailing.models import Email
 import mailing.settings as st_mail
+from mensajeria import Mensajeria
 
 logger = logging.getLogger('default')
 
@@ -18,9 +19,10 @@ def send_mail(email_code, email_to):
     content = template.render(context)
     if st.EMAIL_DEBUG:
         email_to = st_mail.EMAIL_DEBUG_ADDRESS
-    msg = EmailMessage(subject=email.title, body=content, to=[email_to])
-    msg.content_subtype = "html"  # Main content is now text/html
-    try:
-        msg.send()
-    except SMTPRecipientsRefused as e:
-        logger.error(str(e))
+    m = Mensajeria(username=st_mail.MENSAJERIA_USERNAME,
+                   password=st_mail.MENSAJERIA_PASSWORD,
+                   sender_id=st_mail.EMAIL_SENDER_NAME)
+    m.send_email(to=email_to,
+                 subject=email.title,
+                 body=content,
+                 input_html=True)

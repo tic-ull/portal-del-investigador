@@ -30,3 +30,5 @@ pyvirtualdisplay
 gevent
 greenlet
 django-modeltranslation
+markdown
+-e git+git@gitlab.stic.ull.es:gestion/mensajeria#egg=mensajeria
