@@ -1,8 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
 from django.conf import settings as st
-from django.core.mail import EmailMessage
-from smtplib import SMTPRecipientsRefused
 from django.template import Template, Context
 import logging
 from mailing.models import Email
