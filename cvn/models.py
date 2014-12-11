@@ -208,17 +208,20 @@ class CVN(models.Model):
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):
+        filename = None
+        cvn_old = None
         try:
             cvn_old = cls.objects.get(user_profile=user_profile)
-            cvn_old.remove()
+            filename = cvn_old.remove()
         except ObjectDoesNotExist:
             pass
+        return cvn_old, filename
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
-        self._backup_pdf()
         if self.xml_file:
             self.xml_file.delete()      # Remove xml file
+        return self._backup_pdf()
 
     def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
@@ -234,6 +237,7 @@ class CVN(models.Model):
             file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
         except IOError:
             pass
+        return old_cvn_file
 
     def remove_producciones(self):
         Articulo.remove_by_userprofile(self.user_profile)
@@ -855,3 +859,23 @@ class Patente(models.Model):
     class Meta:
         verbose_name_plural = _(u'Propiedades Intelectuales')
         ordering = ['-fecha', 'titulo']
+
+
+class OldCvnPdf(models.Model):
+
+    user_profile = models.ForeignKey(UserProfile)
+
+    cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.OLD_ROOT)
+
+    uploaded_at = models.DateField(_(u'Fecha de subida'))
+
+    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
+    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    def __unicode__(self):
+        return "%s" % self.cvn_file
+
+    class Meta:
+        verbose_name_plural = _(u'Histórico CVN')
+        ordering = ['-uploaded_at']

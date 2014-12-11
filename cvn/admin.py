@@ -2,7 +2,7 @@
 
 from forms import UploadCVNForm
 from models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
-                    Libro, CVN, Capitulo, Patente)
+                    Libro, CVN, Capitulo, Patente, OldCvnPdf)
 from core.models import UserProfile
 from django.contrib import admin
 
@@ -60,6 +60,23 @@ class ProductionAdmin(admin.ModelAdmin):
     ordering = ('created_at',)
 
 
+class OldCVNAdmin(admin.ModelAdmin):
+    model = OldCvnPdf
+    list_display = (
+        'cvn_file', 'user_profile', 'uploaded_at', 'created_at', )
+    list_filter = ('user_profile', 'uploaded_at', )
+    search_fields = (
+        'user_profile__user__username',
+        'user_profile__documento',
+        'user_profile__rrhh_code',
+        'user_profile__user__first_name',
+        'user_profile__user__last_name'
+    )
+    ordering = ('-created_at', )
+
+
+
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(CVN, CVNAdmin)
 admin.site.register(Articulo, ProductionAdmin)
@@ -70,3 +87,4 @@ admin.site.register(Congreso, ProductionAdmin)
 admin.site.register(Proyecto, ProductionAdmin)
 admin.site.register(Convenio, ProductionAdmin)
 admin.site.register(Patente, ProductionAdmin)
+admin.site.register(OldCvnPdf, OldCVNAdmin)
