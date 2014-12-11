@@ -124,7 +124,7 @@ class CVN(models.Model):
     def update_from_pdf(self, pdf, commit=True):
         CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
-            'CVN-' + self.user_profile.user.username, pdf,
+            'CVN-' + self.user_profile.documento, pdf,
             content_type=st_cvn.PDF)
         (xml, error) = FECYT.pdf2xml(self.cvn_file)
         self.update_fields(xml, commit)
@@ -135,7 +135,7 @@ class CVN(models.Model):
             self.update_from_pdf(pdf, commit)
 
     def update_fields(self, xml, commit=True):
-        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
+        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.documento
         self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
                            ContentFile(xml), save=False)
         tree_xml = etree.XML(xml)
