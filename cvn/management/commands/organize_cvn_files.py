@@ -15,7 +15,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         for cvn in CVN.objects.all():
             try:
-                commit = False
                 pdf_name = u'%s/CVN-%s.pdf' % (
                     st_cvn.PDF_ROOT, cvn.user_profile.documento)
                 new_pdf_path = os.path.join(
@@ -24,7 +23,6 @@ class Command(BaseCommand):
                     file_move_safe(
                         cvn.cvn_file.path, new_pdf_path, allow_overwrite=True)
                     cvn.cvn_file.name = pdf_name
-                    commit = True
 
                 xml_name = u'%s/CVN-%s.xml' % (
                     st_cvn.XML_ROOT, cvn.user_profile.documento)
@@ -34,13 +32,10 @@ class Command(BaseCommand):
                     file_move_safe(
                         cvn.xml_file.path, new_xml_path, allow_overwrite=True)
                     cvn.xml_file.name = xml_name
-                    commit = True
 
-                if commit:
-                    cvn.save()
+                cvn.save()
 
             except Exception as e:
-                import pdb; pdb.set_trace()
                 print 'User: %s - CVN: %s' % (
                     cvn.user_profile.user, cvn.cvn_file)
                 print '%s (%s)' % (e.message, type(e))
