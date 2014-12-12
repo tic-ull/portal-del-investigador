@@ -12,7 +12,7 @@ class CVNAdmin(admin.ModelAdmin):
     form = UploadCVNForm
     list_display = (
         'cvn_file', 'user_profile', 'fecha', 'status', 'xml_file',
-        'updated_at', 'is_inserted', )
+        'uploaded_at', 'updated_at', 'is_inserted', )
     list_filter = ('status', 'is_inserted', )
     search_fields = (
         'user_profile__user__username',
