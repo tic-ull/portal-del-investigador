@@ -49,7 +49,7 @@ class UploadCVNForm(forms.ModelForm):
                       cvn_file=SimpleUploadedFile(old_cvn_file.split('/')[-1],
                                                   open(old_cvn_file).read(),
                                                   content_type=st_cvn.PDF),
-                      uploaded_at=cvn_old.fecha).save()
+                      uploaded_at=cvn_old.uploaded_at).save()
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.user_profile = self.user.profile
         cvn.update_fields(self.xml, commit)
