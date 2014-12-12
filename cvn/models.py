@@ -15,6 +15,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
 from managers import CongresoManager, ScientificExpManager, CvnItemManager
+from .helpers import get_cvn_path
 
 import base64
 import datetime
@@ -88,9 +89,9 @@ class FECYT:
 
 class CVN(models.Model):
 
-    cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.PDF_ROOT)
+    cvn_file = models.FileField(_(u'PDF'), upload_to=get_cvn_path)
 
-    xml_file = models.FileField(_(u'XML'), upload_to=st_cvn.XML_ROOT)
+    xml_file = models.FileField(_(u'XML'), upload_to=get_cvn_path)
 
     fecha = models.DateField(_(u'Fecha del CVN'))
 
