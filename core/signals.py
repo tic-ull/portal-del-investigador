@@ -1,25 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
-from models import UserProfile
 from crequest.middleware import CrequestMiddleware
-from django.contrib.auth.models import User
 from django.contrib.auth.signals import user_logged_in
-from django.db.models.signals import post_save
 from statistics.models import Department
-
-
-def create_profile(sender, instance, created, **kwargs):
-    if not created:
-        return
-    request = CrequestMiddleware.get_request()
-    if (request and 'attributes' in request.session
-            and 'NumDocumento' in request.session['attributes']):
-        documento = request.session['attributes']['NumDocumento']
-        profile = UserProfile.objects.create(
-            user=instance, documento=documento)
-        profile.update_rrhh_code()
-
-post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 
 
 def update_personal_data(request, user):
