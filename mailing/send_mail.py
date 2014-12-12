@@ -12,6 +12,8 @@ logger = logging.getLogger('default')
 
 def send_mail(email_code, email_to):
     email = Email.objects.get(entry_type=email_code.value)
+    if not email.title or not email.content:
+        return
     template = Template(email.content)
     context = Context({})
     content = template.render(context)
