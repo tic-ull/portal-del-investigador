@@ -1,8 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as st_cvn
 from iso3166 import countries
 import datetime
-import settings as st_cvn
 import string
 
 
@@ -53,8 +53,7 @@ def _parse_unitary_date(xml):
 def _enddate_to_duration(node, fecha_inicio):
     duration = None
     fecha_fin = _parse_segregated_date(node)
-    if (fecha_inicio is not None and
-            fecha_fin is not None):
+    if fecha_inicio is not None and fecha_fin is not None:
         delta = fecha_fin - fecha_inicio
         duration = delta.days
     return fecha_fin, duration
@@ -62,10 +61,8 @@ def _enddate_to_duration(node, fecha_inicio):
 
 def _duration_to_enddate(node, fecha_inicio):
     duration = _parse_duration(node)
-    if (fecha_inicio is not None and
-            duration is not None):
-        fecha_fin = (fecha_inicio +
-                     datetime.timedelta(days=duration))
+    if fecha_inicio is not None and duration is not None:
+        fecha_fin = (fecha_inicio + datetime.timedelta(days=duration))
         return fecha_fin, duration
     return None, None
 
@@ -175,20 +172,20 @@ def parse_produccion_subtype(xml):
     return ''
 
 
-def parse_publicacion_location(tree_xml):
+def parse_publicacion_location(xml):
     """Input: Location node"""
     data = {}
-    if tree_xml:
-        volume = tree_xml.find('Volume/Item')
+    if xml:
+        volume = xml.find('Volume/Item')
         if volume is not None and volume.text is not None:
             data['volumen'] = volume.text.strip()
-        number = tree_xml.find('Number/Item')
+        number = xml.find('Number/Item')
         if number is not None and number.text is not None:
             data['numero'] = number.text.strip()
-        page = tree_xml.find('InitialPage/Item')
+        page = xml.find('InitialPage/Item')
         if page is not None and page.text is not None:
             data['pagina_inicial'] = page.text.strip()
-        page = tree_xml.find('FinalPage/Item')
+        page = xml.find('FinalPage/Item')
         if page is not None and page.text is not None:
             data['pagina_final'] = page.text.strip()
     return data
@@ -241,16 +238,17 @@ def parse_date_interval(xml):
     return fecha_inicio, fecha_fin, duracion
 
 
-def parse_produccion_id(id_list, code_type):
-    """Input: id_list is a list of ExternalPK nodes (ExternalPK nodes contain
-       different identifiers for produccion nodes. code_type is what
-       type of id you want to get: ISSN, ISBN, etc. (PRODUCCION_ID_CODE)
+def parse_produccion_id(node_list):
+    """Input: node_list is a list of ExternalPK nodes (ExternalPK nodes contain
+       different identifiers for produccion nodes.
+       Output: A dictionary with the PRODUCCION_ID_CODEs found
     """
-    for node in id_list:
-        if node.find('Type/Item').text != code_type:
-            continue
-        return node.find('Code/Item').text
-    return None
+    prods = {i: None for i in st_cvn.PRODUCCION_ID_CODE.values()}
+
+    for node in node_list:
+        prods[node.find('Type/Item').text] = node.find('Code/Item').text
+
+    return prods
 
 
 def parse_economic(node_list):
@@ -281,12 +279,43 @@ def parse_places(node_list):
 
 
 def parse_entities(node_list):
-    main_entity = None
-    extended_entities = u""
+    operators = u""
+    entities = {i.value: None for i in st_cvn.FC_ENTITY}
     for item in node_list:
-        entity_name = item.find("EntityName")
-        if entity_name.attrib['code'] == st_cvn.FC_ENTITY_OWNER:
-            main_entity = entity_name.find("Item").text
-        elif entity_name.attrib['code'] == st_cvn.FC_ENITITY_OPERATOR:
-            extended_entities += entity_name.find("Item").text + "; "
-    return main_entity, extended_entities.strip('; ')
+        entity = item.find("EntityName")
+        # Most entities come once, so we just save the content to a dict key
+        if entity.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
+            entities[entity.attrib['code']] = entity.find("Item").text
+        # The entity operator (an entity that operates a patent) can come
+        # more than once, so we concatenate the occurrence.
+        else:
+            operators += entity.find("Item").text + "; "
+    if operators:
+        entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
+    return entities
+
+
+def parse_dedication_type(node):
+    if node is not None:
+        return (st_cvn.FC_DEDICATION_TYPE(node.text)
+                == st_cvn.FC_DEDICATION_TYPE.TOTAL)
+    else:
+        return None
+
+
+def parse_filters(node_list):
+    filters = {i.value: None for i in st_cvn.FC_FILTER}
+    for item in node_list:
+        filter_name = item.find("Value")
+        data = filter_name.find("Item").text
+        filters[filter_name.attrib['code']] = data
+        if data == 'OTHERS':
+            filters[filter_name.attrib['code']] = item.find("Others/Item").text
+        else:  # Get the key of corresponding hash
+            dict = st_cvn.FC_SUBJECT_TYPE
+            if filter_name.attrib['code'] == st_cvn.FC_FILTER.PROGRAM.value:
+                dict = st_cvn.FC_PROGRAM_TYPE
+            filters[filter_name.attrib['code']] = dict.keys()[
+                dict.values().index(unicode(data))]
+
+    return filters

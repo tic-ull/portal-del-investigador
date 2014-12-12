@@ -12,7 +12,7 @@ from models import CVN
 from statistics.models import Department
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
-import settings as st_cvn
+from cvn import settings as st_cvn
 
 
 @login_required
@@ -67,7 +67,7 @@ def download_cvn(request):
 @staff_member_required
 def ull_report(request):
     context = {}
-    user = User.objects.get(username='GesInv-ULL')
+    user = User.objects.using('historica').get(username='GesInv-ULL')
     scientific_production_to_context(user.profile, context)
     try:
         context['report_date'] = user.profile.cvn.fecha.year - 1

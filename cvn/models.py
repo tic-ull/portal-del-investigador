@@ -3,24 +3,27 @@
 from core import settings as st_core
 from core.models import UserProfile, Log
 from mailing.send_mail import send_mail
+from cvn import settings as st_cvn
+from cvn.parsers.read_helpers import (parse_produccion_type, parse_date,
+                                      parse_produccion_subtype, parse_nif)
+from cvn.parsers.write import CvnXmlWriter
 from django.conf import settings as st
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.base import ContentFile
 from django.core.files.move import file_move_safe
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import mailing.settings as st_mail
 from lxml import etree
-from managers import (PublicacionManager, CongresoManager, ProyectoManager,
-                      ConvenioManager, TesisDoctoralManager, PatenteManager)
-from parser_helpers import (parse_produccion_type, parse_produccion_subtype,
-                            parse_nif)
+from managers import CongresoManager, ScientificExpManager, CvnItemManager
+
 import base64
 import datetime
 import logging
 import os
-import settings as st_cvn
 import suds
 import sys
-
 
 logger = logging.getLogger('cvn')
 
@@ -40,28 +43,49 @@ class FECYT:
         return getattr(sys.modules[__name__], code)
 
     @staticmethod
-    def getXML(file_pdf):
+    def pdf2xml(cvn_file):
         try:
-            data_pdf = base64.encodestring(file_pdf.read())
+            if cvn_file.closed:
+                cvn_file.open()
+            content = base64.encodestring(cvn_file.read())
         except IOError:
             logger.error(u'No existe el fichero o directorio:' +
-                         u' %s' % file_pdf.name)
+                         u' %s' % cvn_file.name)
             return False
         # Web Service - FECYT
-        client_ws = suds.client.Client(st_cvn.URL_WS)
+        client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
         try:
             result_xml = client_ws.service.cvnPdf2Xml(
-                st_cvn.USER_WS, st_cvn.PASSWD_WS, data_pdf)
+                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, content)
         except:
             logger.warning(
                 u'No hay respuesta del WS' +
                 u' de la FECYT para el fichero' +
-                u' %s' % file_pdf.name)
+                u' %s' % cvn_file.name)
             return False, 1
         # Format CVN-XML of FECYT
         if result_xml.errorCode == 0:
             return base64.decodestring(result_xml.cvnXml), 0
         return False, result_xml.errorCode
+
+    @staticmethod
+    def xml2pdf(xml):
+        content = xml.decode('utf8')
+        # Web Service - FECYT
+        client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
+        try:
+            pdf = client_ws.service.crearPDFBean(
+                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT,
+                st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
+        except UnicodeDecodeError as e:
+            logger.error(e.message)
+            return None
+        if pdf.returnCode == '01':
+            xml_error = base64.decodestring(pdf.dataHandler)
+            logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u'\n' +
+                         xml_error.decode('iso-8859-10'))
+            return None
+        return base64.decodestring(pdf.dataHandler)
 
 
 class CVN(models.Model):
@@ -76,17 +100,128 @@ class CVN(models.Model):
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
+    uploaded_at = models.DateTimeField(_(u'PDF Subido'),
+                                       default=datetime.datetime.now())
+
     user_profile = models.OneToOneField(UserProfile)
 
     status = models.IntegerField(_(u'Estado'), choices=st_cvn.CVN_STATUS)
 
     is_inserted = models.BooleanField(_(u'Insertado'), default=False)
 
-    class Meta:
-        verbose_name_plural = _(u'Currículum Vitae Normalizado')
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        pdf_path = kwargs.pop('pdf_path', None)
+        pdf = kwargs.pop('pdf', None)
 
-    def __unicode__(self):
-        return '%s ' % self.cvn_file.name.split('/')[-1]
+        super(CVN, self).__init__(*args, **kwargs)
+
+        if user:
+            self.user_profile = user.profile
+
+        if pdf_path:
+            pdf_file = open(pdf_path)
+            pdf = pdf_file.read()
+
+        if pdf and user:
+            self.update_from_pdf(pdf, commit=False)
+
+    def update_from_pdf(self, pdf, commit=True):
+        CVN.remove_cvn_by_userprofile(self.user_profile)
+        self.cvn_file = SimpleUploadedFile(
+            'CVN-' + self.user_profile.user.username, pdf,
+            content_type=st_cvn.PDF)
+        (xml, error) = FECYT.pdf2xml(self.cvn_file)
+        self.update_fields(xml, commit)
+
+    def update_from_xml(self, xml, commit=True):
+        pdf = FECYT.xml2pdf(xml)
+        if pdf:
+            self.update_from_pdf(pdf, commit)
+
+    def update_fields(self, xml, commit=True):
+        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
+        self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
+                           ContentFile(xml), save=False)
+        tree_xml = etree.XML(xml)
+        self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
+        self.is_inserted = False
+        self.uploaded_at = datetime.datetime.now()
+        self.update_status(commit)
+        self.xml_file.close()
+        if commit:
+            self.save()
+
+    def update_status(self, commit=True):
+        status = self.status
+        if not self._is_valid_identity():
+            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
+        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
+            self.status = st_cvn.CVNStatus.EXPIRED
+        else:
+            self.status = st_cvn.CVNStatus.UPDATED
+        if self.status != status and commit:
+            self.save()
+            Log.objects.create(
+                user_profile=self.user_profile,
+                application=self._meta.app_label.upper(),
+                entry_type=st_core.LogType.CVN_STATUS,
+                date=datetime.datetime.now(),
+                message=st_cvn.CVN_STATUS[self.status][1]
+            )
+            if self.status == st_cvn.CVNStatus.EXPIRED:
+                send_mail(email_code=st_mail.MailType.EXPIRED,
+                          email_to=self.user_profile.user.email)
+
+    def _is_valid_identity(self):
+        try:
+            if self.xml_file.closed:
+                self.xml_file.open()
+        except IOError:
+            return False
+        xml_tree = etree.parse(self.xml_file)
+        self.xml_file.seek(0)
+        nif = parse_nif(xml_tree)
+        self.xml_file.close()
+        for character in [' ', '-']:
+            if character in nif:
+                nif = nif.replace(character, '')
+        if nif.upper() == self.user_profile.documento.upper():
+            return True
+        # NIF/NIE without final letter
+        if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
+            return True
+        return False
+
+    @staticmethod
+    def create(user, xml=None):
+        if not xml:
+            parser = CvnXmlWriter(user=user)
+            # TODO: insert ull info
+            xml = parser.tostring()
+        pdf = FECYT.xml2pdf(xml)
+        if pdf is None:
+            return None
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.save()
+        return cvn
+
+    def upgrade(self):
+        if self.xml_file.closed:
+            self.xml_file.open()
+        self.xml_file.seek(0)
+        parser = CvnXmlWriter(user=self.user_profile.user,
+                              xml=self.xml_file.read())
+        # TODO: insert ull info
+        self.update_from_xml(parser.tostring())
+
+    @classmethod
+    def remove_cvn_by_userprofile(cls, user_profile):
+        try:
+            cvn_old = cls.objects.get(user_profile=user_profile)
+            cvn_old.remove()
+        except ObjectDoesNotExist:
+            pass
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
@@ -104,7 +239,20 @@ class CVN(models.Model):
         old_cvn_file = os.path.join(old_path, new_file_name)
         if not os.path.isdir(old_path):
             os.makedirs(old_path)
-        file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        try:
+            file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+        except IOError:
+            pass
+
+    def remove_producciones(self):
+        Articulo.remove_by_userprofile(self.user_profile)
+        Libro.remove_by_userprofile(self.user_profile)
+        Capitulo.remove_by_userprofile(self.user_profile)
+        Congreso.remove_by_userprofile(self.user_profile)
+        Proyecto.remove_by_userprofile(self.user_profile)
+        Convenio.remove_by_userprofile(self.user_profile)
+        TesisDoctoral.remove_by_userprofile(self.user_profile)
+        Patente.remove_by_userprofile(self.user_profile)
 
     def insert_xml(self):
         try:
@@ -122,16 +270,6 @@ class CVN(models.Model):
             else:
                 logger.warning(u'Se requiere de un fichero CVN-XML')
 
-    def remove_producciones(self):
-        Articulo.removeByUserProfile(self.user_profile)
-        Libro.removeByUserProfile(self.user_profile)
-        Capitulo.removeByUserProfile(self.user_profile)
-        Congreso.objects.removeByUserProfile(self.user_profile)
-        Proyecto.objects.removeByUserProfile(self.user_profile)
-        Convenio.objects.removeByUserProfile(self.user_profile)
-        TesisDoctoral.objects.removeByUserProfile(self.user_profile)
-        Patente.objects.removeByUserProfile(self.user_profile)
-
     def _parse_cvn_items(self, cvn_items):
         for CVNItem in cvn_items:
             code = parse_produccion_type(CVNItem)
@@ -141,45 +279,11 @@ class CVN(models.Model):
                 continue
             produccion.objects.create(CVNItem, self.user_profile)
 
-    def _is_valid_identity(self):
-        try:
-            if self.xml_file.closed:
-                self.xml_file.open()
-        except IOError:
-            return False
-        xml_tree = etree.parse(self.xml_file)
-        self.xml_file.seek(0)
-        nif = parse_nif(xml_tree)
-        self.xml_file.close()
-        if nif.upper() == self.user_profile.documento.upper():
-            return True
-        if len(nif) == 8 and nif == self.user_profile.documento[:-1]:
-            return True
-        return False
+    def __unicode__(self):
+        return '%s ' % self.cvn_file.name.split('/')[-1]
 
-    def update_status(self):
-        if not self._is_valid_identity():
-            status = st_cvn.CVNStatus.INVALID_IDENTITY
-        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
-            status = st_cvn.CVNStatus.EXPIRED
-        else:
-            status = st_cvn.CVNStatus.UPDATED
-        if self.status != status:
-            self.status = status
-            self.save()
-
-            if self.status == st_cvn.CVNStatus.EXPIRED:
-                send_mail(
-                    email_code=st_mail.MailType.EXPIRED,
-                    email_to=self.user_profile.user.email)
-
-            Log.objects.create(
-                user_profile=self.user_profile,
-                application=self._meta.app_label.upper(),
-                entry_type=st_core.LogType.CVN_STATUS,
-                date=datetime.datetime.now(),
-                message=st_cvn.CVN_STATUS[self.status][1]
-            )
+    class Meta:
+        verbose_name_plural = _(u'Currículum Vitae Normalizado')
 
 
 class Publicacion(models.Model):
@@ -275,13 +379,13 @@ class Publicacion(models.Model):
 
 class Articulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.articulo_set.remove(
             *user_profile.articulo_set.all())
-        Articulo.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Artículos')
@@ -289,13 +393,13 @@ class Articulo(Publicacion):
 
 class Libro(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.libro_set.remove(
             *user_profile.libro_set.all())
-        Libro.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Libros')
@@ -303,13 +407,13 @@ class Libro(Publicacion):
 
 class Capitulo(Publicacion):
 
-    objects = PublicacionManager()
+    objects = CvnItemManager()
 
-    @staticmethod
-    def removeByUserProfile(user_profile):
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
         user_profile.capitulo_set.remove(
             *user_profile.capitulo_set.all())
-        Capitulo.objects.filter(user_profile__isnull=True).delete()
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     class Meta:
         verbose_name_plural = _(u'Capítulos de Libros')
@@ -406,6 +510,12 @@ class Congreso(models.Model):
     #                                        max_length=500,
     #                                        blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.congreso_set.remove(
+            *user_profile.congreso_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return "%s" % self.titulo
 
@@ -419,7 +529,7 @@ class Proyecto(models.Model):
         https://cvn.fecyt.es/editor/cvn.html?locale\
         =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDIComp
     """
-    objects = ProyectoManager()
+    objects = ScientificExpManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -519,6 +629,12 @@ class Proyecto(models.Model):
     #     max_length=2048, blank=True, null=True
     # )
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.proyecto_set.remove(
+            *user_profile.proyecto_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return u'%s' % self.titulo
 
@@ -532,7 +648,7 @@ class Convenio(models.Model):
     https://cvn.fecyt.es/editor/cvn.html?locale\
     =spa#EXPERIENCIA_CIENTIFICA_dataGridProyIDINoComp
     """
-    objects = ConvenioManager()
+    objects = ScientificExpManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -627,6 +743,12 @@ class Convenio(models.Model):
     # palabras_clave = models.CharField(_(u'Describir con palabras clave'),
     #                                   max_length=500, blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.convenio_set.remove(
+            *user_profile.convenio_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return u'%s' % self.titulo
 
@@ -639,7 +761,7 @@ class TesisDoctoral(models.Model):
     """
         https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE
     """
-    objects = TesisDoctoralManager()
+    objects = CvnItemManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -686,6 +808,12 @@ class TesisDoctoral(models.Model):
     #                                          max_length=500,
     #                                          blank=True, null=True)
 
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.tesisdoctoral_set.remove(
+            *user_profile.tesisdoctoral_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
+
     def __unicode__(self):
         return "%s" % self.titulo
 
@@ -698,7 +826,7 @@ class Patente(models.Model):
     """
     https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA
     """
-    objects = PatenteManager()
+    objects = CvnItemManager()
 
     user_profile = models.ManyToManyField(UserProfile, blank=True, null=True)
 
@@ -723,6 +851,12 @@ class Patente(models.Model):
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    @classmethod
+    def remove_by_userprofile(cls, user_profile):
+        user_profile.patente_set.remove(
+            *user_profile.patente_set.all())
+        cls.objects.filter(user_profile__isnull=True).delete()
 
     def __unicode__(self):
         return "%s" % self.titulo

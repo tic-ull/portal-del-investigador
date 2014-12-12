@@ -15,12 +15,9 @@ def create_profile(sender, instance, created, **kwargs):
     if (request and 'attributes' in request.session
             and 'NumDocumento' in request.session['attributes']):
         documento = request.session['attributes']['NumDocumento']
-        profile = UserProfile.objects.create(user=instance, documento=documento)
+        profile = UserProfile.objects.create(
+            user=instance, documento=documento)
         profile.update_rrhh_code()
-    else:
-        # Django-cas makes sure documento exists before creating the user
-        # This should only happen with users created in testing (user factory)
-        UserProfile.objects.create(user=instance)
 
 post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 

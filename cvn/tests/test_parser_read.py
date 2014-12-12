@@ -1,12 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
-from django.test import TestCase
-import os
-from cvn.parser_helpers import (parse_date, parse_date_interval,
-                                parse_produccion_id, parse_places)
 from cvn import settings as st_cvn
+from cvn.parsers.read import (parse_date, parse_date_interval,
+                              parse_produccion_id, parse_places)
+from django.test import TestCase
 from lxml import etree
+
 import datetime
+import os
 
 
 class ParserTestCase(TestCase):
@@ -87,12 +88,11 @@ class ParserTestCase(TestCase):
         xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
                                             'xml/externalpks.xml'))
         ids = etree.parse(xml_externalpks).findall('ExternalPK')
-        issn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISSN'])
-        isbn = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE['ISBN'])
-        financiadora = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
-            'FINANCIADORA'])
-        deposito_legal = parse_produccion_id(ids, st_cvn.PRODUCCION_ID_CODE[
-            'DEPOSITO_LEGAL'])
+        pids = parse_produccion_id(ids)
+        issn = pids[st_cvn.PRODUCCION_ID_CODE['ISSN']]
+        isbn = pids[st_cvn.PRODUCCION_ID_CODE['ISBN']]
+        financiadora = pids[st_cvn.PRODUCCION_ID_CODE['FINANCIADORA']]
+        deposito_legal = pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]
         self.assertEqual(issn, '0395-2037')
         self.assertEqual(isbn, '1-56619-909-1')
         self.assertEqual(financiadora, 'Cod. segun financiadora')

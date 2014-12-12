@@ -1,0 +1,106 @@
+<CvnItem>
+  <CvnItemID>
+    <CVNPK>
+      <Item>030.010.000.000</Item>
+    </CVNPK>
+    <CodeCVNItem>
+      <Item>040</Item>
+    </CodeCVNItem>
+    <ExperienceType>
+      <Item>000</Item>
+    </ExperienceType>
+    <ResultType>
+      <Item>010</Item>
+    </ResultType>
+  </CvnItemID>
+  <Title>
+    <Name code="030.010.000.160">
+      <Item>%(subject)s</Item>
+    </Name>
+    <Type>000</Type>
+    <Category>OTHERS</Category>
+  </Title>
+  <Description code="030.010.000.270">
+    <Item>%(professional_category)s</Item>
+  </Description>
+  <Filter>
+    <Type code="030.010.000.140">
+      <Item>100</Item>
+    </Type>
+    <Value code="030.010.000.140">
+      <Item>%(program_type)s</Item>
+    </Value>
+    <Others code="030.010.000.150">
+      <Item>%(program_others)s</Item>
+    </Others>
+  </Filter>
+  <Filter>
+    <Type code="030.010.000.190">
+      <Item>070</Item>
+    </Type>
+    <Value code="030.010.000.190">
+      <Item>%(subject_type)s</Item>
+    </Value>
+    <Others code="030.010.000.430">
+      <Item>%(subject_others)s</Item>
+    </Others>
+  </Filter>
+  <Edition>
+    <Text code="030.010.000.200">
+      <Item>%(course)s</Item>
+    </Text>
+    <Type code="030.010.000.200">
+      <Item>000</Item>
+    </Type>
+  </Edition>
+  <Link>
+    <CvnItemID>
+      <CodeCVNItem>
+        <Item>000</Item>
+      </CodeCVNItem>
+    </CvnItemID>
+    <Title>
+      <Name code="030.010.000.020">
+        <Item>%(qualification)s</Item>
+      </Name>
+      <Identification code="030.010.000.020">
+        <Item>OTHERS</Item>
+      </Identification>
+      <Type>010</Type>
+      <Category>000</Category>
+    </Title>
+  </Link>
+  <Entity>
+    <EntityName code="030.010.000.080">
+      <Item>%(university)s</Item>
+     </EntityName>
+  </Entity>
+  <Entity>
+    <EntityName code="030.010.000.130">
+      <Item>%(department)s</Item>
+    </EntityName>
+  </Entity>
+  <Entity>
+    <EntityName code="030.010.000.540">
+      <Item>%(faculty)s</Item>
+    </EntityName>
+  </Entity>
+  <Date>
+    <Moment>
+      <Item>OTHERS</Item>
+    </Moment>
+    <StartDate>
+      <Year code="030.010.000.550">
+        <Item>%(school_year)s</Item>
+      </Year>
+    </StartDate>
+  </Date>
+  <PhysicalDimension>
+    <Value code="030.010.000.220">
+      <Item>%(number_credits)s</Item>
+    </Value>
+    <Type code="030.010.000.210">
+      <Item>000</Item>
+    </Type>
+  </PhysicalDimension>
+</CvnItem>

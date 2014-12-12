@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:CVN xsi:schemaLocation="http://cv.normalizado.org/cvn CVN.xsd" xmlns:tns="http://cv.normalizado.org/cvn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Version>
+    <VersionID>
+      <Date code="000.020.000.020">
+        <Item>%(today)s</Item>
+      </Date>
+      <CodificationVersion code="000.020.000.080">
+        <Item>%(version)s</Item>
+      </CodificationVersion>
+    </VersionID>
+  </Version>
+  <Agent>
+    <Identification>
+      <PersonalIdentification>
+        <GivenName code="000.010.000.020">
+          <Item>%(given_name)s</Item>
+        </GivenName>
+        <FirstFamilyName code="000.010.000.010">
+          <Item>%(first_family_name)s</Item>
+        </FirstFamilyName>
+        <OfficialId>
+          <%(id_type)s code="%(id_type_code)s">
+            <Item>%(official_id)s</Item>
+          </%(id_type)s>
+        </OfficialId>
+      </PersonalIdentification>
+    </Identification>
+    <Contact>
+      <InternetEmailAddress code="000.010.000.230">
+        <Item>%(internet_email_address)s</Item>
+      </InternetEmailAddress>
+    </Contact>
+  </Agent>
+</tns:CVN>

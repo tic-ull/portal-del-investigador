@@ -1,16 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as st_cvn
-from cvn.models import (CVN, Congreso, Convenio, Proyecto,
-                        TesisDoctoral, Articulo, Libro, Capitulo)
-from cvn.parser_helpers import parse_produccion_type, parse_produccion_subtype
-from core.tests.helpers import init, clean
-from django.test import TestCase
-from core.tests.factories import UserFactory
-from lxml import etree
-from cvn.forms import UploadCVNForm
-import datetime
 import os
+
+from django.test import TestCase
+
+from cvn import settings as st_cvn
+from cvn.models import CVN
+from core.tests.helpers import init, clean
+from core.tests.factories import UserFactory
 
 
 class CVNTestCase(TestCase):
@@ -28,14 +25,15 @@ class CVNTestCase(TestCase):
                              'xml/CVN-Test.xml'))
 
     def test_on_insert_cvn_old_pdf_is_moved(self):
-        u = UserFactory.create()
-        cvn = UploadCVNForm.CVN(u, os.path.join(
+        us = UserFactory.create()
+        cvn = CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+        cvn.save()
         relative_path = (
             cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
             cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
         full_path = os.path.join(st_cvn.OLD_PDF_ROOT, relative_path)
-        UploadCVNForm.CVN(u, os.path.join(
+        CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         self.assertTrue(os.path.isfile(full_path))
 
@@ -43,9 +41,23 @@ class CVNTestCase(TestCase):
         user = UserFactory.create()
         user.profile.documento = '11111111H'
         user.profile.save()
-        cvn = UploadCVNForm.CVN(user, os.path.join(
+        cvn = CVN(user=user, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-NIF-sin_letra.pdf'))
         self.assertNotEqual(cvn.status, st_cvn.CVNStatus.INVALID_IDENTITY)
+
+    def test_update_from_pdf(self):
+        us = UserFactory.create()
+        cvn = CVN(user=us)
+        pdf_file = file(os.path.join(st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+        cvn.update_from_pdf(pdf_file.read())
+        self.assertTrue(cvn.xml_file and cvn.cvn_file)
+
+    def test_update_from_xml(self):
+        us = UserFactory.create()
+        cvn = CVN(user=us)
+        xml_file = file(os.path.join(st_cvn.TEST_ROOT, 'xml/CVN-Test.xml'))
+        cvn.update_from_xml(xml_file.read())
+        self.assertTrue(cvn.xml_file and cvn.cvn_file)
 
     @classmethod
     def tearDownClass(cls):

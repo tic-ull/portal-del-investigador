@@ -1,31 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.translation import ugettext as _
 from lxml import etree
-from models import Articulo, Capitulo, Libro
-from parser_helpers import parse_nif
-import settings as st_cvn
-
-
-def scientific_production_to_context(user_profile, context):
-    try:
-        if not user_profile.cvn.is_inserted:
-            return False
-        context['Articulos'] = Articulo.objects.filter(
-            user_profile=user_profile)
-        context['Capitulos'] = Capitulo.objects.filter(
-            user_profile=user_profile)
-        context['Libros'] = Libro.objects.filter(
-            user_profile=user_profile)
-        context['Congresos'] = user_profile.congreso_set.all()
-        context['Proyectos'] = user_profile.proyecto_set.all()
-        context['Convenios'] = user_profile.convenio_set.all()
-        context['TesisDoctorales'] = user_profile.tesisdoctoral_set.all()
-        context['Patentes'] = user_profile.patente_set.all()
-        return True
-    except ObjectDoesNotExist:
-        return False
+from cvn.parsers.read_helpers import parse_nif
+from cvn import settings as st_cvn
 
 
 def cvn_to_context(user, context):
@@ -41,10 +19,25 @@ def cvn_to_context(user, context):
             user.cvn.xml_file.close()
             if nif is not '':
                 context['nif_invalid'] = nif.upper()
-            else:
-                context['nif_invalid'] = _(u'Desconocido')
     except ObjectDoesNotExist:
         return
+
+
+def scientific_production_to_context(user_profile, context):
+    try:
+        if not user_profile.cvn.is_inserted:
+            return False
+        context['Articulos'] = user_profile.articulo_set.all()
+        context['Capitulos'] = user_profile.capitulo_set.all()
+        context['Libros'] = user_profile.libro_set.all()
+        context['Congresos'] = user_profile.congreso_set.all()
+        context['Proyectos'] = user_profile.proyecto_set.all()
+        context['Convenios'] = user_profile.convenio_set.all()
+        context['TesisDoctorales'] = user_profile.tesisdoctoral_set.all()
+        context['Patentes'] = user_profile.patente_set.all()
+        return True
+    except ObjectDoesNotExist:
+        return False
 
 
 def isdigit(obj):

@@ -1,0 +1,41 @@
+<CvnItem>
+  <CvnItemID>
+    <CVNPK>
+      <Item>020.010.020.000</Item>
+    </CVNPK>
+    <CodeCVNItem>
+      <Item>000</Item>
+    </CodeCVNItem>
+    <ExperienceType>
+      <Item>010</Item>
+    </ExperienceType>
+    <ResultType>
+      <Item>010</Item>
+    </ResultType>
+  </CvnItemID>
+  <Title>
+    <Name code="020.010.020.010">
+      <Item>%(title)s</Item>
+    </Name>
+    <Identification code="020.010.020.010">
+      <Item>OTHERS</Item>
+    </Identification>
+    <Type>010</Type>
+    <Category>000</Category>
+  </Title>
+  <Entity>
+    <EntityName code="020.010.020.100">
+      <Item>%(university)s</Item>
+    </EntityName>
+  </Entity>
+  <Date>
+    <Moment>
+      <Item>030</Item>
+    </Moment>
+    <OnlyDate>
+      <DayMonthYear code="020.010.020.140">
+        <Item>%(date)s</Item>
+      </DayMonthYear>
+    </OnlyDate>
+  </Date>
+</CvnItem>

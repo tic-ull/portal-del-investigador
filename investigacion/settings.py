@@ -9,6 +9,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+RES_ROOT = os.path.join(BASE_DIR, 'res')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 # ******************************* PATHS *************************************
@@ -129,12 +130,21 @@ WSGI_APPLICATION = 'investigacion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'memviinv',
+        'NAME': 'investigacion',
         'USER': '<user>',
         'PASSWORD': '<password>',
         'HOST': '',
         'PORT': '',
     },
+    'historica': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'investigacion_historica',
+        'USER': '<user>',
+        'PASSWORD': '<password>',
+        'HOST': '',
+        'PORT': '',
+        'TEST_MIRROR': 'default',
+    }
 }
 
 SIGIDI_DB = {
@@ -217,20 +227,23 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'handlers': ['request_handler'],
+            'handlers': ['request_handler', 'mail_admins'],
             'level': 'ERROR',
             'propagate': False,
         },
         'default': {
             'handlers': ['default', 'mail_admins'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'cvn': {
-            'handlers': ['default'],
+            'handlers': ['default', 'mail_admins'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'cvn.management.commands.find_pairs': {
-            'handlers': ['find_pairs_handler'],
+            'handlers': ['find_pairs_handler', 'mail_admins'],
+            'level': 'DEBUG',
             'propagate': False,
         },
     }
