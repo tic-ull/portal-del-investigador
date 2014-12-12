@@ -99,6 +99,9 @@ class CVN(models.Model):
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
+    uploaded_at = models.DateTimeField(_(u'PDF Subido'),
+                                       default=datetime.datetime.now())
+
     user_profile = models.OneToOneField(UserProfile)
 
     status = models.IntegerField(_(u'Estado'), choices=st_cvn.CVN_STATUS)
@@ -142,6 +145,7 @@ class CVN(models.Model):
         tree_xml = etree.XML(xml)
         self.fecha = parse_date(tree_xml.find('Version/VersionID/Date'))
         self.is_inserted = False
+        self.uploaded_at = datetime.datetime.now()
         self.update_status(commit)
         self.xml_file.close()
         if commit:
