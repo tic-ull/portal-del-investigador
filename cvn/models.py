@@ -99,8 +99,8 @@ class CVN(models.Model):
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
-    uploaded_at = models.DateTimeField(_(u'PDF Subido'),
-                                       default=datetime.datetime.now())
+    uploaded_at = models.DateTimeField(
+        _(u'PDF Subido'), default=datetime.datetime(2014, 10, 18))
 
     user_profile = models.OneToOneField(UserProfile)
 
