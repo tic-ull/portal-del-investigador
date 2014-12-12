@@ -1,6 +1,5 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as st_cvn
 from cvn.models import CVN
 from django.conf import settings as st
 from django.core.files.move import file_move_safe
