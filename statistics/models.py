@@ -59,13 +59,14 @@ class Department(Stats):
     def get_user_department(rrhh_code):
         if rrhh_code is None:
             return None, None
+        dept_json = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_USER % rrhh_code)
+        if dept_json is None:
+            return None, None
+        dept_json = dept_json.pop()
+        if 'unidad' in dept_json and not len(dept_json['unidad']):
+            return None, None
         try:
-            dept_json = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_USER % rrhh_code)
-            if dept_json is None:
-                return None, None
-            dept_json = dept_json.pop()
-            dept = Department.objects.get(
-                code=dept_json['unidad']['codigo'])
+            dept = Department.objects.get(code=dept_json['unidad']['codigo'])
         except (KeyError, ObjectDoesNotExist):
             return None, None
         return dept, dept_json
