@@ -37,7 +37,7 @@ class UserProfile(models.Model):
                             ' Old ID = ' + user.profile.documento +
                             ' New ID = ' + documento)
 
-        return created, user
+        return user, created
 
     def update_rrhh_code(self):
         rrhh_code = ws.get(ws=(st.WS_COD_PERSONA % self.documento),
