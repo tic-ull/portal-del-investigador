@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('code', models.CharField(unique=True, max_length=100, verbose_name='Code')),
-                ('gender_equality', models.NullBooleanField(default=None, verbose_name='Igualdad de g\xe9nero')),
-                ('free_software', models.NullBooleanField(default=None, verbose_name='Software Libre')),
+                ('gender_equality', models.NullBooleanField(default=None, verbose_name='Gender equality')),
+                ('free_software', models.NullBooleanField(default=None, verbose_name='Free Software')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated')),
             ],
@@ -31,8 +31,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('code', models.CharField(unique=True, max_length=100, verbose_name='Code')),
-                ('gender_equality', models.NullBooleanField(default=None, verbose_name='Igualdad de g\xe9nero')),
-                ('free_software', models.NullBooleanField(default=None, verbose_name='Software Libre')),
+                ('gender_equality', models.NullBooleanField(default=None, verbose_name='Gender equality')),
+                ('free_software', models.NullBooleanField(default=None, verbose_name='Free Software')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated')),
             ],
