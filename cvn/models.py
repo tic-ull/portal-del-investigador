@@ -872,15 +872,15 @@ class OldCvnPdf(models.Model):
 
     cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.OLD_ROOT)
 
-    uploaded_at = models.DateTimeField(_(u'Fecha de subida'))
+    uploaded_at = models.DateTimeField(_(u'PDF Subido'))
 
     created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
     def __unicode__(self):
-        return "%s" % self.cvn_file
+        return '%s ' % self.cvn_file.name.split('/')[-1]
 
     class Meta:
-        verbose_name_plural = _(u'Histórico CVN')
+        verbose_name_plural = _(u'Histórico de Currículum Vitae Normalizado')
         ordering = ['-uploaded_at']
