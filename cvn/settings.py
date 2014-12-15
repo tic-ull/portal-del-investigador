@@ -18,8 +18,6 @@ NAME_CVN = 'CVN'
 TIPO_PLANTILLA = 'PN2008'
 
 # Paths
-PDF_ROOT = "cvn/pdf"
-XML_ROOT = "cvn/xml"
 OLD_ROOT = "cvn/old_cvn"
 OLD_PDF_ROOT = os.path.join(st.MEDIA_ROOT, "cvn/old_cvn/")  # CVN antiguos
 PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
@@ -43,10 +41,6 @@ XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
 XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
 
-# URLs
-URL_PDF = os.path.join(st.MEDIA_URL, PDF_ROOT)
-URL_XML = os.path.join(st.MEDIA_URL, XML_ROOT)
-URL_OLD_CVN = os.path.join(st.MEDIA_URL, OLD_PDF_ROOT)  # CVN antiguos
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
 
 # content-type for pdfs
