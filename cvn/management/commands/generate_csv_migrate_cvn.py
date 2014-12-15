@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.models import CVN
-from cvn.settings import MIGRATION_ROOT, PDF_ROOT
+from cvn.settings import MIGRATION_ROOT
 from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         creation_date = self.check_args(options)
-        cvn_path = os.path.join(MIGRATION_ROOT, PDF_ROOT)
+        cvn_path = os.path.join(MIGRATION_ROOT, 'cvn')
         if not os.path.isdir(cvn_path):
             os.makedirs(cvn_path)
         csv_file = csv.writer(
@@ -46,13 +46,15 @@ class Command(BaseCommand):
         for cvn in CVN.objects.filter(updated_at__gte=creation_date):
             lines += 1
             try:
-                output = MIGRATION_ROOT + '/' + cvn.cvn_file.name
+                filename = cvn.cvn_file.name.split('/')[-1]
+                pdf_path = 'cvn/' + filename
+                output = MIGRATION_ROOT + '/' + pdf_path
                 shutil.copyfile(
                     cvn.cvn_file.path, output)
                 csv_file.writerow([
                     cvn.user_profile.user.username,
                     cvn.user_profile.documento,
-                    cvn.cvn_file.name,
+                    pdf_path,
                     cvn.user_profile.user.first_name.upper().encode('utf8'),
                     cvn.user_profile.user.last_name.upper().encode('utf8')])
                 print u'[%s] Usuario: %s - CVN: %s \t \t OK' % (

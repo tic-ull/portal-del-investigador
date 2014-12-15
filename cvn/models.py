@@ -17,6 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 import mailing.settings as st_mail
 from lxml import etree
 from managers import CongresoManager, ScientificExpManager, CvnItemManager
+from .helpers import get_cvn_path
 
 import base64
 import datetime
@@ -90,9 +91,9 @@ class FECYT:
 
 class CVN(models.Model):
 
-    cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.PDF_ROOT)
+    cvn_file = models.FileField(_(u'PDF'), upload_to=get_cvn_path)
 
-    xml_file = models.FileField(_(u'XML'), upload_to=st_cvn.XML_ROOT)
+    xml_file = models.FileField(_(u'XML'), upload_to=get_cvn_path)
 
     fecha = models.DateField(_(u'Fecha del CVN'))
 
@@ -100,8 +101,8 @@ class CVN(models.Model):
 
     updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
 
-    uploaded_at = models.DateTimeField(_(u'PDF Subido'),
-                                       default=datetime.datetime.now())
+    uploaded_at = models.DateTimeField(
+        _(u'PDF Subido'), default=datetime.datetime(2014, 10, 18))
 
     user_profile = models.OneToOneField(UserProfile)
 
@@ -129,7 +130,7 @@ class CVN(models.Model):
     def update_from_pdf(self, pdf, commit=True):
         CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
-            'CVN-' + self.user_profile.user.username, pdf,
+            'CVN-' + self.user_profile.documento, pdf,
             content_type=st_cvn.PDF)
         (xml, error) = FECYT.pdf2xml(self.cvn_file)
         self.update_fields(xml, commit)
@@ -140,7 +141,7 @@ class CVN(models.Model):
             self.update_from_pdf(pdf, commit)
 
     def update_fields(self, xml, commit=True):
-        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.user.username
+        self.cvn_file.name = u'CVN-%s.pdf' % self.user_profile.documento
         self.xml_file.save(self.cvn_file.name.replace('pdf', 'xml'),
                            ContentFile(xml), save=False)
         tree_xml = etree.XML(xml)
