@@ -46,14 +46,6 @@ EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
 # content-type for pdfs
 PDF = "application/pdf"
 
-# Log configuration
-# XML fetching from FECYT
-FILE_LOG_IMPORT = os.path.join(st.PROJECT_ROOT, 'errorCVN.log')
-# CVN inserted in database app
-FILE_LOG_INSERTADOS = os.path.join(st.PROJECT_ROOT, 'cvnInsertados.log')
-# Duplicated CVN
-FILE_LOG_DUPLICADOS = os.path.join(st.PROJECT_ROOT, 'cvnDuplicados.log')
-
 # Production unique identifier type
 PRODUCCION_ID_CODE = {
     'FINANCIADORA': '000',
@@ -77,11 +69,6 @@ class FC_OFFICIAL_ID(Enum):
 
 FC_PRIORITY_COUNTRY = "050.030.010.120"
 FC_EXTENDED_COUNTRY = "050.030.010.220"
-
-
-class FC_SURNAME(Enum):
-    APELLIDO = "000.010.000.010"
-    DOCTORANDO = "030.040.000.120"
 
 
 class FC_ENTITY(Enum):
@@ -209,19 +196,19 @@ ERROR_CODES = {
     1: _(u'Error general no determinado en el servidor de la FECYT.'),
     2: _(u'El PDF no tiene XML asociado.'),
     3: _(u'El usuario con el que se pretende hacer la importación no existe '
-         'en la base de datos de la FECYT.'),
+         u'en la base de datos de la FECYT.'),
     4: _(u'Contraseña incorrecta.'),
     5: _(u'El Servicio Web no puede conectarse a la base de datos de '
-         'instituciones de la FECYT.'),
+         u'instituciones de la FECYT.'),
     6: _(u'Error no determinado durante el proceso de autentificación '
-         'con la FECYT.'),
+         u'con la FECYT.'),
     8: _(u'No se permite realizar importaciones para esta institución.'),
     10: _(u'El CvnRootBean obtenido del XML o del PDF no es válido.'),
     13: _(u'El CVN-XML no es válido.'),
     14: _(u'Fallo en la extracción del CvnRootBean desde el XML.'),
     16: _(u'El XML está vacío.'),
     17: _(u'El proceso de conversión de CvnRootBean de 1.2.5 a 1.3.0 ha '
-          'fallado.')
+          u'fallado.')
 }
 
 RETURN_CODE = {
