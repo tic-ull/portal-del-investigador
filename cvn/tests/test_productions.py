@@ -46,6 +46,20 @@ class CVNTestCase(TestCase):
         except:
             raise
 
+    def test_delete_producciones(self):
+        user = UserFactory.create()
+        cvn = CVN(user=user,pdf_path=os.path.join(
+            st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+        cvn.insert_xml()
+        cvn.remove_producciones()
+        self.assertEqual(user.profile.articulo_set.count(), 0)
+        self.assertEqual(user.profile.capitulo_set.count(), 0)
+        self.assertEqual(user.profile.congreso_set.count(), 0)
+        self.assertEqual(user.profile.convenio_set.count(), 0)
+        self.assertEqual(user.profile.libro_set.count(), 0)
+        self.assertEqual(user.profile.proyecto_set.count(), 0)
+        self.assertEqual(user.profile.tesisdoctoral_set.count(), 0)
+
     def test_number_of_articles(self):
         cvn = CVN(xml_file=self.xml_ull)
         cvn.xml_file.seek(0)
