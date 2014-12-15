@@ -11,7 +11,7 @@ from managers import StatsManager, ProfessionalCategoryManager
 
 
 class Stats(models.Model):
-    name = models.CharField(_(u'Nombre'), max_length=40, unique=True)
+    name = models.CharField(_(u'Nombre'), max_length=256, unique=True)
     code = models.CharField(_(u'Código unidad'), max_length=10)
     number_valid_cvn = models.IntegerField(_(u'CVN válidos'))
     computable_members = models.IntegerField(_(u'Miembros computables'))
@@ -45,6 +45,22 @@ class Stats(models.Model):
         if commit:
             self.save()
 
+    @classmethod
+    def get_user_unit(cls, rrhh_code, data_source):
+        if rrhh_code is None:
+            return None, None
+        unit_json = ws.get(data_source % rrhh_code)
+        if unit_json is None:
+            return None, None
+        unit_json = unit_json.pop()
+        if 'unidad' in unit_json and not len(unit_json['unidad']):
+            return None, None
+        try:
+            unit = cls.objects.get(code=unit_json['unidad']['codigo'])
+        except (KeyError, ObjectDoesNotExist):
+            return None, None
+        return unit, unit_json
+
     def __unicode__(self):
         return self.name
 
@@ -54,22 +70,7 @@ class Stats(models.Model):
 
 
 class Department(Stats):
-
-    @staticmethod
-    def get_user_department(rrhh_code):
-        if rrhh_code is None:
-            return None, None
-        dept_json = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_USER % rrhh_code)
-        if dept_json is None:
-            return None, None
-        dept_json = dept_json.pop()
-        if 'unidad' in dept_json and not len(dept_json['unidad']):
-            return None, None
-        try:
-            dept = Department.objects.get(code=dept_json['unidad']['codigo'])
-        except (KeyError, ObjectDoesNotExist):
-            return None, None
-        return dept, dept_json
+    pass
 
 
 class Area(Stats):
