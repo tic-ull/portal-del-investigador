@@ -23,12 +23,12 @@ def signal_handler(signal, frame):
     return None
 
 
-def difering_fields(obj1, obj2, EXCLUDE_FIELDS=[]):
+def difering_fields(obj1, obj2, exclude_fields=[]):
     difering = []
     tipo = type(obj1)
     fields = tipo._meta.get_all_field_names()
     for f in fields:
-        if f not in EXCLUDE_FIELDS:
+        if f not in exclude_fields:
             f1 = obj1.__getattribute__(f)
             f2 = obj2.__getattribute__(f)
             if f1 and f2 and f1 != f2:
@@ -41,36 +41,35 @@ def log_print(message):
     logger.info(message)
 
 
-def backupDatabase(username, dbname, port):
-    dbName = st.DATABASES['historica']['NAME']
-    filePath = '%s/%s.%s.gz' % (st.BACKUP_DIR, dbName,
-                                time.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
+def backup_database():
+    dbname = st.DATABASES['historica']['NAME']
+    file_path = '%s/%s.%s.gz' % (st.BACKUP_DIR, dbname,
+                                 time.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
     params = 'export PGPASSWORD=%s\npg_dump -U%s -h %s %s | gzip -9 -c > %s' \
         % (st.DATABASES['historica']['PASSWORD'],
            st.DATABASES['historica']['USER'],
            st.DATABASES['historica']['HOST'],
-           dbName, filePath)
+           dbname, file_path)
 
     if not os.path.exists(st.BACKUP_DIR):
         os.mkdir(st.BACKUP_DIR)
     proc = subprocess.Popen([params], stderr=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     if err:
-        os.remove(filePath)
+        os.remove(file_path)
     return err
 
 
-def findDup(i, registros, NAME_FIELD, LIMIT):
+def find_dup(i, registros, name_field, limit):
     duplicates = {}
     pry1 = registros[i]
     for pry2 in registros[i + 1:]:
-        pry1_name = pry1.__getattribute__(NAME_FIELD)
-        pry2_name = pry2.__getattribute__(NAME_FIELD)
+        pry1_name = pry1.__getattribute__(name_field)
+        pry2_name = pry2.__getattribute__(name_field)
         if pry1_name and pry2_name:
-            percentage, time = do_stringcmp("qgram3avrg",
-                                            pry1_name.lower(),
-                                            pry2_name.lower())
-            if percentage > LIMIT:
+            percentage = do_stringcmp(
+                "qgram3avrg", pry1_name.lower(), pry2_name.lower())[0]
+            if percentage > limit:
                 pair = tuple([pry1, pry2])
                 duplicates[pair] = percentage
     return duplicates
@@ -159,7 +158,7 @@ class Command(BaseCommand):
                 f1 = "" if f1 is None else f1
                 f2 = pry2.__getattribute__(f)
                 f2 = "" if f2 is None else f2
-                if (f1 != f2):
+                if f1 != f2:
                     log_print(unicode(f)[:self.FIELD_WIDTH - 1]
                               .ljust(self.FIELD_WIDTH)
                               + unicode(f1)[:self.COLWIDTH - 1]
@@ -168,13 +167,13 @@ class Command(BaseCommand):
                               .ljust(self.COLWIDTH))
         log_print("-" * (self.FIELD_WIDTH + 2 * self.COLWIDTH))
 
-    def checkArgs(self, options):
+    def check_args(self, options):
         if options['table'] is None:
             raise CommandError("Option `--table=...` must be specified.")
         else:
             if options['table'] in self.TABLES:
-                TABLE = self.TABLES[options['table']]
-                NAME_FIELD = self.NAME_FIELDS[options['table']]
+                table = self.TABLES[options['table']]
+                name_field = self.NAME_FIELDS[options['table']]
             else:
                 raise CommandError("\"{0}\" is not a table. Use Proyecto, " +
                                    "Convenio, Articulo, Libro, Capitulo, " +
@@ -187,19 +186,19 @@ class Command(BaseCommand):
                 self.DIFFERING_PAIRS = int(options['differing_pairs'])
             except:
                 raise CommandError("Option `--diff needs an integer 0,1,...")
-        return TABLE, NAME_FIELD
+        return table, name_field
 
-    def runQueries(self, options, TABLE):
+    def run_queries(self, options, table):
         log_print("Buscando duplicados en el modelo " +
-                  "{0}".format(TABLE.__name__))
+                  "{0}".format(table.__name__))
         if not options['year']:
-            registros = TABLE.objects.exclude(user_profile=None)
+            registros = table.objects.exclude(user_profile=None)
         else:
             self.YEAR = options['year']
             fecha_inicio_max = datetime.date(int(self.YEAR), 12, 31)
             fecha_fin_min = datetime.date(int(self.YEAR), 1, 1)
             try:
-                elements = TABLE.objects.filter(
+                elements = table.objects.filter(
                     fecha_de_inicio__lte=fecha_inicio_max
                 ).exclude(user_profile=None)
                 registros = []
@@ -211,7 +210,7 @@ class Command(BaseCommand):
                         registros.append(element)
                 return registros
             except FieldError:
-                registros = TABLE.objects.filter(
+                registros = table.objects.filter(
                     fecha__year=self.YEAR
                 ).exclude(user_profile=None)
         if options['usuario']:
@@ -222,7 +221,7 @@ class Command(BaseCommand):
                 raise CommandError('El usuario con documento "{0}" no existe'
                                    .format(usuario))
 
-            if TABLE in [Congreso, Articulo, Libro, Capitulo, Proyecto]:
+            if table in [Congreso, Articulo, Libro, Capitulo, Proyecto]:
                 registros = registros.filter(user_profile=usuario)
             else:
                 new_registros = []
@@ -233,9 +232,9 @@ class Command(BaseCommand):
         log_print("Total de registros en estudio = {0}".format(len(registros)))
         return registros
 
-    def findDuplicates(self, registros, NAME_FIELD, threads):
-        result = Parallel(n_jobs=threads)(delayed(findDup)(
-            i, registros, NAME_FIELD, self.LIMIT
+    def find_duplicates(self, registros, name_field, threads):
+        result = Parallel(n_jobs=threads)(delayed(find_dup)(
+            i, registros, name_field, self.LIMIT
         ) for i in range(0, len(registros)))
         duplicates = {}
         for i in result:
@@ -244,7 +243,7 @@ class Command(BaseCommand):
                   .format(len(duplicates), len(registros)))
         return duplicates
 
-    def mergePair(self, model_fields, pair, master, duplicates, count):
+    def merge_pair(self, model_fields, pair, master, duplicates, count):
         repeat = True
         while repeat:
             repeat = False
@@ -271,7 +270,9 @@ class Command(BaseCommand):
                         log_print(u"{0:5d}: {1}".format(pair[1].id, f2))
                         print "\n  NEW:", master_f, "\n"
                         print "--------------------------------"
-                        choice = self.choice(pair[0], pair[1])
+                        print ('Return=NEW\t1=ID1\t2=ID2\t0=Ignorar pareja'
+                               '\t-1=Reniciar\tq=save_and_abort')
+                        choice = self.get_choice()
 
                         # Salir del for => Deja de comparar registros de la
                         # pareja => break
@@ -304,49 +305,48 @@ class Command(BaseCommand):
                         log_print(u"----------")
         return master, False
 
-    def confirmDuplicates(self, sorted_pairs, TABLE, NAME_FIELD, duplicates):
+    def confirm_duplicates(self, sorted_pairs, table, name_field, duplicates):
         pairs_solved = {}
         count = 0
         for pair in sorted_pairs:
             count += 1
             difering_length = difering_fields(
-                pair[0], pair[1], self.DONT_CHECK_FIELDS + [NAME_FIELD])
+                pair[0], pair[1], self.DONT_CHECK_FIELDS + [name_field])
 
             if difering_length == self.DIFFERING_PAIRS:
-                master = TABLE()
-                model_fields = TABLE._meta.get_fields_with_model()
+                master = table()
+                model_fields = table._meta.get_fields_with_model()
                 model_fields = [
-                    field[0].get_attname() for field in model_fields
-                ]
-                master, exit = self.mergePair(model_fields, pair,
-                                              master, duplicates, count)
+                    field[0].get_attname() for field in model_fields]
+                master, stop = self.merge_pair(model_fields, pair,
+                                               master, duplicates, count)
                 if master:
                     master.save()
                     pairs_solved[(pair[0].id, pair[1].id)] = master.id
-                if exit:
+                if stop:
                     log_print("User aborted main loop...")
                     break
         return pairs_solved
 
     def handle(self, *args, **options):
-        TABLE, NAME_FIELD = self.checkArgs(options)
+        table, name_field = self.check_args(options)
         log_print("Haciendo copia de seguridad de BD")
-        error = backupDatabase('viinv', 'memviinv', '5432')
+        error = backup_database()
         if error:
             log_print(error)
         else:
             print('Realizando consultas')
-            registros = self.runQueries(options, TABLE)
+            registros = self.run_queries(options, table)
             registros = [p for p in registros]
             print('Buscando parejas de duplicados')
-            duplicates = self.findDuplicates(registros, NAME_FIELD, 2)
+            duplicates = self.find_duplicates(registros, name_field, 2)
             sorted_pairs = sorted(duplicates, key=duplicates.get, reverse=True)
             signal.signal(signal.SIGINT, signal_handler)
-            pairs_solved = self.confirmDuplicates(sorted_pairs, TABLE,
-                                                  NAME_FIELD, duplicates)
-            self.commit_changes(TABLE, pairs_solved)
+            pairs_solved = self.confirm_duplicates(sorted_pairs, table,
+                                                   name_field, duplicates)
+            self.commit_changes(table, pairs_solved)
 
-    def commit_changes(self, TABLE, pairs_solved):
+    def commit_changes(self, table, pairs_solved):
         print pairs_solved
         log_print("========================================")
         log_print(u"Número de campos diferentes " +
@@ -360,9 +360,9 @@ class Command(BaseCommand):
             log_print(u"----------")
             log_print("Cambiando usuarios de {0} y {1} a {2}"
                       .format(pair[0], pair[1], new_id))
-            master_p = TABLE.objects.get(pk=new_id)
+            master_p = table.objects.get(pk=new_id)
             for pry_id in pair:
-                p = TABLE.objects.get(pk=pry_id)
+                p = table.objects.get(pk=pry_id)
                 for u in p.user_profile.all():
                     master_p.user_profile.add(u)
                     log_print((u"Proyecto {0} [ID={1}] " +
@@ -375,11 +375,9 @@ class Command(BaseCommand):
                 p.save()
             master_p.save()
 
-    def choice(self, pry1, pry2):
-        print ('Return=NEW\t1=ID1\t2=ID2\t0=Ignorar pareja\t-1=Reniciar' +
-               '\tq=save_and_abort')
+    def get_choice(self):
         choice = None
-        while (choice not in ["", 1, 2, -1, 0, 'q']):
+        while choice not in ["", 1, 2, -1, 0, 'q']:
             choice = raw_input("? ")
             try:
                 choice = int(choice)
