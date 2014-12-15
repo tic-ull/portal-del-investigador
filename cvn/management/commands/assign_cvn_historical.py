@@ -25,33 +25,25 @@ class Command(BaseCommand):
         return user
 
     def cvn2user(self, user, cvn):
-        file_path = st_cvn.OLD_PDF_ROOT + cvn
+        filename = 'old/CVN-%s' % user.profile.documento
+        for data in cvn.split('-')[2:]:
+            filename += '-%s' % data
+        file_path = os.path.join(st_cvn.OLD_PDF_ROOT, cvn)
         old_cvn = OldCvnPdf(user_profile=user.profile,
                             cvn_file=SimpleUploadedFile(
                                 cvn,
                                 open(file_path).read(),
                                 content_type=st_cvn.PDF),
                             uploaded_at=datetime.datetime.now())
-        os.remove(file_path)
-        filename = 'CVN-%s' % user.profile.documento
-        for data in cvn.split('-')[2:]:
-            filename += '-%s' % data
-        old_cvn.cvn_file.name = st_cvn.OLD_PDF_ROOT + filename
         old_cvn.save()
-
-    def relocate_old_cvn(self):
-        for cvn in OldCvnPdf.objects.all():
-            filename = 'old/%s' % cvn.cvn_file.name.split('/')[-1]
-            new_name = get_cvn_path(cvn, filename)
-            path = os.path.join(st.MEDIA_ROOT, new_name)
-
-            root_dir = '/'.join(path.split('/')[:-1])
-            if not os.path.isdir(root_dir):
-                os.makedirs(root_dir)
-
-            file_move_safe(cvn.cvn_file.path, path, allow_overwrite=True)
-            cvn.cvn_file.name = new_name
-            cvn.save()
+        old_cvn_path = get_cvn_path(old_cvn, filename)
+        old_cvn_new_path = os.path.join(st.MEDIA_ROOT, old_cvn_path)
+        root_dir = '/'.join(old_cvn_new_path.split('/')[:-1])
+        if not os.path.isdir(root_dir):
+            os.makedirs(root_dir)
+        file_move_safe(file_path, old_cvn_new_path, allow_overwrite=True)
+        old_cvn.cvn_file.name = old_cvn_path
+        old_cvn.save()
 
     def handle(self, *args, **options):
         list_cvn = os.listdir(st_cvn.OLD_PDF_ROOT)
@@ -70,4 +62,3 @@ class Command(BaseCommand):
                 self.cvn2user(user, cvn)
             else:
                 print '%s (%s) not found' % (username, cvn)
-        self.relocate_old_cvn()
