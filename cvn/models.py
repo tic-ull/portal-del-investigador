@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from core import settings as st_core
-from core.models import UserProfile, Log
+from core.models import UserProfile
 from cvn import settings as st_cvn
 from cvn.parsers.read_helpers import (parse_produccion_type, parse_date,
                                       parse_produccion_subtype, parse_nif)
@@ -161,13 +161,6 @@ class CVN(models.Model):
             self.status = st_cvn.CVNStatus.UPDATED
         if self.status != status and commit:
             self.save()
-            Log.objects.create(
-                user_profile=self.user_profile,
-                application=self._meta.app_label.upper(),
-                entry_type=st_core.LogType.CVN_STATUS,
-                date=datetime.datetime.now(),
-                message=st_cvn.CVN_STATUS[self.status][1]
-            )
 
     def _is_valid_identity(self):
         try:
