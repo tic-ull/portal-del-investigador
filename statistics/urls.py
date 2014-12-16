@@ -11,4 +11,7 @@ urlpatterns = patterns(
     url(r'^departamentos/$', 'dept_stats', name='dept_stats'),
     url(r'^departamentos/(?P<codigo>\d+)/$', 'dept_stats_detail',
         name='dept_stats_detail'),
+    url(r'^areas/$', 'area_stats', name='area_stats'),
+    url(r'^areas/(?P<codigo>\d+)/$', 'area_stats_detail',
+        name='area_stats_detail'),
 )
