@@ -5,19 +5,19 @@
 {% load render_table from django_tables2 %}
 
 {%block breadcrumb %}
-    <li><a href='{% url 'dept_stats' %}'>{% trans 'Departamentos' %}</a></li>
-    <li><a href=''>{{ dept_nombre_corto }}</a></li>
+    <li><a href='{% url unit_url %}'>{% trans unit %}</a></li>
+    <li><a href=''>{{ nombre_corto }}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
-    <h1 class="page-header">{{ departamento }}</h1>
+    <h1 class="page-header">{{ unidad }}</h1>
 
     <div class="section">
         <ul class="nav nav-tabs header">
             <li class="active">{% trans 'Información general' %}</li>
         </ul>
 	    <div class="content">
-            {% render_table info_department "core/table.html" %}
+            {% render_table info_unit "core/table.html" %}
 	    </div>
     </div>
 
