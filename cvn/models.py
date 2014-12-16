@@ -1,11 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
-from core import settings as st_core
 from core.models import UserProfile
 from cvn import settings as st_cvn
-from cvn.parsers.read_helpers import (parse_produccion_type, parse_date,
-                                      parse_produccion_subtype, parse_nif)
-from cvn.parsers.write import CvnXmlWriter
+from parsers.read_helpers import parse_date, parse_nif, parse_cvnitem_to_class
+from parsers.write import CvnXmlWriter
+from managers import CongresoManager, ScientificExpManager, CvnItemManager
+from .helpers import get_cvn_path
+import fecyt
+
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
@@ -14,77 +16,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
-from managers import CongresoManager, ScientificExpManager, CvnItemManager
-from .helpers import get_cvn_path
 
-import base64
 import datetime
 import logging
 import os
-import suds
-import sys
+
 
 logger = logging.getLogger('cvn')
-
-
-class FECYT:
-
-    @staticmethod
-    def get_produccion_from_code(code, subtype):
-        if code == '':
-            return None
-        if code == 'TesisDoctoral' and subtype != 'TesisDoctoral':
-            return None
-        if code == 'Publicacion':
-            if subtype not in [u'Articulo', u'Libro', u'Capitulo']:
-                return None
-            code = subtype
-        return getattr(sys.modules[__name__], code)
-
-    @staticmethod
-    def pdf2xml(cvn_file):
-        try:
-            if cvn_file.closed:
-                cvn_file.open()
-            content = base64.encodestring(cvn_file.read())
-        except IOError:
-            logger.error(u'No existe el fichero o directorio:' +
-                         u' %s' % cvn_file.name)
-            return False
-        # Web Service - FECYT
-        client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
-        try:
-            result_xml = client_ws.service.cvnPdf2Xml(
-                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, content)
-        except:
-            logger.warning(
-                u'No hay respuesta del WS' +
-                u' de la FECYT para el fichero' +
-                u' %s' % cvn_file.name)
-            return False, 1
-        # Format CVN-XML of FECYT
-        if result_xml.errorCode == 0:
-            return base64.decodestring(result_xml.cvnXml), 0
-        return False, result_xml.errorCode
-
-    @staticmethod
-    def xml2pdf(xml):
-        content = xml.decode('utf8')
-        # Web Service - FECYT
-        client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
-        try:
-            pdf = client_ws.service.crearPDFBean(
-                st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT,
-                st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
-        except UnicodeDecodeError as e:
-            logger.error(e.message)
-            return None
-        if pdf.returnCode == '01':
-            xml_error = base64.decodestring(pdf.dataHandler)
-            logger.error(st_cvn.RETURN_CODE[pdf.returnCode] + u'\n' +
-                         xml_error.decode('iso-8859-10'))
-            return None
-        return base64.decodestring(pdf.dataHandler)
 
 
 class CVN(models.Model):
@@ -130,11 +68,11 @@ class CVN(models.Model):
         self.cvn_file = SimpleUploadedFile(
             'CVN-' + self.user_profile.documento, pdf,
             content_type=st_cvn.PDF)
-        (xml, error) = FECYT.pdf2xml(self.cvn_file)
+        (xml, error) = fecyt.pdf2xml(self.cvn_file)
         self.update_fields(xml, commit)
 
     def update_from_xml(self, xml, commit=True):
-        pdf = FECYT.xml2pdf(xml)
+        pdf = fecyt.xml2pdf(xml)
         if pdf:
             self.update_from_pdf(pdf, commit)
 
@@ -188,7 +126,7 @@ class CVN(models.Model):
             parser = CvnXmlWriter(user=user)
             # TODO: insert ull info
             xml = parser.tostring()
-        pdf = FECYT.xml2pdf(xml)
+        pdf = fecyt.xml2pdf(xml)
         if pdf is None:
             return None
         cvn = CVN(user=user, pdf=pdf)
@@ -260,13 +198,11 @@ class CVN(models.Model):
                 logger.warning(u'Se requiere de un fichero CVN-XML')
 
     def _parse_cvn_items(self, cvn_items):
-        for CVNItem in cvn_items:
-            code = parse_produccion_type(CVNItem)
-            subtype = parse_produccion_subtype(CVNItem)
-            produccion = FECYT.get_produccion_from_code(code, subtype)
+        for cvnitem in cvn_items:
+            produccion = parse_cvnitem_to_class(cvnitem)
             if produccion is None:
                 continue
-            produccion.objects.create(CVNItem, self.user_profile)
+            produccion.objects.create(cvnitem, self.user_profile)
 
     def __unicode__(self):
         return '%s ' % self.cvn_file.name.split('/')[-1]
