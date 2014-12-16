@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from models import FECYT, CVN, OldCvnPdf
+from models import CVN
+import fecyt
+
 
 import mimetypes
 
@@ -15,6 +17,7 @@ class UploadCVNForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.xml = None
         if 'instance' in kwargs and kwargs['instance'] is not None:
             self.user = kwargs['instance'].user_profile.user
         if 'data' in kwargs and 'user' in kwargs['data']:
@@ -36,7 +39,7 @@ class UploadCVNForm(forms.ModelForm):
         if mimetypes.guess_type(cvn_file.name)[0] != st_cvn.PDF:
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
-        (self.xml, error) = FECYT.pdf2xml(cvn_file)
+        (self.xml, error) = fecyt.pdf2xml(cvn_file)
         if not self.xml:
             raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
         return cvn_file

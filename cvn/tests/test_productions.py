@@ -9,8 +9,8 @@ from lxml import etree
 from cvn import settings as st_cvn
 from cvn.models import (CVN, Congreso, Convenio, Proyecto, Patente,
                         TesisDoctoral, Articulo, Libro, Capitulo)
-from cvn.parsers.read_helpers import (parse_produccion_type,
-                                      parse_produccion_subtype)
+from cvn.parsers.read_helpers import (_parse_produccion_type,
+                                      _parse_produccion_subtype)
 from core.tests.helpers import init, clean
 from core.tests.factories import UserFactory
 
@@ -84,7 +84,7 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            tipo = parse_produccion_type(item)
+            tipo = _parse_produccion_type(item)
             if tipo == 'Congreso':
                 data = Congreso.objects.create(item, u.profile)
                 self.assertEqual(data.titulo, u'Título')
@@ -107,8 +107,8 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            tipo = parse_produccion_type(item)
-            subtipo = parse_produccion_subtype(item)
+            tipo = _parse_produccion_type(item)
+            subtipo = _parse_produccion_subtype(item)
             data = None
             if tipo == 'Publicacion':
 
@@ -152,7 +152,7 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            tipo = parse_produccion_type(item)
+            tipo = _parse_produccion_type(item)
             if tipo == 'Proyecto' or tipo == 'Convenio':
                 data = {}
                 if tipo == 'Proyecto':
@@ -192,7 +192,7 @@ class CVNTestCase(TestCase):
         u = UserFactory.create()
         items = etree.parse(cvn.xml_file).findall('CvnItem')
         for item in items:
-            tipo = parse_produccion_type(item)
+            tipo = _parse_produccion_type(item)
             if tipo == 'TesisDoctoral':
                 data = TesisDoctoral.objects.create(item, u.profile)
                 self.assertEqual(data.titulo, u'Título del trabajo')
