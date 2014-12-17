@@ -498,16 +498,20 @@ class ScientificExp(models.Model):
         # If we update fecha_de_fin or duracion we must calculate the other
         # field. To check which one was modified we compare with old version.
         try:
-            db_instance = type(self).objects.get(pk=self.pk)
+            old = type(self).objects.get(pk=self.pk)
         except ObjectDoesNotExist:
             pass
         else:
-            if (db_instance.fecha_de_fin != self.fecha_de_fin and
-               self.fecha_de_fin is not None):
+            inicio_changed = (old.fecha_de_inicio != self.fecha_de_inicio
+                              and self.fecha_de_inicio is not None)
+            fin_changed = (old.fecha_de_fin != self.fecha_de_fin
+                           and self.fecha_de_fin is not None)
+            duracion_changed = (old.duracion != self.duracion and
+                                self.duracion is not None)
+            if inicio_changed or fin_changed:
                 duracion = self.fecha_de_fin - self.fecha_de_inicio
                 self.duracion = duracion.days
-            elif (db_instance.duracion != self.duracion and
-                    self.duracion is not None):
+            elif duracion_changed:
                 self.fecha_de_fin = (self.fecha_de_inicio +
                                      datetime.timedelta(days=self.duracion))
         # We do the save afterwards
