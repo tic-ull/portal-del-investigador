@@ -515,6 +515,30 @@ class ScientificExp(models.Model):
     def __unicode__(self):
         return u'%s' % self.titulo
 
+    def save(self, *args, **kwargs):
+
+        # If we update fecha_de_fin or duracion we must calculate the other
+        # field. To check which one was modified we compare with old version.
+        try:
+            old = type(self).objects.get(pk=self.pk)
+        except ObjectDoesNotExist:
+            pass
+        else:
+            inicio_changed = (old.fecha_de_inicio != self.fecha_de_inicio
+                              and self.fecha_de_inicio is not None)
+            fin_changed = (old.fecha_de_fin != self.fecha_de_fin
+                           and self.fecha_de_fin is not None)
+            duracion_changed = (old.duracion != self.duracion and
+                                self.duracion is not None)
+            if inicio_changed or fin_changed:
+                duracion = self.fecha_de_fin - self.fecha_de_inicio
+                self.duracion = duracion.days
+            elif duracion_changed:
+                self.fecha_de_fin = (self.fecha_de_inicio +
+                                     datetime.timedelta(days=self.duracion))
+        # We do the save afterwards
+        super(ScientificExp, self).save(*args, **kwargs)
+
     class Meta:
         verbose_name_plural = _(u'Experiencia Científica')
         ordering = ['-fecha_de_inicio', 'titulo']
