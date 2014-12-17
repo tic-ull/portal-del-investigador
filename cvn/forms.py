@@ -6,10 +6,8 @@ from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from models import CVN
+from models import CVN, OldCvnPdf
 import fecyt
-
-
 import mimetypes
 
 
@@ -46,13 +44,13 @@ class UploadCVNForm(forms.ModelForm):
 
     @transaction.atomic
     def save(self, commit=True):
-        (cvn_old, old_cvn_file) = CVN.remove_cvn_by_userprofile(self.user.profile)
+        old_cvn_file, cvn_old = CVN.remove_cvn_by_userprofile(self.user.profile)
         if old_cvn_file is not None:
-            OldCvnPdf(user_profile=cvn_old.user_profile,
-                      cvn_file=SimpleUploadedFile(old_cvn_file.split('/')[-1],
-                                                  open(old_cvn_file).read(),
-                                                  content_type=st_cvn.PDF),
-                      uploaded_at=cvn_old.uploaded_at).save()
+            cvn_old = OldCvnPdf(user_profile=cvn_old.user_profile,
+                                cvn_file=None,
+                                uploaded_at=cvn_old.uploaded_at)
+            cvn_old.cvn_file.name = old_cvn_file
+            cvn_old.save()
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.user_profile = self.user.profile
         cvn.update_fields(self.xml, commit)

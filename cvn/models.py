@@ -151,7 +151,7 @@ class CVN(models.Model):
             filename = cvn_old.remove()
         except ObjectDoesNotExist:
             pass
-        return cvn_old, filename
+        return filename, cvn_old
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
@@ -161,16 +161,17 @@ class CVN(models.Model):
 
     def _backup_pdf(self):
         cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
-        old_path = os.path.join(st.MEDIA_ROOT, st_cvn.OLD_PDF_ROOT)
-        new_file_name = self.cvn_file.name.split('/')[-1].replace(
+        new_file_name = 'old/%s' %self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(
                 self.updated_at.strftime('%Y-%m-%d')
             ) + u'.pdf')
-        old_cvn_file = os.path.join(old_path, new_file_name)
-        if not os.path.isdir(old_path):
-            os.makedirs(old_path)
+        old_cvn_file = get_cvn_path(self, new_file_name)
+        old_path = os.path.join(st.MEDIA_ROOT, old_cvn_file)
+        root_dir = '/'.join(old_path.split('/')[:-1])
+        if not os.path.isdir(root_dir):
+            os.makedirs(root_dir)
         try:
-            file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
+            file_move_safe(cvn_path, old_path, allow_overwrite=True)
         except IOError:
             pass
         return old_cvn_file
