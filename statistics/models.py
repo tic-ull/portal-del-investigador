@@ -3,7 +3,6 @@
 from core.models import UserProfile
 from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
-from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
