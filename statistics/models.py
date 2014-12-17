@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from managers import StatsManager, ProfessionalCategoryManager
+from django.conf import settings as st
 
 
 class Stats(models.Model):
@@ -45,10 +46,10 @@ class Stats(models.Model):
             self.save()
 
     @classmethod
-    def get_user_unit(cls, rrhh_code, data_source):
+    def get_user_unit(cls, rrhh_code):
         if rrhh_code is None:
             return None, None
-        unit_json = ws.get(data_source % rrhh_code)
+        unit_json = ws.get(cls.WS_USER_UNIT % rrhh_code)
         if unit_json is None:
             return None, None
         unit_json = unit_json.pop()
@@ -69,11 +70,13 @@ class Stats(models.Model):
 
 
 class Department(Stats):
-    pass
+    WS_USER_UNIT = st.WS_DEPARTMENTS_AND_MEMBERS_USER
+    WS_UNIT = st.WS_DEPARTMENTS_AND_MEMBERS_UNIT
 
 
 class Area(Stats):
-    pass
+    WS_USER_UNIT = st.WS_AREAS_AND_MEMBERS_USER
+    WS_UNIT = st.WS_AREAS_AND_MEMBERS_UNIT
 
 
 class ProfessionalCategory(models.Model):

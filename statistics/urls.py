@@ -16,8 +16,7 @@ urlpatterns = patterns(
         name='dept_stats'),
 
     url(r'^departamentos/(?P<codigo>\d+)/$', 'unit_stats_detail',
-        {'unit': u'Departamentos', 'model': 'Department',
-         'data_source': st.WS_DEPARTMENTS_AND_MEMBERS_UNIT},
+        {'unit': u'Departamentos', 'model': 'Department'},
         name='dept_stats_detail'),
 
     url(r'^areas/$', 'unit_stats',
@@ -25,7 +24,6 @@ urlpatterns = patterns(
         name='area_stats'),
 
     url(r'^areas/(?P<codigo>\d+)/$', 'unit_stats_detail',
-        {'unit': u'Áreas', 'model': 'Area',
-         'data_source': st.WS_AREAS_AND_MEMBERS_UNIT},
+        {'unit': u'Áreas', 'model': 'Area'},
         name='area_stats_detail'),
 )

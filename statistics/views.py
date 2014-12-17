@@ -30,12 +30,12 @@ def unit_stats(request, unit, model):
 
 @login_required
 @staff_member_required
-def unit_stats_detail(request, codigo, unit, model, data_source):
+def unit_stats_detail(request, codigo, unit, model):
     context = dict()
     current_unit = resolve(request.path_info).url_name
     context['current_url'] = '_'.join(current_unit.split('_')[:-1])
     context['unit'] = unit
-    data_unit = ws.get(data_source % codigo)
+    data_unit = ws.get(eval(model).WS_UNIT % codigo)
     if data_unit is None:
         raise Http404
     data_unit = data_unit.pop()
