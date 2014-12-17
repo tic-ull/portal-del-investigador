@@ -3,7 +3,6 @@
 from core.models import UserProfile
 from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
-from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -31,16 +30,12 @@ def unit_stats(request, unit, model):
 
 @login_required
 @staff_member_required
-def unit_stats_detail(request, codigo, unit, model):
+def unit_stats_detail(request, codigo, unit, model, data_source):
     context = dict()
     current_unit = resolve(request.path_info).url_name
     context['current_url'] = '_'.join(current_unit.split('_')[:-1])
     context['unit'] = unit
-    data_unit = None
-    if unit == u'Departamentos':
-        data_unit = ws.get(st.WS_DEPARTMENTS_AND_MEMBERS_UNIT % codigo)
-    elif unit == u'Áreas':
-        data_unit = ws.get(st.WS_AREAS_AND_MEMBERS_UNIT % codigo)
+    data_unit = ws.get(data_source % codigo)
     if data_unit is None:
         raise Http404
     data_unit = data_unit.pop()
