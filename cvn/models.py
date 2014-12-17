@@ -57,13 +57,6 @@ class CVN(models.Model):
         if pdf and user:
             self.update_from_pdf(pdf, commit=False)
 
-    def delete(self, *args, **kwargs):
-        # Delete the files and don't save the changes to the model
-        self.cvn_file.delete(save=False)
-        self.xml_file.delete(save=False)
-        # Delete the model
-        super(CVN, self).delete(*args, **kwargs)
-
     def update_from_pdf(self, pdf, commit=True):
         CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
