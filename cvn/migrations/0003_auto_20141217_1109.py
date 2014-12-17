@@ -20,7 +20,7 @@ def unfill_uploaded_at(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cvn', '0002_auto_20141212_1209'),
+        ('cvn', '0002_auto_20141217_1109'),
     ]
 
     operations = [
