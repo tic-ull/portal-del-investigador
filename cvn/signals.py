@@ -30,13 +30,6 @@ pre_save.connect(save_date, sender=Proyecto, dispatch_uid='save-date')
 pre_save.connect(save_date, sender=Convenio, dispatch_uid='save-date')
 
 
-def cvn_delete_files(sender, instance, **kwargs):
-    instance.cvn_file.delete(False)
-    instance.xml_file.delete(False)
-
-pre_delete.connect(cvn_delete_files, sender=CVN)
-
-
 def log_status_cvn_changed(sender, instance, **kwargs):
     updated = False
     try:
