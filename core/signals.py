@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from crequest.middleware import CrequestMiddleware
+from django.conf import settings as st
 from django.contrib.auth.signals import user_logged_in
 from statistics.models import Department
 
@@ -21,8 +22,8 @@ def update_personal_data(request, user):
 
 def send_department(request, user):
     if request:
-        (dept, dept_json) = Department.get_user_department(
-            user.profile.rrhh_code)
+        (dept, dept_json) = Department.get_user_unit(
+            rrhh_code=user.profile.rrhh_code)
         if dept is not None and dept_json is not None:
             request.session['dept'] = dept.name
             request.session['dept_json'] = dept_json

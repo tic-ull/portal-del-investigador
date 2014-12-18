@@ -4,6 +4,7 @@ from cvn import settings as st_cvn
 from iso3166 import countries
 import datetime
 import string
+import sys
 
 
 def _parse_duration(duration):
@@ -81,6 +82,18 @@ def _parse_place(place_node):
     return place
 
 
+def _get_produccion_from_code(code, subtype):
+    if code == '':
+        return None
+    if code == 'TesisDoctoral' and subtype != 'TesisDoctoral':
+        return None
+    if code == 'Publicacion':
+        if subtype not in [u'Articulo', u'Libro', u'Capitulo']:
+            return None
+        code = subtype
+    return getattr(sys.modules['cvn.models'], code)
+
+
 def parse_scope(tree_xml):
     """Input: Scope node
        Example: CvnItem/Link/Scope
@@ -149,7 +162,7 @@ def parse_authors(author_list):
     return authors[:-2] if authors else authors
 
 
-def parse_produccion_type(xml):
+def _parse_produccion_type(xml):
     """Input: CvnItem node"""
     if xml is None:
         return ''
@@ -159,7 +172,7 @@ def parse_produccion_type(xml):
     return st_cvn.FECYT_CODE[cvn_key]
 
 
-def parse_produccion_subtype(xml):
+def _parse_produccion_subtype(xml):
     """Input: CvnItem node"""
     if xml is None:
         return ''
@@ -319,3 +332,9 @@ def parse_filters(node_list):
                 dict.values().index(unicode(data))]
 
     return filters
+
+
+def parse_cvnitem_to_class(cvnitem):
+    code = _parse_produccion_type(cvnitem)
+    subtype = _parse_produccion_subtype(cvnitem)
+    return _get_produccion_from_code(code, subtype)

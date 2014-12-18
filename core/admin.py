@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.contrib import admin
-from django.contrib.flatpages.admin import FlatPageAdmin
+from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from core.forms import PageForm
 from modeltranslation.admin import TranslationAdmin
 from django.contrib.flatpages.models import FlatPage
