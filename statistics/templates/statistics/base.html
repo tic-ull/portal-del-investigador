@@ -2,7 +2,10 @@
 {% load i18n %}
 
 {% block breadcrumb_app %}
+    {% comment %}
     <li><a href="{% url 'statistics' %}">{% trans 'Estadísticas' %}</a></li>
+    {% endcomment %}
+    <li>{% trans 'Estadísticas' %}</li>
     {% block breadcrumb %}
     {% endblock breadcrumb %}
 {% endblock breadcrumb_app %}

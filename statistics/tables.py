@@ -5,7 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 import django_tables2 as tables
 
 
-class DepartmentTable(Table):
+class UnitTable(Table):
 
     PERCENTAGE_TEMPLATE = '''
         {% load l10n %}
@@ -27,9 +27,7 @@ class DepartmentTable(Table):
         </div>
     '''
 
-    NAME_TEMPLATE = '''
-    <a href='{% url 'dept_stats_detail' record.code %}'>{{ record.name }}</a>
-    '''
+    NAME_TEMPLATE = ''' record.name '''
 
     name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
 
@@ -52,7 +50,31 @@ class DepartmentTable(Table):
         attrs = {'class': 'table table-striped table-condensed'}
 
 
-class DepartmentDetailTable(Table):
+class DepartmentTable(UnitTable):
+
+    NAME_TEMPLATE = '''
+    <a href='{% url 'dept_stats_detail' record.code %}'>{{ record.name }}</a>
+    '''
+
+    name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
+
+    class Meta(UnitTable.Meta):
+        pass
+
+
+class AreaTable(UnitTable):
+
+    NAME_TEMPLATE = '''
+    <a href='{% url 'area_stats_detail' record.code %}'>{{ record.name }}</a>
+    '''
+
+    name = tables.TemplateColumn(NAME_TEMPLATE, attrs={'th': {'width': '38%'}})
+
+    class Meta(UnitTable.Meta):
+        pass
+
+
+class UnitDetailTable(Table):
     CVN_STATUS_TEMPLATE = '''
         {% if record.is_CVN_valid %}
             <div style="padding: 4px; text-align:center;"
@@ -67,10 +89,13 @@ class DepartmentDetailTable(Table):
 
     research = tables.Column(accessor='miembro',
                              verbose_name=_(u'Investigador'))
+
     category = tables.Column(accessor='categoria',
                              verbose_name=_(u'Categoría'))
+
     cvn_required = tables.Column(accessor='obligatorio',
                                  verbose_name=_(u'CVN obligatorio'))
+
     cvn_status = tables.TemplateColumn(CVN_STATUS_TEMPLATE,
                                        accessor='CVNStatus',
                                        verbose_name=_(u'Estado CVN'),
