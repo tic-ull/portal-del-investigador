@@ -37,9 +37,9 @@ class CVNTestCase(TestCase):
         CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         self.assertTrue(os.path.isfile(full_path))
-        self.assertIsNotNone(
-            OldCvnPdf.objects.get(user_profile=us.profile,
-                                  uploaded_at=cvn.uploaded_at))
+        self.assertEqual(
+            OldCvnPdf.objects.filter(user_profile=us.profile,
+                                     uploaded_at=cvn.uploaded_at).count(), 1)
 
     def test_valid_identity_nif_without_letter(self):
         user = UserFactory.create()
