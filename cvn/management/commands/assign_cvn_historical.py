@@ -4,11 +4,14 @@ from django.contrib.auth.models import User
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.move import file_move_safe
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
 from cvn import settings as st_cvn
+from cvn.fecyt import pdf2xml
 from cvn.helpers import get_cvn_path
+from cvn.parsers.read_helpers import parse_nif
 from cvn.models import OldCvnPdf
+from lxml import etree
+
 
 import datetime
 import os
@@ -48,19 +51,33 @@ class Command(BaseCommand):
         old_cvn.cvn_file.name = old_cvn_path
         old_cvn.save()
 
+    def search_user(self, username, cvn):
+        search_dict = dict()
+        # Search by username
+        if not self.is_documento(username):
+            search_dict = {'username': username}
+            user = self.get_user(search_dict)
+        else:
+        # Search by NIF/NIE in fields "username" and "documento" (UserProfile)
+            search_dict['username__icontains'] = username[:-1]
+            user = self.get_user(search_dict)
+            if not user:
+                user = self.get_user({'profile__documento__iexact': username})
+        if not user:
+            # Search in cvn file
+            cvn_file_path = os.path.join(st_cvn.OLD_PDF_ROOT, cvn)
+            cvn_file = open(cvn_file_path)
+            (xml, error) = pdf2xml(cvn_file)
+            tree_xml = etree.XML(xml)
+            document = parse_nif(tree_xml)
+            user = self.get_user({'profile__documento__iexact': document})
+        return user
+
     def handle(self, *args, **options):
         list_cvn = os.listdir(st_cvn.OLD_PDF_ROOT)
         for cvn in list_cvn:
             username = cvn.split('-')[1]
-            search_dict = {'username': username}
-            user = self.get_user(search_dict)
-            # Search for DNI in "username" field
-            if not user and self.is_documento(username):
-                search_dict['username__icontains'] = username[:-1]
-                user = self.get_user(search_dict)
-                # Search  "document" field in the table "profile"
-                if not user :
-                    user = self.get_user({'profile__documento__iexact': username})
+            user = self.search_user(username, cvn)
             if user:
                 self.cvn2user(user, cvn)
             else:
