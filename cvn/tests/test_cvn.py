@@ -37,7 +37,6 @@ class CVNTestCase(TestCase):
             '/'.join(cvn.cvn_file.path.split('/')[:-1]), 'old', filename)
         CVN(user=user, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
-        import pdb; pdb.set_trace()
         self.assertTrue(os.path.isfile(old_cvn_path))
         self.assertEqual(OldCvnPdf.objects.filter(
             user_profile=user.profile, uploaded_at=cvn.uploaded_at).count(), 1)
