@@ -707,7 +707,7 @@ class OldCvnPdf(models.Model):
 
     user_profile = models.ForeignKey(UserProfile)
 
-    cvn_file = models.FileField(_(u'PDF'), upload_to=st_cvn.OLD_ROOT)
+    cvn_file = models.FileField(_(u'PDF'), upload_to=get_cvn_path)
 
     uploaded_at = models.DateTimeField(_(u'PDF Subido'))
 
