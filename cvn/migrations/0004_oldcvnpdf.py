@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0002_auto_20141008_0853'),
-        ('cvn', '0003_auto_20141212_1213'),
+        ('cvn', '0003_auto_20141217_1109'),
     ]
 
     operations = [
