@@ -5,7 +5,7 @@ import os
 from django.test import TestCase
 
 from cvn import settings as st_cvn
-from cvn.models import CVN
+from cvn.models import CVN, OldCvnPdf
 from core.tests.helpers import init, clean
 from core.tests.factories import UserFactory
 
@@ -29,14 +29,9 @@ class CVNTestCase(TestCase):
         cvn = CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         cvn.save()
-        relative_path = (
-            'old/' + cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
-            cvn.updated_at.strftime('%Y-%m-%d-%Hh%Mm%Ss') + '.pdf')
-        root_dir = '/'.join(cvn.cvn_file.path.split('/')[:-1])
-        full_path = os.path.join(root_dir, relative_path)
         CVN(user=us, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
-        self.assertTrue(os.path.isfile(full_path))
+        self.assertIsNotNone(OldCvnPdf.objects.get(user_profile=us.profile))
 
     def test_valid_identity_nif_without_letter(self):
         user = UserFactory.create()
