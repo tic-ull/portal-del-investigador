@@ -16,7 +16,6 @@ from parsers.write import CvnXmlWriter
 import datetime
 import fecyt
 import logging
-import os
 
 logger = logging.getLogger('cvn')
 
