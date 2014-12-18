@@ -48,7 +48,7 @@ class CVNTestCase(TestCase):
 
     def test_delete_producciones(self):
         user = UserFactory.create()
-        cvn = CVN(user=user,pdf_path=os.path.join(
+        cvn = CVN(user=user, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         cvn.insert_xml()
         cvn.remove_producciones()
@@ -235,26 +235,38 @@ class CVNTestCase(TestCase):
                          'MOBILIARIO URBANO SA')
 
     def test_check_change_date_cvn(self):
-        date_1 = datetime.date(2014, 4, 3)
-        date_2 = datetime.date(2013, 3, 3)
-        date_3 = datetime.date(2014, 4, 3)
+        date_1 = datetime.date(2013, 3, 3)
+        date_2 = datetime.date(2014, 4, 3)
+        date_3 = datetime.date(2014, 4, 20)
         date_4 = datetime.date(2002, 3, 2)
         duration_1 = 60
         duration_2 = 136
-        p = Proyecto(fecha_de_inicio=date_1,
-                     fecha_de_fin=date_2)
-        p.save()
-        p.fecha_de_fin = date_3
-        p.save()
+
+        # Update fecha_de_fin in proyecto
+        p1 = Proyecto(fecha_de_inicio=date_1, fecha_de_fin=date_2)
+        p1.save()
+        p1.fecha_de_fin = date_3
+        p1.save()
+
+        # Update duracion in convenio
         c = Convenio(fecha_de_inicio=date_4,
                      duracion=duration_1)
         c.save()
         c.duracion = duration_2
         c.save()
-        p_duration = date_3 - date_1
+
+        # Update fecha_de_inicio in proyecto
+        p2 = Proyecto(fecha_de_inicio=date_1, fecha_de_fin=date_2)
+        p2.save()
+        p2.fecha_de_inicio = date_4
+        p2.save()
+
+        p1_duration = date_3 - date_1
         c_date = date_4 + datetime.timedelta(days=duration_2)
-        self.assertEqual(p.duracion, p_duration.days)
+        p2_duration = date_2 - date_4
+        self.assertEqual(p1.duracion, p1_duration.days)
         self.assertEqual(c.fecha_de_fin, c_date)
+        self.assertEqual(p2.duracion, p2_duration.days)
 
     @classmethod
     def tearDownClass(cls):
