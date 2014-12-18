@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='OldCvnPdf',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('cvn_file', models.FileField(upload_to=cvn.helpers.get_cvn_path, verbose_name='PDF')),
+                ('cvn_file', models.FileField(upload_to=cvn.helpers.get_old_cvn_path, verbose_name='PDF')),
                 ('uploaded_at', models.DateTimeField(verbose_name='Uploaded PDF')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated')),

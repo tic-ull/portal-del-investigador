@@ -1,6 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
-from .models import CVN, OldCvnPdf
+from .models import CVN
 from cvn import settings as st_cvn
 from django import forms
 from django.contrib.auth.models import User
@@ -44,13 +44,7 @@ class UploadCVNForm(forms.ModelForm):
 
     @transaction.atomic
     def save(self, commit=True):
-        old_cvn_file, cvn_old = CVN.remove_cvn_by_userprofile(self.user.profile)
-        if old_cvn_file is not None:
-            cvn_old = OldCvnPdf(user_profile=cvn_old.user_profile,
-                                cvn_file=None,
-                                uploaded_at=cvn_old.uploaded_at)
-            cvn_old.cvn_file.name = old_cvn_file
-            cvn_old.save()
+        CVN.remove_cvn_by_userprofile(self.user.profile)
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.user_profile = self.user.profile
         cvn.update_fields(self.xml, commit)
