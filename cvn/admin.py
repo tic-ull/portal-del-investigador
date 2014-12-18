@@ -62,9 +62,10 @@ class ProductionAdmin(admin.ModelAdmin):
 
 class OldCVNAdmin(admin.ModelAdmin):
     model = OldCvnPdf
+
     list_display = (
         'cvn_file', 'user_profile', 'uploaded_at', 'created_at', )
-    list_filter = ('uploaded_at', )  # 'user_profile',)
+
     search_fields = (
         'user_profile__user__username',
         'user_profile__documento',
@@ -72,7 +73,11 @@ class OldCVNAdmin(admin.ModelAdmin):
         'user_profile__user__first_name',
         'user_profile__user__last_name'
     )
-    ordering = ('-created_at', )
+
+    ordering = ('-uploaded_at', )
+
+    def has_add_permission(self, request):
+        return False
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
