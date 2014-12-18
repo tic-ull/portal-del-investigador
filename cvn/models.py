@@ -148,9 +148,9 @@ class CVN(models.Model):
         # Removes data related to CVN that is not on the CVN class.
         self._backup_pdf()
         if self.cvn_file:
-            self.cvn_file.delete(False)
+            self.cvn_file.delete(False)  # Remove PDF file
         if self.xml_file:
-            self.xml_file.delete(False)      # Remove xml file
+            self.xml_file.delete(False)  # Remove XML file
 
     def _backup_pdf(self):
         filename = self.cvn_file.name.split('/')[-1].replace(
