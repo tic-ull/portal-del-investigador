@@ -3,10 +3,8 @@
 from .helpers import get_cvn_path, get_old_cvn_path
 from core.models import UserProfile
 from cvn import settings as st_cvn
-from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
-from django.core.files.move import file_move_safe
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _

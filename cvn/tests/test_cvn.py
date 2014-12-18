@@ -31,7 +31,7 @@ class CVNTestCase(TestCase):
         cvn.save()
         relative_path = (
             'old/' + cvn.cvn_file.name.split('/')[-1].split('.')[0] + '-' +
-            cvn.updated_at.strftime('%Y-%m-%d') + '.pdf')
+            cvn.updated_at.strftime('%Y-%m-%d-%Hh%Mm%Ss') + '.pdf')
         root_dir = '/'.join(cvn.cvn_file.path.split('/')[:-1])
         full_path = os.path.join(root_dir, relative_path)
         CVN(user=us, pdf_path=os.path.join(
