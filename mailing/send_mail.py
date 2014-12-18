@@ -2,10 +2,11 @@
 
 from django.conf import settings as st
 from django.template import Template, Context
-import logging
 from mailing.models import Email
-import mailing.settings as st_mail
 from mensajeria import Mensajeria
+
+import logging
+import mailing.settings as st_mail
 
 logger = logging.getLogger('default')
 

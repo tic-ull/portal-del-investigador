@@ -1,9 +1,9 @@
 # -*- encoding: UTF-8 -*-
 
-
-from models import Email
+from .forms import EmailForm
+from .models import Email
 from django.contrib import admin
-from forms import EmailForm
+
 
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
