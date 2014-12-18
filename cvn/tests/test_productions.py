@@ -48,7 +48,7 @@ class CVNTestCase(TestCase):
 
     def test_delete_producciones(self):
         user = UserFactory.create()
-        cvn = CVN(user=user,pdf_path=os.path.join(
+        cvn = CVN(user=user, pdf_path=os.path.join(
             st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
         cvn.insert_xml()
         cvn.remove_producciones()
@@ -243,8 +243,7 @@ class CVNTestCase(TestCase):
         duration_2 = 136
 
         # Update fecha_de_fin in proyecto
-        p1 = Proyecto(fecha_de_inicio=date_1,
-                     fecha_de_fin=date_2)
+        p1 = Proyecto(fecha_de_inicio=date_1, fecha_de_fin=date_2)
         p1.save()
         p1.fecha_de_fin = date_3
         p1.save()
@@ -257,8 +256,7 @@ class CVNTestCase(TestCase):
         c.save()
 
         # Update fecha_de_inicio in proyecto
-        p2 = Proyecto(fecha_de_inicio=date_1,
-                     fecha_de_fin=date_2)
+        p2 = Proyecto(fecha_de_inicio=date_1, fecha_de_fin=date_2)
         p2.save()
         p2.fecha_de_inicio = date_4
         p2.save()
