@@ -73,10 +73,17 @@ class ProductionAdmin(admin.ModelAdmin):
 
 
 class OldCVNAdmin(admin.ModelAdmin):
+
+    def cvn_file_link(self):
+        if self.cvn_file:
+            return "<a href='%s'>%s<a/>" % (self.cvn_file.url, self.cvn_file)
+    cvn_file_link.short_description = u'PDF'
+    cvn_file_link.allow_tags = True
+
     model = OldCvnPdf
 
     list_display = (
-        'cvn_file', 'user_profile', 'uploaded_at', 'created_at', )
+        'user_profile', cvn_file_link, 'uploaded_at', 'created_at', )
 
     search_fields = (
         'user_profile__user__username',
@@ -90,6 +97,9 @@ class OldCVNAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+    def get_readonly_fields(self, request, obj=None):
+        return tuple(OldCvnPdf._meta.get_all_field_names())
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
