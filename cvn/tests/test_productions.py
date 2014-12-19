@@ -36,7 +36,7 @@ class CVNTestCase(TestCase):
             cvn = CVN(user=user, pdf_path=os.path.join(
                 st_cvn.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
             cvn.insert_xml()
-            self.assertEqual(user.profile.articulo_set.count(), 1074)
+            self.assertEqual(user.profile.articulo_set.count(), 1214)
             self.assertEqual(user.profile.libro_set.count(), 6)
             self.assertEqual(user.profile.capitulo_set.count(), 32)
             self.assertEqual(user.profile.congreso_set.count(), 55)
@@ -76,7 +76,7 @@ class CVNTestCase(TestCase):
                 count += 1
                 Articulo.objects.create(item, u.profile)
         self.assertEqual(count, 1214)
-        self.assertEqual(Articulo.objects.all().count(), 1074)
+        self.assertEqual(Articulo.objects.all().count(), 1214)
 
     def test_check_read_data_congress(self):
         cvn = CVN(xml_file=self.xml_test)
