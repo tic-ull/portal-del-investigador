@@ -1,16 +1,16 @@
 # -*- encoding: UTF-8 -*-
 
+from cvn import settings as st_cvn
+from cvn.fecyt import pdf2xml
+from cvn.models import OldCvnPdf
+from cvn.parsers.read_helpers import parse_nif
+from django.conf import settings as st
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management.base import BaseCommand
-from django.conf import settings as st
-from cvn.fecyt import pdf2xml
-from cvn.parsers.read_helpers import parse_nif
-from cvn.models import OldCvnPdf
-from cvn import settings as st_cvn
-from lxml import etree
 from django.db.models import Q
+from lxml import etree
 
 import datetime
 import os
