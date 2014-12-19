@@ -8,12 +8,23 @@ from django.contrib import admin
 
 
 class CVNAdmin(admin.ModelAdmin):
+
+    def xml_file_link(self):
+        if self.xml_file:
+            return "<a href='%s'>%s<a/>" % (self.xml_file.url, self.xml_file)
+    xml_file_link.short_description = u'XML'
+    xml_file_link.allow_tags = True
+
     model = CVN
+
     form = UploadCVNForm
+
     list_display = (
-        'cvn_file', 'user_profile', 'fecha', 'status', 'xml_file',
+        'cvn_file', 'user_profile', 'fecha', 'status', xml_file_link,
         'uploaded_at', 'updated_at', 'is_inserted', )
+
     list_filter = ('status', 'is_inserted', )
+
     search_fields = (
         'user_profile__user__username',
         'user_profile__documento',
@@ -21,6 +32,7 @@ class CVNAdmin(admin.ModelAdmin):
         'user_profile__user__first_name',
         'user_profile__user__last_name'
     )
+
     ordering = ('-updated_at', )
 
     def has_add_permission(self, request):
