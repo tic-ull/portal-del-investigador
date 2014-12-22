@@ -165,6 +165,18 @@ class CVN(models.Model):
         except ObjectDoesNotExist:
             pass
 
+    @staticmethod
+    def create(user, xml=None):
+        if not xml:
+            parser = CvnXmlWriter(user=user)
+            xml = parser.tostring()
+        pdf = fecyt.xml2pdf(xml)
+        if pdf is None:
+            return None
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.save()
+        return cvn
+
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
         self._backup_pdf()
