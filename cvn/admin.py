@@ -45,7 +45,17 @@ class CVNInline(admin.StackedInline):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'documento', 'rrhh_code', )
+
+    list_display = ('user', 'get_first_name', 'get_last_name', 'documento',
+                    'rrhh_code', )
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+    get_first_name.short_description = u'Nombre'
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+    get_last_name.short_description = u'Apellidos'
 
     search_fields = ['user__username', 'documento', 'rrhh_code',
                      'user__first_name', 'user__last_name', ]
