@@ -321,6 +321,12 @@ WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 # RRHH code
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 
+# CVN Info ULL: learning_degree / learning_phd
+WS_ULL_LEARNING = WS_SERVER_URL + 'get_formacion_academica?cod_persona=%s'
+
+# CVN Info ULL: profession / old_profession
+WS_ULL_CARGOS = WS_SERVER_URL + 'get_cargos?cod_persona=%s'
+
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
     WS_SERVER_URL +
