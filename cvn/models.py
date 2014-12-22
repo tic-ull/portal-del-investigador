@@ -14,6 +14,7 @@ from parsers.read_helpers import parse_date, parse_nif, parse_cvnitem_to_class
 from parsers.write import CvnXmlWriter
 from django.conf import settings as st
 from core.ws_utils import CachedWS as ws
+from helpers import DateRange
 
 import datetime
 import fecyt
@@ -114,43 +115,51 @@ class CVN(models.Model):
         return False
 
     @classmethod
-    def get_pdf_ull(cls, user):
+    def get_pdf_ull(cls, user, start_date=None, end_date=None):
         parser = CvnXmlWriter(user=user)
-        cls._insert_learning_ull(user, parser)
-        cls._insert_cargos_ull(user, parser)
+        cls._insert_learning_ull(user, parser, start_date, end_date)
+        cls._insert_cargos_ull(user, parser, start_date, end_date)
         xml = parser.tostring()
         return fecyt.xml2pdf(xml)
 
     @staticmethod
-    def _insert_learning_ull(user, parser):
+    def _insert_learning_ull(user, parser, start_date, end_date):
         items = ws.get(url=st.WS_ULL_LEARNING % user.profile.rrhh_code,
                        use_redis=False)
         for item in items:
+            item_date = datetime.datetime.strptime(item["f_expedicion"],
+                                                   "%d-%m-%Y").date()
+            item_date_range = DateRange(item_date, item_date)
+            if not item_date_range.intersect(DateRange(start_date, end_date)):
+                continue
             doctor = item["des1_grado_titulacion"] == u'Doctor'
-            date = datetime.datetime.strptime(item["f_expedicion"],
-                                              "%d-%m-%Y").date()
             university = item.pop("organismo", None)
             if doctor:
                 parser.add_learning_phd(title=item["des1_titulacion"],
-                                        date=date,
+                                        date=item_date,
                                         university=university)
             else:
                 parser.add_learning(title=item["des1_titulacion"],
                                     title_type=item["des1_grado_titulacion"],
                                     university=university,
-                                    date=date)
+                                    date=item_date)
 
     @staticmethod
-    def _insert_cargos_ull(user, parser):
+    def _insert_cargos_ull(user, parser, start_date, end_date):
         items = ws.get(url=st.WS_ULL_CARGOS % user.profile.rrhh_code,
                        use_redis=False)
         for item in items:
-            item["title"] = item.pop("des1_cargo")
             item["start_date"] = datetime.datetime.strptime(
                 item.pop("f_toma_posesion"), "%d-%m-%Y").date()
             if "f_hasta" in item:
                 item["end_date"] = datetime.datetime.strptime(
                     item.pop("f_hasta"), "%d-%m-%Y").date()
+            else:
+                item["end_date"] = None
+            item_date_range = DateRange(item["start_date"], item["end_date"])
+            if not item_date_range.intersect(DateRange(start_date, end_date)):
+                continue
+            item["title"] = item.pop("des1_cargo")
             item["centre"] = item.pop("centro", None)
             item["department"] = item.pop("departamento", None)
             item["full_time"] = item.pop("dedicacion",
