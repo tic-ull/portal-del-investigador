@@ -12,6 +12,8 @@ from lxml import etree
 from managers import CongresoManager, ScientificExpManager, CvnItemManager
 from parsers.read_helpers import parse_date, parse_nif, parse_cvnitem_to_class
 from parsers.write import CvnXmlWriter
+from django.conf import settings as st
+from core.ws_utils import CachedWS as ws
 
 import datetime
 import fecyt
@@ -117,21 +119,20 @@ class CVN(models.Model):
             parser = CvnXmlWriter(user=user)
             # TODO: insert ull info
             xml = parser.tostring()
-        pdf = fecyt.xml2pdf(xml)
-        if pdf is None:
-            return None
-        cvn = CVN(user=user, pdf=pdf)
-        cvn.save()
-        return cvn
+        return fecyt.xml2pdf(xml)
+        #if pdf is None:
+        #    return None
+        #cvn = CVN(user=user, pdf=pdf)
+        #cvn.save()
+        #return cvn
 
-    def upgrade(self):
-        if self.xml_file.closed:
-            self.xml_file.open()
-        self.xml_file.seek(0)
-        parser = CvnXmlWriter(user=self.user_profile.user,
-                              xml=self.xml_file.read())
-        # TODO: insert ull info
-        self.update_from_xml(parser.tostring())
+    @staticmethod
+    def _insert_learning_ull(user, parser):
+        pass
+        #ull_info = ws.get(url=(st.st.WS_ULL_LEARNING % user.profile.),
+        #                  use_redis=False)
+
+
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):
