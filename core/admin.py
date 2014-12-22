@@ -53,8 +53,14 @@ UserAdmin.inlines = [
 
 
 class LogAdmin(admin.ModelAdmin):
+
     list_display = ('application', 'entry_type', 'user_profile', 'date')
+
     list_filter = ('entry_type', 'application')
+
+    search_fields = (
+        'user_profile__user__username', 'user_profile__documento',
+    )
 
     def has_add_permission(self, request):
         return False
