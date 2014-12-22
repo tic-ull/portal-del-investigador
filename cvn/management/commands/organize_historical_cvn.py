@@ -51,6 +51,7 @@ class Command(BaseCommand):
             filename, cvn_pdf.read(), content_type=st_cvn.PDF)
         cvn_old = OldCvnPdf(
             user_profile=user.profile, cvn_file=old_cvn_file,
-            uploaded_at=datetime.datetime.now())
+            uploaded_at=datetime.datetime.strptime(
+                ','.join(cvn.replace('.pdf', '').split('-')[2:]), '%Y,%m,%d'))
         cvn_old.save()
         os.remove(cvn_pdf_path)
