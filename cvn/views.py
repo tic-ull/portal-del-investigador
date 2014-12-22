@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm
 from models import CVN
-from statistics.models import Department
+from statistics.models import Department, Area
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
 from cvn import settings as st_cvn
@@ -25,7 +25,14 @@ def index(request):
         dept = Department.objects.get(name=request.session['dept'])
         dept_json = request.session['dept_json']
         context['department'] = dept
-        context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
+
+    area, area_json = None, None
+    if 'area' and 'area_json' in request.session:
+        area = Area.objects.get(name=request.session['area'])
+        area_json = request.session['area_json']
+        context['area'] = area
+
+    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
 
     try:
         cvn = CVN.objects.get(user_profile__user=user)
@@ -41,9 +48,13 @@ def index(request):
         if form.is_valid():
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
-            if dept is not None and old_cvn_status != cvn.status:
-                dept.update(dept_json['unidad']['nombre'],
-                            dept_json['miembros'], commit=True)
+            if old_cvn_status != cvn.status:
+                if dept is not None:
+                    dept.update(dept_json['unidad']['nombre'],
+                                dept_json['miembros'], commit=True)
+                if area is not None:
+                    area.update(area_json['unidad']['nombre'],
+                                area_json['miembros'], commit=True)
 
     context['form'] = form
     cvn_to_context(user.profile, context)

@@ -84,27 +84,8 @@
                                     <td align='center'>{{ cvn.fecha }}</td>
                                 </tr>
                                 {% comment %}
-                                {% if department %}
-                                    <tr id="dept">
-                                        <td colspan=2>
-                                            <center><strong>{{ department.name }}</strong></center>
-                                            <div class="progress">
-                                                <div class="progress-bar
-                                                    {% if department.percentage >= validPercentCVN %}
-                                                        progress-bar-success
-                                                    {% else %}
-                                                        progress-bar-danger
-                                                    {% endif %} "
-                                                    role="progressbar" aria-valuenow={{ department.percentage }} aria-valuemin="0"
-                                                    aria-valuemax="100" style="width: {{ department.percentage|unlocalize }}%">
-                                                    <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">
-                                                        {{ department.percentage|floatformat:1 }}%
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% endif %}
+                                {% include 'cvn/partials/statistics_unit.html' with unit=department %}
+                                {% include 'cvn/partials/statistics_unit.html' with unit=area %}
                                 {% endcomment %}
                             </tbody>
                         </table>
