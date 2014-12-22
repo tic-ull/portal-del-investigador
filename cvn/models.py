@@ -113,26 +113,49 @@ class CVN(models.Model):
             return True
         return False
 
-    @staticmethod
-    def create(user, xml=None):
-        if not xml:
-            parser = CvnXmlWriter(user=user)
-            # TODO: insert ull info
-            xml = parser.tostring()
+    @classmethod
+    def get_pdf_ull(cls, user):
+        parser = CvnXmlWriter(user=user)
+        cls._insert_learning_ull(user, parser)
+        cls._insert_cargos_ull(user, parser)
+        xml = parser.tostring()
         return fecyt.xml2pdf(xml)
-        #if pdf is None:
-        #    return None
-        #cvn = CVN(user=user, pdf=pdf)
-        #cvn.save()
-        #return cvn
 
     @staticmethod
     def _insert_learning_ull(user, parser):
-        pass
-        #ull_info = ws.get(url=(st.st.WS_ULL_LEARNING % user.profile.),
-        #                  use_redis=False)
+        items = ws.get(url=st.WS_ULL_LEARNING % user.profile.rrhh_code,
+                       use_redis=False)
+        for item in items:
+            doctor = item["des1_grado_titulacion"] == u'Doctor'
+            date = datetime.datetime.strptime(item["f_expedicion"],
+                                              "%d-%m-%Y").date()
+            university = item.pop("organismo", None)
+            if doctor:
+                parser.add_learning_phd(title=item["des1_titulacion"],
+                                        date=date,
+                                        university=university)
+            else:
+                parser.add_learning(title=item["des1_titulacion"],
+                                    title_type=item["des1_grado_titulacion"],
+                                    university=university,
+                                    date=date)
 
-
+    @staticmethod
+    def _insert_cargos_ull(user, parser):
+        items = ws.get(url=st.WS_ULL_CARGOS % user.profile.rrhh_code,
+                       use_redis=False)
+        for item in items:
+            item["title"] = item.pop("des1_cargo")
+            item["start_date"] = datetime.datetime.strptime(
+                item.pop("f_toma_posesion"), "%d-%m-%Y").date()
+            if "f_hasta" in item:
+                item["end_date"] = datetime.datetime.strptime(
+                    item.pop("f_hasta"), "%d-%m-%Y").date()
+            item["centre"] = item.pop("centro", None)
+            item["department"] = item.pop("departamento", None)
+            item["full_time"] = item.pop("dedicacion",
+                                         None) == "Tiempo Completo"
+            parser.add_profession(**item)
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):
