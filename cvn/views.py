@@ -74,3 +74,9 @@ def ull_report(request):
     except ObjectDoesNotExist:
         context['report_date'] = _('No disponible')
     return render(request, 'cvn/ull_report.html', context)
+
+
+@login_required
+def create_cvn(request):
+    context = {}
+    return render(request, 'cvn/create_cvn.html', context)
