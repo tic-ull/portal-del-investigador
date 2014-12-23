@@ -1,19 +1,19 @@
 # -*- encoding: UTF-8 -*-
 
+from core.models import UserProfile
+from core.widgets import FileFieldURLWidget
+from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 from forms import UploadCVNForm
 from models import (Congreso, Proyecto, Convenio, TesisDoctoral, Articulo,
                     Libro, CVN, Capitulo, Patente, OldCvnPdf)
-from core.models import UserProfile
-from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
-
 
 
 class CVNAdmin(admin.ModelAdmin):
 
     def xml_file_link(self):
         if self.xml_file:
-            return "<a href='%s'>%s<a/>" % (self.xml_file.url, self.xml_file)
+            return "<a href='%s'>%s</a>" % (self.xml_file.url, self.xml_file)
     xml_file_link.short_description = u'XML'
     xml_file_link.allow_tags = True
 
@@ -46,6 +46,26 @@ class CVNInline(admin.StackedInline):
     form = UploadCVNForm
 
 
+class OldCvnPdfInline(admin.StackedInline):
+
+    model = OldCvnPdf
+
+    extra = 0
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'cvn_file':
+            kwargs['widget'] = FileFieldURLWidget
+        return super(OldCvnPdfInline, self).formfield_for_dbfield(
+            db_field, **kwargs)
+
+    readonly_fields = ('uploaded_at', )
+
+    fields = ('cvn_file', 'uploaded_at')
+
+    def has_add_permission(self, request):
+        return False
+
+
 class UserProfileAdmin(admin.ModelAdmin):
 
     list_display = ('user', 'get_first_name', 'get_last_name', 'documento',
@@ -65,7 +85,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     readonly_fields = ('rrhh_code', )
 
     inlines = [
-        CVNInline,
+        CVNInline, OldCvnPdfInline,
     ]
 
     def has_add_permission(self, request):
