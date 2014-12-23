@@ -84,10 +84,10 @@ class CVN(models.Model):
 
     def update_status(self, commit=True):
         status = self.status
-        if not self._is_valid_identity():
-            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
-        elif self.fecha <= st_cvn.FECHA_CADUCIDAD:
+        if self.fecha <= st_cvn.FECHA_CADUCIDAD:
             self.status = st_cvn.CVNStatus.EXPIRED
+        elif not self._is_valid_identity():
+            self.status = st_cvn.CVNStatus.INVALID_IDENTITY
         else:
             self.status = st_cvn.CVNStatus.UPDATED
         if self.status != status and commit:
