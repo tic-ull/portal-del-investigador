@@ -1,0 +1,24 @@
+{% load i18n %}
+{% load l10n %}
+
+{% if unit %}
+    <tr>
+        <td colspan=2>
+            <center><strong>{{ unit.name }}</strong></center>
+            <div class="progress">
+                <div class="progress-bar
+                    {% if unit.percentage >= validPercentCVN %}
+                        progress-bar-success
+                    {% else %}
+                        progress-bar-danger
+                    {% endif %} "
+                    role="progressbar" aria-valuenow={{ unit.percentage }} aria-valuemin="0"
+                    aria-valuemax="100" style="width: {{ unit.percentage|unlocalize }}%">
+                    <span class="num_pcnt" style="display:block;position:absolute;color:black;vertical-align:middle; margin: auto;">
+                        {{ unit.percentage|floatformat:1 }}%
+                    </span>
+                </div>
+            </div>
+        </td>
+    </tr>
+{% endif %}

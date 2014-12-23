@@ -2,6 +2,7 @@
 
 import hashlib
 import os
+import datetime
 
 
 # Do not touch. Uses self so it can be called in a django upload_to field
@@ -23,3 +24,16 @@ def get_cvn_path(self, filename):
 def get_old_cvn_path(self, filename):
     return os.path.join(
         get_md5_path(self), self.user_profile.documento, 'old', filename)
+
+
+class DateRange:
+    MIN_DATE = datetime.date(datetime.MINYEAR, 1, 1)
+    MAX_DATE = datetime.date(datetime.MAXYEAR, 12, 31)
+
+    def __init__(self, start_date=None, end_date=None):
+        self.start_date = self.MIN_DATE if start_date is None else start_date
+        self.end_date = self.MAX_DATE if end_date is None else end_date
+
+    def intersect(self, b):
+        return ((self.start_date <= b.start_date <= self.end_date)
+                or (b.start_date <= self.start_date <= b.end_date))
