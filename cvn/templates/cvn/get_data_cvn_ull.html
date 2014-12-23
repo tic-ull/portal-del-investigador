@@ -11,7 +11,11 @@
 
 	<h1 class="page-header">{% trans "Obtener información de la Universidad de La Laguna" %} </h1>
 
-    {% trans "Seleccione la opción que desee para obtener los datos:" %}
+    {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
+    </br>
+    {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
+
+
     </br></br>
     <form action="" method='post' target="_blank">{% csrf_token %}
         <div class="col-md-6">
@@ -38,7 +42,7 @@
                     </div>
                     <div id="select_year" class="panel-collapse collapse">
                         <div class="panel-body">
-                            {% trans "Año" %}: {{ form.year }}
+                            {% trans "Seleccionar año" %}: {{ form.year }}
                             </br></br>
                             <input id="id_select_year" style="display:none;" type="Submit" name="select_year" />
                             <button type="button" id="select_year" onclick="$('#id_select_year').click()" class='btn btn-primary btn-block btn-ms'>
