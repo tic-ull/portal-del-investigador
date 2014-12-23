@@ -64,6 +64,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'cvn/locale'),
     os.path.join(BASE_DIR, 'statistics/locale'),
     os.path.join(BASE_DIR, 'accounting/locale'),
+    os.path.join(BASE_DIR, 'mailing/locale'),
 )
 TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = True

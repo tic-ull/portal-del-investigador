@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('entry_type', models.IntegerField(verbose_name='Type', choices=[(0, b'EXPIRED')])),
                 ('title', models.CharField(max_length=255, verbose_name='Title')),
-                ('content', models.TextField(verbose_name='Contenido')),
+                ('content', models.TextField(verbose_name='Content')),
             ],
             options={
             },
