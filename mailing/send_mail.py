@@ -1,12 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
+from .models import Email
 from django.conf import settings as st
 from django.template import Template, Context
-from mailing.models import Email
+from mailing import settings as st_mail
 from mensajeria import Mensajeria
 
 import logging
-import mailing.settings as st_mail
 
 logger = logging.getLogger('default')
 

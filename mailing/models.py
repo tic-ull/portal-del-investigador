@@ -2,8 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-import mailing.settings as st_mail
+from mailing import settings as st_mail
 
 
 class Email(models.Model):
