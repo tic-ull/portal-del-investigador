@@ -251,4 +251,4 @@ class FC_FILTER(Enum):
     SUBJECT = "030.010.000.190"
 
 # Range of years for the dropdown
-RANGE_OF_YEARS = (1950, 2050)
+RANGE_OF_YEARS = (1950, 2030)
