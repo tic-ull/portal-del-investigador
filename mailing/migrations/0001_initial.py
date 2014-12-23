@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
                 ('entry_type', models.IntegerField(unique=True, verbose_name='Type', choices=[(0, b'EXPIRED')])),
                 ('title', models.CharField(max_length=255, verbose_name='Title')),
                 ('content', models.TextField(verbose_name='Content')),
+                ('is_active', models.BooleanField(default=False, verbose_name='Active')),
             ],
             options={
             },

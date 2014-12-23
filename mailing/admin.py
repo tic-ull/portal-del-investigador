@@ -8,6 +8,10 @@ from django.contrib import admin
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
 
+    list_display = ('entry_type', 'title', 'is_active', )
+
+    list_filter = ('is_active', )
+
     readonly_fields = ('entry_type', )
 
     form = EmailForm

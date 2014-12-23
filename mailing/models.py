@@ -13,5 +13,7 @@ class Email(models.Model):
 
     content = models.TextField(_(u'Contenido'), blank=False)
 
+    is_active = models.BooleanField(_(u'Activo'), default=False)
+
     def __unicode__(self):
         return st_mail.MailType(self.entry_type).name
