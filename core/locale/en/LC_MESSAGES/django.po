@@ -1,16 +1,16 @@
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-12 12:02+0000\n"
-"PO-Revision-Date: 2014-12-04 14:36-0102\n"
+"POT-Creation-Date: 2014-12-23 08:40+0000\n"
+"PO-Revision-Date: 2014-12-23 08:43-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "X-Translated-Using: django-rosetta 0.7.4\n"
 
 #: admin.py:32 admin.py:33 templates/core/base.html:107
@@ -18,27 +18,27 @@ msgstr ""
 msgid "Preguntas Frecuentes"
 msgstr "Frequently Asked Questions"
 
-#: models.py:14
+#: models.py:15
 msgid "Documento"
 msgstr "Document"
 
-#: models.py:16
+#: models.py:17
 msgid "Código persona"
 msgstr "Person code"
 
-#: models.py:36
+#: models.py:59
 msgid "Aplicación"
 msgstr "Application"
 
-#: models.py:38
+#: models.py:61
 msgid "Tipo"
 msgstr "Type"
 
-#: models.py:40
+#: models.py:63
 msgid "Fecha"
 msgstr "Date"
 
-#: models.py:42
+#: models.py:65
 msgid "Mensaje"
 msgstr "Message"
 
@@ -46,7 +46,7 @@ msgstr "Message"
 msgid "Universidad de La Laguna - Portal del Investigador"
 msgstr "University of La Laguna - Researcher Portal"
 
-#: templates/core/base.html:37 templates/core/base.html.py:520
+#: templates/core/base.html:37 templates/core/base.html.py:521
 msgid "Universidad de La Laguna"
 msgstr "University of La Laguna"
 
@@ -155,18 +155,23 @@ msgid "Panel de administración"
 msgstr "Admin Panel"
 
 #: templates/core/base.html:503
-msgid "Estadísticas por Departamentos"
-msgstr "Statistics for Departments"
+#| msgid "Estadísticas por Grupos"
+msgid "Estadísticas por Áreas"
+msgstr "Statistics by Area"
 
 #: templates/core/base.html:504
-msgid "Estadísticas por Grupos"
-msgstr "Statistics for Groups"
+msgid "Estadísticas por Departamentos"
+msgstr "Statistics by Department"
 
 #: templates/core/base.html:505
+msgid "Estadísticas por Grupos"
+msgstr "Statistics by Group"
+
+#: templates/core/base.html:506
 msgid "Informe ULL"
 msgstr "Report ULL"
 
-#: templates/core/base.html:520
+#: templates/core/base.html:521
 msgid "Teléfono"
 msgstr "Phone number"
 
