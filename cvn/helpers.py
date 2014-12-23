@@ -16,3 +16,10 @@ def get_md5_path(self):
 def get_cvn_path(self, filename):
     return os.path.join(
         get_md5_path(self), self.user_profile.documento, filename)
+
+
+# Do not touch. Uses self so it can be called in a django upload_to field
+# https://stackoverflow.com/questions/17539720/django-model-with-filefield-dynamic-upload-to-argument
+def get_old_cvn_path(self, filename):
+    return os.path.join(
+        get_md5_path(self), self.user_profile.documento, 'old', filename)

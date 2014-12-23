@@ -1,9 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
 from crequest.middleware import CrequestMiddleware
-from django.conf import settings as st
 from django.contrib.auth.signals import user_logged_in
-from statistics.models import Department
+from statistics.models import Department, Area
 
 
 def update_personal_data(request, user):
@@ -29,9 +28,19 @@ def send_department(request, user):
             request.session['dept_json'] = dept_json
 
 
+def send_area(request, user):
+    if request:
+        (area, area_json) = Area.get_user_unit(
+            rrhh_code=user.profile.rrhh_code)
+        if area is not None and area_json is not None:
+            request.session['area'] = area.name
+            request.session['area_json'] = area_json
+
+
 def update_profile(user, **kwargs):
     request = CrequestMiddleware.get_request()
     update_personal_data(request, user)
     send_department(request, user)
+    send_area(request, user)
 
 user_logged_in.connect(update_profile, dispatch_uid='update-profile')

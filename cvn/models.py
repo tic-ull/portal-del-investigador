@@ -1,12 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
-from .helpers import get_cvn_path
+from .helpers import get_cvn_path, get_old_cvn_path
 from core.models import UserProfile
 from cvn import settings as st_cvn
-from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
-from django.core.files.move import file_move_safe
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -20,7 +18,6 @@ from parsers.write import CvnXmlWriter
 import datetime
 import fecyt
 import logging
-import os
 
 logger = logging.getLogger('cvn')
 
@@ -152,23 +149,24 @@ class CVN(models.Model):
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.
         self._backup_pdf()
+        if self.cvn_file:
+            self.cvn_file.delete(False)  # Remove PDF file
         if self.xml_file:
-            self.xml_file.delete()      # Remove xml file
+            self.xml_file.delete(False)  # Remove XML file
 
     def _backup_pdf(self):
-        cvn_path = os.path.join(st.MEDIA_ROOT, self.cvn_file.name)
-        old_path = os.path.join(st.MEDIA_ROOT, st_cvn.OLD_PDF_ROOT)
-        new_file_name = self.cvn_file.name.split('/')[-1].replace(
+        filename = self.cvn_file.name.split('/')[-1].replace(
             u'.pdf', u'-' + str(
-                self.updated_at.strftime('%Y-%m-%d')
+                self.uploaded_at.strftime('%Y-%m-%d-%Hh%Mm%Ss')
             ) + u'.pdf')
-        old_cvn_file = os.path.join(old_path, new_file_name)
-        if not os.path.isdir(old_path):
-            os.makedirs(old_path)
-        try:
-            file_move_safe(cvn_path, old_cvn_file, allow_overwrite=True)
-        except IOError:
-            pass
+
+        old_cvn_file = SimpleUploadedFile(
+            filename, self.cvn_file.read(), content_type=st_cvn.PDF)
+
+        cvn_old = OldCvnPdf(
+            user_profile=self.user_profile, cvn_file=old_cvn_file,
+            uploaded_at=self.uploaded_at)
+        cvn_old.save()
 
     def remove_producciones(self):
         Articulo.remove_by_userprofile(self.user_profile)
@@ -701,3 +699,23 @@ class Patente(models.Model):
     class Meta:
         verbose_name_plural = _(u'Propiedades Intelectuales')
         ordering = ['-fecha', 'titulo']
+
+
+class OldCvnPdf(models.Model):
+
+    user_profile = models.ForeignKey(UserProfile)
+
+    cvn_file = models.FileField(_(u'PDF'), upload_to=get_old_cvn_path)
+
+    uploaded_at = models.DateTimeField(_(u'PDF Subido'))
+
+    created_at = models.DateTimeField(_(u'Creado'), auto_now_add=True)
+
+    updated_at = models.DateTimeField(_(u'Actualizado'), auto_now=True)
+
+    def __unicode__(self):
+        return '%s ' % self.cvn_file.name.split('/')[-1]
+
+    class Meta:
+        verbose_name_plural = _(u'Histórico de Currículum Vitae Normalizado')
+        ordering = ['-uploaded_at']

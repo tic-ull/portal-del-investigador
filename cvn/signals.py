@@ -2,7 +2,7 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save, pre_delete
-from models import CVN
+from models import CVN, OldCvnPdf
 from core import settings as st_core
 from cvn import settings as st_cvn
 from core.models import Log
@@ -13,9 +13,11 @@ import datetime
 # https://code.djangoproject.com/ticket/10751
 def cvn_delete_files(sender, instance, **kwargs):
     instance.cvn_file.delete(False)
-    instance.xml_file.delete(False)
+    if hasattr(instance, 'xml_file'):
+        instance.xml_file.delete(False)
 
 pre_delete.connect(cvn_delete_files, sender=CVN)
+pre_delete.connect(cvn_delete_files, sender=OldCvnPdf)
 
 
 def log_status_cvn_changed(sender, instance, **kwargs):

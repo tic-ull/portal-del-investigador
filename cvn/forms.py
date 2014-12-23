@@ -1,13 +1,13 @@
 # -*- encoding: UTF-8 -*-
 
+from .models import CVN
 from cvn import settings as st_cvn
 from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
-from models import CVN
-import fecyt
 
+import fecyt
 import mimetypes
 
 
