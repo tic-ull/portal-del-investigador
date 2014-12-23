@@ -5,6 +5,7 @@ from cvn import settings as st_cvn
 from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 
 import fecyt
@@ -55,3 +56,17 @@ class UploadCVNForm(forms.ModelForm):
     class Meta:
         model = CVN
         fields = ['cvn_file']
+
+
+class GetDataCVNULL(forms.Form):
+    all_year = forms.BooleanField(required=False)
+    start_year = forms.ChoiceField(widget=forms.Select(), required=False)
+    end_year = forms.ChoiceField(widget=forms.Select(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(GetDataCVNULL, self).__init__(*args, **kwargs)
+        choices = [(x, x) for x in range(1900, 2020)]
+        self.fields['start_year'].choices = choices
+        self.fields['end_year'].choices = choices
+
+

@@ -1,0 +1,81 @@
+{% extends 'cvn/base.html' %}
+{% load i18n %}
+
+{% load staticfiles %}
+
+{% block breadcrumb %}
+    <li><a href='{% url 'get_cvn_data_ull' %}'>{% trans "Obtener información" %}</a></li>
+{% endblock breadcrumb %}
+
+{% block main %}
+
+	<h1 class="page-header">{% trans "Obtener información de la Universidad de La Laguna" %} </h1>
+
+    {% trans "Seleccione la opción que desee para obtener los datos:" %}
+    </br></br>
+    <form action="" method='post'>{% csrf_token %}
+        <div class="col-md-6">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#all_years"> {% trans "Todos los años"%}</a>
+                        </h4>
+                    </div>
+                    <div id="all_years" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <input id="id_all_years" style="display:none;" type="Submit" name="all_year" />
+                            <button type="button" id="all_years" onclick="$('#id_all_years').click()" class='fa fa-download btn btn-primary btn-block btn-ms'>
+                                {% trans 'Obtener información de todos los años' %}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#last_year"> {% trans "Último año"%}</a>
+                        </h4>
+                    </div>
+                    <div id="last_year" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <input id="id_last_year" style="display:none;" type="Submit" name="last_year" />
+                            <button type="button" id="last_year" onclick="$('#id_last_year').click()" class='fa fa-download btn btn-primary btn-block btn-ms'>
+                                {% trans 'Obtener información del último año' %}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#range_years"> {% trans "Seleccione un rango"%}</a>
+                        </h4>
+                    </div>
+                    <div id="range_years" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            {% trans "Desde" %}: {{ form.start_year }} {% trans "Hasta" %}: {{ form.end_year }}
+                            </br></br>
+                            <input id="id_range_years" style="display:none;" type="Submit" name="range_years" />
+                            <button type="button" id="range_years" onclick="$('#id_range_years').click()" class='fa fa-download btn btn-primary btn-block btn-ms'>
+                                {% trans 'Obtener información del rango seleccionado' %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% comment %}
+<script>
+    $(document).ready(function(){
+        $('.collapse').on('show.bs.collapse', function (e) {
+           $(e.target).parent().find("a").removeClass("fa-plus").addClass("fa-minus");
+        });
+
+        $('.collapse').on('hide.bs.collapse', function (e) {
+           $(e.target).parent().find("a").removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
+</script>
+{% endcomment %}
+{% endblock main %}

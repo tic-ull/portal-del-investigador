@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from forms import UploadCVNForm
+from forms import UploadCVNForm, GetDataCVNULL
 from models import CVN
 from statistics.models import Department
 from statistics import settings as st_stat
@@ -77,6 +77,20 @@ def ull_report(request):
 
 
 @login_required
-def create_cvn(request):
+def get_cvn_data_ull(request):
     context = {}
-    return render(request, 'cvn/create_cvn.html', context)
+    context['form'] = GetDataCVNULL()
+    if request.method == 'POST':
+        form = GetDataCVNULL(request.POST)
+        import pdb; pdb.set_trace()
+        if form.is_valid():
+            try:
+                if form.data['all_years']:
+                    pass
+                if form.data['last_year']:
+                    pass
+                if form.data['range_years']:
+                    pass
+            except: #MultiValueDictKeyError:
+                pass
+    return render(request, 'cvn/get_data_cvn_ull.html', context)
