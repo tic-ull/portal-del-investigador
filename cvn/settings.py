@@ -249,3 +249,6 @@ UNIVERSITY = _(u'Universidad de La Laguna')
 class FC_FILTER(Enum):
     PROGRAM = "030.010.000.140"
     SUBJECT = "030.010.000.190"
+
+# Range of years for the dropdown
+RANGE_OF_YEARS = (1950, 2050)

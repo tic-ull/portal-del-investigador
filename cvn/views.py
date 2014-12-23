@@ -13,6 +13,7 @@ from statistics.models import Department, Area
 from statistics import settings as st_stat
 from utils import scientific_production_to_context, cvn_to_context
 from cvn import settings as st_cvn
+import datetime
 
 
 @login_required
@@ -89,19 +90,24 @@ def ull_report(request):
 
 @login_required
 def get_cvn_data_ull(request):
-    context = {}
+    context = dict()
     context['form'] = GetDataCVNULL()
     if request.method == 'POST':
         form = GetDataCVNULL(request.POST)
-        import pdb; pdb.set_trace()
         if form.is_valid():
-            try:
-                if form.data['all_years']:
-                    pass
-                if form.data['last_year']:
-                    pass
-                if form.data['range_years']:
-                    pass
-            except: #MultiValueDictKeyError:
-                pass
+            start_year = None
+            end_year = None
+            if 'select_year' in form.data:
+                start_year = datetime.date(int(form.data['year']), 01, 01)
+                end_year = datetime.date(int(form.data['year']), 12, 31)
+            if 'range_years' in form.data:
+                start_year = datetime.date(int(form.data['start_year']), 01, 01)
+                end_year = datetime.date(int(form.data['end_year']), 12, 31)
+            #pdf = CVN.get_pdf_ull(User.objects.get(profile__rrhh_code=29739),
+            #                      start_year, end_year)
+            pdf = CVN.get_pdf_ull(request.user, start_year, end_year)
+            response = HttpResponse(pdf, content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; ' \
+                                              'filename="CVN-ULL-info.pdf"'
+            return response
     return render(request, 'cvn/get_data_cvn_ull.html', context)

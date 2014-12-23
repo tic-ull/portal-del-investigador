@@ -59,13 +59,15 @@ class UploadCVNForm(forms.ModelForm):
 
 
 class GetDataCVNULL(forms.Form):
-    all_year = forms.BooleanField(required=False)
+    year = forms.ChoiceField(widget=forms.Select(), required=False)
     start_year = forms.ChoiceField(widget=forms.Select(), required=False)
     end_year = forms.ChoiceField(widget=forms.Select(), required=False)
 
     def __init__(self, *args, **kwargs):
         super(GetDataCVNULL, self).__init__(*args, **kwargs)
-        choices = [(x, x) for x in range(1900, 2020)]
+        choices = [(x, x) for x in range(st_cvn.RANGE_OF_YEARS[0],
+                                         st_cvn.RANGE_OF_YEARS[1])]
+        self.fields['year'].choices = choices
         self.fields['start_year'].choices = choices
         self.fields['end_year'].choices = choices
 
