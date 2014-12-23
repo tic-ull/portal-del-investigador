@@ -7,7 +7,7 @@ from mailing import settings as st_mail
 
 class Email(models.Model):
     entry_type = models.IntegerField(
-        _(u'Tipo'), choices=st_mail.MAIL_TYPE, null=False)
+        _(u'Tipo'), choices=st_mail.MAIL_TYPE, null=False, unique=True)
 
     title = models.CharField(_(u'Título'), max_length=255, blank=False)
 
