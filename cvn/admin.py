@@ -42,8 +42,17 @@ class CVNAdmin(admin.ModelAdmin):
 
 
 class CVNInline(admin.StackedInline):
+
     model = CVN
+
     form = UploadCVNForm
+
+    fields = ('cvn_file', 'xml_file')
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        if db_field.name == 'xml_file':
+            kwargs['widget'] = FileFieldURLWidget
+        return super(CVNInline, self).formfield_for_dbfield(db_field, **kwargs)
 
 
 class OldCvnPdfInline(admin.StackedInline):
