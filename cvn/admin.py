@@ -54,6 +54,9 @@ class CVNInline(admin.StackedInline):
             kwargs['widget'] = FileFieldURLWidget
         return super(CVNInline, self).formfield_for_dbfield(db_field, **kwargs)
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class OldCvnPdfInline(admin.StackedInline):
 
@@ -72,6 +75,9 @@ class OldCvnPdfInline(admin.StackedInline):
     fields = ('cvn_file', 'uploaded_at')
 
     def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
         return False
 
 
