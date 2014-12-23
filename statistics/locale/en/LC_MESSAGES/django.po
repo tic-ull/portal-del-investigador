@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-12 12:02+0000\n"
+"POT-Creation-Date: 2014-12-23 08:41+0000\n"
 "PO-Revision-Date: 2014-09-19 14:17-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,51 +42,45 @@ msgstr "Total members"
 msgid "Porcentaje CVN válidos"
 msgstr "Percentage valid CVN"
 
-#: models.py:79
+#: models.py:83
 msgid "Código de categoría"
 msgstr "Category code"
 
-#: models.py:81 tables.py:71
+#: models.py:85 tables.py:94
 msgid "Categoría"
 msgstr "Category"
 
-#: models.py:82
+#: models.py:86
 msgid "CVN requerido"
 msgstr "CVN required"
 
-#: models.py:89
+#: models.py:93
 msgid "Professional categories"
 msgstr "Professional categories"
 
-#: tables.py:39
+#: tables.py:37
 msgid "CVN actualizado y con NIF/NIE correcto"
 msgstr "Updated  CVN and NIF/NIE correct"
 
-#: tables.py:49
+#: tables.py:47
 msgid "CVN válidos / Miembros computables"
 msgstr "Valid CVN / Computable members"
 
-#: tables.py:69
+#: tables.py:91
 msgid "Investigador"
 msgstr "Researcher"
 
-#: tables.py:73
+#: tables.py:97
 msgid "CVN obligatorio"
 msgstr "Mandatory CVN"
 
-#: tables.py:76
+#: tables.py:101
 msgid "Estado CVN"
 msgstr "CVN Status"
 
-#: templates/statistics/base.html:5
+#: templates/statistics/base.html:9
 msgid "Estadísticas"
 msgstr "Statistics"
-
-#: templates/statistics/statistics.html:8
-#: templates/statistics/statistics.html:15
-#: templates/statistics/stats_detail.html:8
-msgid "Departamentos"
-msgstr "Departments"
 
 #: templates/statistics/statistics.html:12
 msgid "Estadísticas del CVN"
@@ -100,25 +94,28 @@ msgstr "General information"
 msgid "Información detallada"
 msgstr "Details"
 
-#: views.py:48
+#: views.py:52
 msgid "No"
 msgstr "No"
 
-#: views.py:50
+#: views.py:54
 msgid "Sí"
 msgstr "Yes"
 
-#: views.py:55
+#: views.py:59
 msgid "Válido"
 msgstr "Valid"
 
-#: views.py:58
+#: views.py:62
 msgid "Inválido"
 msgstr "Invalid"
 
-#: views.py:61
+#: views.py:65
 msgid "No dispone de CVN"
 msgstr "CVN not available"
+
+#~ msgid "Departamentos"
+#~ msgstr "Departments"
 
 #~ msgid "Número de CVN válidos"
 #~ msgstr "Number of CVN valid"

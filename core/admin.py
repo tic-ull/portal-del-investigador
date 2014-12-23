@@ -1,16 +1,16 @@
 # -*- encoding: UTF-8 -*-
 
-from models import UserProfile, Log
+from .forms import PageForm
+from .models import UserProfile, Log
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from django.contrib.sites.models import Site
-from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
-from core.forms import PageForm
-from modeltranslation.admin import TranslationAdmin
 from django.contrib.flatpages.models import FlatPage
-from modeltranslation.translator import translator, TranslationOptions
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
+from modeltranslation.admin import TranslationAdmin
+from modeltranslation.translator import translator, TranslationOptions
 
 
 # Options for the flatpages (faq)

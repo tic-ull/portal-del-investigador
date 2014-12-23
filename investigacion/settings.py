@@ -298,7 +298,6 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 
 # ************************* EMAIL ********************************************
 import socket
-
 EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
 SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
 
