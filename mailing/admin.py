@@ -7,7 +7,8 @@ from django.contrib import admin
 
 @admin.register(Email)
 class EmailAdmin(admin.ModelAdmin):
-    readonly_fields = ('entry_type',)
+
+    readonly_fields = ('entry_type', )
 
     form = EmailForm
 

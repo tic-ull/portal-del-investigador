@@ -20,10 +20,8 @@ def send_mail(email_code, email_to):
     content = template.render(context)
     if st.EMAIL_DEBUG:
         email_to = st_mail.EMAIL_DEBUG_ADDRESS
-    m = Mensajeria(username=st_mail.MENSAJERIA_USERNAME,
-                   password=st_mail.MENSAJERIA_PASSWORD,
+    m = Mensajeria(username=st.MENSAJERIA_USERNAME,
+                   password=st.MENSAJERIA_PASSWORD,
                    sender_id=st_mail.EMAIL_SENDER_NAME)
-    m.send_email(to=email_to,
-                 subject=email.title,
-                 body=content,
-                 input_html=True)
+    m.send_email(to=email_to, subject=email.title,
+                 body=content, input_html=True)

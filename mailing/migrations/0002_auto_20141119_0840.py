@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.db import models, migrations
-import mailing.settings as st_mail
+from mailing import settings as st_mail
 
 
 def create_email_expired(apps, schema_editor):

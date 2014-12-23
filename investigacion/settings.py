@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
-import os
 import js
+import os
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -30,7 +30,8 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
+EMAIL_DEBUG = True
 DEVEL = True
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -38,7 +39,6 @@ ALLOWED_HOSTS = ['*']
 
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
-SITE_URL = 'http://localhost:8081'
 
 # ******************************* ADMINS *************************************
 ADMINS = (
@@ -278,8 +278,9 @@ TEMPLATE_DIRS = (
 # ************************* TEMPLATES ****************************************
 
 # ************************* STATIC FILES *************************************
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),
-                    ('js', js.__path__[0] + ''),
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    ('js', js.__path__[0] + ''),
 )
 
 STATICFILES_FINDERS = (
@@ -304,6 +305,9 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 import socket
 EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
 SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
+
+MENSAJERIA_USERNAME = ""
+MENSAJERIA_PASSWORD = ""
 
 # ************************* EMAIL ********************************************
 
