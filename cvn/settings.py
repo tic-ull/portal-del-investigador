@@ -10,6 +10,8 @@ import os
 _ = lambda s: s
 
 # ************************* FECYT ********************************************
+USER_FECYT = '<user>'
+PASSWORD_FECYT = '<password>'
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 WS_FECYT_VERSION = "1.3.0"
@@ -249,3 +251,13 @@ UNIVERSITY = _(u'Universidad de La Laguna')
 class FC_FILTER(Enum):
     PROGRAM = "030.010.000.140"
     SUBJECT = "030.010.000.190"
+
+# ************************* SETTINGS LOCAL ***********************************
+try:
+    CVN_SETTINGS_LOCAL
+except NameError:
+    try:
+        from .settings_local import *
+    except ImportError:
+        pass
+# ************************* SETTINGS LOCAL ***********************************
