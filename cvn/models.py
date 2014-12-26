@@ -60,7 +60,7 @@ class CVN(models.Model):
         CVN.remove_cvn_by_userprofile(self.user_profile)
         self.cvn_file = SimpleUploadedFile(
             'CVN-' + self.user_profile.documento, pdf,
-            content_type=st_cvn.PDF)
+            content_type="application/pdf")
         (xml, error) = fecyt.pdf2xml(self.cvn_file)
         self.update_fields(xml, commit)
 
@@ -84,7 +84,7 @@ class CVN(models.Model):
 
     def update_status(self, commit=True):
         status = self.status
-        if self.fecha <= st_cvn.FECHA_CADUCIDAD:
+        if self.fecha <= st_cvn.EXPIRY_DATE:
             self.status = st_cvn.CVNStatus.EXPIRED
         elif not self._is_valid_identity():
             self.status = st_cvn.CVNStatus.INVALID_IDENTITY
@@ -158,7 +158,7 @@ class CVN(models.Model):
             ) + u'.pdf')
 
         old_cvn_file = SimpleUploadedFile(
-            filename, self.cvn_file.read(), content_type=st_cvn.PDF)
+            filename, self.cvn_file.read(), content_type="application/pdf")
 
         cvn_old = OldCvnPdf(
             user_profile=self.user_profile, cvn_file=old_cvn_file,

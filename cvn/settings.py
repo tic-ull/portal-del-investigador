@@ -9,42 +9,43 @@ import os
 # Enable translations in this file
 _ = lambda s: s
 
-# ************************* FECYT ********************************************
-USER_FECYT = '<user>'
-PASSWORD_FECYT = '<password>'
+# Expiry date for a CVN
+EXPIRY_DATE = datetime.date(2013, 12, 31)
+
+# Date format for writing in the CVN-XML files
+CVN_XML_DATE_FORMAT = '%Y-%m-%d'
+
+# ******************************* FECYT *************************************
+FECYT_USER = '<user>'
+FECYT_PASSWORD = '<password>'
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 WS_FECYT_VERSION = "1.3.0"
 FECYT_CVN_NAME = 'CVN'
-TIPO_PLANTILLA = 'PN2008'
+FECYT_TIPO_PLANTILLA = 'PN2008'
+# ******************************* FECYT *************************************
 
-# Paths
-PDF_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
-CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
-PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
-TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
+# ******************************* PATHS *************************************
+REPORTS_PDF_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/pdf')
+REPORTS_CSV_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
+REPORTS_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
+FILE_TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
-CVN_TEMPLATE_DIR = os.path.join(st.BASE_DIR, 'cvn/templates/cvn')
+XML_TEMPLATE = os.path.join(st.BASE_DIR, 'cvn/templates/cvn/xml')
+# ******************************* PATHS *************************************
 
-# Date format for writing to the CVN-XML files
-XML_CVN_DATE_FORMAT = '%Y-%m-%d'
-# XML Files for XML parser (to create or modify cvn-xml)
+# ******************************* XML ***************************************
+XML_SKELETON_PATH = os.path.join(XML_TEMPLATE, 'skeleton.xml')
+XML_CURRENT_PROFESSION = os.path.join(XML_TEMPLATE, 'current_profession.xml')
+XML_PROFESSION = os.path.join(XML_TEMPLATE, 'profession.xml')
+XML_TEACHING = os.path.join(XML_TEMPLATE, 'teaching.xml')
+XML_LEARNING = os.path.join(XML_TEMPLATE, 'learning.xml')
+XML_LEARNING_PHD = os.path.join(XML_TEMPLATE, 'learning_phd.xml')
+# ******************************* XML ***************************************
 
-# Base xml-cvn
-XML_SKELETON_PATH = os.path.join(CVN_TEMPLATE_DIR, 'xml/skeleton.xml')
-
-# CVN Items
-XML_CURRENT_PROFESSION = os.path.join(
-    CVN_TEMPLATE_DIR, 'xml/current_profession.xml')
-XML_PROFESSION = os.path.join(CVN_TEMPLATE_DIR, 'xml/profession.xml')
-XML_TEACHING = os.path.join(CVN_TEMPLATE_DIR, 'xml/teaching.xml')
-XML_LEARNING = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning.xml')
-XML_LEARNING_PHD = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning_phd.xml')
-
+# ******************************* URLS **************************************
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
-
-# content-type for pdfs
-PDF = "application/pdf"
+# ******************************* URLS **************************************
 
 # Production unique identifier type
 PRODUCCION_ID_CODE = {
@@ -188,9 +189,6 @@ SCOPE = {
     u"OTHERS": u"Otros",
 }
 
-# Expiration date for cvn
-FECHA_CADUCIDAD = datetime.date(2013, 12, 31)
-
 # FECYT error codes and description
 ERROR_CODES = {
     1: _(u'Error general no determinado en el servidor de la FECYT.'),
@@ -218,7 +216,16 @@ RETURN_CODE = {
 
 REGULAR_DATE_CODE = '040'
 
+# CVN Entity
+UNIVERSITY = _(u'Universidad de La Laguna')
 
+
+class FC_FILTER(Enum):
+    PROGRAM = "030.010.000.140"
+    SUBJECT = "030.010.000.190"
+
+
+# ******************************* STATUS ************************************
 class CVNStatus(IntEnum):
     UPDATED = 0
     EXPIRED = 1
@@ -229,8 +236,10 @@ CVN_STATUS = (
     (CVNStatus.EXPIRED.value, _(u'Caducado')),
     (CVNStatus.INVALID_IDENTITY.value, _(u'NIF/NIE Incorrecto')),
 )
+# ******************************* STATUS ************************************
 
-# Messages for waiting when be upload a new CVN
+# ******************************* WAITING ***********************************
+# Messages of waiting when be upload a new CVN
 MESSAGES_WAITING = {
     0: _(u'Este proceso puede tardar unos minutos, por favor espere.'),
     1: _(u'Se ha establecido la conexión con la FECYT.'
@@ -241,16 +250,8 @@ MESSAGES_WAITING = {
          u' Si el error persiste contacte con el Servicio de Investigación (sopinve@ull.es).'),
 }
 
-# In milliseconds
-TIME_WAITING = 5000
-
-# CVN Entity
-UNIVERSITY = _(u'Universidad de La Laguna')
-
-
-class FC_FILTER(Enum):
-    PROGRAM = "030.010.000.140"
-    SUBJECT = "030.010.000.190"
+TIME_WAITING = 5000  # In milliseconds
+# ******************************* WAITING ***********************************
 
 # ************************* SETTINGS LOCAL ***********************************
 try:

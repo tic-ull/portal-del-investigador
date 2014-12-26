@@ -15,7 +15,7 @@ def get_xml_fragment(filepath):
 
 class CvnXmlWriter:
 
-    DATE_FORMAT = st_cvn.XML_CVN_DATE_FORMAT
+    DATE_FORMAT = st_cvn.CVN_XML_DATE_FORMAT
 
     def __init__(self, user, *args, **kwargs):
         xml = kwargs.pop('xml', None)

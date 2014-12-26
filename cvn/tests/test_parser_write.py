@@ -70,7 +70,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_cargos(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/cargos.csv'))
+        f = open(os.path.join(st_cvn.FILE_TEST_ROOT, 'csv/cargos.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:
@@ -102,7 +102,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_categorias(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/categorias.csv'))
+        f = open(os.path.join(st_cvn.FILE_TEST_ROOT, 'csv/categorias.csv'))
         reader = csv.DictReader(self.utf_8_encoder(f), delimiter='|')
         now = datetime.datetime.now().date()
         for row in reader:
@@ -135,7 +135,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_titulacion(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/titulacion.csv'))
+        f = open(os.path.join(st_cvn.FILE_TEST_ROOT, 'csv/titulacion.csv'))
         reader = csv.DictReader(f, delimiter=',')
         for row in reader:
             try:
@@ -155,7 +155,7 @@ class ParserWriterTestCase(TestCase):
     def test_parse_docencia(self):
         user = UserFactory.create()
         parser = CvnXmlWriter(user)
-        f = open(os.path.join(st_cvn.TEST_ROOT, 'csv/docencia.csv'))
+        f = open(os.path.join(st_cvn.FILE_TEST_ROOT, 'csv/docencia.csv'))
         reader = csv.DictReader(f, delimiter='|')
         for row in reader:
             # Change the format of floating number to make it compatible

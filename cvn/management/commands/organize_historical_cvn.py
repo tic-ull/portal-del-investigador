@@ -1,6 +1,5 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn import settings as st_cvn
 from cvn.fecyt import pdf2xml
 from cvn.models import OldCvnPdf
 from cvn.parsers.read_helpers import parse_nif
@@ -48,7 +47,7 @@ class Command(BaseCommand):
         cvn_pdf_path = os.path.join(self.OLD_PDF_ROOT, cvn)
         cvn_pdf = open(cvn_pdf_path)
         old_cvn_file = SimpleUploadedFile(
-            filename, cvn_pdf.read(), content_type=st_cvn.PDF)
+            filename, cvn_pdf.read(), content_type="application/pdf")
         cvn_old = OldCvnPdf(
             user_profile=user.profile, cvn_file=old_cvn_file,
             uploaded_at=datetime.datetime.strptime(

@@ -194,7 +194,7 @@ def parse_cvnitem_learning_degree(node):
             else None)
     try:
         date = datetime.datetime.strptime(date,
-                                          st_cvn.XML_CVN_DATE_FORMAT).date()
+                                          st_cvn.CVN_XML_DATE_FORMAT).date()
     except TypeError:
         pass
     item = {'title': node.find('Title/Name/Item').text,
