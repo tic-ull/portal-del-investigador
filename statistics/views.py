@@ -24,7 +24,7 @@ def unit_stats(request, unit, model):
     context['unit'] = unit
     context['unitStats'] = eval(model + 'Table')(eval(model).objects.all())
     RequestConfig(request, paginate=False).configure(context['unitStats'])
-    context['validPercentCVN'] = st_stats.PERCENT_VALID_DEPT_CVN
+    context['validPercentCVN'] = st_stats.PERCENTAGE_VALID_CVN
     return render(request, 'statistics/statistics.html', context)
 
 
@@ -39,7 +39,7 @@ def unit_stats_detail(request, codigo, unit, model):
     if data_unit is None:
         raise Http404
     data_unit = data_unit.pop()
-    context['validPercentCVN'] = st_stats.PERCENT_VALID_DEPT_CVN
+    context['validPercentCVN'] = st_stats.PERCENTAGE_VALID_CVN
     context['unidad'] = unicode(
         data_unit['unidad']['nombre'])
     context['nombre_corto'] = unicode(
