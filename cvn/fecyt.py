@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn import settings as st_cvn
+from django.conf import settings as st
 
 import suds
 import base64
@@ -22,7 +23,7 @@ def pdf2xml(cvn_file):
     client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
     try:
         result_xml = client_ws.service.cvnPdf2Xml(
-            st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, content)
+            st.USER_FECYT, st.PASSWORD_FECYT, content)
     except:
         logger.warning(
             u'No hay respuesta del WS' +
@@ -41,7 +42,7 @@ def xml2pdf(xml):
     client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
     try:
         pdf = client_ws.service.crearPDFBean(
-            st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT,
+            st.USER_FECYT, st.PASSWORD_FECYT,
             st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
     except UnicodeDecodeError as e:
         logger.error(e.message)
