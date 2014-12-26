@@ -4,7 +4,8 @@ from enum import IntEnum
 
 MENSAJERIA_USERNAME = '<user>'
 MENSAJERIA_PASSWORD = '<password>'
-EMAIL_SENDER_NAME = u"Servicio de Investigación"
+MENSAJERIA_SENDER_ID = u"Servicio de Investigación"
+EMAIL_DEBUG = True
 EMAIL_DEBUG_ADDRESS = 'stic.becariosinvestigacion.info@ull.edu.es'
 
 

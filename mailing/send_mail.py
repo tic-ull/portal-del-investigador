@@ -3,7 +3,6 @@
 from .models import Email
 from core import settings as st_core
 from core.models import Log
-from django.conf import settings as st
 from django.template import Template, Context
 from mailing import settings as st_mail
 from mensajeria import Mensajeria
@@ -17,7 +16,7 @@ logger = logging.getLogger('default')
 def send_mail(email_type, user, app_label):
     email_to = user.email
 
-    if st.EMAIL_DEBUG:
+    if st_mail.EMAIL_DEBUG:
         email_to = st_mail.EMAIL_DEBUG_ADDRESS
 
     if email_to is None:
@@ -36,7 +35,7 @@ def send_mail(email_type, user, app_label):
     try:
         m = Mensajeria(username=st_mail.MENSAJERIA_USERNAME,
                        password=st_mail.MENSAJERIA_PASSWORD,
-                       sender_id=st_mail.EMAIL_SENDER_NAME)
+                       sender_id=st_mail.MENSAJERIA_SENDER_ID)
 
         m.send_email(to=email_to, subject=email.title,
                      body=content, input_html=True)

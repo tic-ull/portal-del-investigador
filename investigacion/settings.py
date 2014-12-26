@@ -30,7 +30,6 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
-EMAIL_DEBUG = True
 DEVEL = True
 
 INTERNAL_IPS = ('127.0.0.1',)
