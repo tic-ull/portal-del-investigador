@@ -34,8 +34,8 @@ def send_mail(email_type, user, app_label):
     content = template.render(context)
 
     try:
-        m = Mensajeria(username=st.MENSAJERIA_USERNAME,
-                       password=st.MENSAJERIA_PASSWORD,
+        m = Mensajeria(username=st_mail.MENSAJERIA_USERNAME,
+                       password=st_mail.MENSAJERIA_PASSWORD,
                        sender_id=st_mail.EMAIL_SENDER_NAME)
 
         m.send_email(to=email_to, subject=email.title,
