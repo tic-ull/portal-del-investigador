@@ -43,7 +43,7 @@ def xml2pdf(xml):
     try:
         pdf = client_ws.service.crearPDFBean(
             st.USER_FECYT, st.PASSWORD_FECYT,
-            st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
+            st_cvn.FECYT_CVN_NAME, content, st_cvn.TIPO_PLANTILLA)
     except UnicodeDecodeError as e:
         logger.error(e.message)
         return None

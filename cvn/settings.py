@@ -2,17 +2,18 @@
 
 from django.conf import settings as st
 from enum import IntEnum, Enum
+
 import datetime
 import os
 
 # Enable translations in this file
 _ = lambda s: s
 
-# FECYT webservice configuration
+# ************************* FECYT ********************************************
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 WS_FECYT_VERSION = "1.3.0"
-NAME_CVN = 'CVN'
+FECYT_CVN_NAME = 'CVN'
 TIPO_PLANTILLA = 'PN2008'
 
 # Paths
@@ -31,7 +32,8 @@ XML_CVN_DATE_FORMAT = '%Y-%m-%d'
 XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
 
 # CVN Items
-XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
+XML_CURRENT_PROFESSION = os.path.join(
+    st.RES_ROOT, 'cvn/xml/current_profession.xml')
 XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
 XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
 XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
