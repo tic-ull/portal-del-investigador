@@ -92,10 +92,6 @@ class CVN(models.Model):
             self.status = st_cvn.CVNStatus.UPDATED
         if self.status != status and commit:
             self.save()
-            if self.status == st_cvn.CVNStatus.EXPIRED:
-                send_mail(email_type=st_mail.MailType.EXPIRED,
-                          user=self.user_profile.user,
-                          app_label=self._meta.app_label)
 
     def _is_valid_identity(self):
         try:
