@@ -71,4 +71,14 @@ class GetDataCVNULL(forms.Form):
         self.fields['start_year'].choices = choices
         self.fields['end_year'].choices = choices
 
+    def clean_end_year(self):
+        try:
+            start_year = int(self.cleaned_data['start_year'])
+            end_year = int(self.cleaned_data['end_year'])
+            if end_year < start_year:
+                raise forms.ValidationError(_("La fecha final no puede ser mayor "
+                                          "que la inicial"))
+        except ValueError:
+            pass
+
 

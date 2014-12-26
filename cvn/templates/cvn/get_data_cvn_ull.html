@@ -14,61 +14,72 @@
     {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
     </br>
     {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
-
-
     </br></br>
+    <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-lg">
+        {%  trans "Todos los años" %}
+    </button>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#selectYears">
+        {%  trans "Seleccionar un año" %}
+    </button>
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#rangeYears">
+        {%  trans "Seleccionar un periodo" %}
+    </button>
+
     <form action="" method='post' target="_blank">{% csrf_token %}
-        <div class="col-md-6">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#all_years"> {% trans "Obtener la información de todos los años"%}</a>
-                        </h4>
-                    </div>
-                    <div id="all_years" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <input id="id_all_years" style="display:none;" type="Submit" name="all_year" />
-                            <button type="button" id="all_years" onclick="$('#id_all_years').click()" class='btn btn-primary btn-block btn-ms'>
-                                {% trans 'Obtener información' %}
-                            </button>
-                        </div>
-                    </div>
+        <input id="all_years" style="display:none;" type="Submit" name="all_year" />
+    </form>
 
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#select_year"> {% trans "Obtener información de un año específico"%}</a>
-                        </h4>
+    <form action="" method='post' target="_blank">{% csrf_token %}
+        <!-- Modal: select a single year -->
+        <div class="modal fade" id="selectYears" tabindex="-1" role="dialog" aria-labelledby="selectYearsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="selectYearsLabel">{%  trans "Información del año seleccionado" %}</h4>
                     </div>
-                    <div id="select_year" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            {% trans "Seleccionar año" %}: {{ form.year }}
-                            </br></br>
-                            <input id="id_select_year" style="display:none;" type="Submit" name="select_year" />
-                            <button type="button" id="select_year" onclick="$('#id_select_year').click()" class='btn btn-primary btn-block btn-ms'>
-                                {% trans 'Obtener información' %}
-                            </button>
-                        </div>
+                    <div class="modal-body">
+                        {%  trans "Esta opción exportará la información almacenada en el año seleccionado:" %}{{ form.year }}
                     </div>
-
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#range_years"> {% trans "Obtener información comprendida en un rango de años"%}</a>
-                        </h4>
-                    </div>
-                    <div id="range_years" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            {% trans "Desde" %}: {{ form.start_year }} {% trans "Hasta" %}: {{ form.end_year }}
-                            </br></br>
-                            <input id="id_range_years" style="display:none;" type="Submit" name="range_years" />
-                            <button type="button" id="range_years" onclick="$('#id_range_years').click()" class='btn btn-primary btn-block btn-ms'>
-                                {% trans 'Obtener información' %}
-                            </button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cerrar" %}</button>
+                        <input id="select_year" style="display:none;" type="Submit" name="select_year" />
+                        <button type="button" onclick="$('#select_year').click()" class="btn btn-primary" data-dismiss="modal">{% trans "Exportar información" %}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+    <form action="" method='post' target="_blank">{% csrf_token %}
+        <!-- Modal: Select a range of years -->
+        <div class="modal fade" id="rangeYears" tabindex="-1" role="dialog" aria-labelledby="rangeYearsLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="rangeYearsLabel">{%  trans "Información del año seleccionado" %}</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% trans "Desde" %}: {{ form.start_year }} {% trans "Hasta" %}: {{ form.end_year }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cerrar" %}</button>
+                        <input id="range_years" style="display:none;" type="Submit" name="range_years" />
+                        <button type="button" onclick="$('#range_years').click()" class="btn btn-primary" data-dismiss="modal">{% trans "Exportar información" %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </br>
+    {%  if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {%  for error in form.end_year.errors %}
+                {{ error|escape }}
+            {%  endfor %}
+        </div>
+    {%  endif %}
 
 {% endblock main %}

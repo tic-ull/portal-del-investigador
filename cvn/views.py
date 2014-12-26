@@ -110,4 +110,5 @@ def get_cvn_data_ull(request):
             response['Content-Disposition'] = 'inline; ' \
                                               'filename="CVN-ULL-info.pdf"'
             return response
+        context['form'] = form
     return render(request, 'cvn/get_data_cvn_ull.html', context)
