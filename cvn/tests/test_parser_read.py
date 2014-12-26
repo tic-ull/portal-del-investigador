@@ -13,7 +13,7 @@ import os
 class ParserTestCase(TestCase):
 
     def test_parse_dates(self):
-        xml_dates = open(os.path.join(st_cvn.TEST_ROOT, 'xml/dates.xml'))
+        xml_dates = open(os.path.join(st_cvn.FILE_TEST_ROOT, 'xml/dates.xml'))
         dates = etree.parse(xml_dates).findall('Date')
         for date in dates:
             date_id = int(date.find('date_id').text)
@@ -85,21 +85,22 @@ class ParserTestCase(TestCase):
                 self.assertEqual(parsed_duration, None)
 
     def test_parse_publicacion_ids(self):
-        xml_externalpks = open(os.path.join(st_cvn.TEST_ROOT,
+        xml_externalpks = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                                             'xml/externalpks.xml'))
         ids = etree.parse(xml_externalpks).findall('ExternalPK')
         pids = parse_produccion_id(ids)
-        issn = pids[st_cvn.PRODUCCION_ID_CODE['ISSN']]
-        isbn = pids[st_cvn.PRODUCCION_ID_CODE['ISBN']]
-        financiadora = pids[st_cvn.PRODUCCION_ID_CODE['FINANCIADORA']]
-        deposito_legal = pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]
+        issn = pids[st_cvn.PRODUCTION_ID_CODE['ISSN']]
+        isbn = pids[st_cvn.PRODUCTION_ID_CODE['ISBN']]
+        financiadora = pids[st_cvn.PRODUCTION_ID_CODE['FINANCIADORA']]
+        deposito_legal = pids[st_cvn.PRODUCTION_ID_CODE['DEPOSITO_LEGAL']]
         self.assertEqual(issn, '0395-2037')
         self.assertEqual(isbn, '1-56619-909-1')
         self.assertEqual(financiadora, 'Cod. segun financiadora')
         self.assertEqual(deposito_legal, 'B-15155-1975')
 
     def test_parse_place(self):
-        xml_patentes = open(os.path.join(st_cvn.TEST_ROOT, 'xml/patentes.xml'))
+        xml_patentes = open(os.path.join(
+            st_cvn.FILE_TEST_ROOT, 'xml/patentes.xml'))
         patentes = etree.parse(xml_patentes).findall('CvnItem')
         for patente in patentes:
             num_solicitud = patente.find(

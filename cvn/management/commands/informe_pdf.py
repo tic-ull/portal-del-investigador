@@ -47,7 +47,7 @@ class InformePDF:
         self.set_logo()
 
     def set_logo(self):
-        img_path = st_cvn.PDF_DEPT_IMAGES
+        img_path = st_cvn.REPORTS_IMAGES
         if not os.path.exists(img_path + 'logo' + self.year + '.png'):
             logo = 'logo.png'
         else:
@@ -61,7 +61,7 @@ class InformePDF:
         self.logo_height *= logo_scale
 
     def go(self):
-        path_file = "%s/%s/%s/" % (st_cvn.PDF_DEPT_ROOT, self.model_type,
+        path_file = "%s/%s/%s/" % (st_cvn.REPORTS_PDF_ROOT, self.model_type,
                                    self.year)
         if not os.path.isdir(path_file):
             os.makedirs(path_file)
