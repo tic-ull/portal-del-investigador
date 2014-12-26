@@ -167,9 +167,9 @@ def _parse_produccion_type(xml):
     if xml is None:
         return ''
     cvn_key = xml.find('CvnItemID/CVNPK/Item').text.strip()
-    if cvn_key not in st_cvn.FECYT_CODE:
+    if cvn_key not in st_cvn.CVNITEM_CODE:
         return ''
-    return st_cvn.FECYT_CODE[cvn_key]
+    return st_cvn.CVNITEM_CODE[cvn_key]
 
 
 def _parse_produccion_subtype(xml):
@@ -180,8 +180,8 @@ def _parse_produccion_subtype(xml):
     if subtype is None:
         return ''
     subtype = subtype.text.strip()
-    if subtype in st_cvn.FECYT_CODE_SUBTYPE:
-        return st_cvn.FECYT_CODE_SUBTYPE[subtype]
+    if subtype in st_cvn.CVNITEM_SUBTYPE_CODE:
+        return st_cvn.CVNITEM_SUBTYPE_CODE[subtype]
     return ''
 
 
@@ -256,7 +256,7 @@ def parse_produccion_id(node_list):
        different identifiers for produccion nodes.
        Output: A dictionary with the PRODUCCION_ID_CODEs found
     """
-    prods = {i: None for i in st_cvn.PRODUCCION_ID_CODE.values()}
+    prods = {i: None for i in st_cvn.PRODUCTION_ID_CODE.values()}
 
     for node in node_list:
         prods[node.find('Type/Item').text] = node.find('Code/Item').text
@@ -284,40 +284,40 @@ def parse_places(node_list):
     extended_place = u""
     for item in node_list:
         country = item.find("CountryCode")
-        if country.attrib['code'] == st_cvn.FC_PRIORITY_COUNTRY:
+        if country.attrib['code'] == st_cvn.PRIORITY_COUNTRY:
             main_place = _parse_place(item)
-        elif country.attrib['code'] == st_cvn.FC_EXTENDED_COUNTRY:
+        elif country.attrib['code'] == st_cvn.EXTENDED_COUNTRY:
             extended_place += _parse_place(item) + "; "
     return main_place, extended_place.strip('; ')
 
 
 def parse_entities(node_list):
     operators = u""
-    entities = {i.value: None for i in st_cvn.FC_ENTITY}
+    entities = {i.value: None for i in st_cvn.Entity}
     for item in node_list:
         entity = item.find("EntityName")
         # Most entities come once, so we just save the content to a dict key
-        if entity.attrib['code'] != st_cvn.FC_ENTITY.OPERATOR.value:
+        if entity.attrib['code'] != st_cvn.Entity.OPERATOR.value:
             entities[entity.attrib['code']] = entity.find("Item").text
         # The entity operator (an entity that operates a patent) can come
         # more than once, so we concatenate the occurrence.
         else:
             operators += entity.find("Item").text + "; "
     if operators:
-        entities[st_cvn.FC_ENTITY.OPERATOR.value] = operators.strip('; ')
+        entities[st_cvn.Entity.OPERATOR.value] = operators.strip('; ')
     return entities
 
 
 def parse_dedication_type(node):
     if node is not None:
-        return (st_cvn.FC_DEDICATION_TYPE(node.text)
-                == st_cvn.FC_DEDICATION_TYPE.TOTAL)
+        return (st_cvn.DedicationType(node.text)
+                == st_cvn.DedicationType.TOTAL)
     else:
         return None
 
 
 def parse_filters(node_list):
-    filters = {i.value: None for i in st_cvn.FC_FILTER}
+    filters = {i.value: None for i in st_cvn.FilterType}
     for item in node_list:
         filter_name = item.find("Value")
         data = filter_name.find("Item").text
@@ -325,9 +325,9 @@ def parse_filters(node_list):
         if data == 'OTHERS':
             filters[filter_name.attrib['code']] = item.find("Others/Item").text
         else:  # Get the key of corresponding hash
-            dict = st_cvn.FC_SUBJECT_TYPE
-            if filter_name.attrib['code'] == st_cvn.FC_FILTER.PROGRAM.value:
-                dict = st_cvn.FC_PROGRAM_TYPE
+            dict = st_cvn.SUBJECT_TYPE
+            if filter_name.attrib['code'] == st_cvn.FilterType.PROGRAM.value:
+                dict = st_cvn.PROGRAM_TYPE
             filters[filter_name.attrib['code']] = dict.keys()[
                 dict.values().index(unicode(data))]
 

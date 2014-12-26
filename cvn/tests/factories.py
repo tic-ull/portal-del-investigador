@@ -38,10 +38,10 @@ class TeachingFactory(factory.Factory):
     professional_category = FuzzyAttribute(
         lambda: u'Profesión #' + str(randint(0, 100)))
     program_type = FuzzyAttribute(lambda: random.choice(
-        st_cvn.FC_SUBJECT_TYPE.keys() +
+        st_cvn.SUBJECT_TYPE.keys() +
         [u'Titulación #' + str(randint(0, 100))]))
     subject_type = FuzzyAttribute(lambda: random.choice(
-        st_cvn.FC_SUBJECT_TYPE.keys() +
+        st_cvn.SUBJECT_TYPE.keys() +
         ['Tipo asignatura #' + str(randint(0, 100))]))
     course = FuzzyAttribute(lambda: str(randint(1, 5)))
     qualification = factory.Sequence(lambda n: u'Titulación #{0}'.format(n))

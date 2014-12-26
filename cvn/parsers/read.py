@@ -18,16 +18,16 @@ def _parse_cvnitem_profession(node):
             'full_time': parse_dedication_type(node.find('Dedication/Item'))}
     entities = parse_entities(node.findall('Entity'))
     item['employer'] = (
-        entities[st_cvn.FC_ENTITY.EMPLOYER.value]
-        if entities[st_cvn.FC_ENTITY.EMPLOYER.value] is not None
-        else entities[st_cvn.FC_ENTITY.CURRENT_EMPLOYER.value]
+        entities[st_cvn.Entity.EMPLOYER.value]
+        if entities[st_cvn.Entity.EMPLOYER.value] is not None
+        else entities[st_cvn.Entity.CURRENT_EMPLOYER.value]
     )
-    item['centre'] = (entities[st_cvn.FC_ENTITY.CENTRE.value]
-                      if entities[st_cvn.FC_ENTITY.CENTRE.value] is not None
-                      else entities[st_cvn.FC_ENTITY.CURRENT_CENTRE.value])
-    item['department'] = (entities[st_cvn.FC_ENTITY.DEPT.value]
-                          if entities[st_cvn.FC_ENTITY.DEPT.value] is not None
-                          else entities[st_cvn.FC_ENTITY.CURRENT_DEPT.value])
+    item['centre'] = (entities[st_cvn.Entity.CENTRE.value]
+                      if entities[st_cvn.Entity.CENTRE.value] is not None
+                      else entities[st_cvn.Entity.CURRENT_CENTRE.value])
+    item['department'] = (entities[st_cvn.Entity.DEPT.value]
+                          if entities[st_cvn.Entity.DEPT.value] is not None
+                          else entities[st_cvn.Entity.CURRENT_DEPT.value])
     return item
 
 
@@ -64,9 +64,9 @@ def parse_cvnitem_scientificact_production(node):
         'titulo': parse_title(node),
         'autores': parse_authors(node.findall('Author')),
         'fecha': parse_date(node.find('Date')),
-        'issn': pids[st_cvn.PRODUCCION_ID_CODE['ISSN']],
-        'isbn': pids[st_cvn.PRODUCCION_ID_CODE['ISBN']],
-        'deposito_legal': pids[st_cvn.PRODUCCION_ID_CODE['DEPOSITO_LEGAL']]
+        'issn': pids[st_cvn.PRODUCTION_ID_CODE['ISSN']],
+        'isbn': pids[st_cvn.PRODUCTION_ID_CODE['ISBN']],
+        'deposito_legal': pids[st_cvn.PRODUCTION_ID_CODE['DEPOSITO_LEGAL']]
     }
     if (node.find('Link/Title/Name') and
             node.find('Link/Title/Name/Item').text):
@@ -107,14 +107,14 @@ def parse_cvnitem_scientificexp_property(node):
     places = parse_places(node.findall("Place"))
     entities = parse_entities(node.findall("Entity"))
     num_solicitud = parse_produccion_id(
-        node.findall('ExternalPK'))[st_cvn.PRODUCCION_ID_CODE['SOLICITUD']]
+        node.findall('ExternalPK'))[st_cvn.PRODUCTION_ID_CODE['SOLICITUD']]
     item = {'titulo': parse_title(node),
             'num_solicitud': num_solicitud,
             'lugar_prioritario': places[0],
             'lugares': places[1],
             'autores': parse_authors(node.findall('Author')),
-            'entidad_titular': entities[st_cvn.FC_ENTITY.OWNER.value],
-            'empresas': entities[st_cvn.FC_ENTITY.OPERATOR.value]}
+            'entidad_titular': entities[st_cvn.Entity.OWNER.value],
+            'empresas': entities[st_cvn.Entity.OPERATOR.value]}
 
     dates = node.findall('Date')
     for date in dates:                              # There can be 2 dates
@@ -143,7 +143,7 @@ def parse_cvnitem_teaching_phd(node):
             'codirector': parse_authors(node.findall('Link/Author')),
             'fecha': parse_date(node.find('Date')),
             'universidad_que_titula': entities[
-                st_cvn.FC_ENTITY.PHD_UNIVERSITY.value]}
+                st_cvn.Entity.PHD_UNIVERSITY.value]}
     return item
 
 
@@ -157,11 +157,11 @@ def parse_cvnitem_teaching_subject(node):
         'qualification': node.find('Link/Title/Name/Item').text,
         'school_year': node.find('Date/StartDate/Year/Item').text,
         'number_credits': node.find('PhysicalDimension/Value/Item').text,
-        'university': entities[st_cvn.FC_ENTITY.UNIVERSITY.value],
-        'department': entities[st_cvn.FC_ENTITY.TEACHING_DEPARTAMENT.value],
-        'faculty': entities[st_cvn.FC_ENTITY.FACULTY.value],
-        'program_type': filters[st_cvn.FC_FILTER.PROGRAM.value],
-        'subject_type': filters[st_cvn.FC_FILTER.SUBJECT.value]
+        'university': entities[st_cvn.Entity.UNIVERSITY.value],
+        'department': entities[st_cvn.Entity.TEACHING_DEPARTAMENT.value],
+        'faculty': entities[st_cvn.Entity.FACULTY.value],
+        'program_type': filters[st_cvn.FilterType.PROGRAM.value],
+        'subject_type': filters[st_cvn.FilterType.SUBJECT.value]
     }
 
     professional_category = node.find('Description/Item').text
@@ -208,26 +208,26 @@ def parse_cvnitem_learning_degree(node):
 def parse_cvnitem(node):
     cvn_key = node.find('CvnItemID/CVNPK/Item').text.strip()
     cvnitem = None
-    if cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_CURRENT.value:
+    if cvn_key == st_cvn.CvnItemCode.PROFESSION_CURRENT.value:
         cvnitem = parse_cvnitem_profession_current(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.PROFESSION_FORMER.value:
+    elif cvn_key == st_cvn.CvnItemCode.PROFESSION_FORMER.value:
         cvnitem = parse_cvnitem_profession_former(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_PHD.value:
+    elif cvn_key == st_cvn.CvnItemCode.LEARNING_PHD.value:
         cvnitem = parse_cvnitem_learning_phd(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.TEACHING_SUBJECT.value:
+    elif cvn_key == st_cvn.CvnItemCode.TEACHING_SUBJECT.value:
         cvnitem = parse_cvnitem_teaching_subject(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.LEARNING_DEGREE.value:
+    elif cvn_key == st_cvn.CvnItemCode.LEARNING_DEGREE.value:
         cvnitem = parse_cvnitem_learning_degree(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_PROPERTY.value:
+    elif cvn_key == st_cvn.CvnItemCode.SCIENTIFICEXP_PROPERTY.value:
         cvnitem = parse_cvnitem_scientificexp_property(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_AGREEMENT.value:
+    elif cvn_key == st_cvn.CvnItemCode.SCIENTIFICEXP_AGREEMENT.value:
         cvnitem = parse_cvnitem_scientificexp_agreement(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICEXP_PROJECT.value:
+    elif cvn_key == st_cvn.CvnItemCode.SCIENTIFICEXP_PROJECT.value:
         cvnitem = parse_cvnitem_scientificexp_project(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.TEACHING_PHD.value:
+    elif cvn_key == st_cvn.CvnItemCode.TEACHING_PHD.value:
         cvnitem = parse_cvnitem_teaching_phd(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICACT_CONGRESS.value:
+    elif cvn_key == st_cvn.CvnItemCode.SCIENTIFICACT_CONGRESS.value:
         cvnitem = parse_cvnitem_scientificact_congress(node)
-    elif cvn_key == st_cvn.CVNITEM_CODE.SCIENTIFICACT_PRODUCTION.value:
+    elif cvn_key == st_cvn.CvnItemCode.SCIENTIFICACT_PRODUCTION.value:
         cvnitem = parse_cvnitem_scientificact_production(node)
     return cvnitem
