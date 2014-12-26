@@ -24,22 +24,22 @@ CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
-
+CVN_TEMPLATE_DIR = os.path.join(st.BASE_DIR, 'cvn/templates/cvn')
 
 # Date format for writing to the CVN-XML files
 XML_CVN_DATE_FORMAT = '%Y-%m-%d'
 # XML Files for XML parser (to create or modify cvn-xml)
 
 # Base xml-cvn
-XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
+XML_SKELETON_PATH = os.path.join(CVN_TEMPLATE_DIR, 'xml/skeleton.xml')
 
 # CVN Items
 XML_CURRENT_PROFESSION = os.path.join(
-    st.RES_ROOT, 'cvn/xml/current_profession.xml')
-XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
-XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
-XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
-XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
+    CVN_TEMPLATE_DIR, 'xml/current_profession.xml')
+XML_PROFESSION = os.path.join(CVN_TEMPLATE_DIR, 'xml/profession.xml')
+XML_TEACHING = os.path.join(CVN_TEMPLATE_DIR, 'xml/teaching.xml')
+XML_LEARNING = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning.xml')
+XML_LEARNING_PHD = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning_phd.xml')
 
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
 
