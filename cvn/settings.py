@@ -186,7 +186,7 @@ class Entity(Enum):
     OWNER = "050.030.010.300"
 
 
-FC_OFFICIAL_TITLE_TYPE = {
+OFFICIAL_TITLE_TYPE = {
     u"DOCTOR": u'940',
     u"LICENCIADO/INGENIERO SUPERIOR": u'950',
     u"DIPLOMADO/INGENIERO TECNICO": u'960'
@@ -233,7 +233,7 @@ class DedicationType(Enum):
     PARTIAL = '030'
 
 
-class FilterType(Enum):
+class FilterCode(Enum):
     PROGRAM = "030.010.000.140"
     SUBJECT = "030.010.000.190"
 

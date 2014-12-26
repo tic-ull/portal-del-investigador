@@ -160,8 +160,8 @@ def parse_cvnitem_teaching_subject(node):
         'university': entities[st_cvn.Entity.UNIVERSITY.value],
         'department': entities[st_cvn.Entity.TEACHING_DEPARTAMENT.value],
         'faculty': entities[st_cvn.Entity.FACULTY.value],
-        'program_type': filters[st_cvn.FilterType.PROGRAM.value],
-        'subject_type': filters[st_cvn.FilterType.SUBJECT.value]
+        'program_type': filters[st_cvn.FilterCode.PROGRAM.value],
+        'subject_type': filters[st_cvn.FilterCode.SUBJECT.value]
     }
 
     professional_category = node.find('Description/Item').text
@@ -184,8 +184,8 @@ def parse_cvnitem_learning_degree(node):
     if title_type == 'OTHERS':
         title_type = node.find('Filter/Others/Item').text
     else:
-        title_type = st_cvn.FC_OFFICIAL_TITLE_TYPE.keys()[
-            st_cvn.FC_OFFICIAL_TITLE_TYPE.values().index(unicode(title_type))]
+        title_type = st_cvn.OFFICIAL_TITLE_TYPE.keys()[
+            st_cvn.OFFICIAL_TITLE_TYPE.values().index(unicode(title_type))]
     university = (node.find('Entity/EntityName/Item').text
                   if node.find('Entity/EntityName/Item') is not None
                   else None)

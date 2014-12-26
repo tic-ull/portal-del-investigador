@@ -317,7 +317,7 @@ def parse_dedication_type(node):
 
 
 def parse_filters(node_list):
-    filters = {i.value: None for i in st_cvn.FilterType}
+    filters = {i.value: None for i in st_cvn.FilterCode}
     for item in node_list:
         filter_name = item.find("Value")
         data = filter_name.find("Item").text
@@ -326,7 +326,7 @@ def parse_filters(node_list):
             filters[filter_name.attrib['code']] = item.find("Others/Item").text
         else:  # Get the key of corresponding hash
             dict = st_cvn.SUBJECT_TYPE
-            if filter_name.attrib['code'] == st_cvn.FilterType.PROGRAM.value:
+            if filter_name.attrib['code'] == st_cvn.FilterCode.PROGRAM.value:
                 dict = st_cvn.PROGRAM_TYPE
             filters[filter_name.attrib['code']] = dict.keys()[
                 dict.values().index(unicode(data))]

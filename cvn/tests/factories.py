@@ -59,7 +59,7 @@ class LearningFactory(factory.Factory):
     FACTORY_FOR = dict
     title = factory.Sequence(lambda n: u'Título #{0}'.format(n))
     title_type = FuzzyAttribute(lambda: random.choice(
-        st_cvn.FC_OFFICIAL_TITLE_TYPE.keys() + ['GRADO', 'FP']))
+        st_cvn.OFFICIAL_TITLE_TYPE.keys() + ['GRADO', 'FP']))
     university = FuzzyAttribute(lambda: random.choice(
         [None, 'Universidad #' + str(randint(0, 100))]))
     date = FuzzyAttribute(lambda: random.choice(
