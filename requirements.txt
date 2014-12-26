@@ -21,7 +21,7 @@ coverage
 django-coverage
 enum34
 django-rosetta
-django-tinymce
+js.tinymce
 django-staticfiles
 django-tables2
 redis
@@ -30,3 +30,5 @@ pyvirtualdisplay
 gevent
 greenlet
 django-modeltranslation
+markdown
+-e git+git@gitlab.stic.ull.es:gestion/mensajeria#egg=mensajeria

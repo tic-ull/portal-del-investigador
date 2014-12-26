@@ -2,19 +2,20 @@
 
 from django.conf import settings as st
 from enum import IntEnum, Enum
+
 import datetime
 import os
 
 # Enable translations in this file
 _ = lambda s: s
 
-# FECYT webservice configuration
-USER_FECYT = "cvnPdfULL01"
-PASSWORD_FECYT = "MXz8T9Py7Xhr"
+# ************************* FECYT ********************************************
+USER_FECYT = '<user>'
+PASSWORD_FECYT = '<password>'
 WS_FECYT_PDF2XML = "https://www.cvnet.es/cvn2RootBean_v1_3/services/Cvn2RootBean?wsdl"
 WS_FECYT_XML2PDF = "https://www.cvnet.es/generadorPdfWS_v1_3/services/GenerarPDFWS?wsdl"
 WS_FECYT_VERSION = "1.3.0"
-NAME_CVN = 'CVN'
+FECYT_CVN_NAME = 'CVN'
 TIPO_PLANTILLA = 'PN2008'
 
 # Paths
@@ -23,21 +24,22 @@ CSV_DEPT_ROOT = os.path.join(st.MEDIA_ROOT, 'cvn/reports/csv')
 PDF_DEPT_IMAGES = os.path.join(st.STATIC_ROOT, 'images/')
 TEST_ROOT = os.path.join(st.BASE_DIR, 'cvn/tests/files/')
 MIGRATION_ROOT = os.path.join(st.BASE_DIR, 'importCVN')
-
+CVN_TEMPLATE_DIR = os.path.join(st.BASE_DIR, 'cvn/templates/cvn')
 
 # Date format for writing to the CVN-XML files
 XML_CVN_DATE_FORMAT = '%Y-%m-%d'
 # XML Files for XML parser (to create or modify cvn-xml)
 
 # Base xml-cvn
-XML_SKELETON_PATH = os.path.join(st.RES_ROOT, 'cvn/xml/skeleton.xml')
+XML_SKELETON_PATH = os.path.join(CVN_TEMPLATE_DIR, 'xml/skeleton.xml')
 
 # CVN Items
-XML_CURRENT_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/current_profession.xml')
-XML_PROFESSION = os.path.join(st.RES_ROOT, 'cvn/xml/profession.xml')
-XML_TEACHING = os.path.join(st.RES_ROOT, 'cvn/xml/teaching.xml')
-XML_LEARNING = os.path.join(st.RES_ROOT, 'cvn/xml/learning.xml')
-XML_LEARNING_PHD = os.path.join(st.RES_ROOT, 'cvn/xml/learning_phd.xml')
+XML_CURRENT_PROFESSION = os.path.join(
+    CVN_TEMPLATE_DIR, 'xml/current_profession.xml')
+XML_PROFESSION = os.path.join(CVN_TEMPLATE_DIR, 'xml/profession.xml')
+XML_TEACHING = os.path.join(CVN_TEMPLATE_DIR, 'xml/teaching.xml')
+XML_LEARNING = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning.xml')
+XML_LEARNING_PHD = os.path.join(CVN_TEMPLATE_DIR, 'xml/learning_phd.xml')
 
 EDITOR_FECYT = 'https://cvn.fecyt.es/editor/'
 
@@ -250,5 +252,17 @@ class FC_FILTER(Enum):
     PROGRAM = "030.010.000.140"
     SUBJECT = "030.010.000.190"
 
+
 # Range of years for the dropdown
 RANGE_OF_YEARS = (1950, 2030)
+
+# ************************* SETTINGS LOCAL ***********************************
+try:
+    CVN_SETTINGS_LOCAL
+except NameError:
+    try:
+        from .settings_local import *
+    except ImportError:
+        pass
+# ************************* SETTINGS LOCAL ***********************************
+
