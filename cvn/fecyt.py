@@ -22,7 +22,7 @@ def pdf2xml(cvn_file):
     client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
     try:
         result_xml = client_ws.service.cvnPdf2Xml(
-            st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT, content)
+            st_cvn.FECYT_USER, st_cvn.FECYT_PASSWORD, content)
     except:
         logger.warning(
             u'No hay respuesta del WS' +
@@ -41,8 +41,8 @@ def xml2pdf(xml):
     client_ws = suds.client.Client(st_cvn.WS_FECYT_XML2PDF)
     try:
         pdf = client_ws.service.crearPDFBean(
-            st_cvn.USER_FECYT, st_cvn.PASSWORD_FECYT,
-            st_cvn.NAME_CVN, content, st_cvn.TIPO_PLANTILLA)
+            st_cvn.FECYT_USER, st_cvn.FECYT_PASSWORD,
+            st_cvn.FECYT_CVN_NAME, content, st_cvn.FECYT_TIPO_PLANTILLA)
     except UnicodeDecodeError as e:
         logger.error(e.message)
         return None

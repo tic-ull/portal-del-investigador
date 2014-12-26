@@ -25,8 +25,20 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ['-uploaded_at'],
-                'verbose_name_plural': 'Hist\xf3rico de Curr\xedculum Vitae Normalizado',
+                'verbose_name_plural': 'Historical Normalized Curriculum Vitae',
             },
             bases=(models.Model,),
+        ),
+        migrations.AlterField(
+            model_name='convenio',
+            name='ambito',
+            field=models.CharField(max_length=50, null=True, verbose_name='Scope', blank=True),
+            preserve_default=True,
+        ),
+        migrations.AlterField(
+            model_name='proyecto',
+            name='ambito',
+            field=models.CharField(max_length=50, null=True, verbose_name='Scope', blank=True),
+            preserve_default=True,
         ),
     ]

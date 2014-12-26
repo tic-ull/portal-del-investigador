@@ -1,3 +1,3 @@
 # -*- encoding: UTF-8 -*-
 
-PERCENT_VALID_DEPT_CVN = 75
+PERCENTAGE_VALID_CVN = 75

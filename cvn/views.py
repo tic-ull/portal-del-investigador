@@ -32,7 +32,7 @@ def index(request):
         area_json = request.session['area_json']
         context['area'] = area
 
-    context['validPercentCVN'] = st_stat.PERCENT_VALID_DEPT_CVN
+    context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN
 
     try:
         cvn = CVN.objects.get(user_profile__user=user)

@@ -27,7 +27,7 @@ class InformeCSV:
                        'Libros', u'Capítulos'.encode('utf-8'), 'Congresos',
                        'Proyectos', 'Convenios', 'Tesis',
                        'Propiedad Intelectual']
-        path = "%s/%s/%s/" % (st_cvn.CSV_DEPT_ROOT, self.model_type,
+        path = "%s/%s/%s/" % (st_cvn.REPORTS_CSV_ROOT, self.model_type,
                               self.year)
         if not os.path.isdir(path):
             os.makedirs(path)
