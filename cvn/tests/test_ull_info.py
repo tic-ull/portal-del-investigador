@@ -49,11 +49,11 @@ class UllInfoTestCase(TestCase):
         init()
 
     def setUp(self):
-        self.xml_ull = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_ull = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                             'xml/CVN-ULL.xml'))
-        self.xml_empty = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_empty = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                               'xml/empty.xml'))
-        self.xml_test = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_test = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                              'xml/CVN-Test.xml'))
 
     @patch.object(CachedWS, 'get', get_learning)
