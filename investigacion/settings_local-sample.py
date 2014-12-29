@@ -28,6 +28,7 @@ EMAIL_SUPPORT = 'email@example.com'
 
 # Enable DJANGO DEBUG TOOLBAR
 # INSTALLED_APPS = ('debug_toolbar', ) + INSTALLED_APPS
+# DEBUG_TOOLBAR_PATCH_SETTINGS = False
 # MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 # DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 
