@@ -118,6 +118,8 @@ class CVN(models.Model):
 
     @classmethod
     def get_pdf_ull(cls, user, start_date=None, end_date=None):
+        if user.profile.rrhh_code is None:
+            return None
         parser = CvnXmlWriter(user=user)
         cls._insert_learning_ull(user, parser, start_date, end_date)
         cls._insert_cargos_ull(user, parser, start_date, end_date)
