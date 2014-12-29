@@ -12,6 +12,8 @@ from core.ws_utils import CachedWS
 from cvn.models import CVN
 from django.conf import settings as st
 from cvn.parsers.read import parse_cvnitem
+from cvn.helpers import DateRange
+import datetime
 from lxml import etree
 
 
@@ -125,6 +127,30 @@ class UllInfoTestCase(TestCase):
         with patch.object(CachedWS, 'get', get_cargos):
             test_info = CachedWS.get(st.WS_ULL_CARGOS % 'example_code')
         self.assertEqual(ws_info, test_info)
+
+    def test_daterange(self):
+        date1 = datetime.date(2001, 1, 1)
+        date2 = datetime.date(2001, 12, 31)
+        date3 = datetime.date(2002, 1, 1)
+        date4 = datetime.date(2003, 1, 1)
+        range1 = DateRange(date1, date2)
+        range2 = DateRange(date3, date4)
+        range3 = DateRange(date2, date4)
+        range4 = DateRange(date1, date1)
+        range5 = DateRange(date3, date3)
+        range6 = DateRange(None, date3)
+        range7 = DateRange(date2, None)
+        range8 = DateRange(date4, date4)
+        range9 = DateRange(date1, date3)
+        range10 = DateRange(date2, date4)
+        self.assertFalse(range1.intersect(range2))
+        self.assertFalse(range3.intersect(range4))
+        self.assertTrue(range3.intersect(range5))
+        self.assertTrue(range6.intersect(range1))
+        self.assertFalse(range6.intersect(range8))
+        self.assertTrue(range7.intersect(range8))
+        self.assertFalse(range7.intersect(range4))
+        self.assertTrue(range9.intersect(range10))
 
     @classmethod
     def tearDownClass(cls):
