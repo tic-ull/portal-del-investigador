@@ -14,18 +14,18 @@ BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 # ******************************* PATHS *************************************
 
 # ******************************* URLS **************************************
-BASE_URL = 'http://wwwpre.ull.es/portaldeinvestigacion'
+BASE_URL = 'http://www.example.com'
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
 LOGIN_URL = 'login'  # Login address for login_required decorator
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
-OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
+OLD_PORTAL_URL = 'http://www.example.com'
 # ******************************* URLS **************************************
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
+SECRET_KEY = 'secret_key-sample'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +40,7 @@ SITE_ID = 1
 
 # ******************************* ADMINS *************************************
 ADMINS = (
-    ('STIC-Investigacion', 'stic.becariosinvestigacion.info@ull.edu.es'),
+    ('STIC-Investigacion', 'email@example.com'),
 )
 MANAGERS = ADMINS
 
@@ -113,7 +113,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # ************************* AUTHENTICATION CAS - ULL *************************
-CAS_SERVER_URL = 'https://loginpruebas.ull.es/cas-1/'
+CAS_SERVER_URL = 'http://www.example.com/cas-1/'
 CAS_ADMIN_PREFIX = 'admin'  # The URL prefix of the Django administration site
 CAS_EXTRA_LOGIN_PARAMS = ''  # Extra parameters for login URL when redirecting
 CAS_IGNORE_REFERER = False
@@ -292,7 +292,7 @@ STATICFILES_FINDERS = (
 # ************************* STATIC FILES *************************************
 
 # ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'https://wwwpre.ull.es/odin/core/rest/'
+WS_SERVER_URL = 'http://www.example.com/'
 # ************************* WEB SERVICES *************************************
 
 # ************************* REDIS ********************************************
@@ -315,7 +315,7 @@ try:
     SETTINGS_LOCAL
 except NameError:
     try:
-        from settings_local import *
+        from .settings_local import *
     except ImportError:
         pass
 # ************************* SETTINGS LOCAL ***********************************
