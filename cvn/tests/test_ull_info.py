@@ -115,10 +115,16 @@ class UllInfoTestCase(TestCase):
         self.assertTrue(allequal)
 
     def test_ws_ull_learning(self):
-        rrhh_code = 29739
+        ws_info = CachedWS.get(st.WS_ULL_LEARNING % 29739)
+        with patch.object(CachedWS, 'get', get_learning):
+            test_info = CachedWS.get(st.WS_ULL_LEARNING % 'example_code')
+        self.assertEqual(ws_info, test_info)
 
     def test_ws_ull_cargos(self):
-        rrhh_code = 29739
+        ws_info = CachedWS.get(st.WS_ULL_CARGOS % 29739)
+        with patch.object(CachedWS, 'get', get_cargos):
+            test_info = CachedWS.get(st.WS_ULL_CARGOS % 'example_code')
+        self.assertEqual(ws_info, test_info)
 
     @classmethod
     def tearDownClass(cls):
