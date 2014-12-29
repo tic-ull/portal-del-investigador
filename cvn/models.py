@@ -126,49 +126,56 @@ class CVN(models.Model):
         xml = parser.tostring()
         return fecyt.xml2pdf(xml)
 
-    @staticmethod
-    def _insert_learning_ull(user, parser, start_date, end_date):
+    @classmethod
+    def _insert_learning_ull(cls, user, parser, start_date, end_date):
         items = ws.get(url=st.WS_ULL_LEARNING % user.profile.rrhh_code,
                        use_redis=False)
         for item in items:
-            item_date = datetime.datetime.strptime(item["f_expedicion"],
-                                                   "%d-%m-%Y").date()
-            item_date_range = DateRange(item_date, item_date)
+            doctor = item["des1_grado_titulacion"] == u'Doctor'
+            cls._learning_to_json(item)
+            item_date_range = DateRange(item['date'], item['date'])
             if not item_date_range.intersect(DateRange(start_date, end_date)):
                 continue
-            doctor = item["des1_grado_titulacion"] == u'Doctor'
-            university = item.pop("organismo", None)
             if doctor:
-                parser.add_learning_phd(title=item["des1_titulacion"],
-                                        date=item_date,
-                                        university=university)
+                parser.add_learning_phd(**item)
             else:
-                parser.add_learning(title=item["des1_titulacion"],
-                                    title_type=item["des1_grado_titulacion"],
-                                    university=university,
-                                    date=item_date)
+                parser.add_learning(**item)
 
     @staticmethod
-    def _insert_cargos_ull(user, parser, start_date, end_date):
+    def _learning_to_json(item):
+        item['title'] = item.pop("des1_titulacion")
+        item['university'] = item.pop("organismo", None)
+        item['date'] = datetime.datetime.strptime(item.pop("f_expedicion"),
+                                                  "%d-%m-%Y").date()
+        title_type = item.pop("des1_grado_titulacion")
+        if title_type != u'Doctor':
+            item['title_type'] = title_type
+
+    @classmethod
+    def _insert_cargos_ull(cls, user, parser, start_date, end_date):
         items = ws.get(url=st.WS_ULL_CARGOS % user.profile.rrhh_code,
                        use_redis=False)
         for item in items:
-            item["start_date"] = datetime.datetime.strptime(
-                item.pop("f_toma_posesion"), "%d-%m-%Y").date()
-            if "f_hasta" in item:
-                item["end_date"] = datetime.datetime.strptime(
-                    item.pop("f_hasta"), "%d-%m-%Y").date()
-            else:
-                item["end_date"] = None
+            cls._cargo_to_json(item)
             item_date_range = DateRange(item["start_date"], item["end_date"])
             if not item_date_range.intersect(DateRange(start_date, end_date)):
                 continue
-            item["title"] = item.pop("des1_cargo")
-            item["centre"] = item.pop("centro", None)
-            item["department"] = item.pop("departamento", None)
-            item["full_time"] = item.pop("dedicacion",
-                                         None) == "Tiempo Completo"
             parser.add_profession(**item)
+
+    @staticmethod
+    def _cargo_to_json(item):
+        item["start_date"] = datetime.datetime.strptime(
+            item.pop("f_toma_posesion"), "%d-%m-%Y").date()
+        if "f_hasta" in item:
+            item["end_date"] = datetime.datetime.strptime(
+                item.pop("f_hasta"), "%d-%m-%Y").date()
+        else:
+            item["end_date"] = None
+        item["title"] = item.pop("des1_cargo")
+        item["centre"] = item.pop("centro", None)
+        item["department"] = item.pop("departamento", None)
+        item["full_time"] = item.pop("dedicacion",
+                                     None) == "Tiempo Completo"
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):
