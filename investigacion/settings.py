@@ -43,6 +43,9 @@ ADMINS = (
     ('STIC-Investigacion', 'stic.becariosinvestigacion.info@ull.edu.es'),
 )
 MANAGERS = ADMINS
+
+SUPPORT = u'Servicio de Investigación'
+EMAIL_SUPPORT = 'email@example.com'
 # ******************************* ADMINS *************************************
 
 # ******************************* LANGUAGE ***********************************
