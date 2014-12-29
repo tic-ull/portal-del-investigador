@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 cvn_file = SimpleUploadedFile(
                     upload_file.name,
                     upload_file.read(),
-                    content_type=st_cvn.PDF)
+                    content_type="application/pdf")
                 upload_file.close()
                 try:
                     user.profile.cvn.remove()

@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+import js
 import os
 
 # ******************************* PATHS *************************************
@@ -8,7 +9,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-RES_ROOT = os.path.join(BASE_DIR, 'res')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
 # ******************************* PATHS *************************************
@@ -19,8 +19,8 @@ STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
 LOGIN_URL = 'login'  # Login address for login_required decorator
-TINYMCE_JS_URL = os.path.join(STATIC_URL, 'tiny_mce/tiny_mce.js')
-TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'tiny_mce/conf/textarea.js')
+TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
+TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://aportalpre.stic.ull.es'
 # ******************************* URLS **************************************
 
@@ -29,7 +29,7 @@ SECRET_KEY = 'z7(##tnkvh@@h@rcpcu+&v=nyy!(nt1y6a8ovb5l7yk04bxh3+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
 DEVEL = True
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -62,6 +62,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'cvn/locale'),
     os.path.join(BASE_DIR, 'statistics/locale'),
     os.path.join(BASE_DIR, 'accounting/locale'),
+    os.path.join(BASE_DIR, 'mailing/locale'),
 )
 TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = True
@@ -78,7 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'django.contrib.sites',
-    'tinymce',
     'core',
     'cvn',
     'crequest',
@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django_tables2',
     'django.contrib.flatpages',
     'accounting',
+    'mailing',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -276,7 +277,10 @@ TEMPLATE_DIRS = (
 # ************************* TEMPLATES ****************************************
 
 # ************************* STATIC FILES *************************************
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    ('js', js.__path__[0] + ''),
+)
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -298,7 +302,6 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 
 # ************************* EMAIL ********************************************
 import socket
-
 EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
 SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
 

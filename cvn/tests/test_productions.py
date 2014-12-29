@@ -22,11 +22,11 @@ class CVNTestCase(TestCase):
         init()
 
     def setUp(self):
-        self.xml_ull = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_ull = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                             'xml/CVN-ULL.xml'))
-        self.xml_empty = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_empty = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                               'xml/empty.xml'))
-        self.xml_test = open(os.path.join(st_cvn.TEST_ROOT,
+        self.xml_test = open(os.path.join(st_cvn.FILE_TEST_ROOT,
                              'xml/CVN-Test.xml'))
 
     def test_insert_xml_ull(self):
@@ -34,7 +34,7 @@ class CVNTestCase(TestCase):
         try:
             user = UserFactory.create()
             cvn = CVN(user=user, pdf_path=os.path.join(
-                st_cvn.TEST_ROOT, 'cvn/CVN-ULL.pdf'))
+                st_cvn.FILE_TEST_ROOT, 'cvn/CVN-ULL.pdf'))
             cvn.insert_xml()
             self.assertEqual(user.profile.articulo_set.count(), 1214)
             self.assertEqual(user.profile.libro_set.count(), 6)
@@ -49,7 +49,7 @@ class CVNTestCase(TestCase):
     def test_delete_producciones(self):
         user = UserFactory.create()
         cvn = CVN(user=user, pdf_path=os.path.join(
-            st_cvn.TEST_ROOT, 'cvn/CVN-Test.pdf'))
+            st_cvn.FILE_TEST_ROOT, 'cvn/CVN-Test.pdf'))
         cvn.insert_xml()
         cvn.remove_producciones()
         self.assertEqual(user.profile.articulo_set.count(), 0)
@@ -210,7 +210,7 @@ class CVNTestCase(TestCase):
     def test_productions_no_title(self):
         u = UserFactory.create()
         cvn = CVN(user=u, pdf_path=os.path.join(
-            st_cvn.TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
+            st_cvn.FILE_TEST_ROOT, 'cvn/produccion_sin_titulo.pdf'))
         cvn.insert_xml()
         self.assertEqual(len(u.profile.proyecto_set.all()), 3)
         self.assertEqual(len(Articulo.objects.filter(user_profile__user=u)), 3)
@@ -218,7 +218,7 @@ class CVNTestCase(TestCase):
     def test_insert_patentes(self):
         u = UserFactory.create()
         cvn = CVN(user=u, pdf_path=os.path.join(
-            st_cvn.TEST_ROOT, 'cvn/cvn-patentes.pdf'))
+            st_cvn.FILE_TEST_ROOT, 'cvn/cvn-patentes.pdf'))
         cvn.insert_xml()
         patente = Patente.objects.get(num_solicitud=111111111111111)
         self.assertEqual(patente.titulo, "Patente uno")
