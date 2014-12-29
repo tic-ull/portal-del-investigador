@@ -6,7 +6,7 @@ MENSAJERIA_USERNAME = '<user>'
 MENSAJERIA_PASSWORD = '<password>'
 MENSAJERIA_SENDER_ID = u"Servicio de Investigación"
 EMAIL_DEBUG = True
-EMAIL_DEBUG_ADDRESS = 'stic.becariosinvestigacion.info@ull.edu.es'
+EMAIL_DEBUG_ADDRESS = 'email@example.com'
 
 
 class MailType(IntEnum):
