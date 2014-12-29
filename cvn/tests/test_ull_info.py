@@ -18,6 +18,25 @@ from lxml import etree
 
 
 @classmethod
+def get_all(cls, url, use_redis=True, timeout=None):
+    if url == st.WS_ULL_LEARNING % 'example_code':
+        return [{u'des1_titulacion': u'LICENCIADO EN MATEMATICAS',
+                 u'organismo': u'UNIVERSIDAD DE LA LAGUNA',
+                 u'f_expedicion': u'18-12-2001',
+                 u'des1_grado_titulacion': u'Licenciado/Ingeniero Superior'},
+                {u'des1_titulacion': u'Doctor por la Universidad de La Laguna',
+                 u'organismo': u'UNIVERSIDAD DE LA LAGUNA',
+                 u'f_expedicion': u'07-07-2006',
+                 u'des1_grado_titulacion': u'Doctor'}]
+    elif url == st.WS_ULL_CARGOS % 'example_code':
+        return [{u'dedicacion': u'Tiempo Completo',
+                 u'des1_cargo': u'SECRETARIO DPTO ANALISIS MATEMATICO',
+                 u'centro': u'DPTO.ANALISIS MATEMATICO',
+                 u'departamento': u'AN\xc1LISIS MATEM\xc1TICO',
+                 u'f_hasta': u'13-02-2013', u'f_toma_posesion': u'30-11-2010'}]
+
+
+@classmethod
 def get_learning(cls, url, use_redis=True, timeout=None):
     if url == st.WS_ULL_LEARNING % 'example_code':
         return [{u'des1_titulacion': u'LICENCIADO EN MATEMATICAS',
@@ -115,6 +134,36 @@ class UllInfoTestCase(TestCase):
             if not equal:
                 allequal = False
         self.assertTrue(allequal)
+
+    @patch.object(CachedWS, 'get', get_all)
+    def test_get_pdf_ull_filter_by_date(self):
+        user = UserFactory.create()
+        user.profile.rrhh_code = 'example_code'
+        pdf = CVN.get_pdf_ull(user=user)
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.xml_file.open()
+        self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 3)
+
+        pdf = CVN.get_pdf_ull(user=user)
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.xml_file.open()
+        self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 3)
+
+        pdf = CVN.get_pdf_ull(user=user, start_date=datetime.date(2012, 1, 1))
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.xml_file.open()
+        self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 1)
+
+        pdf = CVN.get_pdf_ull(user=user, end_date=datetime.date(2010, 1, 1))
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.xml_file.open()
+        self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 2)
+
+        pdf = CVN.get_pdf_ull(user=user, start_date=datetime.date(2006, 1, 1),
+                              end_date=datetime.date(2011, 1, 1))
+        cvn = CVN(user=user, pdf=pdf)
+        cvn.xml_file.open()
+        self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 2)
 
     def test_ws_ull_learning(self):
         ws_info = CachedWS.get(st.WS_ULL_LEARNING % 29739)
