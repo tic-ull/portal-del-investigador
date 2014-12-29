@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm, GetDataCVNULL
@@ -90,6 +90,8 @@ def ull_report(request):
 
 @login_required
 def get_cvn_data_ull(request):
+    if not request.user.profile.rrhh_code:
+        raise Http404
     context = dict()
     context['form'] = GetDataCVNULL()
     if request.method == 'POST':
