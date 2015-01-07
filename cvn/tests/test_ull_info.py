@@ -81,7 +81,7 @@ class UllInfoTestCase(TestCase):
     def test_get_pdf_ull_learning(self):
         user = UserFactory.create()
         user.profile.rrhh_code = 'example_code'
-        pdf = CVN.get_pdf_ull(user=user)
+        pdf = CVN.get_user_pdf_ull(user=user)
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -110,7 +110,7 @@ class UllInfoTestCase(TestCase):
     def test_get_pdf_ull_cargos(self):
         user = UserFactory.create()
         user.profile.rrhh_code = 'example_code'
-        pdf = CVN.get_pdf_ull(user=user)
+        pdf = CVN.get_user_pdf_ull(user=user)
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         cvn_items = etree.parse(cvn.xml_file).findall('CvnItem')
@@ -139,27 +139,27 @@ class UllInfoTestCase(TestCase):
     def test_get_pdf_ull_filter_by_date(self):
         user = UserFactory.create()
         user.profile.rrhh_code = 'example_code'
-        pdf = CVN.get_pdf_ull(user=user)
+        pdf = CVN.get_user_pdf_ull(user=user)
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 3)
 
-        pdf = CVN.get_pdf_ull(user=user)
+        pdf = CVN.get_user_pdf_ull(user=user)
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 3)
 
-        pdf = CVN.get_pdf_ull(user=user, start_date=datetime.date(2012, 1, 1))
+        pdf = CVN.get_user_pdf_ull(user=user, start_date=datetime.date(2012, 1, 1))
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 1)
 
-        pdf = CVN.get_pdf_ull(user=user, end_date=datetime.date(2010, 1, 1))
+        pdf = CVN.get_user_pdf_ull(user=user, end_date=datetime.date(2010, 1, 1))
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()
         self.assertEqual(len(etree.parse(cvn.xml_file).findall('CvnItem')), 2)
 
-        pdf = CVN.get_pdf_ull(user=user, start_date=datetime.date(2006, 1, 1),
+        pdf = CVN.get_user_pdf_ull(user=user, start_date=datetime.date(2006, 1, 1),
                               end_date=datetime.date(2011, 1, 1))
         cvn = CVN(user=user, pdf=pdf)
         cvn.xml_file.open()

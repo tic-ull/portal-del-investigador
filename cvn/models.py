@@ -117,12 +117,14 @@ class CVN(models.Model):
         return False
 
     @classmethod
-    def get_pdf_ull(cls, user, start_date=None, end_date=None):
+    def get_user_pdf_ull(cls, user, start_date=None, end_date=None):
         if user.profile.rrhh_code is None:
             return None
         parser = CvnXmlWriter(user=user)
-        cls._insert_learning_ull(user, parser, start_date, end_date)
-        cls._insert_cargos_ull(user, parser, start_date, end_date)
+        learning = cls._insert_learning_ull(user, parser, start_date, end_date)
+        cargos = cls._insert_cargos_ull(user, parser, start_date, end_date)
+        if not learning and not cargos:
+            return None
         xml = parser.tostring()
         return fecyt.xml2pdf(xml)
 
@@ -140,6 +142,7 @@ class CVN(models.Model):
                 parser.add_learning_phd(**item)
             else:
                 parser.add_learning(**item)
+        return len(items)
 
     @staticmethod
     def _learning_to_json(item):
@@ -161,6 +164,7 @@ class CVN(models.Model):
             if not item_date_range.intersect(DateRange(start_date, end_date)):
                 continue
             parser.add_profession(**item)
+        return len(items)
 
     @staticmethod
     def _cargo_to_json(item):

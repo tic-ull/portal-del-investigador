@@ -5,37 +5,59 @@
 {% load staticfiles %}
 
 {% block breadcrumb %}
-    <li><a href='{% url 'export_data_ull' %}'>{% trans "Exportar Datos ULL" %}</a></li>
+    <li><a href='{% url 'export_data_ull' %}'>{% trans "Exportar datos ULL" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
-	<h1 class="page-header">{% trans "Exportar datos de la Universidad de La Laguna" %}</h1>
+	<h1 class="page-header">{% trans "Exportar mis datos de la Universidad de La Laguna" %}</h1>
 
-    {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
-    </br>
-    {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
-    </br></br>
-
-    <div class="row">
-        <div class="col-md-4">
-            <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
-                {% trans "Todos los años" %}
-            </button>
-        </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
-                {% trans "Seleccionar un año" %}
-            </button>
-        </div>
-        <div class="col-md-4">
-            <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
-                {% trans "Seleccionar un periodo" %}
-            </button>
+    <div class="section">
+        <ul class="nav nav-tabs header">
+            <li class="active">{% trans 'Exportar' %}</li>
+        </ul>
+        <div class="content">
+            <div class="alert alert-info">
+                {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
+                {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
+                        {% trans "Todos los años" %}
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
+                        {% trans "Seleccionar un año" %}
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
+                        {% trans "Seleccionar un periodo" %}
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <form action="" method='post' target="_blank">{% csrf_token %}
-        <input id="all_years" style="display:none;" type="Submit" name="all_year" />
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            {% for field in form %}
+                {{ field.error }}
+            {%  endfor %}
+            {% if form.non_field_errors %}
+                {{ form.non_field_errors }}
+            {% endif %}
+        </div>
+        <br>
+    {%  endif %}
+
+    <form action="" method='post'
+        {% if form.is_multipart %}
+            enctype="multipart/form-data"
+        {% endif %}>{% csrf_token %}
+        <input id="all_years" style="display:none;" type="Submit" name="all_years" />
     </form>
 
     <form action="" method='post' target="_blank">{% csrf_token %}
@@ -59,6 +81,7 @@
             </div>
         </div>
     </form>
+
     <form action="" method='post' target="_blank">{% csrf_token %}
         <!-- Modal: Select a range of years -->
         <div class="modal fade" id="rangeYears" tabindex="-1" role="dialog" aria-labelledby="rangeYearsLabel" aria-hidden="true">
@@ -80,15 +103,5 @@
             </div>
         </div>
     </form>
-    </br>
-    {%  if form.errors %}
-        <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            {%  for error in form.end_year.errors %}
-                {{ error|escape }}
-            {%  endfor %}
-        </div>
-    {%  endif %}
 
 {% endblock main %}

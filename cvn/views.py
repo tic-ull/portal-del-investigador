@@ -92,8 +92,10 @@ def ull_report(request):
 def export_data_ull(request):
     if not request.user.profile.rrhh_code:
         raise Http404
+
     context = dict()
     context['form'] = GetDataCVNULL()
+
     if request.method == 'POST':
         form = GetDataCVNULL(request.POST)
         if form.is_valid():
@@ -105,11 +107,17 @@ def export_data_ull(request):
             if 'range_years' in form.data:
                 start_year = datetime.date(int(form.data['start_year']), 01, 01)
                 end_year = datetime.date(int(form.data['end_year']), 12, 31)
-            #pdf = CVN.get_pdf_ull(User.objects.get(profile__rrhh_code=29739),
-            #                      start_year, end_year)
-            pdf = CVN.get_pdf_ull(request.user, start_year, end_year)
+            # pdf = CVN.get_user_pdf_ull(User.objects.get(profile__rrhh_code=29739), start_year, end_year)
+            pdf = CVN.get_user_pdf_ull(request.user, start_year, end_year)
+
+            if not pdf:
+                form._errors['__all__'] = _(
+                    u'No dispone de información para el periodo seleccionado')
+                context['form'] = form
+                return render(request, 'cvn/export_data_ull.html', context)
+
             response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'inline; ' \
+            response['Content-Disposition'] = 'attachment;' \
                                               'filename="CVN-ULL-info.pdf"'
             return response
         context['form'] = form
