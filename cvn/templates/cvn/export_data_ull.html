@@ -21,37 +21,38 @@
                 {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
             </div>
             <br>
-            <div class="row">
-                <div class="col-md-4">
-                    <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
-                        {% trans "Todos los años" %}
-                    </button>
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
-                        {% trans "Seleccionar un año" %}
-                    </button>
-                </div>
-                <div class="col-md-4">
-                    <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
-                        {% trans "Seleccionar un periodo" %}
-                    </button>
+            <div class="well">
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        {% for field in form %}
+                            {{ field.error }}
+                        {%  endfor %}
+                        {% if form.non_field_errors %}
+                            {{ form.non_field_errors }}
+                        {% endif %}
+                    </div>
+                    <br>
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
+                            {% trans "Todos los años" %}
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
+                            {% trans "Seleccionar un año" %}
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
+                            {% trans "Seleccionar un periodo" %}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {% if form.errors %}
-        <div class="alert alert-danger">
-            {% for field in form %}
-                {{ field.error }}
-            {%  endfor %}
-            {% if form.non_field_errors %}
-                {{ form.non_field_errors }}
-            {% endif %}
-        </div>
-        <br>
-    {%  endif %}
 
     <form action="" method='post'
         {% if form.is_multipart %}
