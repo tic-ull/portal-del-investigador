@@ -89,7 +89,7 @@ def ull_report(request):
 
 
 @login_required
-def get_cvn_data_ull(request):
+def export_data_ull(request):
     if not request.user.profile.rrhh_code:
         raise Http404
     context = dict()
@@ -113,4 +113,4 @@ def get_cvn_data_ull(request):
                                               'filename="CVN-ULL-info.pdf"'
             return response
         context['form'] = form
-    return render(request, 'cvn/get_data_cvn_ull.html', context)
+    return render(request, 'cvn/export_data_ull.html', context)

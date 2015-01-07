@@ -1,29 +1,38 @@
 {% extends 'cvn/base.html' %}
-{% load i18n %}
 
+{% load i18n %}
+{% load l10n %}
 {% load staticfiles %}
 
 {% block breadcrumb %}
-    <li><a href='{% url 'get_cvn_data_ull' %}'>{% trans "Obtener información" %}</a></li>
+    <li><a href='{% url 'export_data_ull' %}'>{% trans "Exportar Datos ULL" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
-
-	<h1 class="page-header">{% trans "Obtener información de la Universidad de La Laguna" %} </h1>
+	<h1 class="page-header">{% trans "Exportar datos de la Universidad de La Laguna" %}</h1>
 
     {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
     </br>
     {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
     </br></br>
-    <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-lg">
-        {%  trans "Todos los años" %}
-    </button>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#selectYears">
-        {%  trans "Seleccionar un año" %}
-    </button>
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#rangeYears">
-        {%  trans "Seleccionar un periodo" %}
-    </button>
+
+    <div class="row">
+        <div class="col-md-4">
+            <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
+                {% trans "Todos los años" %}
+            </button>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
+                {% trans "Seleccionar un año" %}
+            </button>
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
+                {% trans "Seleccionar un periodo" %}
+            </button>
+        </div>
+    </div>
 
     <form action="" method='post' target="_blank">{% csrf_token %}
         <input id="all_years" style="display:none;" type="Submit" name="all_year" />
