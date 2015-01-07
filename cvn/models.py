@@ -57,12 +57,13 @@ class CVN(models.Model):
             self.update_from_pdf(pdf, commit=False)
 
     def update_from_pdf(self, pdf, commit=True):
-        CVN.remove_cvn_by_userprofile(self.user_profile)
-        self.cvn_file = SimpleUploadedFile(
-            'CVN-' + self.user_profile.documento, pdf,
-            content_type="application/pdf")
-        (xml, error) = fecyt.pdf2xml(self.cvn_file)
-        self.update_fields(xml, commit)
+        name = 'CVN-' + self.user_profile.documento
+        (xml, error) = fecyt.pdf2xml(pdf, name)
+        if not error:
+            CVN.remove_cvn_by_userprofile(self.user_profile)
+            self.cvn_file = SimpleUploadedFile(name, pdf,
+                                               content_type="application/pdf")
+            self.update_fields(xml, commit)
 
     def update_from_xml(self, xml, commit=True):
         pdf = fecyt.xml2pdf(xml)
