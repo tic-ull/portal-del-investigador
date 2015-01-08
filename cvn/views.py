@@ -117,8 +117,9 @@ def export_data_ull(request):
                 return render(request, 'cvn/export_data_ull.html', context)
 
             response = HttpResponse(pdf, content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment;' \
-                                              'filename="CVN-ULL-info.pdf"'
+            response['Content-Disposition'] = (
+                'attachment;' 'filename="CVN-EXPORT-%s.pdf"' % (
+                    request.user.profile.documento))
             return response
         context['form'] = form
     return render(request, 'cvn/export_data_ull.html', context)

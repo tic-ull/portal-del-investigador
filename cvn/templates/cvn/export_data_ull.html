@@ -5,7 +5,7 @@
 {% load staticfiles %}
 
 {% block breadcrumb %}
-    <li><a href='{% url 'export_data_ull' %}'>{% trans "Exportar datos ULL" %}</a></li>
+    <li><a href='{% url 'export_data_ull' %}'>{% trans "Exportar información ULL" %}</a></li>
 {% endblock breadcrumb %}
 
 {% block main %}
@@ -17,35 +17,42 @@
         </ul>
         <div class="content">
             <div class="alert alert-info">
-                {% trans "Seleccione la opción que desee para obtener los datos sobre las titulaciones y cargos almacenados en la Universidad de la Laguna." %}
-                {% trans "El PDF que obtendrá debe almacenarlo e importarlo en el editor de la FECYT." %}
+                <p>{% trans "Seleccione una de las opciones disponibles para obtener sus datos sobre:" %}</p>
+                <br>
+                <ul>
+                    <li><p>{% trans "Docencia impartida" %}</p></li>
+                    <li><p>{% trans "Categorías profesionales" %}</p></li>
+                    <li><p>{% trans "Cargos desempeñados" %}</p></li>
+                    <li><p>{% trans "Titulaciones y formación académica" %}</p></li>
+                </ul>
+                <p>
+                {% trans "Para añadir a su CVN la información que obtendrá en un CVN-PDF deberá importarlo en el " %}
+                    <a href={{ EDITOR_FECYT }} class="alert-link" target="_blank">{% trans 'Editor de la FECYT' %}</a>
+                </p>
             </div>
             <br>
             <div class="well">
                 {% if form.errors %}
-                    <div class="alert alert-danger">
-                        {% for field in form %}
-                            {{ field.error }}
+                    <div id="hideme" class="alert alert-danger">
+                        {% for key, value in form.errors.items %}
+                            {{ value }}
                         {%  endfor %}
-                        {% if form.non_field_errors %}
-                            {{ form.non_field_errors }}
-                        {% endif %}
                     </div>
                     <br>
                 {% endif %}
                 <div class="row">
                     <div class="col-md-4">
-                        <button type="button" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
+                        <button type="button" id="export-all" onclick="$('#all_years').click()" class="btn btn-primary btn-block btn-ms">
                             {% trans "Todos los años" %}
                         </button>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
+                        <button type="button" id="export-year" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#selectYears">
                             {% trans "Seleccionar un año" %}
                         </button>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
+                        <button type="button" id="export-range" class="btn btn-primary btn-block btn-ms" data-toggle="modal" data-target="#rangeYears">
                             {% trans "Seleccionar un periodo" %}
                         </button>
                     </div>
@@ -61,48 +68,64 @@
         <input id="all_years" style="display:none;" type="Submit" name="all_years" />
     </form>
 
-    <form action="" method='post' target="_blank">{% csrf_token %}
-        <!-- Modal: select a single year -->
-        <div class="modal fade" id="selectYears" tabindex="-1" role="dialog" aria-labelledby="selectYearsLabel" aria-hidden="true">
+    <form action="" method='post'
+        {% if form.is_multipart %}
+            enctype="multipart/form-data"
+        {% endif %}>{% csrf_token %}
+        <div class="modal fade" id="selectYears">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="selectYearsLabel">{%  trans "Información del año seleccionado" %}</h4>
+                        <h4 class="modal-title">{% trans "Exportar mis datos de la Universidad de La Laguna" %}</h4>
                     </div>
                     <div class="modal-body">
-                        {%  trans "Esta opción exportará la información almacenada en el año seleccionado:" %}{{ form.year }}
+                        {%  trans "Obtener información del año" %}: {{ form.year }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cerrar" %}</button>
-                        <input id="select_year" style="display:none;" type="Submit" name="select_year" />
-                        <button type="button" onclick="$('#select_year').click()" class="btn btn-primary" data-dismiss="modal">{% trans "Exportar información" %}</button>
+                        <button type="button" class="btn btn-danger btn-ms" data-dismiss="modal">{% trans "Cerrar" %}</button>
+                        <input id="year" style="display:none;" type="Submit" name="select_year" />
+                        <button type="button" onclick="$('#year').click()" class="btn btn-primary btn-ms">{% trans "Exportar" %}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
 
-    <form action="" method='post' target="_blank">{% csrf_token %}
-        <!-- Modal: Select a range of years -->
-        <div class="modal fade" id="rangeYears" tabindex="-1" role="dialog" aria-labelledby="rangeYearsLabel" aria-hidden="true">
+    <form action="" method='post'
+        {% if form.is_multipart %}
+            enctype="multipart/form-data"
+        {% endif %}>{% csrf_token %}
+        <div class="modal fade" id="rangeYears">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="rangeYearsLabel">{%  trans "Información del año seleccionado" %}</h4>
+                        <h4 class="modal-title">{% trans "Exportar mis datos de la Universidad de La Laguna" %}</h4>
                     </div>
                     <div class="modal-body">
-                        {% trans "Desde" %}: {{ form.start_year }} {% trans "Hasta" %}: {{ form.end_year }}
+                        {% trans "Desde el año" %} {{ form.start_year }} {% trans "hasta el" %} {{ form.end_year }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cerrar" %}</button>
+                        <button type="button" class="btn btn-danger btn-ms" data-dismiss="modal">{% trans "Cerrar" %}</button>
                         <input id="range_years" style="display:none;" type="Submit" name="range_years" />
-                        <button type="button" onclick="$('#range_years').click()" class="btn btn-primary" data-dismiss="modal">{% trans "Exportar información" %}</button>
+                        <button type="button" onclick="$('#range_years').click()" class="btn btn-primary btn-ms">{% trans "Exportar" %}</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
+    <script>
+        $("#export-all").click(function() {
+            $("#hideme").hide();
+        });
+        $("#export-year").click(function() {
+            $("#hideme").hide();
+        });
+        $("#export-range").click(function() {
+            $("#hideme").hide();
+        });
+    </script>
 
 {% endblock main %}
