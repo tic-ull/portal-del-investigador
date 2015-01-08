@@ -7,4 +7,4 @@
 # Actualiza el listado de Proyectos y Convenios desde SIGIDI
 10 03 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_projects_and_agreements
 # Insercion tardia de nuevos CVNs
-*/30 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
+*/10 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
