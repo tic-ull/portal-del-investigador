@@ -43,7 +43,7 @@ class Command(BaseCommand):
             open(os.path.join(MIGRATION_ROOT, 'users_to_migrate.csv'), 'wb'),
             delimiter=';')
         lines = 0
-        for cvn in CVN.objects.filter(updated_at__gte=creation_date):
+        for cvn in CVN.objects.filter(uploaded_at__gte=creation_date):
             lines += 1
             try:
                 filename = cvn.cvn_file.name.split('/')[-1]
