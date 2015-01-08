@@ -1,8 +1,8 @@
 # -*- encoding: UTF-8 -*-
 
+import datetime
 import hashlib
 import os
-import datetime
 
 
 # Do not touch. Uses self so it can be called in a django upload_to field

@@ -1,22 +1,19 @@
 # -*- encoding: UTF-8 -*-
 
-from .helpers import get_cvn_path, get_old_cvn_path
+from .helpers import get_cvn_path, get_old_cvn_path, DateRange
 from core.models import UserProfile
+from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
+from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
-from mailing import settings as st_mail
-from mailing.send_mail import send_mail
 from managers import CongresoManager, ScientificExpManager, CvnItemManager
 from parsers.read_helpers import parse_date, parse_nif, parse_cvnitem_to_class
 from parsers.write import CvnXmlWriter
-from django.conf import settings as st
-from core.ws_utils import CachedWS as ws
-from helpers import DateRange
 
 import datetime
 import fecyt
@@ -149,8 +146,8 @@ class CVN(models.Model):
     def _learning_to_json(item):
         item['title'] = item.pop("des1_titulacion")
         item['university'] = item.pop("organismo", None)
-        item['date'] = datetime.datetime.strptime(item.pop("f_expedicion"),
-                                                  "%d-%m-%Y").date()
+        item['date'] = datetime.datetime.strptime(
+            item.pop("f_expedicion"), "%d-%m-%Y").date()
         title_type = item.pop("des1_grado_titulacion")
         if title_type != u'Doctor':
             item['title_type'] = title_type
@@ -179,16 +176,7 @@ class CVN(models.Model):
         item["title"] = item.pop("des1_cargo")
         item["centre"] = item.pop("centro", None)
         item["department"] = item.pop("departamento", None)
-        item["full_time"] = item.pop("dedicacion",
-                                     None) == "Tiempo Completo"
-
-    @classmethod
-    def remove_cvn_by_userprofile(cls, user_profile):
-        try:
-            cvn_old = cls.objects.get(user_profile=user_profile)
-            cvn_old.remove()
-        except ObjectDoesNotExist:
-            pass
+        item["full_time"] = item.pop("dedicacion", None) == "Tiempo Completo"
 
     @staticmethod
     def create(user, xml=None):
@@ -201,6 +189,14 @@ class CVN(models.Model):
         cvn = CVN(user=user, pdf=pdf)
         cvn.save()
         return cvn
+
+    @classmethod
+    def remove_cvn_by_userprofile(cls, user_profile):
+        try:
+            cvn_old = cls.objects.get(user_profile=user_profile)
+            cvn_old.remove()
+        except ObjectDoesNotExist:
+            pass
 
     def remove(self):
         # Removes data related to CVN that is not on the CVN class.

@@ -101,13 +101,14 @@ def export_data_ull(request):
         if form.is_valid():
             start_year = None
             end_year = None
+
             if 'select_year' in form.data:
                 start_year = datetime.date(int(form.data['year']), 01, 01)
                 end_year = datetime.date(int(form.data['year']), 12, 31)
             if 'range_years' in form.data:
                 start_year = datetime.date(int(form.data['start_year']), 01, 01)
                 end_year = datetime.date(int(form.data['end_year']), 12, 31)
-            # pdf = CVN.get_user_pdf_ull(User.objects.get(profile__rrhh_code=29739), start_year, end_year)
+
             pdf = CVN.get_user_pdf_ull(request.user, start_year, end_year)
 
             if not pdf:
@@ -121,5 +122,6 @@ def export_data_ull(request):
                 'attachment;' 'filename="CVN-EXPORT-%s.pdf"' % (
                     request.user.profile.documento))
             return response
+
         context['form'] = form
     return render(request, 'cvn/export_data_ull.html', context)

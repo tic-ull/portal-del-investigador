@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from datetime import date
 from django.conf import settings as st
 from enum import IntEnum, Enum
 
@@ -260,9 +261,7 @@ SUBJECT_TYPE_OTHERS = "030.010.000.430"
 
 # ******************************* CVN ITEMS *********************************
 
-
-# Range of years for the dropdown
-RANGE_OF_YEARS = (1950, 2030)
+RANGE_OF_YEARS = (1950, date.today().year + 1)  # Range of years for CVN Export
 
 # ************************* SETTINGS LOCAL ***********************************
 try:
@@ -273,4 +272,3 @@ except NameError:
     except ImportError:
         pass
 # ************************* SETTINGS LOCAL ***********************************
-

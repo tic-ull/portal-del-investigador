@@ -5,7 +5,6 @@ from cvn import settings as st_cvn
 from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 
 import fecyt
@@ -59,27 +58,28 @@ class UploadCVNForm(forms.ModelForm):
         fields = ['cvn_file']
 
 
-class GetDataCVNULL(forms.Form):
-    year = forms.ChoiceField(widget=forms.Select(), required=False)
-    start_year = forms.ChoiceField(widget=forms.Select(), required=False)
-    end_year = forms.ChoiceField(widget=forms.Select(), required=False)
+def get_range_of_years_choices():
+    choices = [(x, x) for x in range(
+        st_cvn.RANGE_OF_YEARS[0], st_cvn.RANGE_OF_YEARS[1])]
+    return choices
 
-    def __init__(self, *args, **kwargs):
-        super(GetDataCVNULL, self).__init__(*args, **kwargs)
-        choices = [(x, x) for x in range(st_cvn.RANGE_OF_YEARS[0],
-                                         st_cvn.RANGE_OF_YEARS[1])]
-        self.fields['year'].choices = choices
-        self.fields['start_year'].choices = choices
-        self.fields['end_year'].choices = choices
+
+class GetDataCVNULL(forms.Form):
+
+    year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
+
+    start_year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
+
+    end_year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
 
     def clean_end_year(self):
-        try:
-            start_year = int(self.cleaned_data['start_year'])
-            end_year = int(self.cleaned_data['end_year'])
-            if end_year < start_year:
-                raise forms.ValidationError(_("La fecha final no puede ser mayor "
-                                          "que la inicial"))
-        except ValueError:
-            pass
-
-
+        start_year = self.cleaned_data['start_year']
+        end_year = self.cleaned_data['end_year']
+        if start_year and end_year:
+            if int(start_year) > int(end_year):
+                raise forms.ValidationError(
+                    _(u'El año inicial no puede ser mayor que el año final'))
+        return end_year
