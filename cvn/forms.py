@@ -38,7 +38,8 @@ class UploadCVNForm(forms.ModelForm):
         if mimetypes.guess_type(cvn_file.name)[0] != "application/pdf":
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
-        (self.xml, error) = fecyt.pdf2xml(cvn_file)
+        cvn_file.open()
+        (self.xml, error) = fecyt.pdf2xml(cvn_file.read(), cvn_file.name)
         if not self.xml:
             raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
         return cvn_file

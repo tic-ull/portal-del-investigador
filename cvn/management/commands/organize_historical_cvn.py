@@ -29,7 +29,10 @@ class Command(BaseCommand):
                     Q(username=username) | Q(profile__documento=username))
             except ObjectDoesNotExist:
                 cvn_file = open(os.path.join(self.OLD_PDF_ROOT, cvn))
-                (xml, error) = pdf2xml(cvn_file)
+                (xml, error) = pdf2xml(cvn_file.read(), cvn_file.name)
+                if error:
+                    print('Fichero no aceptado por la FECYT: ' + cvn_file.name)
+                    continue
                 tree_xml = etree.XML(xml)
                 documento = parse_nif(tree_xml)
                 try:

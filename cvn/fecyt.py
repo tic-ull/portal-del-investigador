@@ -9,15 +9,8 @@ import logging
 logger = logging.getLogger('cvn')
 
 
-def pdf2xml(cvn_file):
-    try:
-        if cvn_file.closed:
-            cvn_file.open()
-        content = base64.encodestring(cvn_file.read())
-    except IOError:
-        logger.error(u'No existe el fichero o directorio:' +
-                     u' %s' % cvn_file.name)
-        return False
+def pdf2xml(pdf, name):
+    content = base64.encodestring(pdf)
     # Web Service - FECYT
     client_ws = suds.client.Client(st_cvn.WS_FECYT_PDF2XML)
     try:
@@ -27,7 +20,7 @@ def pdf2xml(cvn_file):
         logger.warning(
             u'No hay respuesta del WS' +
             u' de la FECYT para el fichero' +
-            u' %s' % cvn_file.name)
+            u' %s' % name)
         return False, 1
     # Format CVN-XML of FECYT
     if result_xml.errorCode == 0:
