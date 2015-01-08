@@ -440,9 +440,6 @@
                                     {% if not user.is_anonymous %}
                                         <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
                                         <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Gestionar CVN" %}</a></li>
-                                        {% if user.profile.rrhh_code %}
-                                        <li><a href='{% url 'export_data_ull' %}'><i class="fa fa-database"></i> {% trans "Exportar información ULL" %}</a></li>
-                                        {% endif %}
                                         <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Contabilidad" %}</a></li>
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Salir" %}</a></li>
                                     {% else %}
@@ -451,7 +448,9 @@
                                 </ul>
                             </div>
                         </div>
+
                         {% comment %}
+                        {% endblock main_menu %}
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-bars"></i> {% trans "Menú principal" %}</h3>
@@ -474,8 +473,10 @@
                                 </ul>
                             </div>
                         </div>
+                        {% endblock main_menu %}
                         {% endcomment %}
-                        {% comment %}
+
+                        {% block submenu %}
                         <div class="panel panel-default panel-ull color-336699">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-file"></i> Título de bloque</h3>
@@ -492,7 +493,8 @@
                                 </ul>
                             </div>
                         </div>
-                        {% endcomment %}
+                        {% endblock submenu %}
+
                         {% if user.is_staff %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
