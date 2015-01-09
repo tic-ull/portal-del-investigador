@@ -263,6 +263,9 @@ SUBJECT_TYPE_OTHERS = "030.010.000.430"
 
 RANGE_OF_YEARS = (1950, date.today().year + 1)  # Range of years for CVN Export
 
+# Unauthorized CVN Authors
+CVN_PDF_AUTHOR_NOAUT = [u'FECYT - Author of Example', ]
+
 # ************************* SETTINGS LOCAL ***********************************
 try:
     CVN_SETTINGS_LOCAL

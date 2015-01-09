@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
+from PyPDF2 import PdfFileReader
 
 import fecyt
 import mimetypes
@@ -34,10 +35,20 @@ class UploadCVNForm(forms.ModelForm):
             cvn_file = self.cleaned_data['cvn_file']
         except:
             cvn_file = self.data['cvn_file']
+        # PDF
         if mimetypes.guess_type(cvn_file.name)[0] != "application/pdf":
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
         cvn_file.open()
+        # Author
+        pdf = PdfFileReader(cvn_file)
+        pdf_info = pdf.getDocumentInfo()
+        if pdf_info['/Author'] in st_cvn.CVN_PDF_AUTHOR_NOAUT:
+            raise forms.ValidationError(
+                _(u'El CVN debe estar generado desde el Editor CVN de la FECYT')
+            )
+        # FECYT
+        cvn_file.seek(0)
         (self.xml, error) = fecyt.pdf2xml(cvn_file.read(), cvn_file.name)
         if not self.xml:
             raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
