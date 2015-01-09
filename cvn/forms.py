@@ -43,7 +43,8 @@ class UploadCVNForm(forms.ModelForm):
         # Author
         pdf = PdfFileReader(cvn_file)
         pdf_info = pdf.getDocumentInfo()
-        if pdf_info['/Author'] in st_cvn.CVN_PDF_AUTHOR_NOAUT:
+        if ('/Author' in pdf_info and
+                pdf_info['/Author'] in st_cvn.CVN_PDF_AUTHOR_NOAUT):
             raise forms.ValidationError(
                 _(u'El CVN debe estar generado desde el Editor CVN de la FECYT')
             )
