@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-09 13:16+0000\n"
-"PO-Revision-Date: 2015-01-09 13:19-0102\n"
+"POT-Creation-Date: 2015-01-09 13:58+0000\n"
+"PO-Revision-Date: 2015-01-09 13:59-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -316,8 +316,6 @@ msgid "Verificando la información de su CVN, por favor espere."
 msgstr "Verifying CVN details, please wait."
 
 #: settings.py:62
-#| msgid ""
-#| "abitual, por favor espere. se duce orpita el o. Si or siste te  el )s il)s)."
 msgid ""
 "Este proceso esta tardando más tiempo de lo habitual, por favor espere. Si "
 "se produce un error repita el proceso. Si el error persiste contacte con el "
@@ -522,11 +520,11 @@ msgstr "Your NIF/NIE is not specified in your CVN"
 msgid "Fecha del documento"
 msgstr "Document Date"
 
-#: templates/cvn/index.html:94
+#: templates/cvn/index.html:91
 msgid "Descargar una copia de mi CVN"
 msgstr "Download a copy of my CVN"
 
-#: templates/cvn/index.html:102
+#: templates/cvn/index.html:99
 msgid "Próximamente podrá visualizar el contenido de su CVN"
 msgstr "Soon you can view the contents of your CVN"
 
@@ -616,15 +614,23 @@ msgstr "Report ULL"
 msgid "Actividad Científica en la Universidad de La Laguna"
 msgstr "Scientific Activity at the Universidad of la Laguna"
 
-#: views.py:51
+#: views.py:29
+msgid "Departamento"
+msgstr "Department"
+
+#: views.py:36
+msgid "Área"
+msgstr "Area"
+
+#: views.py:53
 msgid "CVN actualizado con éxito."
 msgstr "CVN updated successfully."
 
-#: views.py:87
+#: views.py:89
 msgid "No disponible"
 msgstr "Not Available"
 
-#: views.py:116
+#: views.py:118
 msgid "No dispone de información en el periodo seleccionado"
 msgstr "No information in this period"
 

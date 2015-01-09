@@ -26,12 +26,14 @@ def index(request):
         dept = Department.objects.get(name=request.session['dept'])
         dept_json = request.session['dept_json']
         context['department'] = dept
+        context['label_dept'] = _(u'Departamento')
 
     area, area_json = None, None
     if 'area' and 'area_json' in request.session:
         area = Area.objects.get(name=request.session['area'])
         area_json = request.session['area_json']
         context['area'] = area
+        context['label_area'] = _(u'Área')
 
     context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN
 

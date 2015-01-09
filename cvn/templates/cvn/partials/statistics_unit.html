@@ -2,7 +2,7 @@
 {% load l10n %}
 
 {% if unit %}
-    <tr>
+    <tr data-original-title={{ label }} data-toggle="tooltip" data-placement="left">
         <td colspan=2>
             <center><strong>{{ unit.name }}</strong></center>
             <div class="progress">
@@ -21,4 +21,9 @@
             </div>
         </td>
     </tr>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 {% endif %}
