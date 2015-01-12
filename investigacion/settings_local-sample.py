@@ -60,3 +60,4 @@ SIGIDI_DB['HOST'] = 'localhost'
 
 # WEB SERVICES
 WS_SERVER_URL = 'http://www.example.com/'
+
