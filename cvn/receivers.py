@@ -8,8 +8,9 @@ from django.db.models.signals import pre_save, pre_delete
 from mailing import settings as st_mail
 from mailing.send_mail import send_mail
 from models import CVN, OldCvnPdf
-import json
+
 import datetime
+import json
 
 
 # Admin actions not calling model's delete() method
@@ -24,7 +25,6 @@ pre_delete.connect(cvn_delete_files, sender=OldCvnPdf)
 
 
 def log_status_cvn_changed(sender, instance, **kwargs):
-
     try:
         old_status = instance.__class__.objects.get(pk=instance.pk).status
     except ObjectDoesNotExist:
