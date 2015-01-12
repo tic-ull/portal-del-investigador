@@ -85,7 +85,6 @@ def _parse_place(place_node):
             place += countries.get(country.text).name
         except KeyError:
             logger.error(u'%s: Código de País no válido' % country.text)
-
     return place
 
 
