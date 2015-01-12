@@ -60,7 +60,7 @@ class UploadCVNForm(forms.ModelForm):
         CVN.remove_cvn_by_userprofile(self.user.profile)
         cvn = super(UploadCVNForm, self).save(commit=False)
         cvn.user_profile = self.user.profile
-        cvn.update_fields(self.xml, commit)
+        cvn.update_fields(self.xml, commit=False)
         if commit:
             cvn.save()
         return cvn
