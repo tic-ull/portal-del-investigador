@@ -40,11 +40,17 @@ DATABASES['default']['NAME'] = 'name'
 DATABASES['default']['USER'] = 'user'
 DATABASES['default']['PASSWORD'] = 'password'
 DATABASES['default']['HOST'] = 'localhost'
+DATABASES['default']['OPTIONS'] = {
+    'options': '-c search_path=schema_default, public'
+}
 
 DATABASES['historica']['NAME'] = 'name'
 DATABASES['historica']['USER'] = 'user'
 DATABASES['historica']['PASSWORD'] = 'password'
 DATABASES['historica']['HOST'] = 'locahost'
+DATABASES['historica']['OPTIONS'] = {
+    'options': '-c search_path=schema_historica, public'
+}
 
 SIGIDI_DB['NAME'] = 'name'
 SIGIDI_DB['USER'] = 'user'

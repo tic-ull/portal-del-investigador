@@ -68,7 +68,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'mailing/locale'),
 )
 TIME_ZONE = 'Atlantic/Canary'
-USE_TZ = True
+USE_TZ = False
 # ******************************* LANGUAGE ***********************************
 
 # ******************************* INSTALLED APPS *****************************
@@ -132,6 +132,9 @@ WSGI_APPLICATION = 'investigacion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=schema_default, public'
+        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
@@ -140,6 +143,9 @@ DATABASES = {
     },
     'historica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=schema_historica, public'
+        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
