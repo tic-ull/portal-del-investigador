@@ -5,6 +5,9 @@ from iso3166 import countries
 import datetime
 import string
 import sys
+import logging
+
+logger = logging.getLogger('cvn')
 
 
 def _parse_duration(duration):
@@ -78,7 +81,11 @@ def _parse_place(place_node):
     if region is not None and country is not None:
         place += ", "
     if country is not None:
-        place += countries.get(country.text).name
+        try:
+            place += countries.get(country.text).name
+        except KeyError:
+            logger.error(u'%s: Código de País no válido' % country.text)
+
     return place
 
 
