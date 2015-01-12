@@ -19,6 +19,7 @@ DEVEL = True
 ADMINS = (
     ('STIC-Investigacion', 'email@example.com'),
 )
+MANAGERS = ADMINS
 
 SUPPORT = u'Servicio de Investigación'
 EMAIL_SUPPORT = 'email@example.com'
