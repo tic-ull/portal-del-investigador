@@ -68,7 +68,7 @@ LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'mailing/locale'),
 )
 TIME_ZONE = 'Atlantic/Canary'
-USE_TZ = True
+USE_TZ = False
 # ******************************* LANGUAGE ***********************************
 
 # ******************************* INSTALLED APPS *****************************
@@ -132,6 +132,9 @@ WSGI_APPLICATION = 'investigacion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=schema_default, public'
+        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
@@ -140,6 +143,9 @@ DATABASES = {
     },
     'historica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=schema_historica, public'
+        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
@@ -327,6 +333,12 @@ WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 # RRHH code
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
 
+# CVN Info ULL: learning_degree / learning_phd
+WS_ULL_LEARNING = WS_SERVER_URL + 'get_formacion_academica?cod_persona=%s'
+
+# CVN Info ULL: profession / old_profession
+WS_ULL_CARGOS = WS_SERVER_URL + 'get_cargos?cod_persona=%s'
+
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
     WS_SERVER_URL +
@@ -404,3 +416,4 @@ WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
 # ****************************** WEB SERVICES ******************************
+

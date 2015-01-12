@@ -10,3 +10,19 @@
 {% block navbar_links %}
     <li><a href={{ EDITOR_FECYT }} target="_blank"><i class="fa fa-external-link"></i> {% trans 'Editor de CVN de la FECYT' %}</a></li>
 {% endblock navbar_links %}
+
+{% block submenu %}
+    {% if user.profile.rrhh_code %}
+    <div class="panel panel-default panel-ull color-336699">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-bars"></i> {% trans "Menú principal" %}</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href='{% url 'cvn' %}'><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
+                <li><a href='{% url 'export_data_ull' %}'><i class="fa fa-database"></i> {% trans "Exportar mi información ULL" %}</a></li>
+            </ul>
+        </div>
+    </div>
+     {% endif %}
+{% endblock submenu %}

@@ -448,7 +448,9 @@
                                 </ul>
                             </div>
                         </div>
+
                         {% comment %}
+                        {% endblock main_menu %}
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-bars"></i> {% trans "Menú principal" %}</h3>
@@ -471,8 +473,10 @@
                                 </ul>
                             </div>
                         </div>
+                        {% endblock main_menu %}
                         {% endcomment %}
-                        {% comment %}
+
+                        {% block submenu %}
                         <div class="panel panel-default panel-ull color-336699">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-file"></i> Título de bloque</h3>
@@ -489,7 +493,8 @@
                                 </ul>
                             </div>
                         </div>
-                        {% endcomment %}
+                        {% endblock submenu %}
+
                         {% if user.is_staff %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">

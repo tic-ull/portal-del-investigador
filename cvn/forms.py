@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
+from PyPDF2 import PdfFileReader
 
 import fecyt
 import mimetypes
@@ -34,10 +35,21 @@ class UploadCVNForm(forms.ModelForm):
             cvn_file = self.cleaned_data['cvn_file']
         except:
             cvn_file = self.data['cvn_file']
+        # PDF
         if mimetypes.guess_type(cvn_file.name)[0] != "application/pdf":
             raise forms.ValidationError(
                 _(u'El CVN debe estar en formato PDF.'))
         cvn_file.open()
+        # Author
+        pdf = PdfFileReader(cvn_file)
+        pdf_info = pdf.getDocumentInfo()
+        if ('/Author' in pdf_info and
+                pdf_info['/Author'] in st_cvn.CVN_PDF_AUTHOR_NOAUT):
+            raise forms.ValidationError(
+                _(u'El CVN debe estar generado desde el Editor CVN de la FECYT')
+            )
+        # FECYT
+        cvn_file.seek(0)
         (self.xml, error) = fecyt.pdf2xml(cvn_file.read(), cvn_file.name)
         if not self.xml:
             raise forms.ValidationError(_(st_cvn.ERROR_CODES[error]))
@@ -56,3 +68,30 @@ class UploadCVNForm(forms.ModelForm):
     class Meta:
         model = CVN
         fields = ['cvn_file']
+
+
+def get_range_of_years_choices():
+    choices = [(x, x) for x in range(
+        st_cvn.RANGE_OF_YEARS[0], st_cvn.RANGE_OF_YEARS[1])]
+    return choices
+
+
+class GetDataCVNULL(forms.Form):
+
+    year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
+
+    start_year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
+
+    end_year = forms.ChoiceField(
+        choices=get_range_of_years_choices(), required=False)
+
+    def clean_end_year(self):
+        start_year = self.cleaned_data['start_year']
+        end_year = self.cleaned_data['end_year']
+        if start_year and end_year:
+            if int(start_year) > int(end_year):
+                raise forms.ValidationError(
+                    _(u'El año inicial no puede ser mayor que el año final'))
+        return end_year

@@ -15,3 +15,6 @@ EXPIRY_DATE = datetime.date(2013, 12, 31)
 # WS FECYT
 FECYT_USER = "user"
 FECYT_PASSWORD = "password"
+
+# Unauthorized CVN Authors
+CVN_PDF_AUTHOR_NOAUT = [u'FECYT - Author of Example', ]
