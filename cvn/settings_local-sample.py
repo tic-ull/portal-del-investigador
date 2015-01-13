@@ -18,3 +18,6 @@ FECYT_PASSWORD = "password"
 
 # Unauthorized CVN Authors
 CVN_PDF_AUTHOR_NOAUT = [u'FECYT - Author of Example', ]
+
+# HISTORICAL REPORT
+HISTORICAL_YEAR = '2013'

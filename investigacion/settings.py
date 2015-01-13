@@ -132,9 +132,6 @@ WSGI_APPLICATION = 'investigacion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'OPTIONS': {
-            'options': '-c search_path=schema_default, public'
-        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
@@ -153,6 +150,10 @@ DATABASES = {
         'PORT': '',
         'TEST_MIRROR': 'default',
     }
+}
+
+HISTORICAL = {
+    'year': 'historica',
 }
 
 SIGIDI_DB = {

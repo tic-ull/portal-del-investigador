@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -79,12 +80,14 @@ def download_cvn(request):
 
 @login_required
 @staff_member_required
-def ull_report(request):
+def ull_report(request, year):
+    if year is None or year not in st.HISTORICAL:
+        raise Http404
     context = {}
-    user = User.objects.using('historica').get(username='GesInv-ULL')
+    user = User.objects.using(st.HISTORICAL[year]).get(username='GesInv-ULL')
     scientific_production_to_context(user.profile, context)
     try:
-        context['report_date'] = user.profile.cvn.fecha.year - 1
+        context['report_date'] = unicode(year)
     except ObjectDoesNotExist:
         context['report_date'] = _('No disponible')
     return render(request, 'cvn/ull_report.html', context)
