@@ -9,9 +9,8 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from forms import UploadCVNForm, GetDataCVNULL
 from models import CVN
-from statistics.models import Department, Area
-from statistics import settings as st_stat
-from utils import scientific_production_to_context, cvn_to_context
+from utils import (scientific_production_to_context, cvn_to_context,
+                   stats_to_context)
 from cvn import settings as st_cvn
 import datetime
 
@@ -20,23 +19,7 @@ import datetime
 def index(request):
     context = {}
     user = request.user
-
-    dept, dept_json = None, None
-    if 'dept' and 'dept_json' in request.session:
-        dept = Department.objects.get(name=request.session['dept'])
-        dept_json = request.session['dept_json']
-        context['department'] = dept
-        context['label_dept'] = _(u'Departamento')
-
-    area, area_json = None, None
-    if 'area' and 'area_json' in request.session:
-        area = Area.objects.get(name=request.session['area'])
-        area_json = request.session['area_json']
-        context['area'] = area
-        context['label_area'] = _(u'Área')
-
-    context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN
-
+    dept, dept_json, area, area_json = stats_to_context(request, context)
     try:
         cvn = CVN.objects.get(user_profile__user=user)
         old_cvn_status = cvn.status
