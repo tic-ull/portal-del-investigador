@@ -108,10 +108,12 @@ def export_data_ull(request):
             end_year = None
 
             if 'select_year' in form.data:
-                start_year = datetime.date(int(form.data['year']), 01, 01)
-                end_year = datetime.date(int(form.data['year']), 12, 31)
+                form_year = int(form.data['year'])
+                start_year = datetime.date(form_year, 01, 01)
+                end_year = datetime.date(form_year, 12, 31)
             if 'range_years' in form.data:
-                start_year = datetime.date(int(form.data['start_year']), 01, 01)
+                form_start_year = int(form.data['start_year'])
+                start_year = datetime.date(form_start_year, 01, 01)
                 end_year = datetime.date(int(form.data['end_year']), 12, 31)
 
             pdf = CVN.get_user_pdf_ull(request.user, start_year, end_year)

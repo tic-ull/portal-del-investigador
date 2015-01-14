@@ -193,7 +193,8 @@ class LoginCAS(test.LiveServerTestCase):
         user.profile.rrhh_code = 29739
         user.profile.save()
         driver.get("http://localhost:8081/es/investigacion/cvn/")
-        driver.find_element_by_link_text(u"Exportar mi información ULL").click()
+        driver.find_element_by_link_text(
+            u"Exportar mi información ULL").click()
         # ALL YEAR
         driver.find_element_by_xpath("(//button[@type='button'])[3]").click()
         self.assertEqual(len(driver.window_handles), 2)
@@ -202,7 +203,8 @@ class LoginCAS(test.LiveServerTestCase):
         # SELECT SINGLE YEAR
         driver.switch_to_window(driver.window_handles[0])
         driver.find_element_by_xpath("(//button[@type='button'])[4]").click()
-        Select(driver.find_element_by_id("id_year")).select_by_visible_text("2001")
+        Select(driver.find_element_by_id("id_year")).select_by_visible_text(
+            "2001")
         driver.find_element_by_css_selector(
             "div.modal-footer > button.btn.btn-primary.btn-ms").click()
         self.assertEqual(len(driver.window_handles), 2)
@@ -232,8 +234,8 @@ class LoginCAS(test.LiveServerTestCase):
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-        self.assertFalse(self.is_element_present(By.LINK_TEXT,
-                                                 u"Exportar mi información ULL"))
+        self.assertFalse(self.is_element_present(
+            By.LINK_TEXT, u"Exportar mi información ULL"))
 
     def is_element_present(self, how, what):
         try:
