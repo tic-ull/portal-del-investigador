@@ -41,16 +41,15 @@ DATABASES['default']['NAME'] = 'name'
 DATABASES['default']['USER'] = 'user'
 DATABASES['default']['PASSWORD'] = 'password'
 DATABASES['default']['HOST'] = 'localhost'
-DATABASES['default']['OPTIONS'] = {
-    'options': '-c search_path=schema_default, public'
+
+DATABASES['historica_2013'] = DATABASES['default'].copy()
+DATABASES['historica_2013']['TEST_MIRROR'] = 'default'
+DATABASES['historica_2013']['OPTIONS'] = {
+    'options': '-c search_path=schema_2013'
 }
 
-DATABASES['historica']['NAME'] = 'name'
-DATABASES['historica']['USER'] = 'user'
-DATABASES['historica']['PASSWORD'] = 'password'
-DATABASES['historica']['HOST'] = 'locahost'
-DATABASES['historica']['OPTIONS'] = {
-    'options': '-c search_path=schema_historica, public'
+HISTORICAL = {
+    '2013': 'historica_2013',
 }
 
 SIGIDI_DB['NAME'] = 'name'
