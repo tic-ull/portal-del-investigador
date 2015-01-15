@@ -36,6 +36,9 @@ EMAIL_SUPPORT = 'email@example.com'
 # AUTHENTICATION CAS
 CAS_SERVER_URL = 'http://www.example.com/cas-1/'
 
+# Add optional apps from Investigacion
+INSTALLED_APPS = INSTALLED_APPS + ['statistics', 'accounting', 'mailing']
+
 # DATABASES
 DATABASES['default']['NAME'] = 'name'
 DATABASES['default']['USER'] = 'user'
