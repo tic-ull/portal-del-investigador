@@ -440,7 +440,9 @@
                                     {% if not user.is_anonymous %}
                                         <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
                                         <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Gestionar CVN" %}</a></li>
-                                        <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Contabilidad" %}</a></li>
+                                        {% if accounting_installed %}
+                                            <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Contabilidad" %}</a></li>
+                                        {% endif %}
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Salir" %}</a></li>
                                     {% else %}
                                         <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
@@ -503,9 +505,11 @@
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
                                     <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
-                                    <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
-                                    <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
-                                    <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Grupos" %}</a></li>
+                                    {% if statistics_installed %}
+                                        <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
+                                        <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
+                                        <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Grupos" %}</a></li>
+                                    {% endif %}
                                     <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
                                 </ul>
                             </div>

@@ -85,12 +85,9 @@ INSTALLED_APPS = (
     'core',
     'cvn',
     'crequest',
-    'statistics',
     'django_coverage',
     'django_tables2',
     'django.contrib.flatpages',
-    'accounting',
-    'mailing',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -271,6 +268,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "core.context_processors.extra_info",
     "cvn.context_processors.extra_info",
+    "core.context_processors.installed_apps"
 )
 
 TEMPLATE_LOADERS = (
