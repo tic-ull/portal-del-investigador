@@ -60,13 +60,6 @@ LANGUAGES = (
 USE_I18N = True
 USE_L10N = True
 LANGUAGE_CODE = 'es'
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'core/locale'),
-    os.path.join(BASE_DIR, 'cvn/locale'),
-    os.path.join(BASE_DIR, 'statistics/locale'),
-    os.path.join(BASE_DIR, 'accounting/locale'),
-    os.path.join(BASE_DIR, 'mailing/locale'),
-)
 TIME_ZONE = 'Atlantic/Canary'
 USE_TZ = False
 # ******************************* LANGUAGE ***********************************
@@ -276,12 +269,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'cvn/templates'),
-    os.path.join(BASE_DIR, 'core/templates'),
-    os.path.join(BASE_DIR, 'statistics/templates'),
-    os.path.join(BASE_DIR, 'accounting/templates'),
-)
 # ************************* TEMPLATES ****************************************
 
 # ************************* STATIC FILES *************************************

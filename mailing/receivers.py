@@ -7,8 +7,8 @@ from .send_mail import send_mail
 from django.dispatch import receiver
 
 @receiver(cvn_status_changed)
-def send_mail_cvn_expired(sender, **kwargs):
-    if sender.status == st_cvn.CVNStatus.EXPIRED:
+def send_mail_cvn_expired(cvn, **kwargs):
+    if cvn.status == st_cvn.CVNStatus.EXPIRED:
         send_mail(email_type=st_mail.MailType.EXPIRED,
-                  user=sender.user_profile.user,
-                  app_label=sender._meta.app_label)
+                  user=cvn.user_profile.user,
+                  app_label=cvn._meta.app_label)
