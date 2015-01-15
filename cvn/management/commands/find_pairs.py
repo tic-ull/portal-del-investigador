@@ -41,14 +41,17 @@ def log_print(message):
     logger.info(message)
 
 
-def backup_database():
-    dbname = st.DATABASES['historica']['NAME']
+def backup_database(year):
+    if year is None or year not in st.HISTORICAL:
+        return u'ERROR: No se ha definido la BD HISTORICA'
+    db = st.HISTORICAL[year]
+    dbname = st.DATABASES[db]['NAME']
     file_path = '%s/%s.%s.gz' % (st.BACKUP_DIR, dbname,
                                  time.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
     params = 'export PGPASSWORD=%s\npg_dump -U%s -h %s %s | gzip -9 -c > %s' \
-        % (st.DATABASES['historica']['PASSWORD'],
-           st.DATABASES['historica']['USER'],
-           st.DATABASES['historica']['HOST'],
+        % (st.DATABASES[db]['PASSWORD'],
+           st.DATABASES[db]['USER'],
+           st.DATABASES[db]['HOST'],
            dbname, file_path)
 
     if not os.path.exists(st.BACKUP_DIR):
@@ -186,7 +189,10 @@ class Command(BaseCommand):
                 self.DIFFERING_PAIRS = int(options['differing_pairs'])
             except:
                 raise CommandError("Option `--diff needs an integer 0,1,...")
-        return table, name_field
+        year = None
+        if options['year'] is not None:
+            year = unicode(options['year'])
+        return table, name_field, year
 
     def run_queries(self, options, table):
         log_print("Buscando duplicados en el modelo " +
@@ -329,9 +335,9 @@ class Command(BaseCommand):
         return pairs_solved
 
     def handle(self, *args, **options):
-        table, name_field = self.check_args(options)
+        table, name_field, year = self.check_args(options)
         log_print("Haciendo copia de seguridad de BD")
-        error = backup_database()
+        error = backup_database(year)
         if error:
             log_print(error)
         else:

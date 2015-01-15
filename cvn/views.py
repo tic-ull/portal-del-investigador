@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -62,12 +63,14 @@ def download_cvn(request):
 
 @login_required
 @staff_member_required
-def ull_report(request):
+def ull_report(request, year):
+    if year is None or year not in st.HISTORICAL:
+        raise Http404
     context = {}
-    user = User.objects.using('historica').get(username='GesInv-ULL')
+    user = User.objects.using(st.HISTORICAL[year]).get(username='GesInv-ULL')
     scientific_production_to_context(user.profile, context)
     try:
-        context['report_date'] = user.profile.cvn.fecha.year - 1
+        context['report_date'] = unicode(year)
     except ObjectDoesNotExist:
         context['report_date'] = _('No disponible')
     return render(request, 'cvn/ull_report.html', context)
@@ -88,10 +91,12 @@ def export_data_ull(request):
             end_year = None
 
             if 'select_year' in form.data:
-                start_year = datetime.date(int(form.data['year']), 01, 01)
-                end_year = datetime.date(int(form.data['year']), 12, 31)
+                form_year = int(form.data['year'])
+                start_year = datetime.date(form_year, 01, 01)
+                end_year = datetime.date(form_year, 12, 31)
             if 'range_years' in form.data:
-                start_year = datetime.date(int(form.data['start_year']), 01, 01)
+                form_start_year = int(form.data['start_year'])
+                start_year = datetime.date(form_start_year, 01, 01)
                 end_year = datetime.date(int(form.data['end_year']), 12, 31)
 
             pdf = CVN.get_user_pdf_ull(request.user, start_year, end_year)
