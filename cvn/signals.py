@@ -2,4 +2,4 @@
 
 from django.dispatch import Signal
 
-cvn_status_changed = Signal(providing_args=["cvn"])
+pre_cvn_status_changed = Signal(providing_args=["cvn"])

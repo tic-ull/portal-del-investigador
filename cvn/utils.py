@@ -43,8 +43,6 @@ def scientific_production_to_context(user_profile, context):
 
 def stats_to_context(request, context):
     """Fills context with info from stats"""
-    dept, dept_json = None, None
-    area, area_json = None, None
     try:
         from statistics.models import Department, Area
         from statistics import settings as st_stat
@@ -52,17 +50,14 @@ def stats_to_context(request, context):
         pass
     else:
         context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN
-        if 'dept' in request.session and 'dept_json' in request.session:
-            dept = Department.objects.get(name=request.session['dept'])
-            dept_json = request.session['dept_json']
+        if 'dept_name' in request.session:
+            dept = Department.objects.get(name=request.session['dept_name'])
             context['department'] = dept
             context['label_dept'] = _(u'Departamento')
-        if 'area' in request.session and 'area_json' in request.session:
-            area = Area.objects.get(name=request.session['area'])
-            area_json = request.session['area_json']
+        if 'area_name' in request.session:
+            area = Area.objects.get(name=request.session['area_name'])
             context['area'] = area
             context['label_area'] = _(u'Área')
-    return dept, dept_json, area, area_json
 
 
 def isdigit(obj):
