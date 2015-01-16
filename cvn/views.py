@@ -20,7 +20,6 @@ import datetime
 def index(request):
     context = {}
     user = request.user
-    dept, dept_json, area, area_json = stats_to_context(request, context)
     try:
         cvn = CVN.objects.get(user_profile__user=user)
         old_cvn_status = cvn.status
@@ -35,15 +34,8 @@ def index(request):
         if form.is_valid():
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
-            if old_cvn_status != cvn.status:
-                if dept is not None:
-                    dept.update(dept_json['unidad']['nombre'],
-                                dept_json['miembros'], commit=True)
-                if area is not None:
-                    area.update(area_json['unidad']['nombre'],
-                                area_json['miembros'], commit=True)
-
     context['form'] = form
+    stats_to_context(request, context)
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     context['TIME_WAITING'] = st_cvn.TIME_WAITING

@@ -43,7 +43,7 @@ def log_status_cvn_changed(sender, instance, **kwargs):
         })
     )
     if instance.status != old_status:
-        signals.cvn_status_changed.send(sender=None, cvn=instance)
+        signals.pre_cvn_status_changed.send(sender=None, cvn=instance)
 
 pre_save.connect(log_status_cvn_changed, sender=CVN,
                  dispatch_uid='log_status_cvn_changed')
