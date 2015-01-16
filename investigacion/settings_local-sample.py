@@ -36,8 +36,11 @@ EMAIL_SUPPORT = 'email@example.com'
 # AUTHENTICATION CAS
 CAS_SERVER_URL = 'http://www.example.com/cas-1/'
 
-# Add optional apps from Investigacion
-INSTALLED_APPS = INSTALLED_APPS + ['statistics', 'accounting', 'mailing']
+# WEB SERVICES
+WS_SERVER_URL = 'http://www.example.com/'
+
+# Proprietary applications
+# INSTALLED_APPS = INSTALLED_APPS + ['statistics', 'accounting', 'mailing']
 
 # DATABASES
 DATABASES['default']['NAME'] = 'name'
@@ -54,7 +57,3 @@ DATABASES['historica_2013']['OPTIONS'] = {
 HISTORICAL = {
     '2013': 'historica_2013',
 }
-
-# WEB SERVICES
-WS_SERVER_URL = 'http://www.example.com/'
-
