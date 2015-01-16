@@ -31,11 +31,13 @@ urlpatterns += i18n_patterns(
 
 if 'statistics' in st.INSTALLED_APPS:
     urlpatterns += i18n_patterns(
+        '',
         url(r'^investigacion/estadisticas/', include('statistics.urls')),
     )
 
 if 'accounting' in st.INSTALLED_APPS:
     urlpatterns += i18n_patterns(
+        '',
         url(r'^investigacion/contabilidad/', include('accounting.urls')),
     )
 
