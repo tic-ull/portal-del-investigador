@@ -1,12 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
+from .models import CVN, OldCvnPdf
 from core import settings as st_core
 from core.models import Log
 from cvn import settings as st_cvn
 from cvn import signals
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.signals import pre_save, pre_delete
-from models import CVN, OldCvnPdf
 
 import datetime
 import json

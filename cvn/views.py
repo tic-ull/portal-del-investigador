@@ -1,5 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
+from .forms import UploadCVNForm, GetDataCVNULL
+from .models import CVN
+from .utils import (scientific_production_to_context, cvn_to_context,
+                    stats_to_context)
+from cvn import settings as st_cvn
 from django.conf import settings as st
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
@@ -8,11 +13,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from forms import UploadCVNForm, GetDataCVNULL
-from models import CVN
-from utils import (scientific_production_to_context, cvn_to_context,
-                   stats_to_context)
-from cvn import settings as st_cvn
+
 import datetime
 
 
@@ -35,7 +36,8 @@ def index(request):
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
     context['form'] = form
-    stats_to_context(request, context)
+    if old_cvn_status != cvn.status:
+        stats_to_context(request, context)
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     context['TIME_WAITING'] = st_cvn.TIME_WAITING

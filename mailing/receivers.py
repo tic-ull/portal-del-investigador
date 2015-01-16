@@ -1,10 +1,11 @@
 # -*- encoding: UTF-8 -*-
 
-from cvn.signals import pre_cvn_status_changed
-import cvn.settings as st_cvn
-import mailing.settings as st_mail
 from .send_mail import send_mail
+from cvn import settings as st_cvn
+from cvn.signals import pre_cvn_status_changed
 from django.dispatch import receiver
+from mailing import settings as st_mail
+
 
 @receiver(pre_cvn_status_changed)
 def send_mail_cvn_expired(cvn, **kwargs):

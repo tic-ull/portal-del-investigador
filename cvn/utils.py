@@ -1,10 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
-from django.core.exceptions import ObjectDoesNotExist
-from lxml import etree
-from cvn.parsers.read_helpers import parse_nif
 from cvn import settings as st_cvn
+from cvn.parsers.read_helpers import parse_nif
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import ugettext as _
+from lxml import etree
 
 
 def cvn_to_context(user, context):

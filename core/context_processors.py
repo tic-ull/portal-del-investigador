@@ -49,6 +49,7 @@ def extra_info(request):
         'last_name': last_name,
     }
 
+
 def installed_apps(request):
     return {
         'statistics_installed': 'statistics' in st.INSTALLED_APPS,
