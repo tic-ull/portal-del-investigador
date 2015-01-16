@@ -3,6 +3,7 @@
 import js
 import os
 
+
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
