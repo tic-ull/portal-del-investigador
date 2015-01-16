@@ -146,14 +146,6 @@ HISTORICAL = {
     'year': 'historica',
 }
 
-SIGIDI_DB = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'name',
-    'USER': 'user',
-    'PASSWORD': 'password',
-    'HOST': '',
-    'PORT': '',
-}
 # ******************************* DATABASES *********************************
 
 SOUTH_TESTS_MIGRATE = False

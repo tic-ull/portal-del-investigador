@@ -55,11 +55,6 @@ HISTORICAL = {
     '2013': 'historica_2013',
 }
 
-SIGIDI_DB['NAME'] = 'name'
-SIGIDI_DB['USER'] = 'user'
-SIGIDI_DB['PASSWORD'] = 'password'
-SIGIDI_DB['HOST'] = 'localhost'
-
 # WEB SERVICES
 WS_SERVER_URL = 'http://www.example.com/'
 

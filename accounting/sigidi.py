@@ -1,6 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 from .models import Project, Agreement
+from .settings import SIGIDI_DB
 from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import connections
@@ -148,7 +149,7 @@ class SigidiConnection:
         SigidiCategories.GESTOR_CONVENIOS_Y_CONTRATOS_SOLO_LECTURA}
 
     def __init__(self, user=None):
-        st.DATABASES['sigidi'] = st.SIGIDI_DB
+        st.DATABASES['sigidi'] = SIGIDI_DB
         self.cursor = connections['sigidi'].cursor()
         self.cursor.__class__.make_query = _make_query
         self.cursor.__class__.make_query_dict = _make_query_dict
