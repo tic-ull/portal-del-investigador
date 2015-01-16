@@ -40,7 +40,7 @@ CAS_SERVER_URL = 'http://www.example.com/cas-1/'
 WS_SERVER_URL = 'http://www.example.com/'
 
 # Proprietary applications
-# INSTALLED_APPS = INSTALLED_APPS + ['statistics', 'accounting', 'mailing']
+# INSTALLED_APPS = INSTALLED_APPS + ('statistics', 'accounting', 'mailing')
 
 # DATABASES
 DATABASES['default']['NAME'] = 'name'
