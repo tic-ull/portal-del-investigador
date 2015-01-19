@@ -25,13 +25,24 @@ SUPPORT = u'Servicio de Investigación'
 EMAIL_SUPPORT = 'email@example.com'
 
 # Enable ROSETTA
-# INSTALLED_APPS = ('rosetta', ) + INSTALLED_APPS
+"""
+INSTALLED_APPS = ('rosetta', ) + INSTALLED_APPS
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'cvn/locale'),
+    os.path.join(BASE_DIR, 'statistics/locale'),
+    os.path.join(BASE_DIR, 'accounting/locale'),
+    os.path.join(BASE_DIR, 'mailing/locale'),
+)
+"""
 
 # Enable DJANGO DEBUG TOOLBAR
-# INSTALLED_APPS = ('debug_toolbar', ) + INSTALLED_APPS
-# DEBUG_TOOLBAR_PATCH_SETTINGS = False
-# MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-# DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
+"""
+INSTALLED_APPS = ('debug_toolbar', ) + INSTALLED_APPS
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
+"""
 
 # AUTHENTICATION CAS
 CAS_SERVER_URL = 'http://www.example.com/cas-1/'
