@@ -46,7 +46,7 @@ def stats_to_context(request, context):
     try:
         from statistics.models import Department, Area
         from statistics import settings as st_stat
-    except:
+    except ImportError:
         pass
     else:
         context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN

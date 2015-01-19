@@ -23,10 +23,8 @@ def index(request):
     user = request.user
     try:
         cvn = CVN.objects.get(user_profile__user=user)
-        old_cvn_status = cvn.status
     except ObjectDoesNotExist:
         cvn = None
-        old_cvn_status = None
 
     form = UploadCVNForm()
     if request.method == 'POST':
@@ -36,8 +34,7 @@ def index(request):
             cvn = form.save()
             context['message'] = _(u'CVN actualizado con éxito.')
     context['form'] = form
-    if old_cvn_status != cvn.status:
-        stats_to_context(request, context)
+    stats_to_context(request, context)
     cvn_to_context(user.profile, context)
     context['CVN'] = scientific_production_to_context(user.profile, context)
     context['TIME_WAITING'] = st_cvn.TIME_WAITING
