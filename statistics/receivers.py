@@ -11,18 +11,17 @@ def update_statistics(instance, **kwargs):
     user = instance.user_profile.user
     (dept, dept_json) = Department.get_user_unit(
         rrhh_code=user.profile.rrhh_code)
-    (area, area_json) = Area.get_user_unit(
-        rrhh_code=user.profile.rrhh_code)
-    if dept is not None:
+    if dept is not None and dept_json is not None:
         dept.update(dept_json['unidad']['nombre'],
                     dept_json['miembros'], commit=True)
-    if area is not None:
+    (area, area_json) = Area.get_user_unit(
+        rrhh_code=user.profile.rrhh_code)
+    if area is not None and area_json is not None:
         area.update(area_json['unidad']['nombre'],
                     area_json['miembros'], commit=True)
     request = CrequestMiddleware.get_request()
     send_department(request, user)
     send_area(request, user)
-
 
 post_save.connect(update_statistics, sender=CVN,
                   dispatch_uid='update_statistics')
