@@ -52,6 +52,6 @@ def extra_info(request):
 
 def installed_apps(request):
     return {
-        'statistics_installed': 'statistics' in st.INSTALLED_APPS,
-        'accounting_installed': 'accounting' in st.INSTALLED_APPS,
+        'is_accounting_installed': 'accounting' in st.INSTALLED_APPS,
+        'is_statistics_installed': 'statistics' in st.INSTALLED_APPS,
     }

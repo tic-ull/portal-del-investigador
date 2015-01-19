@@ -4,7 +4,7 @@ from crequest.middleware import CrequestMiddleware
 from django.contrib.auth.signals import user_logged_in
 
 
-def update_profile(user, **kwargs):
+def update_user(user, **kwargs):
     request = CrequestMiddleware.get_request()
     if request and 'attributes' in request.session:
         cas_info = request.session['attributes']
@@ -18,4 +18,4 @@ def update_profile(user, **kwargs):
             user.username = cas_info['username']
         user.save()
 
-user_logged_in.connect(update_profile, dispatch_uid='update-profile')
+user_logged_in.connect(update_user, dispatch_uid='update-profile')
