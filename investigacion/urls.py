@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 
+import debug_toolbar
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -50,4 +52,10 @@ if st.DEBUG:
         urlpatterns += patterns(
             '',
             url(r'^investigacion/rosetta/', include('rosetta.urls')),
+        )
+
+    if 'debug_toolbar' in st.INSTALLED_APPS:
+        urlpatterns += patterns(
+            '',
+            url(r'^__debug__/', include(debug_toolbar.urls)),
         )
