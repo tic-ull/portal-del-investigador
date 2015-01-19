@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-09 13:58+0000\n"
-"PO-Revision-Date: 2015-01-09 13:59-0102\n"
+"POT-Creation-Date: 2015-01-19 09:49+0000\n"
+"PO-Revision-Date: 2015-01-19 10:02-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -614,23 +614,23 @@ msgstr "Report ULL"
 msgid "Actividad Científica en la Universidad de La Laguna"
 msgstr "Scientific Activity at the Universidad of la Laguna"
 
-#: views.py:29
+#: utils.py:56
 msgid "Departamento"
 msgstr "Department"
 
-#: views.py:36
+#: utils.py:60
 msgid "Área"
 msgstr "Area"
 
-#: views.py:53
+#: views.py:35
 msgid "CVN actualizado con éxito."
 msgstr "CVN updated successfully."
 
-#: views.py:89
+#: views.py:66
 msgid "No disponible"
 msgstr "Not Available"
 
-#: views.py:118
+#: views.py:97
 msgid "No dispone de información en el periodo seleccionado"
 msgstr "No information in this period"
 
