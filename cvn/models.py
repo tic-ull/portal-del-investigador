@@ -1,16 +1,16 @@
 # -*- encoding: UTF-8 -*-
 
-from .helpers import get_cvn_path, get_old_cvn_path
+from .helpers import get_cvn_path, get_old_cvn_path, DateRange
 from core.models import UserProfile
+from core.ws_utils import CachedWS as ws
 from cvn import settings as st_cvn
+from django.conf import settings as st
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lxml import etree
-from mailing import settings as st_mail
-from mailing.send_mail import send_mail
 from managers import CongresoManager, ScientificExpManager, CvnItemManager
 from parsers.read_helpers import parse_date, parse_nif, parse_cvnitem_to_class
 from parsers.write import CvnXmlWriter
@@ -114,11 +114,74 @@ class CVN(models.Model):
             return True
         return False
 
+    @classmethod
+    def get_user_pdf_ull(cls, user, start_date=None, end_date=None):
+        if user.profile.rrhh_code is None:
+            return None
+        parser = CvnXmlWriter(user=user)
+        learning = cls._insert_learning_ull(user, parser, start_date, end_date)
+        cargos = cls._insert_cargos_ull(user, parser, start_date, end_date)
+        if not learning and not cargos:
+            return None
+        xml = parser.tostring()
+        return fecyt.xml2pdf(xml)
+
+    @classmethod
+    def _insert_learning_ull(cls, user, parser, start_date, end_date):
+        items = ws.get(url=st.WS_ULL_LEARNING % user.profile.rrhh_code,
+                       use_redis=False)
+        for item in items:
+            doctor = item["des1_grado_titulacion"] == u'Doctor'
+            cls._learning_to_json(item)
+            item_date_range = DateRange(item['date'], item['date'])
+            if not item_date_range.intersect(DateRange(start_date, end_date)):
+                continue
+            if doctor:
+                parser.add_learning_phd(**item)
+            else:
+                parser.add_learning(**item)
+        return len(items)
+
+    @staticmethod
+    def _learning_to_json(item):
+        item['title'] = item.pop("des1_titulacion")
+        item['university'] = item.pop("organismo", None)
+        item['date'] = datetime.datetime.strptime(
+            item.pop("f_expedicion"), "%d-%m-%Y").date()
+        title_type = item.pop("des1_grado_titulacion")
+        if title_type != u'Doctor':
+            item['title_type'] = title_type
+
+    @classmethod
+    def _insert_cargos_ull(cls, user, parser, start_date, end_date):
+        items = ws.get(url=st.WS_ULL_CARGOS % user.profile.rrhh_code,
+                       use_redis=False)
+        for item in items:
+            cls._cargo_to_json(item)
+            item_date_range = DateRange(item["start_date"], item["end_date"])
+            if not item_date_range.intersect(DateRange(start_date, end_date)):
+                continue
+            parser.add_profession(**item)
+        return len(items)
+
+    @staticmethod
+    def _cargo_to_json(item):
+        item["start_date"] = datetime.datetime.strptime(
+            item.pop("f_toma_posesion"), "%d-%m-%Y").date()
+        if "f_hasta" in item:
+            item["end_date"] = datetime.datetime.strptime(
+                item.pop("f_hasta"), "%d-%m-%Y").date()
+        else:
+            item["end_date"] = None
+        item["title"] = item.pop("des1_cargo")
+        item["centre"] = item.pop("centro", None)
+        item["department"] = item.pop("departamento", None)
+        item["full_time"] = item.pop("dedicacion", None) == "Tiempo Completo"
+
     @staticmethod
     def create(user, xml=None):
         if not xml:
             parser = CvnXmlWriter(user=user)
-            # TODO: insert ull info
             xml = parser.tostring()
         pdf = fecyt.xml2pdf(xml)
         if pdf is None:
@@ -126,15 +189,6 @@ class CVN(models.Model):
         cvn = CVN(user=user, pdf=pdf)
         cvn.save()
         return cvn
-
-    def upgrade(self):
-        if self.xml_file.closed:
-            self.xml_file.open()
-        self.xml_file.seek(0)
-        parser = CvnXmlWriter(user=self.user_profile.user,
-                              xml=self.xml_file.read())
-        # TODO: insert ull info
-        self.update_from_xml(parser.tostring())
 
     @classmethod
     def remove_cvn_by_userprofile(cls, user_profile):

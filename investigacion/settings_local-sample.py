@@ -19,21 +19,39 @@ DEVEL = True
 ADMINS = (
     ('STIC-Investigacion', 'email@example.com'),
 )
+MANAGERS = ADMINS
 
 SUPPORT = u'Servicio de Investigación'
 EMAIL_SUPPORT = 'email@example.com'
 
 # Enable ROSETTA
-# INSTALLED_APPS = ('rosetta', ) + INSTALLED_APPS
+"""
+INSTALLED_APPS = ('rosetta', ) + INSTALLED_APPS
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'cvn/locale'),
+    os.path.join(BASE_DIR, 'statistics/locale'),
+    os.path.join(BASE_DIR, 'accounting/locale'),
+    os.path.join(BASE_DIR, 'mailing/locale'),
+)
+"""
 
 # Enable DJANGO DEBUG TOOLBAR
-# INSTALLED_APPS = ('debug_toolbar', ) + INSTALLED_APPS
-# DEBUG_TOOLBAR_PATCH_SETTINGS = False
-# MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-# DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
+"""
+INSTALLED_APPS = ('debug_toolbar', ) + INSTALLED_APPS
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
+"""
 
 # AUTHENTICATION CAS
 CAS_SERVER_URL = 'http://www.example.com/cas-1/'
+
+# WEB SERVICES
+WS_SERVER_URL = 'http://www.example.com/'
+
+# Proprietary applications
+# INSTALLED_APPS = INSTALLED_APPS + ('statistics', 'accounting', 'mailing')
 
 # DATABASES
 DATABASES['default']['NAME'] = 'name'
@@ -41,15 +59,12 @@ DATABASES['default']['USER'] = 'user'
 DATABASES['default']['PASSWORD'] = 'password'
 DATABASES['default']['HOST'] = 'localhost'
 
-DATABASES['historica']['NAME'] = 'name'
-DATABASES['historica']['USER'] = 'user'
-DATABASES['historica']['PASSWORD'] = 'password'
-DATABASES['historica']['HOST'] = 'locahost'
+DATABASES['historica_2013'] = DATABASES['default'].copy()
+DATABASES['historica_2013']['TEST_MIRROR'] = 'default'
+DATABASES['historica_2013']['OPTIONS'] = {
+    'options': '-c search_path=schema_2013'
+}
 
-SIGIDI_DB['NAME'] = 'name'
-SIGIDI_DB['USER'] = 'user'
-SIGIDI_DB['PASSWORD'] = 'password'
-SIGIDI_DB['HOST'] = 'localhost'
-
-# WEB SERVICES
-WS_SERVER_URL = 'http://www.example.com/'
+HISTORICAL = {
+    '2013': 'historica_2013',
+}

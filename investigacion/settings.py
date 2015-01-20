@@ -3,6 +3,7 @@
 import js
 import os
 
+
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -60,15 +61,8 @@ LANGUAGES = (
 USE_I18N = True
 USE_L10N = True
 LANGUAGE_CODE = 'es'
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'core/locale'),
-    os.path.join(BASE_DIR, 'cvn/locale'),
-    os.path.join(BASE_DIR, 'statistics/locale'),
-    os.path.join(BASE_DIR, 'accounting/locale'),
-    os.path.join(BASE_DIR, 'mailing/locale'),
-)
 TIME_ZONE = 'Atlantic/Canary'
-USE_TZ = True
+USE_TZ = False
 # ******************************* LANGUAGE ***********************************
 
 # ******************************* INSTALLED APPS *****************************
@@ -85,12 +79,9 @@ INSTALLED_APPS = (
     'core',
     'cvn',
     'crequest',
-    'statistics',
     'django_coverage',
     'django_tables2',
     'django.contrib.flatpages',
-    'accounting',
-    'mailing',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -140,6 +131,9 @@ DATABASES = {
     },
     'historica': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'OPTIONS': {
+            'options': '-c search_path=schema_historica, public'
+        },
         'NAME': 'name',
         'USER': 'user',
         'PASSWORD': 'password',
@@ -149,14 +143,10 @@ DATABASES = {
     }
 }
 
-SIGIDI_DB = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'name',
-    'USER': 'user',
-    'PASSWORD': 'password',
-    'HOST': '',
-    'PORT': '',
+HISTORICAL = {
+    'year': 'historica',
 }
+
 # ******************************* DATABASES *********************************
 
 SOUTH_TESTS_MIGRATE = False
@@ -264,6 +254,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "core.context_processors.extra_info",
     "cvn.context_processors.extra_info",
+    "core.context_processors.installed_apps"
 )
 
 TEMPLATE_LOADERS = (
@@ -271,12 +262,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'cvn/templates'),
-    os.path.join(BASE_DIR, 'core/templates'),
-    os.path.join(BASE_DIR, 'statistics/templates'),
-    os.path.join(BASE_DIR, 'accounting/templates'),
-)
 # ************************* TEMPLATES ****************************************
 
 # ************************* STATIC FILES *************************************
@@ -326,6 +311,12 @@ WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
 # RRHH code
 WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
+
+# CVN Info ULL: learning_degree / learning_phd
+WS_ULL_LEARNING = WS_SERVER_URL + 'get_formacion_academica?cod_persona=%s'
+
+# CVN Info ULL: profession / old_profession
+WS_ULL_CARGOS = WS_SERVER_URL + 'get_cargos?cod_persona=%s'
 
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
@@ -404,4 +395,3 @@ WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
 WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
 # ****************************** WEB SERVICES ******************************
-

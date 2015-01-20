@@ -7,6 +7,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
 
+import debug_toolbar
+
 admin.autodiscover()
 
 urlpatterns = patterns(
@@ -23,14 +25,23 @@ urlpatterns += i18n_patterns(
     url(r'^investigacion/$', RedirectView.as_view(
         url=st.BASE_URL), name='index'),
     url(r'^investigacion/cvn/', include('cvn.urls')),
-    url(r'^investigacion/estadisticas/', include('statistics.urls')),
     url(r'^investigacion/faq/$', TemplateView.as_view(
         template_name='core/faq/faq.html'), name='faq'),
     (r'^investigacion/faq/*', include(
         'django.contrib.flatpages.urls')),
-    url(r'^investigacion/contabilidad/', include('accounting.urls')),
 )
 
+if 'accounting' in st.INSTALLED_APPS:
+    urlpatterns += i18n_patterns(
+        '',
+        url(r'^investigacion/contabilidad/', include('accounting.urls')),
+    )
+
+if 'statistics' in st.INSTALLED_APPS:
+    urlpatterns += i18n_patterns(
+        '',
+        url(r'^investigacion/estadisticas/', include('statistics.urls')),
+    )
 
 if st.DEVEL:
     urlpatterns += static(st.MEDIA_URL, document_root=st.MEDIA_ROOT)
@@ -41,4 +52,10 @@ if st.DEBUG:
         urlpatterns += patterns(
             '',
             url(r'^investigacion/rosetta/', include('rosetta.urls')),
+        )
+
+    if 'debug_toolbar' in st.INSTALLED_APPS:
+        urlpatterns += patterns(
+            '',
+            url(r'^__debug__/', include(debug_toolbar.urls)),
         )

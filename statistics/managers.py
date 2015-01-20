@@ -26,7 +26,7 @@ class StatsManager(models.Manager):
 class ProfessionalCategoryManager(models.Manager):
 
     def update(self, past_days=0):
-        categories = ws.get(ws=(st.WS_CCE % past_days), use_redis=False)
+        categories = ws.get(url=(st.WS_CCE % past_days), use_redis=False)
         if categories is None:
             raise IOError('WS "%s" does not work' % (st.WS_CCE % past_days))
         for category in categories:

@@ -30,14 +30,14 @@ class Command(BaseCommand):
     def handle(self, *args,  **options):
         self._check_args(options)
         try:
-            department_list = ws.get(ws=st.WS_DEPARTMENTS_AND_MEMBERS,
+            department_list = ws.get(url=st.WS_DEPARTMENTS_AND_MEMBERS,
                                      use_redis=False)
             if department_list is None:
                 raise IOError('WebService "%s" does not work' %
                               st.WS_DEPARTMENTS_AND_MEMBERS)
             Department.objects.all().delete()
 
-            area_list = ws.get(ws=st.WS_AREAS_AND_MEMBERS, use_redis=False)
+            area_list = ws.get(url=st.WS_AREAS_AND_MEMBERS, use_redis=False)
             if area_list is None:
                 raise IOError('WebService "%s" does not work' %
                               st.WS_AREAS_AND_MEMBERS)

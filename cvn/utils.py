@@ -1,9 +1,10 @@
 # -*- encoding: UTF-8 -*-
 
-from django.core.exceptions import ObjectDoesNotExist
-from lxml import etree
-from cvn.parsers.read_helpers import parse_nif
 from cvn import settings as st_cvn
+from cvn.parsers.read_helpers import parse_nif
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import ugettext as _
+from lxml import etree
 
 
 def cvn_to_context(user, context):
@@ -38,6 +39,25 @@ def scientific_production_to_context(user_profile, context):
         return True
     except ObjectDoesNotExist:
         return False
+
+
+def stats_to_context(request, context):
+    """Fills context with info from stats"""
+    try:
+        from statistics.models import Department, Area
+        from statistics import settings as st_stat
+    except ImportError:
+        pass
+    else:
+        context['validPercentCVN'] = st_stat.PERCENTAGE_VALID_CVN
+        if 'dept_name' in request.session:
+            dept = Department.objects.get(name=request.session['dept_name'])
+            context['department'] = dept
+            context['label_dept'] = _(u'Departamento')
+        if 'area_name' in request.session:
+            area = Area.objects.get(name=request.session['area_name'])
+            context['area'] = area
+            context['label_area'] = _(u'Área')
 
 
 def isdigit(obj):

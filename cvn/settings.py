@@ -1,5 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
+from datetime import date
 from django.conf import settings as st
 from enum import IntEnum, Enum
 
@@ -60,7 +61,9 @@ MESSAGES_WAITING = {
     2: _(u'Verificando la información de su CVN, por favor espere.'),
     3: _(u'Este proceso esta tardando más tiempo de lo habitual, por favor espere.'
          u' Si se produce un error repita el proceso.'
-         u' Si el error persiste contacte con el %s (%s).' % (st.SUPPORT, st.EMAIL_SUPPORT)),
+         u' Si el error persiste contacte con el ') +
+        (u'%(support)s (%(email)s).' % {'support': st.SUPPORT,
+                                        'email': st.EMAIL_SUPPORT})
 }
 
 TIME_WAITING = 5000  # In milliseconds
@@ -259,6 +262,14 @@ SUBJECT_TYPE = {
 SUBJECT_TYPE_OTHERS = "030.010.000.430"
 
 # ******************************* CVN ITEMS *********************************
+
+RANGE_OF_YEARS = (1950, date.today().year + 1)  # Range of years for CVN Export
+
+# Unauthorized CVN Authors
+CVN_PDF_AUTHOR_NOAUT = [u'FECYT - Author of Example', ]
+
+# HISTORICAL REPORT
+HISTORICAL_YEAR = '2013'
 
 # ************************* SETTINGS LOCAL ***********************************
 try:

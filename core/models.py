@@ -40,7 +40,7 @@ class UserProfile(models.Model):
         return user, created
 
     def update_rrhh_code(self):
-        rrhh_code = ws.get(ws=(st.WS_COD_PERSONA % self.documento),
+        rrhh_code = ws.get(url=(st.WS_COD_PERSONA % self.documento),
                            use_redis=False)
         if rrhh_code is not None:
             self.rrhh_code = rrhh_code

@@ -1,7 +1,6 @@
 # -*- encoding: UTF-8 -*-
 
 from cvn.parsers.read import parse_cvnitem
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 import datetime
