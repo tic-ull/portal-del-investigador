@@ -1,0 +1,12 @@
+[submodule "cvn"]
+	path = cvn
+	url = git@gitlab.stic.ull.es:investigacion/cvn.git
+[submodule "accounting"]
+	path = accounting
+	url = git@gitlab.stic.ull.es:investigacion/accounting.git
+[submodule "mailing"]
+	path = mailing
+	url = git@gitlab.stic.ull.es:investigacion/mailing.git
+[submodule "statistics"]
+	path = statistics
+	url = git@gitlab.stic.ull.es:investigacion/statistics.git
