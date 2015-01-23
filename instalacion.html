@@ -2,7 +2,7 @@
 <html lang="en"
 >
 <head>
-    <title>installation - Portal del Investigador - Documentación</title>
+    <title>Instalación - Portal del Investigador - Documentación</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,16 +18,16 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
-<link rel="canonical" href="/investigacion/installation.html">
+<link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+        <meta name="description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
-    <meta property="og:title" content="installation"/>
-    <meta property="og:url" content="/investigacion/installation.html"/>
-    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+    <meta property="og:title" content="Instalación"/>
+    <meta property="og:url" content="/investigacion/instalacion.html"/>
+    <meta property="og:description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
 
 
     <!-- ULL -->
@@ -91,7 +91,7 @@
         <div class="collapse navbar-collapse navbar-app-collapse">
             <ul class="nav navbar-nav navbar-right">
                          <li><a href="/investigacion/">Home</a></li>
-                         <li class="active"><a href="/investigacion/installation.html">installation</a></li>
+                         <li class="active"><a href="/investigacion/instalacion.html">Instalación</a></li>
                          <li><a href="/investigacion/other.html">Other</a></li>
                          <li><a href="/investigacion/team.html">Team</a></li>
                          <li><a href="/investigacion/contacto.html">Contacto</a></li>
@@ -105,11 +105,10 @@
         <div class="col-md-9" role="main">
 
     <section id="content" class="body">
-        <h1 class="entry-title">installation</h1>
+        <h1 class="entry-title">Instalación</h1>
         
         <div class="entry-content">
-            <h3>Proceso de instalación</h3>
-<ol>
+            <ol>
     <li> Instalar/Actualizar el paquete VIRTUALENV</li>
 <pre>
 sudo apt-get install python-pip
@@ -135,7 +134,8 @@ git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
     <li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
 <pre>
 pip install -U distribute
-sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib 
+                     libpq-dev libxml2-dev libxslt1-dev python-dev
 pip install -r requirements.txt
 </pre>
 
@@ -181,6 +181,60 @@ python manage.py makemigrations
 python manage.py migrate
 </pre>
     <li> Configurar Settings Local</li>
+    <ul>
+        <li>Settings Local de Investigación (investigacion/settings_local.p</li>
+        <tbody>
+            <tr>
+                <th>VARIABLE</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td> BASE_URL </td>
+                <td> URL que se emplea como base del proyecto (el index del proyecto es una url externa) </td>
+            </tr>
+            <tr>
+                <td> OLD_PORTAL_URL </td>
+                <td> URL del antiguo Portal del Investigador (actualmente empleada en la aplicación Statistics)</td>
+            </tr>
+            <tr>
+                <td> SECRET_KEY </td>
+                <td>Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, se debe establecer en un valor impredecible y único </td>
+            </tr>
+            <tr>
+                <td> DEBUG </td>
+                <td> Booleano que activa/desactiva el modo de depuración </td>
+            </tr>   
+            <tr>
+                <td> TEMPLATE_DEBUG </td>
+                <td> Booleano que activa/desactiva el modo de depuración </td>
+            </tr>
+            <tr>
+                <td> DEVEL </td>
+                <td> Booleano que indica si se está o no en el Entorno de Desarrollo </td>
+            </tr>
+            <tr>
+                <td> ADMINS </td>
+                <td> Tupla de las personas que reciben las notificaciones de error </td>
+            </tr>
+            <tr>
+                <td> SUPPORT </td>
+                <td> Nombre del Departamento de Soporte </td>
+            </tr>
+            <tr>
+                <td> EMAIL_SUPPORT </td>
+                <td> Correo Electrónico del Departamento de Soporte </td>
+            </tr>
+            <tr>
+                <td> CAS_SERVER_URL </td>
+                <td> URL del Servicio de Autenticación (CAS) </td>
+            </tr>
+            <tr>
+                <td> WS_SERVER_UR </td>
+                <td> URL base del Servicio de Web Services </td>
+            </tr>           
+        </tbody>
+
+    </ul>
 </ol>
         </div>
     </section>
