@@ -181,62 +181,62 @@ python manage.py makemigrations
 python manage.py migrate
 </pre>
     <li> Configurar Settings Local</li>
-    <ul>
-        <li>Settings Local de Investigación (investigacion/settings_local.py)</li>
-        </ul>
-        <table>
-            <tr>
-                <th>VARIABLE</th>
-                <th>DESCRIPCIÓN</th>
-            </tr>
-            <tr>
-                <td> BASE_URL </td>
-                <td> URL que se emplea como base del proyecto (el index del proyecto es una url externa) </td>
-            </tr>
-            <tr>
-                <td> OLD_PORTAL_URL </td>
-                <td> URL del antiguo Portal del Investigador (actualmente empleada en la aplicación Statistics)</td>
-            </tr>
-            <tr>
-                <td> SECRET_KEY </td>
-                <td>Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, se debe establecer en un valor impredecible y único </td>
-            </tr>
-            <tr>
-                <td> DEBUG </td>
-                <td> Booleano que activa/desactiva el modo de depuración </td>
-            </tr>   
-            <tr>
-                <td> TEMPLATE_DEBUG </td>
-                <td> Booleano que activa/desactiva el modo de depuración </td>
-            </tr>
-            <tr>
-                <td> DEVEL </td>
-                <td> Booleano que indica si se está o no en el Entorno de Desarrollo </td>
-            </tr>
-            <tr>
-                <td> ADMINS </td>
-                <td> Tupla de las personas que reciben las notificaciones de error </td>
-            </tr>
-            <tr>
-                <td> SUPPORT </td>
-                <td> Nombre del Departamento de Soporte </td>
-            </tr>
-            <tr>
-                <td> EMAIL_SUPPORT </td>
-                <td> Correo Electrónico del Departamento de Soporte </td>
-            </tr>
-            <tr>
-                <td> CAS_SERVER_URL </td>
-                <td> URL del Servicio de Autenticación (CAS) </td>
-            </tr>
-            <tr>
-                <td> WS_SERVER_UR </td>
-                <td> URL base del Servicio de Web Services </td>
-            </tr>           
-        </table>
-
-
 </ol>
+
+<div class="highlight"><pre><span class="nt">&lt;ul&gt;</span>
+    <span class="nt">&lt;li&gt;</span>Settings Local de Investigación (investigacion/settings_local.py)<span class="nt">&lt;/li&gt;</span>
+<span class="nt">&lt;/ul&gt;</span>
+    <span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;th&gt;</span>VARIABLE<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>DESCRIPCIÓN<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> BASE_URL <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> URL que se emplea como base del proyecto (el index del proyecto es una url externa) <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> OLD_PORTAL_URL <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> URL del antiguo Portal del Investigador (actualmente empleada en la aplicación Statistics)<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> SECRET_KEY <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, se debe establecer en un valor impredecible y único <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> DEBUG <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Booleano que activa/desactiva el modo de depuración <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>   
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> TEMPLATE_DEBUG <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Booleano que activa/desactiva el modo de depuración <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> DEVEL <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Booleano que indica si se está o no en el Entorno de Desarrollo <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> ADMINS <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Tupla de las personas que reciben las notificaciones de error <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> SUPPORT <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Nombre del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> EMAIL_SUPPORT <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> Correo Electrónico del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> CAS_SERVER_URL <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> URL del Servicio de Autenticación (CAS) <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span> WS_SERVER_UR <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span> URL base del Servicio de Web Services <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>           
+    <span class="nt">&lt;/table&gt;</span>
+</pre></div>
         </div>
     </section>
         </div>
