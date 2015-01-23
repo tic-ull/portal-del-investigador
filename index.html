@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv 2. Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate 3. Descargar el repositorio git clone git@gitlab ..." />
+        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Home"/>
     <meta property="og:url" content="/investigacion/"/>
-    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv 2. Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate 3. Descargar el repositorio git clone git@gitlab ..." />
+    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
 
 
     <!-- ULL -->
@@ -116,10 +116,11 @@ sudo apt-get install python-pip
 pip show virtualenv 
 sudo pip install --upgrade virtualenv   
 pip show virtualenv
-<pre>
+</pre>
 
-2. Crear y activar un VIRTUALENV para el proyecto
-
+<ol>
+<li>Crear y activar un VIRTUALENV para el proyecto</li>
+</ol>
 <pre>
 mkdir -p virtualenv
 cd virtualenv
@@ -127,34 +128,42 @@ virtualenv --no-site-packages .
 source bin/activate
 </pre>
 
-3. Descargar el repositorio
-
+<ol>
+<li>Descargar el repositorio</li>
+</ol>
 <pre>
 git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
 </pre>
 
-4. Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)
-
+<ol>
+<li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
+</ol>
 <pre>
 pip install -U distribute
 sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
 pip install -r requirements.txt
 </pre>
 
-5. Configurar PostgreSQL
-
+<ol>
+<li>Configurar PostgreSQL</li>
+</ol>
 <ul>
-    <li>
-        Cambiar contraseña del usuario postgres 
-        <pre>
-        sudo su postgres -c psql
-        ALTER USER postgres WITH PASSWORD '<contraseña>';
-        </pre>
-    </li>
+    <li>Cambiar contraseña del usuario postgres </li>   
+    <pre>
+    sudo su postgres -c psql
+    ALTER USER postgres WITH PASSWORD '<contraseña>';
+    </pre>
+
+    <li>Cambiar contraseña del usuario postgres en el sistema </li>
+    <pre>
+    sudo passwd -d postgres
+    sudo su postgres -c passwd
+    </pre>
 </ul>
 
-6. Crear el esquema de la base de datos
-
+<ol>
+<li>Crear el esquema de la base de datos</li>
+</ol>
 <pre>
     python manage.py makemigrations
 
