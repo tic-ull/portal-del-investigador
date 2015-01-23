@@ -144,7 +144,7 @@ pip install -r requirements.txt
             <li>Cambiar contraseña del usuario postgres </li>   
 <pre>
 sudo su postgres -c psql
-ALTER USER postgres WITH PASSWORD '<contraseña>';
+ALTER USER postgres WITH PASSWORD 'contraseña';
 </pre>
 
             <li>Cambiar contraseña del usuario postgres en el sistema </li>
@@ -156,16 +156,16 @@ sudo su postgres -c passwd
             <li>Crear usuario y base de datos</li>
 <pre>
 sudo su postgres -c psql
-CREATE USER <user> WITH PASSWORD '<contraseña>';
+CREATE USER user WITH PASSWORD 'contraseña';
 ALTER USER <user> createdb;
-CREATE DATABASE <database>
+CREATE DATABASE database
     ENCODING = 'UTF8'
     TABLESPACE = pg_default
     LC_COLLATE = 'es_ES.UTF-8'
     LC_CTYPE = 'es_ES.UTF-8'
     CONNECTION LIMIT = -1;
-GRANT CONNECT, TEMPORARY ON DATABASE <database> TO <user>;
-GRANT ALL ON DATABASE <database> TO <user>;     
+GRANT CONNECT, TEMPORARY ON DATABASE database TO user;
+GRANT ALL ON DATABASE database TO user;     
 </pre>
 
             <li>Probar el acceso</li>
@@ -255,6 +255,50 @@ python manage.py migrate
                 </ul>
                     <div class="content">
                         <div class="row-fluid">
+                            <strong>Base de datos por Defecto </strong>
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th>VARIABLE</th>
+                                    <th>DESCRIPCIÓN</th>
+                                </tr>
+                                <tr>
+                                    <td> DATABASES['default']['NAME'] </td>
+                                    <td> Nombre de la Base de Datos </td>
+                                </tr>
+                                <tr>
+                                    <td> DATABASES['default']['USER'] </td>
+                                    <td> Usuario de la Base de Datos </td>
+                                </tr>
+                                <tr>
+                                    <td> DATABASES['default']['PASSWORD']  </td>
+                                    <td> Contraseña del usuario de la Base de Datos </td>
+                                </tr>
+                                <tr>
+                                    <td> DATABASES['default']['HOST'] </td>
+                                    <td> Host de la Base de Datos  </td>
+                                </tr>                                       
+                            </table>
+                            <strong>Base de datos por Defecto </strong>
+                             Para la realización de Informes de Producción Científica extraídos de los CVN cada año se clona la base de datos por defecto en un esquema “histórico” de sólo lectura.
+
+                            Para cada base de datos/esquema se debe añadir la siguiente configuración:
+<pre>
+DATABASES['historica_2013'] = DATABASES['default'].copy()
+DATABASES['historica_2013']['TEST_MIRROR'] = 'default'
+DATABASES['historica_2013']['OPTIONS'] = { 
+    'options': '-c search_path=schema_2013'
+}
+</pre>
+                            <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <th>VARIABLE</th>
+                                        <th>DESCRIPCIÓN</th>
+                                    </tr>
+                                    <tr>
+                                        <td> HISTORICAL </td>
+                                        <td> Hash que relaciona un año con la configuración de su base de datos histórica </td>
+                                    </tr>
+                            </table>    
                         </div>
                     </div>
                 </div>
