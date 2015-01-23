@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
+        <meta name="description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate --&gt; Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Instalación"/>
     <meta property="og:url" content="/investigacion/instalacion.html"/>
-    <meta property="og:description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
+    <meta property="og:description" content="Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate --&gt; Descargar el repositorio git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion ..." />
 
 
     <!-- ULL -->
@@ -109,6 +109,7 @@
         
         <div class="entry-content">
             <ol>
+<! --
     <li> Instalar/Actualizar el paquete VIRTUALENV</li>
 <pre>
 sudo apt-get install python-pip
@@ -124,7 +125,7 @@ cd virtualenv
 virtualenv --no-site-packages .
 source bin/activate
 </pre>
-
+-->
     <li>Descargar el repositorio</li>
 <pre>
 git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
@@ -134,46 +135,12 @@ git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
     <li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
 <pre>
 pip install -U distribute
-sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib 
+sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \
                      libpq-dev libxml2-dev libxslt1-dev python-dev
 pip install -r requirements.txt
 </pre>
 
     <li>Configurar PostgreSQL
-        <ul>
-            <li>Cambiar contraseña del usuario postgres </li>   
-<pre>
-sudo su postgres -c psql
-ALTER USER postgres WITH PASSWORD 'contraseña';
-</pre>
-
-            <li>Cambiar contraseña del usuario postgres en el sistema </li>
-<pre>
-sudo passwd -d postgres
-sudo su postgres -c passwd
-</pre>
-
-            <li>Crear usuario y base de datos</li>
-<pre>
-sudo su postgres -c psql
-CREATE USER user WITH PASSWORD 'contraseña';
-ALTER USER <user> createdb;
-CREATE DATABASE database
-    ENCODING = 'UTF8'
-    TABLESPACE = pg_default
-    LC_COLLATE = 'es_ES.UTF-8'
-    LC_CTYPE = 'es_ES.UTF-8'
-    CONNECTION LIMIT = -1;
-GRANT CONNECT, TEMPORARY ON DATABASE database TO user;
-GRANT ALL ON DATABASE database TO user;     
-</pre>
-
-            <li>Probar el acceso</li>
-<pre>
-psql -U <user> -W <database>        
-</pre>
-        </ul>
-    </li>
 
     <li>Crear el esquema de la base de datos</li>
 <pre>
@@ -263,30 +230,6 @@ cp settings_local-sample.py settings_local.py
                 </ul>
                     <div class="content">
                         <div class="row-fluid">
-                            <strong>Base de datos por Defecto </strong>
-                            <table class="table table-striped table-condensed">
-                                <tr>
-                                    <th>VARIABLE</th>
-                                    <th>DESCRIPCIÓN</th>
-                                </tr>
-                                <tr>
-                                    <td> DATABASES['default']['NAME'] </td>
-                                    <td> Nombre de la Base de Datos </td>
-                                </tr>
-                                <tr>
-                                    <td> DATABASES['default']['USER'] </td>
-                                    <td> Usuario de la Base de Datos </td>
-                                </tr>
-                                <tr>
-                                    <td> DATABASES['default']['PASSWORD']  </td>
-                                    <td> Contraseña del usuario de la Base de Datos </td>
-                                </tr>
-                                <tr>
-                                    <td> DATABASES['default']['HOST'] </td>
-                                    <td> Host de la Base de Datos  </td>
-                                </tr>                                       
-                            </table>
-                            <strong>Base de datos por Defecto </strong>
                             <p>
                             Para la realización de Informes de Producción Científica extraídos de los CVN cada año se clona la base de datos por defecto en un esquema “histórico” de sólo lectura.
 
