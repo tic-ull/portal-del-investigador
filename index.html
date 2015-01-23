@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat ..." />
+        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Home"/>
     <meta property="og:url" content="/investigacion/"/>
-    <meta property="og:description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat ..." />
+    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
 
 
     <!-- ULL -->
@@ -107,7 +107,41 @@
         <h1 class="entry-title">Home</h1>
         
         <div class="entry-content">
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <h3>Proceso de instalación</h3>
+<ol>
+<li>
+<p>Instalar/Actualizar el paquete VIRTUALENV</p>
+<p>sudo apt-get install python-pip
+pip show virtualenv
+sudo pip install --upgrade virtualenv
+pip show virtualenv</p>
+</li>
+<li>
+<p>Crear y activar un VIRTUALENV para el proyecto</p>
+<p>mkdir -p virtualenv
+cd virtualenv
+virtualenv --no-site-packages .
+source bin/activate</p>
+</li>
+<li>
+<p>Descargar el repositorio</p>
+<p>git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git</p>
+</li>
+<li>
+<p>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</p>
+<p>pip install -U distribute
+sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+pip install -r requirements.txt</p>
+</li>
+<li>
+<p>Configurar PostgreSQL</p>
+</li>
+<li>
+<p>Crear el esquema de la base de datos</p>
+<p>python manage.py makemigrations
+python manage.py migrate</p>
+</li>
+</ol>
         </div>
     </section>
         </div>
