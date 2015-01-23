@@ -181,8 +181,16 @@ python manage.py makemigrations
 python manage.py migrate
 </pre>
     <li> Configurar Settings Local</li>
-
+    <p>
+    En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones que necesitan ser modificadas, por lo que se recomienda su uso como punto de partida. 
+    </p>
+<pre>
+cp settings_local-sample.py settings_local.py
+</pre>
     <ul>
+
+        <!-- Configuración del Proyecto -->
+
         <li> Settings Local de Investigación (investigacion/settings_local.py)</li>
         <div class="row">
             <div class="col-md-12">
@@ -279,9 +287,11 @@ python manage.py migrate
                                 </tr>                                       
                             </table>
                             <strong>Base de datos por Defecto </strong>
-                             Para la realización de Informes de Producción Científica extraídos de los CVN cada año se clona la base de datos por defecto en un esquema “histórico” de sólo lectura.
+                            <p>
+                            Para la realización de Informes de Producción Científica extraídos de los CVN cada año se clona la base de datos por defecto en un esquema “histórico” de sólo lectura.
 
                             Para cada base de datos/esquema se debe añadir la siguiente configuración:
+                            </p>
 <pre>
 DATABASES['historica_2013'] = DATABASES['default'].copy()
 DATABASES['historica_2013']['TEST_MIRROR'] = 'default'
@@ -299,6 +309,53 @@ DATABASES['historica_2013']['OPTIONS'] = {
                                         <td> Hash que relaciona un año con la configuración de su base de datos histórica </td>
                                     </tr>
                             </table>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aplicación CVN -->
+
+        <li> Settings Local de CVN (cvn/settings_local.py) </li>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section">
+                <ul class="nav nav-tabs header">
+                    <li class="active">Configuración</li>
+                </ul>
+                    <div class="content">
+                        <div class="row-fluid">
+                            <table class="table table-striped table-condensed">
+                                <tr>
+                                    <th>VARIABLE</th>
+                                    <th>DESCRIPCIÓN</th>
+                                </tr>
+                                <tr>
+                                    <td> UNIVERSITY </td>
+                                    <td> Nombre de la Entidad por defecto </td>
+                                </tr>
+                                <tr>
+                                    <td> EXPIRY_DATE </td>
+                                    <td> Fecha de Caducidad de un CVN </td>
+                                </tr>
+                                <tr>
+                                    <td> FECYT_USER </td>
+                                    <td> Usuario del Servicio de Web Services de la FECYT </td>
+                                </tr>
+                                <tr>
+                                    <td> FECYT_PASSWORD </td>
+                                    <td> Contraseña del usuario del Servicio de Web Services de la FECYT </td>
+                                </tr>
+                                <tr>
+                                    <td> CVN_PDF_AUTHOR_NOAUT </td>
+                                    <td> Nombre del autor de un CVN-PDF cuya subida no está autorizada </td>
+                                </tr>                                       
+                                <tr>
+                                    <td> HISTORICAL_YEAR </td>
+                                    <td>Obtiene el año para acceder a la base de datos histórica y mostrar el CVN-PDF del usuario GesInv-ULL empleado para subirle un CVN con toda la producción científica de la Universidad </td>
+                                </tr>
+                            </table>                        
                         </div>
                     </div>
                 </div>
