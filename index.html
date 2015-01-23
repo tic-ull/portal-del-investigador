@@ -113,38 +113,58 @@
 </ol>
 <p><code>
 sudo apt-get install python-pip
-pip show virtualenv 
+
+pip show virtualenv
+
 sudo pip install --upgrade virtualenv   
+
 pip show virtualenv
 </code></p>
 
 <ol>
-<li>
-<p>Crear y activar un VIRTUALENV para el proyecto</p>
-<p>mkdir -p virtualenv</p>
-<p>cd virtualenv</p>
-<p>virtualenv --no-site-packages .</p>
-<p>source bin/activate</p>
-</li>
-<li>
-<p>Descargar el repositorio</p>
-<p>git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git</p>
-</li>
-<li>
-<p>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</p>
-<p>pip install -U distribute</p>
-<p>sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev</p>
-<p>pip install -r requirements.txt</p>
-</li>
+<li>Crear y activar un VIRTUALENV para el proyecto</li>
+</ol>
+<p><code>
+    mkdir -p virtualenv
+
+    cd virtualenv
+
+    virtualenv --no-site-packages .
+
+    source bin/activate
+</code></p>
+
+<ol>
+<li>Descargar el repositorio</li>
+</ol>
+<p><code>
+    git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
+</code></p>
+
+<ol>
+<li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
+</ol>
+<p><code>
+    pip install -U distribute
+
+    sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+
+    pip install -r requirements.txt
+</code></p>
+
+<ol>
 <li>
 <p>Configurar PostgreSQL</p>
 </li>
 <li>
 <p>Crear el esquema de la base de datos</p>
-<p>python manage.py makemigrations</p>
-<p>python manage.py migrate</p>
 </li>
 </ol>
+<p><code>
+    python manage.py makemigrations
+
+    python manage.py migrate
+</code></p>
         </div>
     </section>
         </div>
