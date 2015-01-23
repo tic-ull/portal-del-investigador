@@ -109,66 +109,61 @@
         <div class="entry-content">
             <h3>Proceso de instalación</h3>
 <ol>
-<li>Instalar/Actualizar el paquete VIRTUALENV</li>
-</ol>
-<pre>
-sudo apt-get install python-pip
-pip show virtualenv 
-sudo pip install --upgrade virtualenv   
-pip show virtualenv
-</pre>
-
-<ol>
-<li>Crear y activar un VIRTUALENV para el proyecto</li>
-</ol>
-<pre>
-mkdir -p virtualenv
-cd virtualenv
-virtualenv --no-site-packages .
-source bin/activate
-</pre>
-
-<ol>
-<li>Descargar el repositorio</li>
-</ol>
-<pre>
-git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
-</pre>
-
-<ol>
-<li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
-</ol>
-<pre>
-pip install -U distribute
-sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
-pip install -r requirements.txt
-</pre>
-
-<ol>
-<li>Configurar PostgreSQL</li>
-</ol>
-<ul>
-    <li>Cambiar contraseña del usuario postgres </li>   
+    <li> Instalar/Actualizar el paquete VIRTUALENV
     <pre>
-    sudo su postgres -c psql
-    ALTER USER postgres WITH PASSWORD '<contraseña>';
+    sudo apt-get install python-pip
+    pip show virtualenv 
+    sudo pip install --upgrade virtualenv   
+    pip show virtualenv
     </pre>
+    </li>
 
-    <li>Cambiar contraseña del usuario postgres en el sistema </li>
+    <li>Crear y activar un VIRTUALENV para el proyecto
     <pre>
-    sudo passwd -d postgres
-    sudo su postgres -c passwd
+    mkdir -p virtualenv
+    cd virtualenv
+    virtualenv --no-site-packages .
+    source bin/activate
     </pre>
-</ul>
+    </li>
 
-<ol>
-<li>Crear el esquema de la base de datos</li>
-</ol>
-<pre>
-    python manage.py makemigrations
+    <li>Descargar el repositorio
+    <pre>
+    git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
+    </pre>
+    </li>
 
-    python manage.py migrate
-</pre>
+    <li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)
+    <pre>
+    pip install -U distribute
+    sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+    pip install -r requirements.txt
+    </pre>
+    </li>
+
+    <li>Configurar PostgreSQL
+        <ul>
+            <li>Cambiar contraseña del usuario postgres </li>   
+        <pre>
+        sudo su postgres -c psql
+        ALTER USER postgres WITH PASSWORD '<contraseña>';
+        </pre>
+
+            <li>Cambiar contraseña del usuario postgres en el sistema </li>
+        <pre>
+        sudo passwd -d postgres
+        sudo su postgres -c passwd
+        </pre>
+        </ul>
+    </li>
+
+    <li>Crear el esquema de la base de datos
+    <pre>
+        python manage.py makemigrations
+
+        python manage.py migrate
+    </pre>
+    </li>
         </div>
     </section>
         </div>
