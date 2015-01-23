@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones ..." />
+        <meta name="description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local Listado de aplicaciones con configuraciones locales: Investigación (Configuración del Proyecto) CVN En cada una de las aplicaciones ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Instalación"/>
     <meta property="og:url" content="/investigacion/instalacion.html"/>
-    <meta property="og:description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones ..." />
+    <meta property="og:description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local Listado de aplicaciones con configuraciones locales: Investigación (Configuración del Proyecto) CVN En cada una de las aplicaciones ..." />
 
 
     <!-- ULL -->
@@ -125,6 +125,11 @@ pip install -r requirements.txt
 
 <h4> Configurar Settings Local</h4>
 
+<p>Listado de aplicaciones con configuraciones locales:
+<ul>
+    <li>Investigación (Configuración del Proyecto)</li>
+    <li>CVN</ul>
+</ul></p>
 <p>
 En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones que necesitan ser modificadas, por lo que se recomienda su uso como punto de partida. 
 </p>
@@ -133,7 +138,59 @@ En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sam
 cp settings_local-sample.py settings_local.py
 </pre>
 
-<h5> Settings Local de Investigación (investigacion/settings_local.py) </h5>
+<h5>Settings Local de Investigación (investigacion/settings_local.py) </h5>
+
+<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped table-condensed&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>VARIABLE<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>DESCRIPCIÓN<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> BASE_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL que se emplea como base del proyecto (el index del proyecto es una url externa) <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> SECRET_KEY <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, se debe establecer en un valor impredecible y único <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> DEBUG <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Booleano que activa/desactiva el modo de depuración  <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>   
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> TEMPLATE_DEBUG <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> 
+        Booleano que activa/desactiva el modo de depuración en las plantillas. Si es <span class="nt">&lt;strong&gt;</span>True<span class="nt">&lt;/strong&gt;</span> la página de error 
+        mostrará un informe detallado para cualquier excepción que ocurra al renderizar la plantilla.
+        <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> DEVEL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Booleano que si está a TRUE indica que se está en el Entorno de Desarrollo <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> ADMINS <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Tupla de las personas que reciben las notificaciones de la aplicación <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> SUPPORT <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Nombre del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> EMAIL_SUPPORT <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Correo Electrónico del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> CAS_SERVER_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL del Servicio de Autenticación (CAS) <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> WS_SERVER_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL base del Servicio de Web Services <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>           
+<span class="nt">&lt;/table&gt;</span>
+</pre></div>
+
 
 <h5>Settings Local de CVN (cvn/settings_local.py)</h5>
 
