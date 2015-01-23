@@ -156,21 +156,21 @@ sudo su postgres -c passwd
             <li>Crear usuario y base de datos</li>
 <pre>
 sudo su postgres -c psql
-CREATE USER investigacion WITH PASSWORD '<contraseña>';
-ALTER USER investigacion createdb;
-CREATE DATABASE investigacion
+CREATE USER <user> WITH PASSWORD '<contraseña>';
+ALTER USER <user> createdb;
+CREATE DATABASE <database>
     ENCODING = 'UTF8'
     TABLESPACE = pg_default
     LC_COLLATE = 'es_ES.UTF-8'
     LC_CTYPE = 'es_ES.UTF-8'
     CONNECTION LIMIT = -1;
-GRANT CONNECT, TEMPORARY ON DATABASE investigacion TO public;
-GRANT ALL ON DATABASE investigacion TO investigacion;       
+GRANT CONNECT, TEMPORARY ON DATABASE <database> TO <user>;
+GRANT ALL ON DATABASE <database> TO <user>;     
 </pre>
 
             <li>Probar el acceso</li>
 <pre>
-psql -U investigacion -W investigacion      
+psql -U <user> -W <database>        
 </pre>
         </ul>
     </li>
@@ -181,11 +181,19 @@ python manage.py makemigrations
 python manage.py migrate
 </pre>
     <li> Configurar Settings Local</li>
+<div class="row">
+    <div class="col-md-12">
+        <div class="section">
+        <ul class="nav nav-tabs header">
+            <li class="active">Settings Local de Investigación (investigacion/settings_local.py)</li>
+        </ul>
 
+        <div class="content">
+            <div class="row-fluid">
+    <!--
     <ul>
-        <li>Settings Local de Investigación (investigacion/settings_local.py)</li>
-    </ul>
-        <table class="table table-striped">
+        <li>Settings Local de Investigación (investigacion/settings_local.py)</li>-->
+        <table class="table table-striped table-condensed">
             <tr>
                 <th>VARIABLE</th>
                 <th>DESCRIPCIÓN</th>
@@ -235,6 +243,13 @@ python manage.py migrate
                 <td> URL base del Servicio de Web Services </td>
             </tr>           
         </table>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<!--            <li> </li>
+        </ul>-->
 </ol>
         </div>
     </section>
