@@ -109,61 +109,80 @@
         <div class="entry-content">
             <h3>Proceso de instalación</h3>
 <ol>
-    <li> Instalar/Actualizar el paquete VIRTUALENV
-    <pre>
-    sudo apt-get install python-pip
-    pip show virtualenv 
-    sudo pip install --upgrade virtualenv   
-    pip show virtualenv
-    </pre>
-    </li>
+    <li> Instalar/Actualizar el paquete VIRTUALENV</li>
+<pre>
+sudo apt-get install python-pip
+pip show virtualenv 
+sudo pip install --upgrade virtualenv   
+pip show virtualenv
+<pre>
 
-    <li>Crear y activar un VIRTUALENV para el proyecto
-    <pre>
-    mkdir -p virtualenv
-    cd virtualenv
-    virtualenv --no-site-packages .
-    source bin/activate
-    </pre>
-    </li>
+    <li>Crear y activar un VIRTUALENV para el proyecto</li>
+<pre>
+mkdir -p virtualenv
+cd virtualenv
+virtualenv --no-site-packages .
+source bin/activate
+</pre>
 
     <li>Descargar el repositorio
     <pre>
-    git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
+git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
     </pre>
     </li>
 
     <li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)
     <pre>
-    pip install -U distribute
-    sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
-    pip install -r requirements.txt
+pip install -U distribute
+sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+pip install -r requirements.txt
     </pre>
     </li>
 
     <li>Configurar PostgreSQL
         <ul>
             <li>Cambiar contraseña del usuario postgres </li>   
-        <pre>
-        sudo su postgres -c psql
-        ALTER USER postgres WITH PASSWORD '<contraseña>';
-        </pre>
+            <pre>
+    sudo su postgres -c psql
+    ALTER USER postgres WITH PASSWORD '<contraseña>';
+            </pre>
 
             <li>Cambiar contraseña del usuario postgres en el sistema </li>
-        <pre>
-        sudo passwd -d postgres
-        sudo su postgres -c passwd
-        </pre>
+            <pre>
+    sudo passwd -d postgres
+    sudo su postgres -c passwd
+            </pre>
+
+            <li>Crear usuario y base de datos</li>
+            <pre>
+    sudo su postgres -c psql
+    CREATE USER investigacion WITH PASSWORD '<contraseña>';
+    ALTER USER investigacion createdb;
+    CREATE DATABASE investigacion
+        ENCODING = 'UTF8'
+        TABLESPACE = pg_default
+        LC_COLLATE = 'es_ES.UTF-8'
+        LC_CTYPE = 'es_ES.UTF-8'
+        CONNECTION LIMIT = -1;
+    GRANT CONNECT, TEMPORARY ON DATABASE investigacion TO public;
+    GRANT ALL ON DATABASE investigacion TO investigacion;       
+            </pre>
+
+            <li>Probar el acceso</li>
+            <pre>
+    psql -U investigacion -W investigacion      
+            </pre>
         </ul>
     </li>
 
     <li>Crear el esquema de la base de datos
     <pre>
-        python manage.py makemigrations
-
-        python manage.py migrate
+python manage.py makemigrations     
+python manage.py migrate
     </pre>
     </li>
+    <li> Configurar Settings Local</li>
+</ol>
         </div>
     </section>
         </div>
