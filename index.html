@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv 2. Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate 3. Descargar el repositorio git clone git@gitlab ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Home"/>
     <meta property="og:url" content="/investigacion/"/>
-    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv 2. Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate 3. Descargar el repositorio git clone git@gitlab ..." />
 
 
     <!-- ULL -->
@@ -111,60 +111,55 @@
 <ol>
 <li>Instalar/Actualizar el paquete VIRTUALENV</li>
 </ol>
-<p><code>
+<pre>
 sudo apt-get install python-pip
-
-pip show virtualenv
-
+pip show virtualenv 
 sudo pip install --upgrade virtualenv   
-
 pip show virtualenv
-</code></p>
+<pre>
 
-<ol>
-<li>Crear y activar un VIRTUALENV para el proyecto</li>
-</ol>
-<p><code>
-    mkdir -p virtualenv
+2. Crear y activar un VIRTUALENV para el proyecto
 
-    cd virtualenv
+<pre>
+mkdir -p virtualenv
+cd virtualenv
+virtualenv --no-site-packages .
+source bin/activate
+</pre>
 
-    virtualenv --no-site-packages .
+3. Descargar el repositorio
 
-    source bin/activate
-</code></p>
+<pre>
+git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
+</pre>
 
-<ol>
-<li>Descargar el repositorio</li>
-</ol>
-<p><code>
-    git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
-</code></p>
+4. Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)
 
-<ol>
-<li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
-</ol>
-<p><code>
-    pip install -U distribute
+<pre>
+pip install -U distribute
+sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+pip install -r requirements.txt
+</pre>
 
-    sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
+5. Configurar PostgreSQL
 
-    pip install -r requirements.txt
-</code></p>
+<ul>
+    <li>
+        Cambiar contraseña del usuario postgres 
+        <pre>
+        sudo su postgres -c psql
+        ALTER USER postgres WITH PASSWORD '<contraseña>';
+        </pre>
+    </li>
+</ul>
 
-<ol>
-<li>
-<p>Configurar PostgreSQL</p>
-</li>
-<li>
-<p>Crear el esquema de la base de datos</p>
-</li>
-</ol>
-<p><code>
+6. Crear el esquema de la base de datos
+
+<pre>
     python manage.py makemigrations
 
     python manage.py migrate
-</code></p>
+</pre>
         </div>
     </section>
         </div>
