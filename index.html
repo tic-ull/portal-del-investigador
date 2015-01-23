@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+        <meta name="description" content="Introducción Portal del Investigador Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Home"/>
     <meta property="og:url" content="/investigacion/"/>
-    <meta property="og:description" content="Proceso de instalación Instalar/Actualizar el paquete VIRTUALENV sudo apt-get install python-pip pip show virtualenv sudo pip install --upgrade virtualenv pip show virtualenv Crear y activar un VIRTUALENV para el proyecto mkdir -p virtualenv cd virtualenv virtualenv --no-site-packages . source bin/activate Descargar el repositorio git clone git@gitlab.stic.ull ..." />
+    <meta property="og:description" content="Introducción Portal del Investigador Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ..." />
 
 
     <!-- ULL -->
@@ -91,6 +91,7 @@
         <div class="collapse navbar-collapse navbar-app-collapse">
             <ul class="nav navbar-nav navbar-right">
                          <li class="active"><a href="/investigacion/">Home</a></li>
+                         <li><a href="/investigacion/installation.html">installation</a></li>
                          <li><a href="/investigacion/other.html">Other</a></li>
                          <li><a href="/investigacion/team.html">Team</a></li>
                          <li><a href="/investigacion/contacto.html">Contacto</a></li>
@@ -107,80 +108,10 @@
         <h1 class="entry-title">Home</h1>
         
         <div class="entry-content">
-            <h3>Proceso de instalación</h3>
-<ol>
-    <li> Instalar/Actualizar el paquete VIRTUALENV</li>
-<pre>
-sudo apt-get install python-pip
-pip show virtualenv 
-sudo pip install --upgrade virtualenv   
-pip show virtualenv
-</pre>
-
-    <li>Crear y activar un VIRTUALENV para el proyecto</li>
-<pre>
-mkdir -p virtualenv
-cd virtualenv
-virtualenv --no-site-packages .
-source bin/activate
-</pre>
-
-    <li>Descargar el repositorio</li>
-<pre>
-git clone git@gitlab.stic.ull.es:investigacion/portal-de-investigacion.git
-</pre>
-
-
-    <li>Instalar dependencia (desde la raíz del proyecto y con el virtualenv activo)</li>
-<pre>
-pip install -U distribute
-sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev
-pip install -r requirements.txt
-</pre>
-
-    <li>Configurar PostgreSQL
-        <ul>
-            <li>Cambiar contraseña del usuario postgres </li>   
-<pre>
-sudo su postgres -c psql
-ALTER USER postgres WITH PASSWORD '<contraseña>';
-</pre>
-
-            <li>Cambiar contraseña del usuario postgres en el sistema </li>
-<pre>
-sudo passwd -d postgres
-sudo su postgres -c passwd
-</pre>
-
-            <li>Crear usuario y base de datos</li>
-<pre>
-sudo su postgres -c psql
-CREATE USER investigacion WITH PASSWORD '<contraseña>';
-ALTER USER investigacion createdb;
-CREATE DATABASE investigacion
-    ENCODING = 'UTF8'
-    TABLESPACE = pg_default
-    LC_COLLATE = 'es_ES.UTF-8'
-    LC_CTYPE = 'es_ES.UTF-8'
-    CONNECTION LIMIT = -1;
-GRANT CONNECT, TEMPORARY ON DATABASE investigacion TO public;
-GRANT ALL ON DATABASE investigacion TO investigacion;       
-</pre>
-
-            <li>Probar el acceso</li>
-<pre>
-psql -U investigacion -W investigacion      
-</pre>
-        </ul>
-    </li>
-
-    <li>Crear el esquema de la base de datos</li>
-<pre>
-python manage.py makemigrations     
-python manage.py migrate
-</pre>
-    <li> Configurar Settings Local</li>
-</ol>
+            <h3>Introducción Portal del Investigador</h3>
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</p>
         </div>
     </section>
         </div>
