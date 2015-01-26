@@ -138,18 +138,93 @@ En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sam
 cp settings_local-sample.py settings_local.py
 </pre>
 
-<h5>Settings Local de Investigación (investigacion/settings_local.py) </h5>
+<p>Settings Local de Investigación (investigacion/settings_local.py)</p>
+<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped table-condensed&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>VARIABLE<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>DESCRIPCIÓN<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> BASE_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL que se emplea como base del proyecto (el index del proyecto es una url externa) <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> SECRET_KEY <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>
+        Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, 
+        se debe establecer en un valor impredecible y único 
+        <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> DEBUG <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Booleano que activa/desactiva el modo de depuración  <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>   
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> TEMPLATE_DEBUG <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> 
+        Booleano que activa/desactiva el modo de depuración en las plantillas. Si es <span class="nt">&lt;strong&gt;</span>True<span class="nt">&lt;/strong&gt;</span> la página de error 
+        mostrará un informe detallado para cualquier excepción que ocurra al renderizar la plantilla.
+        <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> DEVEL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Booleano que si está a TRUE indica que se está en el Entorno de Desarrollo <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> ADMINS <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Tupla de las personas que reciben las notificaciones de la aplicación <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> SUPPORT <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Nombre del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> EMAIL_SUPPORT <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Correo Electrónico del Departamento de Soporte <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> CAS_SERVER_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL del Servicio de Autenticación (CAS) <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> WS_SERVER_URL <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> URL base del Servicio de Web <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>           
+<span class="nt">&lt;/table&gt;</span>
+</pre></div>
 
-<div class="highlight"><pre>                    <span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped table-condensed&quot;</span><span class="nt">&gt;</span>
-                            <span class="nt">&lt;tr&gt;</span>
-                                <span class="nt">&lt;th&gt;</span>VARIABLE<span class="nt">&lt;/th&gt;</span>
-                                <span class="nt">&lt;th&gt;</span>DESCRIPCIÓN<span class="nt">&lt;/th&gt;</span>
-                            <span class="nt">&lt;/tr&gt;</span>
-                            <span class="nt">&lt;tr&gt;</span>
-                                <span class="nt">&lt;td&gt;</span> HISTORICAL <span class="nt">&lt;/td&gt;</span>
-                                <span class="nt">&lt;td&gt;</span> Hash que relaciona un año con la configuración de su base de datos histórica <span class="nt">&lt;/td&gt;</span>
-                            <span class="nt">&lt;/tr&gt;</span>
-                    <span class="nt">&lt;/table&gt;</span>
+
+<p>Settings Local de CVN (cvn/settings_local.py)</p>
+<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;table table-striped table-condensed&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;th&gt;</span>VARIABLE<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;th&gt;</span>DESCRIPCIÓN<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> UNIVERSITY <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Nombre de la Entidad por defecto <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> EXPIRY_DATE <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Fecha a partir de la cual se considerará un CVN caducado <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> FECYT_USER <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Usuario del Servicio Web de la FECYT <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> FECYT_PASSWORD <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Contraseña del usuario del Servicio Web de la FECYT <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> CVN_PDF_AUTHOR_NOAUT <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span> Nombre del autor de un CVN-PDF cuya subida no está autorizada <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>                                       
+    <span class="nt">&lt;tr&gt;</span>
+        <span class="nt">&lt;td&gt;</span> HISTORICAL_YEAR <span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;td&gt;</span>Obtiene el año para acceder a la base de datos histórica y mostrar el CVN-PDF del usuario GesInv-ULL empleado para subirle un CVN con toda la producción científica de la Universidad <span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
 </pre></div>
 
 
