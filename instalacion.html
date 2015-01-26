@@ -108,14 +108,12 @@
         <h1 class="entry-title">Instalación</h1>
         
         <div class="entry-content">
-            <h4>Descargar el repositorio</h4>
-
+            <p>Descargar el repositorio</p>
 <pre>
 git clone --recursive repo portal-investigador
 </pre>
 
-<h4>Instalar dependencias</h4>
-
+<p>Instalar dependencias</p>
 <pre>
 pip install -U distribute
 sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \
@@ -123,8 +121,7 @@ sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-
 pip install -r requirements.txt
 </pre>
 
-<h4> Configurar Settings Local</h4>
-
+<p>Configurar Settings Local</p>
 <p>Listado de aplicaciones con configuraciones locales:
 <ul>
     <li>Investigación (Configuración del Proyecto)</li>
@@ -228,12 +225,11 @@ cp settings_local-sample.py settings_local.py
 </pre></div>
 
 
-<h4>Configurar PostgreSQL y crear el esquema de la base de datos</h4>
-
+<p>Configurar PostgreSQL y crear el esquema de la base de datos
 <pre>
-python manage.py makemigrations     
+python manage.py makemigrations   <br />
 python manage.py migrate
-</pre>
+</pre></p>
         </div>
     </section>
         </div>
