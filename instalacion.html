@@ -108,12 +108,14 @@
         <h1 class="entry-title">Instalación</h1>
         
         <div class="entry-content">
-            <p>Descargar el repositorio</p>
+            <h3>Descargar el repositorio</h3>
+
 <pre>
 git clone --recursive repo portal-investigador
 </pre>
 
-<p>Instalar dependencias</p>
+<h3>Instalar dependencias</h3>
+
 <pre>
 pip install -U distribute
 sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \
@@ -121,7 +123,8 @@ sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-
 pip install -r requirements.txt
 </pre>
 
-<p>Configurar Settings Local</p>
+<h3>Configurar Settings Local</h3>
+
 <p>Listado de aplicaciones con configuraciones locales:
 <ul>
     <li>Investigación (Configuración del Proyecto)</li>
@@ -135,7 +138,8 @@ En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sam
 cp settings_local-sample.py settings_local.py
 </pre>
 
-<p>Settings Local de Investigación (investigacion/settings_local.py)</p>
+<h4>Settings Local de Investigación (investigacion/settings_local.py)</h4>
+
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -189,7 +193,8 @@ cp settings_local-sample.py settings_local.py
     </tr>           
 </table>
 
-<p>Settings Local de CVN (cvn/settings_local.py)</p>
+<h4>Settings Local de CVN (cvn/settings_local.py)</h4>
+
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -225,11 +230,12 @@ cp settings_local-sample.py settings_local.py
 </pre></div>
 
 
-<p>Configurar PostgreSQL y crear el esquema de la base de datos
+<h3>Configurar PostgreSQL y crear el esquema de la base de datos</h3>
+
 <pre>
-python manage.py makemigrations   <br />
+python manage.py makemigrations     
 python manage.py migrate
-</pre></p>
+</pre>
         </div>
     </section>
         </div>
