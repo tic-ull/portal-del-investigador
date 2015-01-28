@@ -189,19 +189,10 @@ def parse_cvnitem_learning_degree(node):
     university = (node.find('Entity/EntityName/Item').text
                   if node.find('Entity/EntityName/Item') is not None
                   else None)
-    date = (node.find('Date/OnlyDate/DayMonthYear/Item').text
-            if node.find('Date/OnlyDate/DayMonthYear/Item') is not None
-            else None)
-    try:
-        date = datetime.datetime.strptime(date,
-                                          st_cvn.CVN_XML_DATE_FORMAT).date()
-    except TypeError:
-        pass
     item = {'title': node.find('Title/Name/Item').text,
             'title_type': title_type,
             'university': university,
-            'date': date}
-
+            'date': parse_date(node.find('Date'))}
     return item
 
 
