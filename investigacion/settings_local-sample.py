@@ -1,5 +1,4 @@
 # -*- encoding: UTF-8 -*-
-
 SETTINGS_LOCAL = True
 from .settings import *
 
