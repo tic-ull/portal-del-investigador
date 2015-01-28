@@ -146,8 +146,11 @@ class CVN(models.Model):
     def _learning_to_json(item):
         item['title'] = item.pop("des1_titulacion")
         item['university'] = item.pop("organismo", None)
-        item['date'] = datetime.datetime.strptime(
-            item.pop("f_expedicion"), "%d-%m-%Y").date()
+        date = item.pop("f_expedicion", None)
+        if date is not None:
+            item['date'] = datetime.datetime.strptime(date, "%d-%m-%Y").date()
+        else:
+            item['date'] = None
         title_type = item.pop("des1_grado_titulacion")
         if title_type != u'Doctor':
             item['title_type'] = title_type
