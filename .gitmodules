@@ -1,6 +1,6 @@
 [submodule "cvn"]
 	path = cvn
-	url = git@gitlab.stic.ull.es:investigacion/cvn.git
+	url = git@gitlab.stic.ull.es:investigacion/cvn_new.git
     branch = master
 [submodule "accounting"]
 	path = accounting
