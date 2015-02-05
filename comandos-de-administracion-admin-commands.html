@@ -188,8 +188,7 @@
                 ya que se realiza una búsqueda todos contra todos, por lo que se recomienda filtrar por años el conjunto 
                 de elementos inicial.
             </p>
-            <h6>Ejecución</h6>
-            <pre>python manage.py find_pairs --document="<00000000A>" --table="Proyecto|Articulo|Libro|Capitulo|Congreso|Convenio|TesisDoctoral|Patente" --diff="0-7" --year="YYYY"</pre>
+            <pre>python manage.py find_pairs --document="..." --table="..." --diff="0-7" --year="YYYY"</pre>
             <p><b>Parámetros</b></p>
             <table class="table table-striped table-condensed">
                 <tr>
@@ -206,8 +205,8 @@
                 </tr>
                 <tr>
                     <td>table</td>
-                    <td>Tabla a limpiar</td>
-                    <td>Limpieza de registros almacenados en <i>table</i></td>
+                    <td>Tabla que se quiere limpiar</td>
+                    <td>Los valores posibles son: Proyecto|Articulo|Libro|Capitulo|Congreso|Convenio|TesisDoctoral|Patente</td>
                     <td>SI</td>
                 </tr>
                 <tr>
