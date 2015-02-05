@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local Listado de aplicaciones con configuraciones locales: Investigación (Configuración del Proyecto) CVN En cada una de las aplicaciones ..." />
+        <meta name="description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Descargar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Instalación"/>
     <meta property="og:url" content="/investigacion/instalacion.html"/>
-    <meta property="og:description" content="Descargar el repositorio git clone --recursive repo portal-investigador Instalar dependencias pip install -U distribute sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \ libpq-dev libxml2-dev libxslt1-dev python-dev pip install -r requirements.txt Configurar Settings Local Listado de aplicaciones con configuraciones locales: Investigación (Configuración del Proyecto) CVN En cada una de las aplicaciones ..." />
+    <meta property="og:description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Descargar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
 
 
     <!-- ULL -->
@@ -107,19 +107,28 @@
         <h1 class="entry-title">Instalación</h1>
         
         <div class="entry-content">
-            <h3>Descargar el repositorio</h3>
+            <p>
+Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu.
+</p>
+
+<h3>Descargar el repositorio</h3>
 
 <pre>
-git clone --recursive repo portal-investigador
+git clone --recursive https://github.com/tic-ull/investigacion.git
 </pre>
 
 <h3>Instalar dependencias</h3>
 
+<div class="alert alert-warning">
+Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se entrará a explicar su funcionamiento.
+</div>
+
 <pre>
-pip install -U distribute
+sudo apt-get install python-pip
+sudo pip install -U distribute
 sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \
-                     libpq-dev libxml2-dev libxslt1-dev python-dev
-pip install -r requirements.txt
+                     libpq-dev libxml2-dev libxslt1-dev python-dev xvfb
+sudo pip install -r requirements.txt
 </pre>
 
 <h3>Configurar Settings Local</h3>
@@ -134,8 +143,7 @@ Listado de aplicaciones con configuraciones locales:
 </ul>
 
 <p>
-En cada una de las aplicaciones existe un fichero de ejemplo (settings_local-sample.py) 
-que define las configuraciones que necesitan ser modificadas, por lo que se recomienda su uso como punto de partida. 
+Los ficheros settings_local.py sobreescriben valores de configuración de los ficheros settings.py. En cada una de las aplicacione existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones que necesitan ser modificadas por defecto, por lo que se recomienda su uso como punto de partida. 
 </p>
 
 <pre>
@@ -151,33 +159,35 @@ cp settings_local-sample.py settings_local.py
     </tr>
     <tr>
         <td> BASE_URL </td>
-        <td> URL que se emplea como base del proyecto (el index del proyecto es una url externa) </td>
+        <td> URL de la página principal del proyecto. Por defecto es un servicio externo.</td>
     </tr>
     <tr>
         <td> SECRET_KEY </td>
         <td>
-        Clave secreta de una instalación particular de Django. Se utiliza para proporcionar la firma criptográfica, 
-        se debe establecer en un valor impredecible y único 
+        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key">https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key</a>
         </td>
     </tr>
     <tr>
         <td> DEBUG </td>
-        <td> Booleano que activa/desactiva el modo de depuración  </td>
+        <td>
+        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG</a>
+        </td>
     </tr>   
     <tr>
         <td> TEMPLATE_DEBUG </td>
         <td> 
-        Booleano que activa/desactiva el modo de depuración en las plantillas. Si es <strong>True</strong> la página de error 
-        mostrará un informe detallado para cualquier excepción que ocurra al renderizar la plantilla.
+        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug">https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug</a>
         </td>
     </tr>
     <tr>
-        <td> DEVEL </td>
-        <td> Booleano que si está a TRUE indica que se está en el Entorno de Desarrollo </td>
+        <td>DEVEL</td>
+        <td>Si DEVEL = True, el servidor de aplicaciones de Django servirá los ficheros estáticos de los que hace uso el proyecto. En otro caso deberá hacerse desde un servidor externo.</td>
     </tr>
     <tr>
         <td> ADMINS </td>
-        <td> Tupla de las personas que reciben las notificaciones de la aplicación </td>
+        <td>
+        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS</a>
+        </td>
     </tr>
     <tr>
         <td> SUPPORT </td>
