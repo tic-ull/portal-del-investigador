@@ -2,7 +2,7 @@
 <html lang="en"
 >
 <head>
-    <title>Categories - Portal del Investigador - Documentación</title>
+    <title>Signals y Receivers - Portal del Investigador - Documentación</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,15 +18,16 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
+<link rel="canonical" href="/investigacion/signals-y-receivers.html">
 
         <meta name="author" content="Universidad de La Laguna" />
+        <meta name="description" content="Signals Las señales son emitidas en momentos clave de la ejecución. Se usan para ejecutar código en terceras aplicaciones en respuesta a eventos importantes. APLICACIÓN SEÑAL DESCRIPCIÓN CVN pre_cvn_status_changed Se genera ante un cambio de estado de un CVN Receivers Los receivers contienen código que es ejecutado en respuesta a ..." />
 
-    <!-- Open Graph tags -->
-        <meta property="og:site_name" content="Portal del Investigador - Documentación" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Portal del Investigador - Documentación"/>
-        <meta property="og:url" content="/investigacion"/>
-        <meta property="og:description" content="Portal del Investigador - Documentación"/>
+    <meta property="og:site_name" content="Portal del Investigador - Documentación" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:title" content="Signals y Receivers"/>
+    <meta property="og:url" content="/investigacion/signals-y-receivers.html"/>
+    <meta property="og:description" content="Signals Las señales son emitidas en momentos clave de la ejecución. Se usan para ejecutar código en terceras aplicaciones en respuesta a eventos importantes. APLICACIÓN SEÑAL DESCRIPCIÓN CVN pre_cvn_status_changed Se genera ante un cambio de estado de un CVN Receivers Los receivers contienen código que es ejecutado en respuesta a ..." />
 
 
     <!-- ULL -->
@@ -92,7 +93,7 @@
                          <li><a href="/investigacion/">Home</a></li>
                          <li><a href="/investigacion/comandos-de-administracion-admin-commands.html">Comandos de Administración (Admin Commands)</a></li>
                          <li><a href="/investigacion/instalacion.html">Instalación</a></li>
-                         <li><a href="/investigacion/signals-y-receivers.html">Signals y Receivers</a></li>
+                         <li class="active"><a href="/investigacion/signals-y-receivers.html">Signals y Receivers</a></li>
                          <li><a href="/investigacion/desarrolladores.html">Desarrolladores</a></li>
                          <li><a href="/investigacion/contacto.html">Contacto</a></li>
             </ul>
@@ -104,11 +105,70 @@
     <div class="row">
         <div class="col-md-9" role="main">
 
-    <section id="categories">
-        <h1>All Categories for Portal del Investigador - Documentación</h1>
-        <div class="panel-group" id="accordion">
-        </div>
+    <section id="content" class="body">
+        <h1 class="entry-title">Signals y Receivers</h1>
+        
+        <div class="entry-content">
+            <div class="section"><ul class="nav nav-tabs header"><li class="active">Signals</li></ul>
+<div class="content">
 
+<p>
+Las señales son emitidas en momentos clave de la ejecución. Se usan para ejecutar código en terceras aplicaciones en respuesta a eventos importantes.
+</p>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>APLICACIÓN</th>
+        <th>SEÑAL</th>
+        <th>DESCRIPCIÓN</th>
+    </tr>
+    <tr>
+        <td>CVN</td>
+        <td>pre_cvn_status_changed</td>
+        <td>Se genera ante un cambio de estado de un CVN</td>
+    </tr>
+</table>
+</div>
+
+</div>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Receivers</li></ul>
+<div class="content">
+
+<p>
+Los receivers contienen código que es ejecutado en respuesta a un evento ocurrido.
+</p>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>APLICACIÓN</th>
+        <th>RECEPTOR</th>
+        <th>DESCRIPCIÓN</th>
+        <th>SEÑAL CAPTURADA</th>
+    </tr>
+    <tr>
+        <td>CORE</td>
+        <td>update_user</td>
+        <td>Actualiza la información del usuario actual almacenada en el modelo user a partir de un hash denominado attributes que se almacena en la sesión del usuario</td>
+        <td>User.post_login</td>
+    </tr>
+    <tr>
+        <td>CVN</td>
+        <td>cvn_delete_files</td>
+        <td>Elimina los ficheros PDF y XML asociados al CVN que se va a eliminado</td>
+        <td>CVN.pre_delete / OldCvnPdf.pre_delete</td>
+    </tr>
+    <tr>
+        <td>CVN</td>
+        <td>log_status_cvn_changed</td>
+        <td>Añade una entrada en la tabla Log cuando un CVN se crea o actualiza</td>
+        <td>CVN.pre_save</td>
+    </tr>
+</table>
+</div>
+
+</div>
+        </div>
     </section>
         </div>
         <div class="col-md-3 sidebar" id="sidebar">
