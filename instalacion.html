@@ -249,10 +249,14 @@ cp settings_local-sample.py settings_local.py
 <div class="section"><ul class="nav nav-tabs header"><li class="active">Configurar bases de datos</li></ul>
 <div class="content">
 
+<div class="alert alert-warning">
+El sistema de base de datos recomendado es PostgreSQL. No se entrará a detallar la configuración del sistema de base de datos y la creación de usuario/base de datos, ya que es el método estándar usado en cualquier proyecto Django.
+</div>
+
 <h4>Base de datos por defecto</h4>
 
 <p>
-El sistema de base de datos recomendado es PostgreSQL. La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
+La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
 </p>
 <pre>
 python manage.py makemigrations
@@ -262,7 +266,7 @@ python manage.py migrate
 <h4 id="bbddh">Base de datos histórica</h4>
 
 <p>
-Para la realización de Informes de Producción Científica extraídos de los CVN se puede congelar la base de datos por defecto a una base de datos histórica de sólo lectura. Cada base de datos histórica se debe añadir a la configuración de base de datos de Django en investigacion/settings_local.py, y posteriormente al diccionario HISTORICAL:
+Para la realización de Informes de Producción Científica extraídos de los CVN se puede congelar la base de datos por defecto a una base de datos histórica de sólo lectura. Cada base de datos histórica se debe añadir a la configuración de base de datos de Django en investigacion/settings_local.py, y posteriormente al diccionario HISTORICAL con el siguiente formato:
 </p>
 
 <pre>
