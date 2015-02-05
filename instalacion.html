@@ -210,47 +210,67 @@ cp settings_local-sample.py settings_local.py
 </div>
 </div>
 
-<h4>Settings Local de CVN (cvn/settings_local.py)</h4>
-
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Settings Local de CVN (cvn/settings_local.py)</li></ul>
+<div class="content">
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
         <th>DESCRIPCIÓN</th>
     </tr>
     <tr>
-        <td> UNIVERSITY </td>
-        <td> Nombre de la Entidad por defecto </td>
+        <td>UNIVERSITY</td>
+        <td>Nombre de la universidad</td>
     </tr>
     <tr>
         <td> EXPIRY_DATE </td>
-        <td> Fecha a partir de la cual se considerará un CVN caducado </td>
+        <td>Tipo datetime.date. Todos los CVNs con fecha de generación anterior a su valor se consideran caducados.</td>
     </tr>
     <tr>
         <td> FECYT_USER </td>
-        <td> Usuario del Servicio Web de la FECYT </td>
+        <td>Nombre de usuario para acceder a los <i>webservices</i> de la FECYT</td>
     </tr>
     <tr>
         <td> FECYT_PASSWORD </td>
-        <td> Contraseña del usuario del Servicio Web de la FECYT </td>
+        <td>Contraseña para acceder a los <i>webservices</i> de la FECYT</td>
     </tr>
     <tr>
         <td> CVN_PDF_AUTHOR_NOAUT </td>
-        <td> Nombre del autor de un CVN-PDF cuya subida no está autorizada </td>
+        <td>Al generar un CVN-PDF a través del <i>webservice</i> de la FECYT se escribe en sus metadatos, en el campo author, el identificador de la universidad que lo genera. A través de esta variable se puede impedir subir PDFs generados por una universidad concreta. Útil para obligar al usuario a pasar por el editor de la FECYT para que complete su CV.</td>
     </tr>                                       
     <tr>
-        <td> HISTORICAL_YEAR </td>
+        <td>HISTORICAL_YEAR</td>
         <td>
-        Obtiene el año para acceder a la base de datos histórica y mostrar el CVN-PDF del usuario 
-        GesInv-ULL empleado para subirle un CVN con toda la producción científica de la Universidad 
+        Se usa para seleccionar qué base de datos histórica se usará para mostrar el informe de producción científica (CVN-PDF del usuario GesInv-ULL). Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>.
         </td>
     </tr>
 </table>
+</div>
+</div>
 
-<h3>Configurar PostgreSQL y crear el esquema de la base de datos</h3>
+<h3>Configurar bases de datos</h3>
+
+<h4>Base de datos por defecto</h4>
+
+<p>
+El sistema de base de datos recomendado es PostgreSQL. La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
+</p>
 
 <pre>
 python manage.py makemigrations     
 python manage.py migrate
+</pre>
+
+<h4 id="bbddh">Base de datos histórica</h4>
+
+<p>
+Para la realización de Informes de Producción Científica extraídos de los CVN se puede congelar la base de datos por defecto a una base de datos histórica de sólo lectura. Cada base de datos histórica se debe añadir a la configuración de base de datos de Django en investigacion/settings_local.py, y posteriormente al diccionario HISTORICAL:
+</p>
+
+<pre>
+HISTORICAL = {'2001': 'nombre_bbdd_historica_2001',
+              '2002': 'nombre_bbdd_historica_2002'
+              ...
+}
 </pre>
         </div>
     </section>
