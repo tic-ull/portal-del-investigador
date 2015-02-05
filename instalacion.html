@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Descargar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
+        <meta name="description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Clonar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Instalación"/>
     <meta property="og:url" content="/investigacion/instalacion.html"/>
-    <meta property="og:description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Descargar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
+    <meta property="og:description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Clonar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
 
 
     <!-- ULL -->
@@ -112,13 +112,18 @@
 Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu.
 </p>
 
-<h3>Descargar el repositorio</h3>
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Clonar el repositorio</li></ul>
+<div class="content">
 
 <pre>
 git clone --recursive https://github.com/tic-ull/investigacion.git
 </pre>
+</div>
 
-<h3>Instalar dependencias</h3>
+</div>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Instalar dependencias</li></ul>
+<div class="content">
 
 <div class="alert alert-warning">
 Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se entrará a explicar su funcionamiento.
@@ -131,13 +136,16 @@ sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-
                      libpq-dev libxml2-dev libxslt1-dev python-dev xvfb
 sudo pip install -r requirements.txt
 </pre>
+</div>
 
-<h3>Configurar Settings Local</h3>
+</div>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Configurar aplicación</li></ul>
+<div class="content">
 
 <p>
 Listado de aplicaciones con configuraciones locales:
 </p>
-
 <ul>
     <li>Investigación (Configuración del Proyecto)</li>
     <li>CVN</li>
@@ -151,8 +159,8 @@ Los ficheros settings_local.py sobreescriben valores de configuración de los fi
 cp settings_local-sample.py settings_local.py
 </pre>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Settings Local de Investigación (investigacion/settings_local.py)</li></ul>
-<div class="content">
+
+<h4>Settings Local de Investigación (investigacion/settings_local.py)</h4>
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -207,11 +215,8 @@ cp settings_local-sample.py settings_local.py
         <td>URL base del webservice //link_a_pag_ws//</td>
     </tr>           
 </table>
-</div>
-</div>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Settings Local de CVN (cvn/settings_local.py)</li></ul>
-<div class="content">
+<h4>Settings Local de CVN (cvn/settings_local.py)</h4>
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -244,17 +249,19 @@ cp settings_local-sample.py settings_local.py
         </td>
     </tr>
 </table>
-</div>
+
 </div>
 
-<h3>Configurar bases de datos</h3>
+</div>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">Configurar bases de datos</li></ul>
+<div class="content">
 
 <h4>Base de datos por defecto</h4>
 
 <p>
 El sistema de base de datos recomendado es PostgreSQL. La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
 </p>
-
 <pre>
 python manage.py makemigrations     
 python manage.py migrate
@@ -272,6 +279,10 @@ HISTORICAL = {'2001': 'nombre_bbdd_historica_2001',
               ...
 }
 </pre>
+
+</div>
+
+</div>
         </div>
     </section>
         </div>
