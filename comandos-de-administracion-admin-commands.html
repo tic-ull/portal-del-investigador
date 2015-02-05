@@ -189,7 +189,7 @@
                 de elementos inicial.
             </p>
             <pre>python manage.py find_pairs --document="..." --table="..." --diff="0-7" --year="YYYY"</pre>
-            <p><b>Parámetros</b></p>
+            <h4>Parámetros</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>PARÁMETRO</th>
@@ -226,91 +226,89 @@
     </div>
 </div>
 
-<h4>Generación de Informes por Departamentos o Áreas</h4>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Generación de Informes por Departamentos o Áreas</li>
+    </ul>
+    <div class="content">
+        <div class="row-fluid">
+            <div class="alert alert-info"><b>cvn/management/commands/dept_report.py</b></div>
+            <p>
+                Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento 
+                o área a partir de la información extraída de diferentes Web Services.
+            </p>
+            <pre>python manage.py dept_report --year="<YYYY>" --id="X" --type="d|a" --format="pdf|csv"</pre>
+            <h4>Parámetros</h4>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>PARÁMETRO</th>
+                    <th>DESCRIPCIÓN</th>
+                </tr>
+                <tr>
+                    <td>year</td>
+                    <td>El Informe contendrá la información del año <i>year</i></td>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>Código interno del Departamento/Área del que se va a hacer el informe. Si no se especifica se obtiene el de todos los Departamentos/Áreas</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>Permite elegir entre Informe por Departamento (d) o Informe por Áreas (a). Si no se especifica se obtiene el Informe por Departamentos</td>
+                </tr>
+                <tr>
+                    <td>format</td>
+                    <td>Permite elegir el formato de salida: PDF o CSV. Si no se especifica se obtiene en PDF</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
-<h5>cvn/management/commands/dept_report.py</h5>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Generación de CSV para la Migración de usuarios y CVNs</li>
+    </ul>
+    <div class="content">
+        <div class="row-fluid">
+            <div class="alert alert-info"><b>cvn/management/commands/generate_csv_migrate_cvn.py</b></div>
+            <p>
+                Permite la creación de un fichero CSV con la información de los usuarios necesaria para la migración a otras instancias de la aplicación. 
+                El formato es el siguiente: nombre de usuario; documento de identidad; ruta del CVN-PDF; nombre; apellidos
+            </p>
+            <pre>python manage.py generate_csv_migrate_cvn --date="<dd-mm-yyyy>"</pre>
+            <h4>Parámetros</h4>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>PARÁMETRO</th>
+                    <th>DESCRIPCIÓN</th>
+                </tr>
+                <tr>
+                    <td>date</td>
+                    <td>Sólo añade al CSV los usuarios que tengan un CVN-PDF subido con fecha igual o posterior a la fecha indicada</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 
-<p>
-Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento 
-o área a partir de la información extraída de diferentes Web Services.
-</p>
-
-<h6>Ejecución</h6>
-
-<pre>
-python manage.py dept_report --year="<YYYY>" --id="X" --type="d|a" --format="pdf|csv"
-</pre>
-
-<p><b>Parámetros</b></p>
-
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>PARÁMETRO</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>year</td>
-        <td>El Informe contendrá la información del año <i>year</i></td>
-    </tr>
-    <tr>
-        <td>id</td>
-        <td>Código interno del Departamento/Área del que se va a hacer el informe. Si no se especifica se obtiene el de todos los Departamentos/Áreas</td>
-    </tr>
-    <tr>
-        <td>type</td>
-        <td>Permite elegir entre Informe por Departamento (d) o Informe por Áreas (a). Si no se especifica se obtiene el Informe por Departamentos</td>
-    </tr>
-    <tr>
-        <td>format</td>
-        <td>Permite elegir el formato de salida: PDF o CSV. Si no se especifica se obtiene en PDF</td>
-    </tr>
-</table>
-
-<h4>Generación de CSV para la Migración de usuarios y CVNs</h4>
-
-<h5>cvn/management/commands/generate_csv_migrate_cvn.py</h5>
-
-<p>
-Permite la creación de un fichero CSV con la información de los usuarios necesaria para la migración a otras instancias de la aplicación. 
-El formato es el siguiente: nombre de usuario; documento de identidad; ruta del CVN-PDF; nombre; apellidos
-</p>
-
-<h6>Ejecución</h6>
-
-<pre>
-python manage.py generate_csv_migrate_cvn --date="<dd-mm-yyyy>"
-</pre>
-
-<p><b>Parámetros</b></p>
-
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>PARÁMETRO</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>date</td>
-        <td>Sólo añade al CSV los usuarios que tengan un CVN-PDF subido con fecha igual o posterior a la fecha indicada</td>
-    </tr>
-</table>
-
-<h4>Importación de usuarios y CVNs a partir de un CSV de Migración</h4>
-
-<h5>cvn/management/commands/migrate_cvn_from_csv.py</h5>
-
-<p>
-Permite importar usuarios y CVNs masivamente en la aplicación desde un CSV, siguiendo el formato del comando <i>generate_csv_migrate_cvn</i>
-</p>
-
-<p>
-El fichero de Migración debe almacenase en el directorio definido en la variable <i>MIGRATION_ROOT</i> en el Settings de CVN.
-</p>
-
-<h6>Ejecución</h6>
-
-<pre>
-python manage.py migrate_cvn_from_csv
-</pre>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Importación de usuarios y CVNs a partir de un CSV de Migración</li>
+    </ul>
+    <div class="content">
+        <div class="row-fluid">
+            <div class="alert alert-info"><b>cvn/management/commands/migrate_cvn_from_csv.py</b></div>
+            <p>
+                Permite importar usuarios y CVNs masivamente en la aplicación desde un CSV, siguiendo el formato del comando <i>generate_csv_migrate_cvn</i>
+            </p>
+            <p>
+                El fichero de Migración debe almacenase en el directorio definido en la variable <i>MIGRATION_ROOT</i> en el Settings de CVN.
+            </p>
+            <pre>python manage.py migrate_cvn_from_csv</pre>
+        </div>
+    </div>
+</div>
         </div>
     </section>
         </div>
