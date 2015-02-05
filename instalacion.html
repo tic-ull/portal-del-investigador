@@ -144,15 +144,7 @@ sudo pip install -r requirements.txt
 <div class="content">
 
 <p>
-Listado de aplicaciones con configuraciones locales:
-</p>
-<ul>
-    <li>Investigación (Configuración del Proyecto)</li>
-    <li>CVN</li>
-</ul>
-
-<p>
-Los ficheros settings_local.py sobreescriben valores de configuración de los ficheros settings.py. En cada una de las aplicacione existe un fichero de ejemplo (settings_local-sample.py) que define las configuraciones que necesitan ser modificadas por defecto, por lo que se recomienda su uso como punto de partida. 
+Tanto el proyecto como las aplicaciones individuales se configuran a través de su fichero settings.py. La configuración de estos ficheros puede ser sobreescrita a través de los ficheros settings_local.py. En las aplicaciones con valores de configuración que necesitan ser sobreescritos obligatoriamente se encuentra un fichero de ejemplo (settings_local-sample.py) que define los valores a configurar, y que se puede usar como punto de partida:
 </p>
 
 <pre>
@@ -160,7 +152,7 @@ cp settings_local-sample.py settings_local.py
 </pre>
 
 
-<h4>Settings Local de Investigación (investigacion/settings_local.py)</h4>
+<h4>Configuración de Investigación (investigacion/settings_local.py)</h4>
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -168,7 +160,7 @@ cp settings_local-sample.py settings_local.py
     </tr>
     <tr>
         <td>BASE_URL</td>
-        <td> URL de la página principal del proyecto. Por defecto es un servicio externo.</td>
+        <td>URL de la página principal del proyecto. Por defecto es un servicio externo.</td>
     </tr>
     <tr>
         <td>SECRET_KEY</td>
@@ -216,7 +208,7 @@ cp settings_local-sample.py settings_local.py
     </tr>           
 </table>
 
-<h4>Settings Local de CVN (cvn/settings_local.py)</h4>
+<h4>Configuración de CVN (cvn/settings_local.py)</h4>
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -240,7 +232,7 @@ cp settings_local-sample.py settings_local.py
     </tr>
     <tr>
         <td> CVN_PDF_AUTHOR_NOAUT </td>
-        <td>Al generar un CVN-PDF a través del <i>webservice</i> de la FECYT se escribe en sus metadatos, en el campo author, el identificador de la universidad que lo genera. A través de esta variable se puede impedir subir PDFs generados por una universidad concreta. Útil para obligar al usuario a pasar por el editor de la FECYT para que complete su CV.</td>
+        <td>Al generar un CVN-PDF a través del <i>webservice</i> de la FECYT se escribe en sus metadatos, en el campo author, el identificador de la universidad que lo genera. A través de esta variable se puede impedir subir PDFs generados por una universidad concreta. Útil para obligar al usuario a pasar por el editor de la FECYT para que complete su CVN.</td>
     </tr>                                       
     <tr>
         <td>HISTORICAL_YEAR</td>
@@ -263,7 +255,7 @@ cp settings_local-sample.py settings_local.py
 El sistema de base de datos recomendado es PostgreSQL. La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
 </p>
 <pre>
-python manage.py makemigrations     
+python manage.py makemigrations
 python manage.py migrate
 </pre>
 
