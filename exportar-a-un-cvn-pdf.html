@@ -2,7 +2,7 @@
 <html lang="es"
 >
 <head>
-    <title>Parseo de un CVN-PDF - Portal del Investigador - Documentación</title>
+    <title>Exportar a un CVN-PDF - Portal del Investigador - Documentación</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,16 +18,16 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
-<link rel="canonical" href="/investigacion/parseo-de-un-cvn-pdf.html">
+<link rel="canonical" href="/investigacion/exportar-a-un-cvn-pdf.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Actividad Científica extraída de un CVN Publicaciones, documentos científicos y técnicos CATEGORÍA Actividad científica y tecnológica ENLACE https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA SECCIÓN Publicaciones, documentos científicos y técnicos MODELO ABSTRACTO Publicacion El Editor de la FECYT permite crear publicaciones de diferentes tipos, empleando para ello ..." />
+        <meta name="description" content="La Universidad de La Laguna posee la siguiente información susceptible de ser incluida en un CVN-PDF: Datos de identificación y contacto Situación profesional actual en la ULL Cargos y actividades desempeñados con anterioridad en la ULL Diplomaturas, licenciaturas e ingenierías, grados y másteres cursados en la ULL Doctorados realizados en ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
-    <meta property="og:title" content="Parseo de un CVN-PDF"/>
-    <meta property="og:url" content="/investigacion/parseo-de-un-cvn-pdf.html"/>
-    <meta property="og:description" content="Actividad Científica extraída de un CVN Publicaciones, documentos científicos y técnicos CATEGORÍA Actividad científica y tecnológica ENLACE https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA SECCIÓN Publicaciones, documentos científicos y técnicos MODELO ABSTRACTO Publicacion El Editor de la FECYT permite crear publicaciones de diferentes tipos, empleando para ello ..." />
+    <meta property="og:title" content="Exportar a un CVN-PDF"/>
+    <meta property="og:url" content="/investigacion/exportar-a-un-cvn-pdf.html"/>
+    <meta property="og:description" content="La Universidad de La Laguna posee la siguiente información susceptible de ser incluida en un CVN-PDF: Datos de identificación y contacto Situación profesional actual en la ULL Cargos y actividades desempeñados con anterioridad en la ULL Diplomaturas, licenciaturas e ingenierías, grados y másteres cursados en la ULL Doctorados realizados en ..." />
 
 
     <!-- ULL -->
@@ -93,8 +93,8 @@
                          <li><a href="/investigacion/">Home</a></li>
                          <li><a href="/investigacion/instalacion.html">Instalación</a></li>
                          <li><a href="/investigacion/admin-commands.html">Admin Commands</a></li>
-                         <li><a href="/investigacion/exportar-a-un-cvn-pdf.html">Exportar a un CVN-PDF</a></li>
-                         <li class="active"><a href="/investigacion/parseo-de-un-cvn-pdf.html">Parseo de un CVN-PDF</a></li>
+                         <li class="active"><a href="/investigacion/exportar-a-un-cvn-pdf.html">Exportar a un CVN-PDF</a></li>
+                         <li><a href="/investigacion/parseo-de-un-cvn-pdf.html">Parseo de un CVN-PDF</a></li>
                          <li><a href="/investigacion/signals-y-receivers.html">Signals y Receivers</a></li>
                          <li><a href="/investigacion/web-services.html">Web Services</a></li>
                          <li><a href="/investigacion/desarrolladores.html">Desarrolladores</a></li>
@@ -109,93 +109,85 @@
         <div class="col-md-9" role="main">
 
     <section id="content" class="body">
-        <h1 class="entry-title">Parseo de un CVN-PDF</h1>
+        <h1 class="entry-title">Exportar a un CVN-PDF</h1>
         
         <div class="entry-content">
-            <h1 class="page-header">Actividad Científica extraída de un CVN</h1>
+            <p>
+    La Universidad de La Laguna posee la siguiente información susceptible de ser incluida en un CVN-PDF:
+</p>
+
+<ul>
+    <li>Datos de identificación y contacto</li>
+    <li>Situación profesional actual en la ULL</li>
+    <li>Cargos y actividades desempeñados con anterioridad en la ULL</li>
+    <li>Diplomaturas, licenciaturas e ingenierías, grados y másteres cursados en la ULL</li>
+    <li>Doctorados realizados en la ULL</li>
+</ul>
+
+<p>
+    Para la generacón de un CVN-PDF se emplean distintos esqueletos en XML, ubicados en  el directorio <i>cvn/templates/cvn/xml</i>.
+</p>
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Publicaciones, documentos científicos y técnicos</li>
+        <li class="active">Datos de identificación y contacto</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>CATEGORÍA</th>
-                    <td>Actividad científica y tecnológica</td>
+                    <td>Datos de identificación y contacto</td>
                 </tr>
                 <tr>
                     <th>ENLACE</th>
-                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA</a></td>
+                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#IDENTIFICACION</a></td>
                 </tr>
                 <tr>
                     <th>SECCIÓN</th>
-                    <td>Publicaciones, documentos científicos y técnicos</td>
+                    <td>Identificación CVN</td>
                 </tr>
                 <tr>
-                    <th>MODELO ABSTRACTO</th>
-                    <td>Publicacion</td>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/skeleton.xml</td>
                 </tr>
             </table>
-            <p>
-                El Editor de la FECYT permite crear publicaciones de diferentes tipos, 
-                empleando para ello el campo Tipo de producción. Actualmente sólo se 
-                extraen las publicaciones que sean de los tipos: 
-            </p>
-            <ul>
-                <li>Artículo (Modelo Articulo)</li>
-                <li>Libro (Modelo Libro)</li>
-                <li>Capítulos de Libros (Modelo Capitulo)</li>
-            </ul>
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Campo del Modelo</th>
+                    <th>Campo del XML</th>
                     <th>Campo de la FECYT</th>
                 </tr>
                 <tr>
-                    <td>titulo</td>
-                    <td>Título de la publicación</td>
+                    <td>today</td>
+                    <td>Fecha del documento</td>
                 </tr>
                 <tr>
-                    <td>fecha</td>
-                    <td>Fecha</td>
+                    <td>version</td>
+                    <td>Versión del Editor de la FECYT</td>
                 </tr>
                 <tr>
-                    <td>nombre_publicacion</td>
-                    <td>Nombre de la publicación</td>
+                    <td>given_name</td>
+                    <td>Nombre</td>
                 </tr>
                 <tr>
-                    <td>volumen</td>
-                    <td>Volumen</td>
+                    <td>first_family_name</td>
+                    <td>Primer Apellido (almacenará el primer y segundo apellido)</td>
                 </tr>
                 <tr>
-                    <td>numero</td>
-                    <td>Número</td>
+                    <td>id_type</td>
+                    <td>Tipo de documento</td>
                 </tr>
                 <tr>
-                    <td>pagina_inicial</td>
-                    <td>Página inicial-final » Inicial</td>
+                    <td>id_type_code</td>
+                    <td>Código interno del Tipo de documento</td>
                 </tr>
                 <tr>
-                    <td>pagina_final</td>
-                    <td>Página inicial-final » Final</td>
+                    <td>official_id</td>
+                    <td>Documento</td>
                 </tr>
                 <tr>
-                    <td>autores</td>
-                    <td>Autores/as (p. o. de firma)*</td>
-                </tr>
-                <tr>
-                    <td>isbn</td>
-                    <td>ISBN/ISSN » ISBN</td>
-                </tr>
-                <tr>
-                    <td>issn</td>
-                    <td>ISBN/ISSN » ISSN</td>
-                </tr>
-                <tr>
-                    <td>deposito_legal</td>
-                    <td>Depósito legal</td>
+                    <td>internet_email_address</td>
+                    <td>Correo electrónico</td>
                 </tr>
             </table>
         </div>
@@ -204,191 +196,135 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Trabajos presentados en congresos nacionales o internacionales</li>
+        <li class="active">Situación profesional</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Categoría</th>
-                    <td>Actividad científica y tecnológica</td>
+                    <th>CATEGORÍA</th>
+                    <td>Situación profesional</td>
                 </tr>
                 <tr>
-                    <th>Enlace</th>
-                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#ACTIVIDAD_CIENTIFICA</a></td>
+                    <th>ENLACE</th>
+                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL</a></td>
                 </tr>
+                <tr>
+                    <th>WEB SERVICE</th>
+                    <td>WS_ULL_CARGOS</td>
+                </tr>
+            </table>
+            <h4>Situación profesional actual</h4>
+            <table class="table table-striped table-condensed">
                 <tr>
                     <th>Sección</th>
-                    <td>Trabajos presentados en congresos nacionales o internacionales</td>
+                    <td>Situación profesional actual</td>
                 </tr>
                 <tr>
-                    <th>Modelo</th>
-                    <td>Congreso</td>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/current_profession.xml</td>
                 </tr>
             </table>
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Campo del Modelo</th>
+                    <th>Campo del XML</th>
                     <th>Campo de la FECYT</th>
+                    <th>Campo del Web Service</th>
                 </tr>
                 <tr>
-                    <td>titulo</td>
-                    <td>Título de la publicación</td>
+                    <td>title</td>
+                    <td>Categoría/puesto o cargo</td>
+                    <td>des1_cargo</td>
                 </tr>
                 <tr>
-                    <td>fecha</td>
-                    <td>Fecha</td>
+                    <td>employer</td>
+                    <td>Nombre de la entidad</td>
+                    <td>(Extraído del Settings de CVN)</td>
                 </tr>
                 <tr>
-                    <td>nombre_publicacion</td>
-                    <td>Nombre de la publicación</td>
+                    <td>centre</td>
+                    <td>Facultad, instituto, centro</td>
+                    <td>centro</td>
                 </tr>
                 <tr>
-                    <td>volumen</td>
-                    <td>Volumen</td>
+                    <td>department</td>
+                    <td>Departamento, servicio, etc.</td>
+                    <td>departamento</td>
                 </tr>
                 <tr>
-                    <td>numero</td>
-                    <td>Número</td>
-                </tr>
-                <tr>
-                    <td>pagina_inicial</td>
-                    <td>Página inicial-final » Inicial</td>
-                </tr>
-                <tr>
-                    <td>pagina_final</td>
-                    <td>Página inicial-final » Final</td>
-                </tr>
-                <tr>
-                    <td>autores</td>
-                    <td>Autores/as (p. o. de firma)*</td>
-                </tr>
-                <tr>
-                    <td>isbn</td>
-                    <td>ISBN/ISSN » ISBN</td>
-                </tr>
-                <tr>
-                    <td>issn</td>
-                    <td>ISBN/ISSN » ISSN</td>
-                </tr>
-                <tr>
-                    <td>deposito_legal</td>
-                    <td>Depósito legal</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Experiencia científica y tecnológica</li>
-    </ul>
-    <div class="content">
-        <div class="row-fluid">
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Categoría</th>
-                    <td>Experiencia científica y tecnológica</td>
-                </tr>
-                <tr>
-                    <th>Enlace</th>
-                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA</a></td>
-                </tr>
-                <tr>
-                    <th>Sección</th>
-                    <td>
-                        <p>Participación en proyectos de I+D+i financiados en convocatorias competitivas de Administraciones o entidades públicas y privadas</p>
-                        <p>Participación en contratos, convenios o proyectos de I+D+i no competitivos con Administraciones o entidades públicas o privadas</p>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Modelo Abstracto</th>
-                    <td>ScientificExp</td>
-                </tr>
-            </table>
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Sección</th>
-                    <td>Participación en contratos, convenios o proyectos de I+D+i no competitivos con Administraciones o entidades públicas o privadas</td>
-                </tr>
-                <tr>
-                    <th>Modelo</th>
-                    <td>Convenio</td>
-                </tr>
-            </table>
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Sección</th>
-                    <td>Participación en proyectos de I+D+i financiados en convocatorias competitivas de Administraciones o entidades públicas y privadas</td>
-                </tr>
-                <tr>
-                    <th>Modelo</th>
-                    <td>Proyecto</td>
-                </tr>
-            </table>
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Campo del Modelo</th>
-                    <th>Campo de la FECYT</th>
-                </tr>
-                <tr>
-                    <td>titulo</td>
-                    <td>Denominación del proyecto</td>
-                </tr>
-                <tr>
-                    <td>numero_de_investigadores</td>
-                    <td>Número de investigadores/as</td>
-                </tr>
-                <tr>
-                    <td>autores</td>
-                    <td>Investigador/es responsable/es*</td>
-                </tr>
-                <tr>
-                    <td>fecha_de_inicio</td>
+                    <td>start_date</td>
                     <td>Fecha de inicio</td>
+                    <td>f_toma_posesion</td>
                 </tr>
                 <tr>
-                    <td>fecha_de_fin</td>
-                    <td>Fecha fin</td>
+                    <td>dedication_type</td>
+                    <td>Tipo de dedicación</td>
+                    <td>dedicacion</td>
                 </tr>
                 <tr>
-                    <td>duracion</td>
-                    <td>Duración del proyecto » Años, Meses y Días</td>
-                </tr>
-                <tr>
-                    <td>ambito</td>
-                    <td>Ámbito del proyecto</td>
-                </tr>
-                <tr>
-                    <td>otro_ambito</td>
-                    <td>Ámbito del proyecto (Otros) » Otro</td>
-                </tr>
-                <tr>
-                    <td>cod_segun_financiadora</td>
-                    <td>Cód. según financiadora</td>
-                </tr>
-                <tr>
-                    <td>cuantia_total</td>
-                    <td>Cuantía total</td>
-                </tr>
-                <tr>
-                    <td>cuantia_subproyecto</td>
-                    <td>Cuantía subproyecto</td>
-                </tr>
-                <tr>
-                    <td>porcentaje_en_subvencion</td>
-                    <td>Porcentaje en subvención</td>
-                </tr>
-                <tr>
-                    <td>porcentaje_en_credito</td>
-                    <td>Porcentaje en crédito</td>
-                </tr>
-                <tr>
-                    <td>porcentaje_mixto</td>
-                    <td>Porcentaje mixto</td>
+                    <td>dedication_code</td>
+                    <td>Código interno del Tipo dedicación</td>
+                    <td></td>
                 </tr>
             </table>
+            <h4>Cargos y actividades desempeñados con anterioridad</h4>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Sección</th>
+                    <td>Cargos y actividades desempeñados con anterioridad</td> 
+                </tr>
+                <tr>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/profession.xml</td>
+                </tr>
+            </table>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Campo del XML</th>
+                    <th>Campo de la FECYT</th>
+                    <th>Campo del Web Service</th>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td>Categoría/puesto o cargo</td>
+                    <td>des1_cargo</td>
+                </tr>
+                <tr>
+                    <td>employer</td>
+                    <td>Nombre de la entidad</td>
+                    <td>(Extraído del Settings de CVN)</td>
+                </tr>
+                <tr>
+                    <td>centre</td>
+                    <td>Facultad, escuela, etc.</td>
+                    <td>centro</td>
+                </tr>
+                <tr>
+                    <td>department</td>
+                    <td>Departamento, servicio, etc.</td>
+                    <td>departamento</td>
+                </tr>
+                <tr>
+                    <td>start_date</td>
+                    <td>Fecha de inicio</td>
+                    <td>f_toma_posesion</td>
+                </tr>
+                <tr>
+                    <td>end_date</td>
+                    <td>Fecha de finalización</td>
+                    <td>f_hasta</td>
+                </tr>
+                <tr>
+                    <td>dedication_type</td>
+                    <td>Tipo de dedicación</td>
+                    <td>dedicacion</td>
+                </tr>
+                <tr>
+                    <td>dedication_code</td>
+                    <td>Código interno del Tipo de dedicación</td>
+                    <td></td>
+                </tr>
+            </table> 
         </div>
     </div>
 </div>
@@ -401,46 +337,92 @@
         <div class="row-fluid">
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Categoría</th>
-                    <td>Actividad docente</td>
+                    <th>CATEGORÍA</th>
+                    <td>Actividad docente » Docencia impartida</td>
                 </tr>
                 <tr>
-                    <th>Enlace</th>
+                    <th>ENLACE</th>
                     <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE</a></td>
                 </tr>
                 <tr>
-                    <th>Sección</th>
-                    <td>Dirección de tesis doctorales y/o proyectos fin de carrera</td>
+                    <th>SECCIÓN</th>
+                    <td>Docencia impartida</td>
                 </tr>
                 <tr>
-                    <th>Modelo</th>
-                    <td>TesisDoctoral</td>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/teaching.xml</td>
                 </tr>
             </table>
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Campo del Modelo</th>
+                    <th>Campo del XML</th>
                     <th>Campo de la FECYT</th>
+                    <th>Campo del Web Service</th>
                 </tr>
                 <tr>
-                    <td>titulo</td>
-                    <td>Título del trabajo</td>
+                    <td>subject</td>
+                    <td>Nombre de la asignatura/curso</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>fecha</td>
-                    <td>Fecha de lectura</td>
+                    <td>professional_category</td>
+                    <td>Categoría profesional</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>autor</td>
-                    <td>Doctorando-a/alumno-a*</td>
+                    <td>program_type</td>
+                    <td>Tipo de programa</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>universidad_que_titula</td>
-                    <td>Universidad que titula</td>
+                    <td>program_others</td>
+                    <td>Tipo de programa (Otros) » Otro</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>codirector</td>
-                    <td>Codirector/a tesis*</td>
+                    <td>subject_type</td>
+                    <td>Tipo de asignatura</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>subject_others</td>
+                    <td>Tipo de asignatura (Otros) » Otro</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>course</td>
+                    <td>Curso que se imparte</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>qualification</td>
+                    <td>Titulación</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>university</td>
+                    <td>Entidad de realización</td>
+                    <td>(Extraído del Settings de CVN)</td>
+                </tr>
+                <tr>
+                    <td>department</td>
+                    <td>Departamento</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>faculty</td>
+                    <td>Facultad, instituto, centro</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>school_year</td>
+                    <td>Fecha inicio</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>number_credits</td>
+                    <td>Número de horas/créditos</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -449,77 +431,116 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Propiedad intelectual e industrial. Know-how y secretos industriales</li>
+        <li class="active">Formación académica recibida</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
+            <h4>Diplomaturas, licenciaturas e ingenierías, grados y másteres</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>Categoría</th>
-                    <td>Experiencia científica y tecnológica</td>
+                    <td>Formación académica recibida</td>
                 </tr>
                 <tr>
                     <th>Enlace</th>
-                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_CIENTIFICA</a></td>
+                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#FORMACION" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#FORMACION</a></td>
                 </tr>
                 <tr>
                     <th>Sección</th>
-                    <td>Propiedad intelectual e industrial. Know-how y secretos industriales</td>
+                    <td>Diplomaturas, licenciaturas e ingenierías, grados y másteres</td>
                 </tr>
                 <tr>
-                    <th>Modelo</th>
-                    <td>Patente</td>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/learning.xml</td>
+                </tr>
+                <tr>
+                    <th>Web Service</th>
+                    <td>WS_ULL_LEARNING</td>
                 </tr>
             </table>
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Campo del Modelo</th>
+                    <th>Campo del XML</th>
                     <th>Campo de la FECYT</th>
+                    <th>Campo del Web Service</th>
                 </tr>
                 <tr>
-                    <td>titulo</td>
-                    <td>Denominación</td>
+                    <td>title</td>
+                    <td>Nombre del título</td>
+                    <td>des1_titulacion</td>
                 </tr>
                 <tr>
-                    <td>fecha</td>
-                    <td>Fecha</td>
+                    <td>title_code</td>
+                    <td>Titulación oficial</td>
+                    <td>des1_grado_titulacion</td>
                 </tr>
                 <tr>
-                    <td>fecha_concesion</td>
-                    <td>Fecha de concesión</td>
+                    <td>others</td>
+                    <td>Titulación oficial (Otros) » Otros</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>num_solicitud</td>
-                    <td>Número de solicitud</td>
+                    <td>university</td>
+                    <td>Entidad que expide el título</td>
+                    <td>organismo</td>
                 </tr>
                 <tr>
-                    <td>lugar_prioritario</td>
-                    <td>País de prioridad</td>
+                    <td>date</td>
+                    <td>Fecha de titulación</td>
+                    <td>f_expedicion</td>
+                </tr>
+            </table>
+            <h4>Doctorados</h4>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Categoría</th>
+                    <td>Formación académica recibida</td>
                 </tr>
                 <tr>
-                    <td>lugares</td>
-                    <td>Países</td>
+                    <th>Enlace</th>
+                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#FORMACION" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#FORMACION</a></td>
                 </tr>
                 <tr>
-                    <td>autores</td>
-                    <td>Inventores/autores/obtentores*</td>
+                    <th>Sección</th>
+                    <td>Doctorados</td>
                 </tr>
                 <tr>
-                    <td>entidad_titular</td>
-                    <td>Entidad titular</td>
+                    <th>XML</th>
+                    <td>cvn/templates/cvn/xml/learning_phd.xml</td>
                 </tr>
                 <tr>
-                    <td>empresas</td>
-                    <td>Empresas</td>
+                    <th>Web Service</th>
+                    <td>WS_ULL_LEARNING</td>
+                </tr>
+            </table>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <th>Campo del XML</th>
+                    <th>Campo de la FECYT</th>
+                    <th>Campo del Web Service</th>
+                </tr>
+                <tr>
+                    <td>title</td>
+                    <td>Programa de doctorado</td>
+                    <td>des1_titulacion</td>
+                </tr>
+                <tr>
+                    <td>university</td>
+                    <td>Universidad que titula</td>
+                    <td>organismo</td>
+                </tr>
+                <tr>
+                    <td>date</td>
+                    <td>Fecha de titulación</td>
+                    <td>f_expedicion</td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
 
-<div class="alert alert-warning">
-    * El campo <i>autores</i> es de tipo <i>TextField</i> e incluye la totalidad de los campos que se emplean en la FECYT (Firma, Nombre, Primer Apellido y Segundo Apellido) 
-</div>
+<div class="highlight"><pre>
+</pre></div>
         </div>
     </section>
         </div>
