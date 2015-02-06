@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/web-services.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="URLs de los Web Services URLs de investigacion/settings.py VARIABLE VALOR DESCRIPCIÓN WS_ULL_LEARNING WS_SERVER_URL + &#39;get_formacion_academica?cod_persona=&#39; Formación académica recibida por el investigador WS_ULL_CARGOS WS_SERVER_URL + &#39;get_cargos?cod_persona=&#39; Cargo desempeñados por el investigador en la universidad WS_SERVER_URL contiene la dirección URL base de los Web Services, del servidor donde se encuentra ..." />
+        <meta name="description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Este Web Service retorna un código único de tipo entero ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Web Services"/>
     <meta property="og:url" content="/investigacion/web-services.html"/>
-    <meta property="og:description" content="URLs de los Web Services URLs de investigacion/settings.py VARIABLE VALOR DESCRIPCIÓN WS_ULL_LEARNING WS_SERVER_URL + &#39;get_formacion_academica?cod_persona=&#39; Formación académica recibida por el investigador WS_ULL_CARGOS WS_SERVER_URL + &#39;get_cargos?cod_persona=&#39; Cargo desempeñados por el investigador en la universidad WS_SERVER_URL contiene la dirección URL base de los Web Services, del servidor donde se encuentra ..." />
+    <meta property="og:description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Este Web Service retorna un código único de tipo entero ..." />
 
 
     <!-- ULL -->
@@ -111,10 +111,50 @@
         <h1 class="entry-title">Web Services</h1>
         
         <div class="entry-content">
-            <h2>URLs de los Web Services</h2>
+            <div class="alert alert-warning">
+WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor.
+</div>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">URLs de investigacion/settings.py</li></ul>
+<h1 class="page-header">Información para el perfil de usuario</h1>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_COD_PERSONA</li></ul>
 <div class="content">
+
+<p>Este Web Service retorna un código único de tipo entero por cada investigador. Este código se guarda en el perfil de usuario, y se usa para identificar al investigador en el resto de Web Services.</p>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>VARIABLE</th>
+        <th>VALOR</th>
+        <th>DESCRIPCIÓN</th>
+    </tr>
+    <tr>
+        <td>WS_COD_PERSONA</td>
+        <td>WS_SERVER_URL + 'get_codpersona?nif=<número de identificación fiscal>'</td>
+        <td>Retorna un código único que identifica al usuario en el resto de Web Services.</td>
+    </tr>
+</table>
+
+Ejemplo de salida del Web Service:
+<pre>
+33184
+</pre>
+
+</div>
+
+</div>
+
+<h1 class="page-header">Generación de CVNs</h1>
+
+<p>
+    Estos web services son usados para generar un CVN básico para el investigador, con la información que la universidad ya conoce sobre el mismo. De esta manera el investigador no necesita crear su CVN desde cero. Son necesarios para el funcionamiento de la opción: "Exportar mi información ULL".
+</p>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_LEARNING</li></ul>
+<div class="content">
+
+<p>Este Web Service contiene información sobre la formación académica recibida por el investigador en la universidad.</p>
+
 <table class="table table-striped table-condensed">
     <tr>
         <th>VARIABLE</th>
@@ -126,29 +166,7 @@
         <td>WS_SERVER_URL + 'get_formacion_academica?cod_persona=<código de persona>'</td>
         <td>Formación académica recibida por el investigador</td>
     </tr>
-    <tr>
-        <td>WS_ULL_CARGOS</td>
-        <td>WS_SERVER_URL + 'get_cargos?cod_persona=<código de persona>'</td>
-        <td>Cargo desempeñados por el investigador en la universidad</td>
-    </tr>
 </table>
-<div class="alert alert-warning">
-WS_SERVER_URL contiene la dirección URL base de los Web Services, del servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor.
-</div>
-</div>
-</div>
-
-<h2>Estructura de los Web Services</h2>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Web Services para generar CVNs</li></ul>
-<div class="content">
-
-<p>
-    Estos web services son usados para generar un CVN básico para el investigador, con la información que la universidad ya conoce sobre el mismo. De esta manera el investigador no necesita crear su CVN desde cero. Son necesarios para el funcionamiento de la opción: "Exportar mi información ULL".
-</p>
-
-<h4>WS_ULL_LEARNING</h4>
-
 <pre>
 [{"des1_titulacion": ..., 
   "des1_grado_titulacion": ...,
@@ -192,8 +210,27 @@ WS_SERVER_URL contiene la dirección URL base de los Web Services, del servidor 
     </tr>
 </table>
 
-<h4>WS_ULL_CARGOS</h4>
+</div>
 
+</div>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_CARGOS</li></ul>
+<div class="content">
+
+<p>Este Web Service contiene información sobre los cargos que ha ejercido el investigador en la universidad.</p>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>VARIABLE</th>
+        <th>VALOR</th>
+        <th>DESCRIPCIÓN</th>
+    </tr>
+    <tr>
+        <td>WS_ULL_CARGOS</td>
+        <td>WS_SERVER_URL + 'get_cargos?cod_persona=<código de persona>'</td>
+        <td>Cargos desempeñados por el investigador en la universidad</td>
+    </tr>
+</table>
 <pre>
 [{
   "dedicacion": ..., 
@@ -249,6 +286,35 @@ WS_SERVER_URL contiene la dirección URL base de los Web Services, del servidor 
         <td>f_hasta</td>
         <td>Fecha de finalización de la actividad</td>
         <td>Formato de la fecha: 'DD-MM-YYYY'</td>
+    </tr>
+</table>
+
+</div>
+
+</div>
+
+<h1 class="page-header">Información de departamentos</h1>
+
+<p>Estos Web Services proveen de información sobre los departamentos de la universidad y sus miembros. Son usados para la generación de informes sobre departamentos en el admin command dept_report.</p>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_DEPARTMENTS_AND_MEMBERS</li></ul>
+<div class="content">
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>VARIABLE</th>
+        <th>VALOR</th>
+        <th>DESCRIPCIÓN</th>
+    </tr>
+</table>
+<pre>
+</pre>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>CLAVE</th>
+        <th>DESCRIPCIÓN</th>
+        <th>VALOR</th>
     </tr>
 </table>
 
