@@ -6,7 +6,7 @@
     <div class="error-page">
         <h2>{{ title }}</h2>
         <p>{% trans 'Rogamos disculpe las molestias' %}</p>
-        <p>{{ contact }} <a href="mailto:sopinve@ull.es">sopinve@ull.es</a></p>
+        <p>{{ contact }} <a href="mailto:{{ email_support }}">{{ email_support }}</a></p>
         <p><a class="btn btn-primary" href="{% url 'index'%}">{% trans 'Volver al Portal del Investigador' %}</a></p>
     </div>
     <div>

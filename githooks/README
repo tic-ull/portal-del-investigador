@@ -1,0 +1,19 @@
+POST-MERGE
+
+DESCRIPTION
+
+    This hook is invoked by git merge, which happens when a git pull is done
+    on a local repository. The hook takes a single parameter, a status flag
+    specifying whether or not the merge being done was a squash merge.
+    This hook cannot affect the outcome of git merge and is not executed,
+    if the merge failed due to conflicts.
+
+    Check if a submodule has been added after a merge (or pull) and
+    run git submodule update
+
+HOWTO
+    
+    cd {PROJECT_ROOT}   # Project's Root Directory (the one containing .git/)
+    cp githooks/post-merge .git/hooks/
+    chmod +x .git/hooks/post-merge
+

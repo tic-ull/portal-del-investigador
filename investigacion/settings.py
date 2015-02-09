@@ -1,8 +1,29 @@
 # -*- encoding: UTF-8 -*-
 
+#
+#    Copyright 2014-2015
+#
+#      STIC-Investigación - Universidad de La Laguna (ULL) <gesinv@ull.edu.es>
+#
+#    This file is part of Portal del Investigador.
+#
+#    Portal del Investigador is free software: you can redistribute it and/or
+#    modify it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    Portal del Investigador is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with Portal del Investigador.  If not, see
+#    <http://www.gnu.org/licenses/>.
+#
+
 import js
 import os
-
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -306,7 +327,8 @@ except NameError:
 # ************************* SETTINGS LOCAL ***********************************
 
 # ************************* WEB SERVICES *************************************
-# All categories
+# All categories. This is used only on the statistics app.
+# There is no need to provide this WS if the statistics app is not being used.
 WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
 # RRHH code
@@ -348,12 +370,6 @@ WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
     'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
-# All current departments
-WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
-
-# All departments by years
-WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
-
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
     WS_SERVER_URL +
@@ -384,12 +400,8 @@ WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
     'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
-# All current areas
-WS_AREAS = WS_SERVER_URL + 'get_areas'
-
-# All areas by years
-WS_AREAS_YEAR = WS_SERVER_URL + 'get_areas?year=%s'
-
+# This is used only on the accounting app.
+# There is no need to provide this WS if the statistics app is not being used.
 WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
