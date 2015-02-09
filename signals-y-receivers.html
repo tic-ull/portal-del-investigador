@@ -112,64 +112,64 @@
         <h1 class="entry-title">Signals y Receivers</h1>
         
         <div class="entry-content">
-            <div class="section"><ul class="nav nav-tabs header"><li class="active">Signals</li></ul>
-<div class="content">
-
-<p>
-Las señales son emitidas en momentos clave de la ejecución. Se usan para ejecutar código en terceras aplicaciones en respuesta a eventos importantes.
-</p>
-
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>APLICACIÓN</th>
-        <th>SEÑAL</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>CVN</td>
-        <td>pre_cvn_status_changed</td>
-        <td>Se genera ante un cambio de estado de un CVN</td>
-    </tr>
-</table>
+            <div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Signals</li>
+    </ul>
+    <div class="content">
+        <p>
+            Las señales son emitidas en momentos clave de la ejecución. Se usan para ejecutar código en terceras aplicaciones en respuesta a eventos importantes.
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>APLICACIÓN</th>
+                <th>SEÑAL</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>CVN</td>
+                <td>pre_cvn_status_changed</td>
+                <td>Se genera ante un cambio de estado de un CVN</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-</div>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Receivers</li></ul>
-<div class="content">
-
-<p>
-Los receivers contienen código que es ejecutado en respuesta a un evento ocurrido.
-</p>
-
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>APLICACIÓN</th>
-        <th>RECEPTOR</th>
-        <th>DESCRIPCIÓN</th>
-        <th>SEÑAL CAPTURADA</th>
-    </tr>
-    <tr>
-        <td>CORE</td>
-        <td>update_user</td>
-        <td>Actualiza la información del usuario actual almacenada en el modelo user a partir de un hash denominado attributes que se almacena en la sesión del usuario</td>
-        <td>User.post_login</td>
-    </tr>
-    <tr>
-        <td>CVN</td>
-        <td>cvn_delete_files</td>
-        <td>Elimina los ficheros PDF y XML asociados al CVN que se va a eliminado</td>
-        <td>CVN.pre_delete / OldCvnPdf.pre_delete</td>
-    </tr>
-    <tr>
-        <td>CVN</td>
-        <td>log_status_cvn_changed</td>
-        <td>Añade una entrada en la tabla Log cuando un CVN se crea o actualiza</td>
-        <td>CVN.pre_save</td>
-    </tr>
-</table>
-</div>
-
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Receivers</li>
+    </ul>
+    <div class="content">
+        <p>
+            Los receivers contienen código que es ejecutado en respuesta a un evento ocurrido.
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>APLICACIÓN</th>
+                <th>RECEPTOR</th>
+                <th>DESCRIPCIÓN</th>
+                <th>SEÑAL CAPTURADA</th>
+            </tr>
+            <tr>
+                <td>CORE</td>
+                <td>update_user</td>
+                <td>Actualiza la información del usuario actual almacenada en el modelo user a partir de un hash denominado attributes que se almacena en la sesión del usuario</td>
+                <td>User.post_login</td>
+            </tr>
+            <tr>
+                <td>CVN</td>
+                <td>cvn_delete_files</td>
+                <td>Elimina los ficheros PDF y XML asociados al CVN que se va a eliminado</td>
+                <td>CVN.pre_delete / OldCvnPdf.pre_delete</td>
+            </tr>
+            <tr>
+                <td>CVN</td>
+                <td>log_status_cvn_changed</td>
+                <td>Añade una entrada en la tabla Log cuando un CVN se crea o actualiza</td>
+                <td>CVN.pre_save</td>
+            </tr>
+        </table>
+    </div>
 </div>
         </div>
     </section>
