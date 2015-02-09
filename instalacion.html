@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/instalacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Clonar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
+        <meta name="description" content="La presente guía de instalación proporciona el paso a paso de la instalación y configuración del proyecto bajo un entorno con sistema operativo GNU/Linux, concretamente Ubuntu. 1. Clonar el repositorio con sus submódulos git clone --recursive https://github.com/tic-ull/investigacion.git 2. Instalar dependencias Para la instalación de ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Instalación"/>
     <meta property="og:url" content="/investigacion/instalacion.html"/>
-    <meta property="og:description" content="Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu. Clonar el repositorio git clone --recursive https://github.com/tic-ull/investigacion.git Instalar dependencias Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se ..." />
+    <meta property="og:description" content="La presente guía de instalación proporciona el paso a paso de la instalación y configuración del proyecto bajo un entorno con sistema operativo GNU/Linux, concretamente Ubuntu. 1. Clonar el repositorio con sus submódulos git clone --recursive https://github.com/tic-ull/investigacion.git 2. Instalar dependencias Para la instalación de ..." />
 
 
     <!-- ULL -->
@@ -113,175 +113,185 @@
         
         <div class="entry-content">
             <p>
-Estas instrucciones indican cómo configurar una máquina de desarrollo con Ubuntu.
+    La presente guía de instalación proporciona el paso a paso de la instalación y configuración del proyecto bajo un entorno con sistema operativo GNU/Linux, concretamente Ubuntu.
 </p>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Clonar el repositorio</li></ul>
-<div class="content">
-
-<pre>
-git clone --recursive https://github.com/tic-ull/investigacion.git
-</pre>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">1. Clonar el repositorio con sus submódulos</li>
+    </ul>
+    <div class="content">
+        <pre>git clone --recursive https://github.com/tic-ull/investigacion.git</pre>
+    </div>
 </div>
 
-</div>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Instalar dependencias</li></ul>
-<div class="content">
-
-<div class="alert alert-warning">
-Para la instalación de dependencias de módulos python se usa pip. Se recomienda usar esta herramienta junto con virtualenv, aunque en las instrucciones no se entrará a explicar su funcionamiento.
-</div>
-
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">2. Instalar dependencias</li>
+    </ul>
+    <div class="content">
+        <div class="alert alert-warning">
+            Para la instalación de dependencias de módulos Python se emplea <i>pip</i>. 
+            Se recomienda el uso de <i>virtualenv</i> junto con esta herramienta, aunque 
+            en las instrucciones no se entrará a explicar su funcionamiento.
+        </div>
 <pre>
 sudo apt-get install python-pip
 sudo pip install -U distribute
-sudo apt-get install libmysqlclient-dev postgresql postgresql-client postgresql-contrib \
-                     libpq-dev libxml2-dev libxslt1-dev python-dev xvfb
+sudo apt-get install postgresql postgresql-client postgresql-contrib libpq-dev \
+                     libxml2-dev libxslt1-dev python-dev xvfb redis-server
 sudo pip install -r requirements.txt
 </pre>
+    </div>
 </div>
 
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">3. Configurar el proyecto y sus aplicaciones</li>
+    </ul>
+    <div class="content">
+        <p>
+            Tanto en el proyecto como en las aplicaciones, los parámetros de configuración se establecen en los ficheros <i>settings.py</i>. 
+            Varios de estos parámetros necesitan ser sobreescritos, para ello se emplean los ficheros <i>settings_local.py</i>.
+            Se proporcionan los ficheros <i>settings_local-sample.py</i> como ejemplo, se recomienda su uso como punto de partida.
+        </p>
+
+        <h4>Configuración del Proyecto Investigación</h4>
+        <div class="alert alert-info">
+            investigacion/settings_local.py
+        </div>
+        <pre>cp investigacion/settings_local-sample.py investigacion/settings_local.py</pre>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>BASE_URL</td>
+                <td>URL de la página principal del proyecto. Por defecto es un servicio externo</td>
+            </tr>
+            <tr>
+                <td>SECRET_KEY</td>
+                <td>
+                    <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key</a>
+                </td>
+            </tr>
+            <tr>
+                <td>DEBUG</td>
+                <td>
+                    <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG</a>
+                </td>
+            </tr>   
+            <tr>
+                <td>TEMPLATE_DEBUG</td>
+                <td> 
+                    <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug</a>
+                </td>
+            </tr>
+            <tr>
+                <td>DEVEL</td>
+                <td>Si DEVEL es True (Entorno de Desarrollo), el servidor de aplicaciones de Django servirá los ficheros estáticos. En otro caso, deberá hacerse desde el Servidor Web del sistema</td>
+            </tr>
+            <tr>
+                <td>ADMINS</td>
+                <td>
+                    <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS</a>
+                </td>
+            </tr>
+            <tr>
+                <td>SUPPORT</td>
+                <td>Nombre del Departamento de Soporte que se le mostrará al usuario en caso de error</td>
+            </tr>
+            <tr>
+                <td>EMAIL_SUPPORT</td>
+                <td>Correo Electrónico del Departamento de Soporte que se le mostrará al usuario en caso de error</td>
+            </tr>
+            <tr>
+                <td>CAS_SERVER_URL</td>
+                <td>URL del Servicio de Autenticación (CAS) <!-- TODO: link_a_pag_cas --></td>
+            </tr>
+            <tr>
+                <td>WS_SERVER_URL</td>
+                <td>URL base del Servicio de Web Services <!-- TODO: link_a_pag_ws --></td>
+            </tr>           
+        </table>
+        <h4>Configuración de CVN</h4>
+        <div class="alert alert-info">
+            cvn/settings_local.py
+        </div>
+        <pre>cp cvn/settings_local-sample.py cvn/settings_local.py</pre>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>UNIVERSITY</td>
+                <td>Nombre de la universidad</td>
+            </tr>
+            <tr>
+                <td>EXPIRY_DATE</td>
+                <td>Variable de tipo datetime.date. Todos los CVNs con fecha de generación anterior a su valor se consideran caducados</td>
+            </tr>
+            <tr>
+                <td>FECYT_USER</td>
+                <td>Nombre de usuario para acceder a los <i>Web Services</i> de la FECYT</td>
+            </tr>
+            <tr>
+                <td>FECYT_PASSWORD</td>
+                <td>Contraseña para acceder a los <i>Web Services</i> de la FECYT</td>
+            </tr>
+            <tr>
+                <td>CVN_PDF_AUTHOR_NOAUT</td>
+                <td>Cuando se genera un CVN-PDF a través del <i>Web Service</i> de la FECYT se escribe en sus metadatos el campo author con el identificador de la universidad que lo genera. 
+                    A través de esta variable se puede impedir subir un CVN generado por una universidad concreta.
+                    Se recomienda su uso para obligar al usuario a editar su CVN desde el Editor de la FECYT
+                </td>
+            </tr>                                       
+            <tr>
+                <td>HISTORICAL_YEAR</td>
+                <td>
+                    Se usa para seleccionar la base de datos histórica que se usará para mostrar el Informe de Producción Científica (CVN-PDF del usuario GesInv-ULL). 
+                    Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Configurar aplicación</li></ul>
-<div class="content">
-
-<p>
-Tanto el proyecto como las aplicaciones individuales se configuran a través de su fichero settings.py. La configuración de estos ficheros puede ser sobreescrita a través de los ficheros settings_local.py. En las aplicaciones con valores de configuración que necesitan ser sobreescritos obligatoriamente se encuentra un fichero de ejemplo (settings_local-sample.py) que define los valores a configurar, y que se puede usar como punto de partida:
-</p>
-
-<pre>
-cp settings_local-sample.py settings_local.py
-</pre>
-
-
-<h4>Configuración de Investigación (investigacion/settings_local.py)</h4>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>BASE_URL</td>
-        <td>URL de la página principal del proyecto. Por defecto es un servicio externo.</td>
-    </tr>
-    <tr>
-        <td>SECRET_KEY</td>
-        <td>
-        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key">https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key</a>
-        </td>
-    </tr>
-    <tr>
-        <td>DEBUG</td>
-        <td>
-        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG</a>
-        </td>
-    </tr>   
-    <tr>
-        <td>TEMPLATE_DEBUG</td>
-        <td> 
-        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug">https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug</a>
-        </td>
-    </tr>
-    <tr>
-        <td>DEVEL</td>
-        <td>Si DEVEL = True, el servidor de aplicaciones de Django servirá los ficheros estáticos de los que hace uso el proyecto. En otro caso deberá hacerse desde un servidor externo.</td>
-    </tr>
-    <tr>
-        <td>ADMINS</td>
-        <td>
-        <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS</a>
-        </td>
-    </tr>
-    <tr>
-        <td>SUPPORT</td>
-        <td>Nombre del Departamento de Soporte (mostrado al usuario en caso de error)</td>
-    </tr>
-    <tr>
-        <td>EMAIL_SUPPORT</td>
-        <td>Correo Electrónico del Departamento de Soporte (mostrado al usuario en caso de error)</td>
-    </tr>
-    <tr>
-        <td>CAS_SERVER_URL</td>
-        <td>URL del Servicio de Autenticación (CAS) //link_a_pag_cas//</td>
-    </tr>
-    <tr>
-        <td>WS_SERVER_URL</td>
-        <td>URL base del webservice //link_a_pag_ws//</td>
-    </tr>           
-</table>
-
-<h4>Configuración de CVN (cvn/settings_local.py)</h4>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>UNIVERSITY</td>
-        <td>Nombre de la universidad</td>
-    </tr>
-    <tr>
-        <td> EXPIRY_DATE </td>
-        <td>Tipo datetime.date. Todos los CVNs con fecha de generación anterior a su valor se consideran caducados.</td>
-    </tr>
-    <tr>
-        <td> FECYT_USER </td>
-        <td>Nombre de usuario para acceder a los <i>webservices</i> de la FECYT</td>
-    </tr>
-    <tr>
-        <td> FECYT_PASSWORD </td>
-        <td>Contraseña para acceder a los <i>webservices</i> de la FECYT</td>
-    </tr>
-    <tr>
-        <td> CVN_PDF_AUTHOR_NOAUT </td>
-        <td>Al generar un CVN-PDF a través del <i>webservice</i> de la FECYT se escribe en sus metadatos, en el campo author, el identificador de la universidad que lo genera. A través de esta variable se puede impedir subir PDFs generados por una universidad concreta. Útil para obligar al usuario a pasar por el editor de la FECYT para que complete su CVN.</td>
-    </tr>                                       
-    <tr>
-        <td>HISTORICAL_YEAR</td>
-        <td>
-        Se usa para seleccionar qué base de datos histórica se usará para mostrar el informe de producción científica (CVN-PDF del usuario GesInv-ULL). Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>.
-        </td>
-    </tr>
-</table>
-
-</div>
-
-</div>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">Configurar bases de datos</li></ul>
-<div class="content">
-
-<div class="alert alert-warning">
-El sistema de base de datos recomendado es PostgreSQL. No se entrará a detallar la configuración del sistema de base de datos y la creación de usuario/base de datos, ya que es el método estándar usado en cualquier proyecto Django.
-</div>
-
-<h4>Base de datos por defecto</h4>
-
-<p>
-La base de datos puede configurarse sobreescribiendo los valores por defecto en investigacion/settings_local.py siguiendo el formato que indica la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases"/>documentación de Django</a>. Después de configurar los valores se debe ejecutar:
-</p>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">4. Configurar bases de datos</li>
+    </ul>
+    <div class="content">
+        <div class="alert alert-warning">
+            Se recomienda el uso de PostgreSQL como Sistema Gestor de Bases de Datos. 
+            No se entrará a detallar la configuración del SGBD ni el proceso de creación de usuarios o bases de datos.
+        </div>
+        <h4>Base de Datos por defecto</h4>
+        <p>
+            La base de datos puede configurarse sobreescribiendo los valores por defecto en <i>investigacion/settings_local.py</i> siguiendo el formato que se indica en la <a href="https://docs.djangoproject.com/en/dev/ref/settings/#databases" target="_blank">documentación de Django</a>. 
+            Una vez configurada, se deben ejecutar los siguientes comandos:
+        </p>
 <pre>
 python manage.py makemigrations
 python manage.py migrate
 </pre>
-
-<h4 id="bbddh">Base de datos histórica</h4>
-
-<p>
-Para la realización de Informes de Producción Científica extraídos de los CVN se puede congelar la base de datos por defecto a una base de datos histórica de sólo lectura. Cada base de datos histórica se debe añadir a la configuración de base de datos de Django en investigacion/settings_local.py, y posteriormente al diccionario HISTORICAL con el siguiente formato:
-</p>
-
+        <h4 id="bbddh">Base de Datos histórica</h4>
+        <p>
+            Para la realización de Informes de Producción Científica extraídos de los CVN se puede clonar la base de datos por defecto a una base de datos histórica de sólo lectura. 
+            Cada base de datos histórica se debe añadir a la configuración de base de datos de Django en <i>investigacion/settings_local.py</i>, 
+            y posteriormente al diccionario <i>HISTORICAL</i> cumpliendo con el siguiente formato:
+        </p>
 <pre>
-HISTORICAL = {'2001': 'nombre_bbdd_historica_2001',
-              '2002': 'nombre_bbdd_historica_2002'
-              ...
+HISTORICAL = {
+    '2013': 'nombre_bbdd_historica_2013',
+    '2014': 'nombre_bbdd_historica_2014',
+    ...
 }
 </pre>
-
-</div>
-
+    </div>
 </div>
         </div>
     </section>
