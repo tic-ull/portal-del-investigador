@@ -1,15 +1,12 @@
 [submodule "accounting"]
 	path = accounting
 	url = git@gitlab.stic.ull.es:investigacion/accounting.git
-    branch = master
 [submodule "mailing"]
 	path = mailing
 	url = git@gitlab.stic.ull.es:investigacion/mailing.git
-    branch = master
 [submodule "statistics"]
 	path = statistics
 	url = git@gitlab.stic.ull.es:investigacion/statistics.git
-    branch = master
 [submodule "cvn"]
 	path = cvn
 	url = git@gitlab.stic.ull.es:investigacion/cvn.git
