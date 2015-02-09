@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/web-services.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Este Web Service retorna un código único de tipo entero ..." />
+        <meta name="description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Retorna un código único de tipo entero por cada investigador ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Web Services"/>
     <meta property="og:url" content="/investigacion/web-services.html"/>
-    <meta property="og:description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Este Web Service retorna un código único de tipo entero ..." />
+    <meta property="og:description" content="WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está servidor donde se encuentra cada uno de los métodos. Debe sobreescribirse con la URL donde cada universidad ha puesto su servidor. Información para el perfil de usuario WS_COD_PERSONA Retorna un código único de tipo entero por cada investigador ..." />
 
 
     <!-- ULL -->
@@ -121,7 +121,7 @@ WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está s
 <div class="section"><ul class="nav nav-tabs header"><li class="active">WS_COD_PERSONA</li></ul>
 <div class="content">
 
-<p>Este Web Service retorna un código único de tipo entero por cada investigador. Este código se guarda en el perfil de usuario, y se usa para identificar al investigador en el resto de Web Services.</p>
+<p>Retorna un código único de tipo entero por cada investigador. Este código se guarda en el perfil de usuario, y se usa para identificar al investigador en el resto de Web Services.</p>
 
 <table class="table table-striped table-condensed">
     <tr>
@@ -131,7 +131,7 @@ WS_SERVER_URL contiene la dirección URL base de los Web Services, donde está s
     </tr>
     <tr>
         <td>WS_COD_PERSONA</td>
-        <td>WS_SERVER_URL + 'get_codpersona?nif=<número de identificación fiscal>'</td>
+        <td>WS_SERVER_URL + 'get_codpersona?nif=[número de identificación fiscal]'</td>
         <td>Retorna un código único que identifica al usuario en el resto de Web Services.</td>
     </tr>
 </table>
@@ -154,7 +154,7 @@ Ejemplo de salida del Web Service:
 <div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_LEARNING</li></ul>
 <div class="content">
 
-<p>Este Web Service contiene información sobre la formación académica recibida por el investigador en la universidad.</p>
+<p>Contiene información sobre la formación académica recibida por el investigador en la universidad.</p>
 
 <table class="table table-striped table-condensed">
     <tr>
@@ -164,7 +164,7 @@ Ejemplo de salida del Web Service:
     </tr>
     <tr>
         <td>WS_ULL_LEARNING</td>
-        <td>WS_SERVER_URL + 'get_formacion_academica?cod_persona=<código de persona>'</td>
+        <td>WS_SERVER_URL + 'get_formacion_academica?cod_persona=[código de persona]'</td>
         <td>Formación académica recibida por el investigador</td>
     </tr>
 </table>
@@ -218,7 +218,7 @@ Ejemplo de salida del Web Service:
 <div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_CARGOS</li></ul>
 <div class="content">
 
-<p>Este Web Service contiene información sobre los cargos que ha ejercido el investigador en la universidad.</p>
+<p>Contiene información sobre los cargos que ha ejercido el investigador en la universidad.</p>
 
 <table class="table table-striped table-condensed">
     <tr>
@@ -228,7 +228,7 @@ Ejemplo de salida del Web Service:
     </tr>
     <tr>
         <td>WS_ULL_CARGOS</td>
-        <td>WS_SERVER_URL + 'get_cargos?cod_persona=<código de persona>'</td>
+        <td>WS_SERVER_URL + 'get_cargos?cod_persona=[código de persona]'</td>
         <td>Cargos desempeñados por el investigador en la universidad</td>
     </tr>
 </table>
@@ -296,10 +296,12 @@ Ejemplo de salida del Web Service:
 
 <h1 class="page-header">Información de departamentos</h1>
 
-<p>Estos Web Services proveen de información sobre los departamentos de la universidad y sus miembros. Son usados para la generación de informes sobre departamentos en el admin command dept_report.</p>
+<p>Estos Web Services proveen de información sobre los departamentos de la universidad. Son usados para la generación de informes sobre departamentos en el admin command dept_report.</p>
 
 <div class="section"><ul class="nav nav-tabs header"><li class="active">WS_DEPARTMENTS_AND_MEMBERS</li></ul>
 <div class="content">
+
+<p>Contiene información sobre los departamentos de la universidad y sus miembros.</p>
 
 <table class="table table-striped table-condensed">
     <tr>
@@ -307,8 +309,58 @@ Ejemplo de salida del Web Service:
         <th>VALOR</th>
         <th>DESCRIPCIÓN</th>
     </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros'</td>
+        <td>Departamentos y miembros actuales de dichos departamentos</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_YEAR</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?year=[año]'</td>
+        <td>Departamentos y sus miembros el año indicado en el parámetro year</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_USER</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
+        <td>Departamentos a los que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
+        <td>Departamentos a los que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]'</td>
+        <td>Información y miembros del departamento identificado por el parámetro codigo</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
+        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
+        <td>Información y miembros del departamento identificado por codigo en el año indicado en el parámetro year</td>
+    </tr>
 </table>
+<div class="alert alert-warning">
+Filtrar los resultados por cod_persona hace que el WS pase de retornar los miembros activos a final de año a retornar los miembros activos en algún momento del año
+</div>
 <pre>
+[{"miembros": [{"cod_cce": ..., 
+                "cod_cce__descripcion": ..., 
+                "cod_persona__apellido1": ..., 
+                "cod_persona__nombre": ..., 
+                "cod_persona": ..., 
+                "cod_cce__descripcion_corta": ..., 
+                "cod_persona__apellido2": ...
+               }, 
+               ...
+              ],
+  "unidad": {"nombre":...,
+             "codigo": ..., 
+             "nombre_corto":...
+            }
+  },
+  ...
+]
 </pre>
 
 <table class="table table-striped table-condensed">
@@ -316,6 +368,189 @@ Ejemplo de salida del Web Service:
         <th>CLAVE</th>
         <th>DESCRIPCIÓN</th>
         <th>VALOR</th>
+    </tr>
+    <tr>
+        <td>cod_cce</td>
+        <td>Código único que identifica la categoría profesional del investigador</td>
+        <td>Ej: '6327'</td>
+    </tr>
+    <tr>
+        <td>cod_cce_descripción</td>
+        <td>Nombre de la categoría profesional del investigador</td>
+        <td>Ej: 'Profesor Titular Universidad'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_apellido1</td>
+        <td>Primer apellido del investigador</td>
+        <td>Ej: 'Rodríguez'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_nombre</td>
+        <td>Nombre del investigador</td>
+        <td>Ej: 'Alberto'</td>
+    </tr>
+    <tr>
+        <td>cod_persona</td>
+        <td>Identificador único del investigador</td>
+        <td>Ej: '17965'</td>
+    </tr>
+    <tr>
+        <td>cod_cce_descripcion_corta</td>
+        <td>Abreviatura de la categoría profesional del investigador</td>
+        <td>Ej: 'T.U.'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_apellido2</td>
+        <td>Segundo apellido del investigador</td>
+        <td>Ej: 'González'</td>
+    </tr>
+    <tr>
+        <td>nombre</td>
+        <td>Nombre del departamento</td>
+        <td>Ej: "Química Orgánica"</td>
+    </tr>
+    <tr>
+        <td>codigo</td>
+        <td>Identificador único del departamento</td>
+        <td>Ej: '48932'</td>
+    </tr>
+    <tr>
+        <td>nombre_corto</td>
+        <td>Abreviatura del nombre del departamento</td>
+        <td>Ej: 'Quim. Organ.'</td>
+    </tr>
+</table>
+
+</div>
+
+</div>
+
+<h1 class="page-header">Información de áreas</h1>
+
+<p>Estos Web Services proveen de información sobre las áreas de la universidad. Son usados para la generación de informes sobre áreas en el admin command dept_report.</p>
+
+<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_AREAS_AND_MEMBERS</li></ul>
+<div class="content">
+
+<p>Contiene información sobre las áreas de la universidad y sus miembros.</p>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>VARIABLE</th>
+        <th>VALOR</th>
+        <th>DESCRIPCIÓN</th>
+    </tr>
+    <tr>
+        <td>WS_AREAS_AND_MEMBERS</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros'</td>
+        <td>Departamentos y miembros actuales de dichos departamentos</td>
+    </tr>
+    <tr>
+        <td>WS_AREAS_AND_MEMBERS_YEAR</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?year=[año]'</td>
+        <td>Areas y sus miembros el año indicado en el parámetro year</td>
+    </tr>
+    <tr>
+        <td>WS_AREAS_AND_MEMBERS_USER</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
+        <td>Areas a las que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
+    </tr>
+    <tr>
+        <td>WS_AREAS_AND_MEMBERS_USER_YEAR</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
+        <td>Areas a las que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
+    </tr>
+    <tr>
+        <td>WS_AREAS_AND_MEMBERS_UNIT</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]'</td>
+        <td>Información y miembros del área identificada por el parámetro codigo</td>
+    </tr>
+    <tr>
+        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
+        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
+        <td>Información y miembros del área identificada por codigo en el año indicado en el parámetro year</td>
+    </tr>
+</table>
+<div class="alert alert-warning">
+Filtrar los resultados por cod_persona hace que el WS pase de retornar los miembros activos a final de año a retornar los miembros activos en algún momento del año
+</div>
+<pre>
+[{"miembros": [{"cod_cce": ..., 
+                "cod_cce__descripcion": ..., 
+                "cod_persona__apellido1": ..., 
+                "cod_persona__nombre": ..., 
+                "cod_persona": ..., 
+                "cod_cce__descripcion_corta": ..., 
+                "cod_persona__apellido2": ...
+               },
+               ...
+              ]
+  "unidad": {"nombre":...,
+             "codigo": ..., 
+             "nombre_corto":...
+            }
+ } 
+ {"miembros": ...,
+  "unidad": ...
+ }
+]
+</pre>
+
+<table class="table table-striped table-condensed">
+    <tr>
+        <th>CLAVE</th>
+        <th>DESCRIPCIÓN</th>
+        <th>VALOR</th>
+    </tr>
+    <tr>
+        <td>cod_cce</td>
+        <td>Código único que identifica la categoría profesional del investigador</td>
+        <td>Ej: '5610'</td>
+    </tr>
+    <tr>
+        <td>cod_cce_descripción</td>
+        <td>Nombre de la categoría profesional del investigador</td>
+        <td>Ej: 'Personal Invest.en Formación (prácticas)'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_apellido1</td>
+        <td>Primer apellido del investigador</td>
+        <td>Ej: 'Ruiz'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_nombre</td>
+        <td>Nombre del investigador</td>
+        <td>Ej: 'Omar'</td>
+    </tr>
+    <tr>
+        <td>cod_persona</td>
+        <td>Identificador único del investigador</td>
+        <td>Ej: '19944'</td>
+    </tr>
+    <tr>
+        <td>cod_cce_descripcion_corta</td>
+        <td>Abreviatura de la categoría profesional del investigador</td>
+        <td>Ej: 'PIFP'</td>
+    </tr>
+    <tr>
+        <td>cod_persona_apellido2</td>
+        <td>Segundo apellido del investigador</td>
+        <td>Ej: 'López'</td>
+    </tr>
+    <tr>
+        <td>nombre</td>
+        <td>Nombre del área</td>
+        <td>Ej: "Economía Aplicada"</td>
+    </tr>
+    <tr>
+        <td>codigo</td>
+        <td>Identificador único del área</td>
+        <td>Ej: '703387'</td>
+    </tr>
+    <tr>
+        <td>nombre_corto</td>
+        <td>Abreviatura del nombre del área</td>
+        <td>Ej: 'Eco. Aplica.'</td>
     </tr>
 </table>
 
