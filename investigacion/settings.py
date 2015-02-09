@@ -400,6 +400,8 @@ WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
     'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
+# This is used only on the accounting app.
+# There is no need to provide this WS if the statistics app is not being used.
 WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
 WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
 WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
