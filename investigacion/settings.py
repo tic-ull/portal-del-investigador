@@ -369,12 +369,6 @@ WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     WS_SERVER_URL +
     'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
-# All current departments
-WS_DEPARTMENTS = WS_SERVER_URL + 'get_departamentos'
-
-# All departments by years
-WS_DEPARTMENTS_YEAR = WS_SERVER_URL + 'get_departamentos?year=%s'
-
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
     WS_SERVER_URL +
