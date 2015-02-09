@@ -327,7 +327,8 @@ except NameError:
 # ************************* SETTINGS LOCAL ***********************************
 
 # ************************* WEB SERVICES *************************************
-# All categories
+# All categories. This is used only on the statistics app.
+# There is no need to provide this WS if the statistics app is not being used.
 WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
 
 # RRHH code
