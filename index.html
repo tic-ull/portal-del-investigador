@@ -148,8 +148,40 @@
     <div class="content">
         <h4>CORE: Módulo de Gestión Centralizada</h4>
         <p>
+            El Módulo <i>core</i> es un conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto.
             <ul>
-                <li>Perfiles de Usuarios</li>
+                <li>
+                    <h5>Perfiles de Usuarios (modelo <i>UserProfile</i>)</h5>
+                    <p>
+                        El Perfil de un usuario almacena su número de documento de identidad y su código único en el aplicativo de Recursos Humanos de la institución académica.
+                    </p>
+                    <p>
+                        Se relaciona con el modelo <i>User</i> de Django, por lo que su función es representar el perfil de un investigador.
+                    </p>
+                </li>
+                <li>
+                    <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
+                    <p>
+                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.  
+                    </p>
+                </li>
+                <li>
+                    <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
+                    <p>
+                        Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
+                    </p>
+                </li>
+                <li>
+                    <h5>Template Base</h5>
+                    <p>
+                        Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
+                        cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
+                    </p>
+                    <div class="alert alert-danger">
+                        La Imagen Corporativa y signos distintivos de la Universidad de La Laguna están sujeta a derechos de Propiedad Intelectual, 
+                        por lo que deberán ser reemplazados. 
+                     </div>
+                </li>
             </ul>
         <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
         <p>
