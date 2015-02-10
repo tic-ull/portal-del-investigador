@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/autenticacion.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Para la autenticación de usuarios debe de usarse un backend de Django con algunas características especiales: Si se aceptan las credenciales se debe llamar a UserProfile.get_or_create_user pasando el username y el documento (nif/nie, pasaporte, etc.). Se debe introducir en request.session[&#39;attributes&#39;] un json con información sobre el ..." />
+        <meta name="description" content="El sistema usado actualmente para la autentificación es CAS, con un backend basado en django-cas. CAS es un sistema de single sign-on, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar ..." />
 
     <meta property="og:site_name" content="Portal del Investigador - Documentación" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Autenticación"/>
     <meta property="og:url" content="/investigacion/autenticacion.html"/>
-    <meta property="og:description" content="Para la autenticación de usuarios debe de usarse un backend de Django con algunas características especiales: Si se aceptan las credenciales se debe llamar a UserProfile.get_or_create_user pasando el username y el documento (nif/nie, pasaporte, etc.). Se debe introducir en request.session[&#39;attributes&#39;] un json con información sobre el ..." />
+    <meta property="og:description" content="El sistema usado actualmente para la autentificación es CAS, con un backend basado en django-cas. CAS es un sistema de single sign-on, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar ..." />
 
 
     <!-- ULL -->
@@ -113,7 +113,16 @@
         <h1 class="entry-title">Autenticación</h1>
         
         <div class="entry-content">
-            <p>Para la autenticación de usuarios debe de usarse un backend de Django con algunas características especiales:</p>
+            <p>
+    El sistema usado actualmente para la autentificación es CAS, con un backend basado en django-cas.
+    CAS es un sistema de single sign-on, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar sus credenciales.
+</p>
+
+<p>
+    Se puede cambiar el sistema de autenticación actual por uno diferente de manera sencilla, siempre que se maneje externamente registro e inicio de sesión.
+    Únicamente se debe crear un nuevo backend de autenticación o adaptar uno ya existente sobreescribiendo la función authenticate para asegurarse de que se cumplen las siguientes condiciones:
+</p>
+
 <ul>
 <li>
 <p>Si se aceptan las credenciales se debe llamar a UserProfile.get_or_create_user pasando el username y el documento (nif/nie, pasaporte, etc.).</p>
@@ -135,7 +144,7 @@
     <tr>
         <th>CLAVE</th>
         <th>DESCRIPCIÓN</th>
-        <th>USADO FUERA DEL BACKEND</th>
+        <th>USADO FUERA DEL BACKEND POR DEFECTO</th>
     </tr>
     <tr>
         <td>TipoCuenta</td>
@@ -169,13 +178,11 @@
     </tr>
 </table>
 
-<p>El sistema usado actualmente para la autentificación es CAS, con un backend basado en django-cas.
-CAS es un sistema de single sign-on, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar sus credenciales.</p>
-
-<p>Se puede cambiar el sistema de autenticación actual por uno diferente de manera sencilla, siempre que se maneje externamente registro e inicio de sesión.
-Únicamente se debe crear un nuevo backend de autenticación o adaptar uno ya existente sobreescribiendo la función authenticate para asegurarse de que los pasos indicados arriba se cumplen.</p>
-
-<p>Usar un sistema de inicio de sesión integrado en la aplicación requeriría mayores cambios que los indicados en esta página y que no se va a entrar a detallar, pero se debe tener en cuenta que independientemente del método, la creación de usuarios debe realizarse siempre a través de UserProfile.get_or_create_user.</p>
+<div class="alert alert-warning">
+<p>
+    Usar un sistema de inicio de sesión integrado en la aplicación requeriría mayores cambios que los indicados en esta página y que no se va a entrar a detallar, pero se debe tener en cuenta que independientemente del método, la creación de usuarios debe realizarse siempre a través de UserProfile.get_or_create_user.
+</p>
+</div>
         </div>
     </section>
         </div>
