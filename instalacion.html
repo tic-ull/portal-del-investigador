@@ -166,54 +166,61 @@ sudo pip install -r requirements.txt
             <tr>
                 <th>VARIABLE</th>
                 <th>DESCRIPCIÓN</th>
+                <th>TIPO</th>
             </tr>
             <tr>
                 <td>BASE_URL</td>
                 <td>URL de la página principal del proyecto. Por defecto es un servicio externo</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>SECRET_KEY</td>
-                <td>
+                <td colspan="2">
                     <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#secret-key</a>
                 </td>
             </tr>
             <tr>
                 <td>DEBUG</td>
-                <td>
+                <td colspan="2">
                     <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-DEBUG</a>
                 </td>
             </tr>   
             <tr>
                 <td>TEMPLATE_DEBUG</td>
-                <td> 
+                <td colspan="2">
                     <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#template-debug</a>
                 </td>
             </tr>
             <tr>
                 <td>DEVEL</td>
                 <td>Si DEVEL es True (Entorno de Desarrollo), el servidor de aplicaciones de Django servirá los ficheros estáticos. En otro caso, deberá hacerse desde el Servidor Web del sistema</td>
+                <td>boolean</td>
             </tr>
             <tr>
                 <td>ADMINS</td>
-                <td>
+                <td colspan="2">
                     <a href="https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS" target="_blank">https://docs.djangoproject.com/en/1.7/ref/settings/#std:setting-ADMINS</a>
                 </td>
             </tr>
             <tr>
                 <td>SUPPORT</td>
                 <td>Nombre del Departamento de Soporte que se le mostrará al usuario en caso de error</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>EMAIL_SUPPORT</td>
                 <td>Correo Electrónico del Departamento de Soporte que se le mostrará al usuario en caso de error</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>CAS_SERVER_URL</td>
                 <td>URL del <a href="autenticacion.html">Servicio de Autenticación</a> (CAS)</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>WS_SERVER_URL</td>
                 <td>URL base del Servicio de <a href="web-services.html">Web Services</a></td>
+                <td>string</td>
             </tr>           
         </table>
         <h4>Configuración de CVN</h4>
@@ -225,22 +232,27 @@ sudo pip install -r requirements.txt
             <tr>
                 <th>VARIABLE</th>
                 <th>DESCRIPCIÓN</th>
+                <th>TIPO</th>
             </tr>
             <tr>
                 <td>UNIVERSITY</td>
                 <td>Nombre de la universidad</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>EXPIRY_DATE</td>
-                <td>Variable de tipo datetime.date. Todos los CVNs con fecha de generación anterior a su valor se consideran caducados</td>
+                <td>Todos los CVNs con fecha de generación anterior a su valor se consideran caducados</td>
+                <td>date</td>
             </tr>
             <tr>
                 <td>FECYT_USER</td>
                 <td>Nombre de usuario para acceder a los <i>Web Services</i> de la FECYT</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>FECYT_PASSWORD</td>
                 <td>Contraseña para acceder a los <i>Web Services</i> de la FECYT</td>
+                <td>string</td>
             </tr>
             <tr>
                 <td>CVN_PDF_AUTHOR_NOAUT</td>
@@ -248,6 +260,7 @@ sudo pip install -r requirements.txt
                     A través de esta variable se puede impedir subir un CVN generado por una universidad concreta.
                     Se recomienda su uso para obligar al usuario a editar su CVN desde el Editor de la FECYT
                 </td>
+                <td>string</td>
             </tr>                                       
             <tr>
                 <td>HISTORICAL_YEAR</td>
@@ -255,6 +268,7 @@ sudo pip install -r requirements.txt
                     Se usa para seleccionar la base de datos histórica que se usará para mostrar el Informe de Producción Científica (CVN-PDF del usuario GesInv-ULL). 
                     Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>
                 </td>
+                <td>string</td>
             </tr>
         </table>
     </div>
