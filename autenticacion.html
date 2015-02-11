@@ -114,21 +114,21 @@
         
         <div class="entry-content">
             <p>
-    El sistema usado actualmente para la autentificación es CAS, con un backend basado en django-cas.
-    CAS es un sistema de single sign-on, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar sus credenciales.
+    El sistema usado actualmente para la autentificación es CAS, con un <i>backend</i> basado en django-cas.
+    CAS es un sistema de <i>single sign-on</i>, y por esto la aplicación no incluye formulario de inicio de sesión ni de registro de usuarios, sino que el usuario se crea si no existe al aceptar sus credenciales.
 </p>
 
 <p>
     Se puede cambiar el sistema de autenticación actual por uno diferente de manera sencilla, siempre que se maneje externamente registro e inicio de sesión.
-    Sólo es necesario crear un nuevo backend de autenticación o adaptar uno ya existente sobreescribiendo la función authenticate para asegurarse de que se cumplen las siguientes condiciones:
+    Sólo es necesario crear un nuevo <i>backend</i> de autenticación o adaptar uno ya existente sobreescribiendo la función <code>authenticate</code> para asegurarse de que se cumplen las siguientes condiciones:
 </p>
 
 <ul>
 <li>
-<p>Si se aceptan las credenciales se debe llamar a UserProfile.get_or_create_user pasando el username y el documento (nif/nie, pasaporte, etc.).</p>
+<p>Si se aceptan las credenciales se debe llamar a <code>UserProfile.get_or_create_user</code> pasando el <i>username</i> y el documento (nif/nie, pasaporte, etc.).</p>
 </li>
 <li>
-<p>Se debe introducir en request.session['attributes'] un json con información sobre el usuario con una estructura similar a la del siguiente ejemplo:</p>
+<p>Se debe introducir en <code>request.session['attributes']</code> un <i>json</i> con información sobre el usuario con una estructura similar a la del siguiente ejemplo:</p>
 </li>
 </ul>
 <pre>
@@ -180,7 +180,7 @@
 
 <div class="alert alert-warning">
 <p>
-    Usar un sistema de inicio de sesión integrado en la aplicación requeriría mayores cambios que los indicados en esta página y que no se va a entrar a detallar, pero se debe tener en cuenta que independientemente del método, la creación de usuarios debe realizarse siempre a través de UserProfile.get_or_create_user.
+    Usar un sistema de inicio de sesión integrado en la aplicación requeriría mayores cambios que los indicados en esta página y que no se va a entrar a detallar, pero se debe tener en cuenta que independientemente del método, la creación de usuarios debe realizarse siempre a través de <code>UserProfile.get_or_create_user</code>.
 </p>
 </div>
         </div>
