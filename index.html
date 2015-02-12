@@ -2,7 +2,7 @@
 <html lang="es"
 >
 <head>
-    <title>Portal del Investigador - Portal del Investigador</title>
+    <title>Portal del Investigador</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,16 +18,15 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
-<link rel="canonical" href="/investigacion/portal-del-investigador.html">
-
+<link rel="canonical" href="/investigacion">
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos ..." />
 
-    <meta property="og:site_name" content="Portal del Investigador" />
-    <meta property="og:type" content="article"/>
-    <meta property="og:title" content="Portal del Investigador"/>
-    <meta property="og:url" content="/investigacion/portal-del-investigador.html"/>
-    <meta property="og:description" content="Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos ..." />
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Portal del Investigador" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Portal del Investigador"/>
+        <meta property="og:url" content="/investigacion"/>
+        <meta property="og:description" content="Portal del Investigador"/>
 
 
     <!-- ULL -->
@@ -91,14 +90,14 @@
         </div>
         <div class="collapse navbar-collapse navbar-app-collapse">
             <ul class="nav navbar-nav navbar-right">
-                        <li class="active"><a href="/investigacion/portal-del-investigador.html">Inicio</a></li>
-                        <li><a href="/investigacion/instalacion.html">Instalación</a></li>
-                        <li><a href="/investigacion/core.html">CORE</a></li>
-                        <li><a href="/investigacion/cvn.html">CVN</a></li>
                         <li><a href="/investigacion/autenticacion.html">Autenticación</a></li>
                         <li><a href="/investigacion/como-contribuir.html">Cómo Contribuir</a></li>
-                        <li><a href="/investigacion/desarrolladores.html">Desarrolladores</a></li>
                         <li><a href="/investigacion/contacto.html">Contacto</a></li>
+                        <li><a href="/investigacion/core.html">CORE</a></li>
+                        <li><a href="/investigacion/cvn.html">CVN</a></li>
+                        <li><a href="/investigacion/desarrolladores.html">Desarrolladores</a></li>
+                        <li><a href="/investigacion/instalacion.html">Instalación</a></li>
+                        <li><a href="/investigacion/portal-del-investigador.html">Portal del Investigador</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -108,132 +107,7 @@
     <div class="row">
         <div class="col-md-9" role="main">
 
-    <section id="content" class="body">
-        <h1 class="entry-title">Portal del Investigador</h1>
-        
-        <div class="entry-content">
-            <div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Qué es el Portal del Investigador</li>
-    </ul>
-    <div class="content">
-        <p>
-            El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) 
-            que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos a la ULL. 
-        </p>
-    </div>
-</div>
 
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Funcionalidades</li>
-    </ul>
-    <div class="content">
-        <h4>CORE: Módulo de Gestión Centralizada</h4>
-        <p>
-            El módulo <i>core</i> es un conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto.
-            <ul>
-                <li>
-                    <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
-                    <p>
-                        El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
-                        y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
-                    </p>
-                    <p>
-                        Se función principal es representar el perfil de un investigador.
-                    </p>
-                </li>
-                <li>
-                    <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
-                    <p>
-                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.  
-                    </p>
-                </li>
-                <li>
-                    <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
-                    <p>
-                        Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
-                    </p>
-                </li>
-                <li>
-                    <h5>Template Base</h5>
-                    <p>
-                        Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
-                        cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
-                    </p>
-                    <div class="alert alert-danger">
-                        La Imagen Corporativa y signos distintivos de la Universidad de La Laguna están sujetos a derechos de Propiedad Intelectual, 
-                        por lo que deberán ser reemplazados. 
-                     </div>
-                </li>
-            </ul>
-        <br>
-        <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
-        <p>
-            El módulo <i>cvn</i> se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
-        </P>
-        <p>
-            Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
-            de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
-            dicha extracción es la funcionalidad principal de este módulo.
-        </p>
-            <ul>
-                <li>
-                    <h5>Subir un nuevo CVN</h5>
-                    <p>
-                        Un Investigador podrá subir un nuevo CVN siempre que este sea válido, es decir,
-                        creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
-                        y sin modificaciones o manipulaciones posteriores.
-                    </p>
-                </li>
-                <li>
-                    <h5>Descargar una copia del CVN</h5>
-                    <p>
-                        Un Investigador podrá descargarse en cualquier momento una copia de su CVN.
-                    </p>
-                </li>
-                <li>
-                    <h5>Exportar información de la institución académica a un CVN</h5>
-                    <p>
-                        Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
-                        se genera un CVN-PDF con la información de interés almacenada en las distintas bases de datos de la institución, 
-                        sólo accesibles desde llamadas a Servicios Web.
-                    </p>
-                    <p>
-                        Cuando un Investigador exporta su información deberá importar el CVN-PDF resultante en el Editor de la FECYT y
-                        posteriormente subirlo al Portal del Investigador.
-                    </p>
-                </li>
-                <li>
-                    <h5>Visualizar información extraída de un CVN</h5>
-                    <p>
-                        Se ofrece a los investigadores la posibilidad de visualizar el contenido extraído de sus CVN.
-                    </p>
-                    <p>
-                        Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
-                        concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
-                        producción científica de la institución.
-                    </p>
-                </li>
-                <li>
-                    <h5>Generación de Informes</h5>
-                    <p>
-                        Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
-                        área de conocimiento a partir de la información extraída de diferentes Web Services. 
-                    </p>
-                </li>
-                <li>
-                    <h5>Limpieza de registros duplicados</h5>
-                    <p>
-                        Busca pares de elementos similares en los CvnItem insertados (posibles duplicados) con el objetivo de unificarlos.
-                    </p>
-                </li>
-            </ul>
-        </p>
-    </div>
-</div>
-        </div>
-    </section>
         </div>
         <div class="col-md-3 sidebar" id="sidebar">
 

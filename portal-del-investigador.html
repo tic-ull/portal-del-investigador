@@ -2,7 +2,7 @@
 <html lang="es"
 >
 <head>
-    <title>CORE - Portal del Investigador</title>
+    <title>Portal del Investigador - Portal del Investigador</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,16 +18,16 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
-<link rel="canonical" href="/investigacion/core.html">
+<link rel="canonical" href="/investigacion/portal-del-investigador.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Admin Commands CRON Los siguientes comandos de administración necesitan ser ejecutados regularmente, por lo que es necesaria su inclusión en el CRON del sistema. Actualización del Código de RRHH de los usuarios core/management/commands/sync_rrhh.py Actualiza el Código de Recursos Humanos de cada usuario (campo rrhh_code del modelo ..." />
+        <meta name="description" content="URL= menulabel: Inicio save_as: index.html sortorder: 0 Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la ..." />
 
     <meta property="og:site_name" content="Portal del Investigador" />
     <meta property="og:type" content="article"/>
-    <meta property="og:title" content="CORE"/>
-    <meta property="og:url" content="/investigacion/core.html"/>
-    <meta property="og:description" content="Admin Commands CRON Los siguientes comandos de administración necesitan ser ejecutados regularmente, por lo que es necesaria su inclusión en el CRON del sistema. Actualización del Código de RRHH de los usuarios core/management/commands/sync_rrhh.py Actualiza el Código de Recursos Humanos de cada usuario (campo rrhh_code del modelo ..." />
+    <meta property="og:title" content="Portal del Investigador"/>
+    <meta property="og:url" content="/investigacion/portal-del-investigador.html"/>
+    <meta property="og:description" content="URL= menulabel: Inicio save_as: index.html sortorder: 0 Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la ..." />
 
 
     <!-- ULL -->
@@ -94,11 +94,11 @@
                         <li><a href="/investigacion/autenticacion.html">Autenticación</a></li>
                         <li><a href="/investigacion/como-contribuir.html">Cómo Contribuir</a></li>
                         <li><a href="/investigacion/contacto.html">Contacto</a></li>
-                        <li class="active"><a href="/investigacion/core.html">CORE</a></li>
+                        <li><a href="/investigacion/core.html">CORE</a></li>
                         <li><a href="/investigacion/cvn.html">CVN</a></li>
                         <li><a href="/investigacion/desarrolladores.html">Desarrolladores</a></li>
                         <li><a href="/investigacion/instalacion.html">Instalación</a></li>
-                        <li><a href="/investigacion/portal-del-investigador.html">Portal del Investigador</a></li>
+                        <li class="active"><a href="/investigacion/portal-del-investigador.html">Portal del Investigador</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -109,96 +109,132 @@
         <div class="col-md-9" role="main">
 
     <section id="content" class="body">
-        <h1 class="entry-title">CORE</h1>
+        <h1 class="entry-title">Portal del Investigador</h1>
         
         <div class="entry-content">
-            <h2 id="admincommands">Admin Commands</h2>
-
-<h3 class="page-header">CRON</h3>
-
-<p>
-    Los siguientes comandos de administración necesitan ser ejecutados regularmente, por lo que es necesaria su inclusión en el CRON del sistema.
-</p>
-
+            <p>URL=
+menulabel: Inicio
+save_as: index.html
+sortorder: 0</p>
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Actualización del Código de RRHH de los usuarios</li>
-    </ul>
-    <div class="content">
-        <div class="row-fluid">
-            <div class="alert alert-info"><b>core/management/commands/sync_rrhh.py</b></div>
-            <p>
-                Actualiza el Código de Recursos Humanos de cada usuario (campo rrhh_code del modelo UserProfile).
-                Este código identifica de manera única a un usuario en la aplicación de Recursos Humanos de la 
-                Universidad de La Laguna, por lo que se emplea como clave para obtener información del usuario 
-                mediante la llamada a distintos Web Services.
-            </p>
-            <pre>python manage.py sync_rrhh</pre>
-        </div>
-    </div>
-</div>
-
-<h2 id="signals">Signals y receivers</h2>
-
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Receivers</li>
+        <li class="active">Qué es el Portal del Investigador</li>
     </ul>
     <div class="content">
         <p>
-            Los receivers contienen código que es ejecutado en respuesta a un evento ocurrido.
+            El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) 
+            que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos a la ULL. 
         </p>
-        <table class="table table-striped table-condensed">
-            <tr>
-                <th>RECEPTOR</th>
-                <th>DESCRIPCIÓN</th>
-                <th>SEÑAL CAPTURADA</th>
-            </tr>
-            <tr>
-                <td>update_user</td>
-                <td>Actualiza la información del usuario actual almacenada en el modelo user a partir de un hash denominado attributes que se almacena en la sesión del usuario</td>
-                <td>User.post_login</td>
-            </tr>
-        </table>
     </div>
 </div>
 
-<h2 id="webservices">Web Services</h2>
-
-<div class="alert alert-warning">
-WS_SERVER_URL contiene la dirección URL base de los <i>web services</i>.
-Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servidor.
-</div>
-
-<h3 class="page-header">Información para el perfil de usuario</h3>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_COD_PERSONA</li></ul>
-<div class="content">
-
-<p>Retorna un código único de tipo entero por cada investigador.
-Este código se guarda en el perfil de usuario, y se usa para identificar al investigador en el resto de <i>web services</i>.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_COD_PERSONA</td>
-        <td>WS_SERVER_URL + 'get_codpersona?nif=[número de identificación fiscal]'</td>
-        <td>Retorna un código único que identifica al usuario en el resto de <i>web services</i>.</td>
-    </tr>
-</table>
-
-Ejemplo de salida del Web Service:
-<pre>
-33184
-</pre>
-
-</div>
-
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Funcionalidades</li>
+    </ul>
+    <div class="content">
+        <h4>CORE: Módulo de Gestión Centralizada</h4>
+        <p>
+            El módulo <i>core</i> es un conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto.
+            <ul>
+                <li>
+                    <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
+                    <p>
+                        El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
+                        y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
+                    </p>
+                    <p>
+                        Se función principal es representar el perfil de un investigador.
+                    </p>
+                </li>
+                <li>
+                    <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
+                    <p>
+                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.  
+                    </p>
+                </li>
+                <li>
+                    <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
+                    <p>
+                        Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
+                    </p>
+                </li>
+                <li>
+                    <h5>Template Base</h5>
+                    <p>
+                        Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
+                        cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
+                    </p>
+                    <div class="alert alert-danger">
+                        La Imagen Corporativa y signos distintivos de la Universidad de La Laguna están sujetos a derechos de Propiedad Intelectual, 
+                        por lo que deberán ser reemplazados. 
+                     </div>
+                </li>
+            </ul>
+        <br>
+        <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
+        <p>
+            El módulo <i>cvn</i> se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
+        </P>
+        <p>
+            Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
+            de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
+            dicha extracción es la funcionalidad principal de este módulo.
+        </p>
+            <ul>
+                <li>
+                    <h5>Subir un nuevo CVN</h5>
+                    <p>
+                        Un Investigador podrá subir un nuevo CVN siempre que este sea válido, es decir,
+                        creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
+                        y sin modificaciones o manipulaciones posteriores.
+                    </p>
+                </li>
+                <li>
+                    <h5>Descargar una copia del CVN</h5>
+                    <p>
+                        Un Investigador podrá descargarse en cualquier momento una copia de su CVN.
+                    </p>
+                </li>
+                <li>
+                    <h5>Exportar información de la institución académica a un CVN</h5>
+                    <p>
+                        Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
+                        se genera un CVN-PDF con la información de interés almacenada en las distintas bases de datos de la institución, 
+                        sólo accesibles desde llamadas a Servicios Web.
+                    </p>
+                    <p>
+                        Cuando un Investigador exporta su información deberá importar el CVN-PDF resultante en el Editor de la FECYT y
+                        posteriormente subirlo al Portal del Investigador.
+                    </p>
+                </li>
+                <li>
+                    <h5>Visualizar información extraída de un CVN</h5>
+                    <p>
+                        Se ofrece a los investigadores la posibilidad de visualizar el contenido extraído de sus CVN.
+                    </p>
+                    <p>
+                        Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
+                        concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
+                        producción científica de la institución.
+                    </p>
+                </li>
+                <li>
+                    <h5>Generación de Informes</h5>
+                    <p>
+                        Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
+                        área de conocimiento a partir de la información extraída de diferentes Web Services. 
+                    </p>
+                </li>
+                <li>
+                    <h5>Limpieza de registros duplicados</h5>
+                    <p>
+                        Busca pares de elementos similares en los CvnItem insertados (posibles duplicados) con el objetivo de unificarlos.
+                    </p>
+                </li>
+            </ul>
+        </p>
+    </div>
 </div>
         </div>
     </section>
