@@ -109,3 +109,19 @@ figure.floatcenter, .align-center {
 .tagcloud li {
     padding: 0px;
 }
+
+.masonry {
+    column-width: 18em;
+    -moz-column-width: 18em;
+    -webkit-column-width: 18em;
+    column-gap: 0em;
+    -moz-column-gap: 0em;
+    -webkit-column-gap:0em;
+    line-height: 0px;
+}
+
+.masonry .item {
+    display: inline-block;
+    padding: 1px;
+    width: 100%; 
+}
