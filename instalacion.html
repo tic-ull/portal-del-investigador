@@ -93,9 +93,8 @@
             <ul class="nav navbar-nav navbar-right">
                         <li><a href="/investigacion/">Inicio</a></li>
                         <li class="active"><a href="/investigacion/instalacion.html">Instalación</a></li>
-                        <li><a href="/investigacion/admin-commands.html">Admin Commands</a></li>
-                        <li><a href="/investigacion/signals-y-receivers.html">Signals y Receivers</a></li>
-                        <li><a href="/investigacion/web-services.html">Web Services</a></li>
+                        <li><a href="/investigacion/core.html">CORE</a></li>
+                        <li><a href="/investigacion/cvn.html">CVN</a></li>
                         <li><a href="/investigacion/autenticacion.html">Autenticación</a></li>
                         <li><a href="/investigacion/parseo-de-un-cvn-pdf.html">Parseo de un CVN-PDF</a></li>
                         <li><a href="/investigacion/exportar-a-un-cvn-pdf.html">Exportar a un CVN-PDF</a></li>
@@ -225,54 +224,10 @@ sudo pip install -r requirements.txt
                 <td>string</td>
             </tr>           
         </table>
-        <h4>Configuración de CVN</h4>
-        <div class="alert alert-info">
-            cvn/settings_local.py
-        </div>
-        <pre>cp cvn/settings_local-sample.py cvn/settings_local.py</pre>
-        <table class="table table-striped table-condensed">
-            <tr>
-                <th>VARIABLE</th>
-                <th>DESCRIPCIÓN</th>
-                <th>TIPO</th>
-            </tr>
-            <tr>
-                <td>UNIVERSITY</td>
-                <td>Nombre de la universidad</td>
-                <td>string</td>
-            </tr>
-            <tr>
-                <td>EXPIRY_DATE</td>
-                <td>Todos los CVNs con fecha de generación anterior a su valor se consideran caducados</td>
-                <td>date</td>
-            </tr>
-            <tr>
-                <td>FECYT_USER</td>
-                <td>Nombre de usuario para acceder a los <i>web services</i> de la FECYT</td>
-                <td>string</td>
-            </tr>
-            <tr>
-                <td>FECYT_PASSWORD</td>
-                <td>Contraseña para acceder a los <i>web services</i> de la FECYT</td>
-                <td>string</td>
-            </tr>
-            <tr>
-                <td>CVN_PDF_AUTHOR_NOAUT</td>
-                <td>Cuando se genera un CVN-PDF a través del <i>web service</i> de la FECYT se escribe en sus metadatos el campo author con el identificador de la universidad que lo genera. 
-                    A través de esta variable se puede impedir subir un CVN generado por una universidad concreta.
-                    Se recomienda su uso para obligar al usuario a editar su CVN desde el Editor de la FECYT
-                </td>
-                <td>string</td>
-            </tr>                                       
-            <tr>
-                <td>HISTORICAL_YEAR</td>
-                <td>
-                    Se usa para seleccionar la base de datos histórica que se usará para mostrar el Informe de Producción Científica (CVN-PDF del usuario GesInv-ULL). 
-                    Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>
-                </td>
-                <td>string</td>
-            </tr>
-        </table>
+        <h4>Configuración de las aplicaciones</h4>
+        <ul>
+            <li><a href="cvn.html#configuracion">Configuración de la aplicación CVN</a></li>
+        </ul>
     </div>
 
 </div>
