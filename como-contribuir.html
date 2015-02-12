@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/como-contribuir.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Trabajar con Git-Submodules Los submódulos de Git permiten insertar uno o más repositorios externos en subdirectorios dentro de otro repositorio. Es decir, permiten gestionar subproyectos dentro de un gran proyecto versionado con Git. En el Portal de Investigador, implementado en Python/Django, cada aplicación se corresponde con un submódulo, por ..." />
+        <meta name="description" content="El Portal del Investigador es Software Libre, por lo que las contribuciones de la comunidad serán bienvenidas. Puede contribuir de diversas maneras: Implementando nuevas funcionalidades Corrigiendo errores Mejorando la traducción etc. La presente guía tiene como objetivo definir la metodología de trabajo que se debe seguir para colaborar en el ..." />
 
     <meta property="og:site_name" content="Portal del Investigador" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="Cómo Contribuir"/>
     <meta property="og:url" content="/investigacion/como-contribuir.html"/>
-    <meta property="og:description" content="Trabajar con Git-Submodules Los submódulos de Git permiten insertar uno o más repositorios externos en subdirectorios dentro de otro repositorio. Es decir, permiten gestionar subproyectos dentro de un gran proyecto versionado con Git. En el Portal de Investigador, implementado en Python/Django, cada aplicación se corresponde con un submódulo, por ..." />
+    <meta property="og:description" content="El Portal del Investigador es Software Libre, por lo que las contribuciones de la comunidad serán bienvenidas. Puede contribuir de diversas maneras: Implementando nuevas funcionalidades Corrigiendo errores Mejorando la traducción etc. La presente guía tiene como objetivo definir la metodología de trabajo que se debe seguir para colaborar en el ..." />
 
 
     <!-- ULL -->
@@ -114,7 +114,27 @@
         <h1 class="entry-title">Cómo Contribuir</h1>
         
         <div class="entry-content">
-            <h2>Trabajar con Git-Submodules</h2>
+            <p>
+    El Portal del Investigador es Software Libre, por lo que las contribuciones de la comunidad serán bienvenidas.
+</p>
+
+<p>
+    Puede contribuir de diversas maneras:
+</p>
+
+<ul>
+    <li>Implementando nuevas funcionalidades</li>
+    <li>Corrigiendo errores</li>
+    <li>Mejorando la traducción</li>
+    <li>etc.</li>
+</ul>
+
+<p>
+    La presente guía tiene como objetivo definir la metodología de trabajo que se debe 
+    seguir para colaborar en el proyecto. Si tiene alguna duda, contacte con nosotros. 
+</p>
+
+<h2>Trabajar con Git-Submodules</h2>
 
 <p>
     Los submódulos de Git permiten insertar uno o más repositorios externos en subdirectorios dentro de otro repositorio. 
@@ -129,23 +149,17 @@
 <pre>
 -INVESTIGACION
   |_core
-  |_cvn                     (Git-Submodule)
+  |_cvn              (Git-Submodule)
   |_githooks
   |_investigacion
   |_static
   |_.gitignore
-  |_.gitmodules             (Configuración de Git-Submodules)
+  |_.gitmodules      (Configuración de Git-Submodules)
   |_AUTHORS
   |_LICENSE
   |_manage.py
   |_requirements.py
 </pre>
-
-<p>
-    La presente guía tiene como objetivo definir la metodología de trabajo
-    que se debe seguir para implementar nuevas funcionalidades  en los 
-    subproyectos, es decir, en los diferentes submódulos existentes. 
-</p>
 
 <div class="section">
     <ul class="nav nav-tabs header">
@@ -230,7 +244,7 @@ git remote update
             <li>
                 Crear un <i>branch</i> para desarrollar una nueva funcionalidad. 
                 Este paso es opcional, es sólo una cuestión de metodología de trabajo, 
-                usted puede hacer un <i>checkout</i> del <i>master</i> si lo desea.
+                usted puede hacer un <i>checkout</i> del <i>master</i> si lo desea
 <pre>
 git checkout -b &lt;funcionalidad_branch&gt;
 </pre>
@@ -311,11 +325,33 @@ git submodule update
     </ul>
     <div class="content">
         <ul>
-            <li>Se deben seguir las convenciones de codificación descritas en <a href="https://www.python.org/dev/peps/pep-0008/" target="_blank">PEP8</a></li>
+            <li>
+                <p>
+                    Se deben seguir las convenciones de codificación descritas en 
+                    <a href="https://www.python.org/dev/peps/pep-0008/" target="_blank">PEP8</a>
+                </p>
+            </li>
             <li>
                 <p>
                     Los caracteres de tabulador, <i>Tab</i> (\0x09), no se deben utilizar en el código. 
-                    Toda la indentación debe hacerse con 4 caracteres de espacio.
+                    Toda la indentación debe hacerse con 4 caracteres de espacio
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Testing</li>
+    </ul>
+    <div class="content">
+        <ul>
+            <li>
+                <p>
+                    El Portal del Investigador implementa una suite de tests propia. 
+                    En nuestra política de desarrollo, toda funcionalidad debe ser 
+                    cubierta por tests que pasen en todo momento
                 </p>
             </li>
         </ul>
