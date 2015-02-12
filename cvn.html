@@ -109,7 +109,7 @@
         <div class="col-md-9" role="main">
 
     <section id="content" class="body">
-        <h1 class="entry-title">CVN</h1>
+        <h1 class="page-header">CVN</h1>
         
         <div class="entry-content">
             <h2 id="configuracion">Configuración</h2>
@@ -1368,11 +1368,11 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 
 <h2 id="exportacion">Exportación de CVN-PDF</h2>
 
-<p>La exportación de CVN-PDF genera ficheros CVN-PDF con la información de la universidad, extraída de los <a href="#cvngeneration">Web Services de generación de CVN</a>.</p>
+<p>La exportación de CVN-PDF genera ficheros CVN-PDF con la información de la universidad, extraída de los <a href="#cvngeneration">Web Services de generación de CVN</a>. A continuación se detalla la información exportada a CVN-PDF.</p>
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Datos de identificación y contacto</li>
+        <li class="active">Identificación CVN</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
@@ -1389,47 +1389,43 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                     <th>SECCIÓN</th>
                     <td>Identificación CVN</td>
                 </tr>
-                <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/skeleton.xml</td>
-                </tr>
             </table>
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Campo del XML</th>
-                    <th>Campo de la FECYT</th>
+                    <th>CAMPO DE LA FECYT</th>
+                    <th>CÓDIGO</th>
                 </tr>
                 <tr>
-                    <td>today</td>
                     <td>Fecha del documento</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>version</td>
                     <td>Versión del Editor de la FECYT</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>given_name</td>
                     <td>Nombre</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>first_family_name</td>
                     <td>Primer Apellido (almacenará el primer y segundo apellido)</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>id_type</td>
                     <td>Tipo de documento</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>id_type_code</td>
                     <td>Código interno del Tipo de documento</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>official_id</td>
                     <td>Documento</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td>internet_email_address</td>
                     <td>Correo electrónico</td>
+                    <td></td>
                 </tr>
             </table>
         </div>
@@ -1438,7 +1434,7 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Situación profesional</li>
+        <li class="active">Situación profesional actual</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
@@ -1452,19 +1448,12 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                     <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL</a></td>
                 </tr>
                 <tr>
-                    <th>WEB SERVICE</th>
-                    <td>WS_ULL_CARGOS</td>
-                </tr>
-            </table>
-            <h4>Situación profesional actual</h4>
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Sección</th>
+                    <th>SECCIÓN</th>
                     <td>Situación profesional actual</td>
                 </tr>
                 <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/current_profession.xml</td>
+                    <th>WEB SERVICE</th>
+                    <td>WS_ULL_CARGOS</td>
                 </tr>
             </table>
             <table class="table table-striped table-condensed">
@@ -1509,15 +1498,32 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                     <td></td>
                 </tr>
             </table>
-            <h4>Cargos y actividades desempeñados con anterioridad</h4>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Cargos y actividades desempeñados con anterioridad</li>
+    </ul>
+    <div class="content">
+        <div class="row-fluid">
             <table class="table table-striped table-condensed">
                 <tr>
-                    <th>Sección</th>
+                    <th>CATEGORÍA</th>
+                    <td>Situación profesional</td>
+                </tr>
+                <tr>
+                    <th>ENLACE</th>
+                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#SITUACION_PROFESIONAL</a></td>
+                </tr>
+                <tr>
+                    <th>SECCIÓN</th>
                     <td>Cargos y actividades desempeñados con anterioridad</td> 
                 </tr>
                 <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/profession.xml</td>
+                    <th>WEB SERVICE</th>
+                    <td>WS_ULL_CARGOS</td>
                 </tr>
             </table>
             <table class="table table-striped table-condensed">
@@ -1573,111 +1579,10 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Actividad docente</li>
+        <li class="active">Diplomaturas, licenciaturas e ingenierías, grados y másteres</li>
     </ul>
     <div class="content">
         <div class="row-fluid">
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>CATEGORÍA</th>
-                    <td>Actividad docente » Docencia impartida</td>
-                </tr>
-                <tr>
-                    <th>ENLACE</th>
-                    <td><a href="https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE" target="_blank">https://cvn.fecyt.es/editor/cvn.html?locale=spa#EXPERIENCIA_DOCENTE</a></td>
-                </tr>
-                <tr>
-                    <th>SECCIÓN</th>
-                    <td>Docencia impartida</td>
-                </tr>
-                <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/teaching.xml</td>
-                </tr>
-            </table>
-            <table class="table table-striped table-condensed">
-                <tr>
-                    <th>Campo del XML</th>
-                    <th>Campo de la FECYT</th>
-                    <th>Campo del Web Service</th>
-                </tr>
-                <tr>
-                    <td>subject</td>
-                    <td>Nombre de la asignatura/curso</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>professional_category</td>
-                    <td>Categoría profesional</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>program_type</td>
-                    <td>Tipo de programa</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>program_others</td>
-                    <td>Tipo de programa (Otros) » Otro</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>subject_type</td>
-                    <td>Tipo de asignatura</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>subject_others</td>
-                    <td>Tipo de asignatura (Otros) » Otro</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>course</td>
-                    <td>Curso que se imparte</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>qualification</td>
-                    <td>Titulación</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>university</td>
-                    <td>Entidad de realización</td>
-                    <td>(Extraído del Settings de CVN)</td>
-                </tr>
-                <tr>
-                    <td>department</td>
-                    <td>Departamento</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>faculty</td>
-                    <td>Facultad, instituto, centro</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>school_year</td>
-                    <td>Fecha inicio</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>number_credits</td>
-                    <td>Número de horas/créditos</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Formación académica recibida</li>
-    </ul>
-    <div class="content">
-        <div class="row-fluid">
-            <h4>Diplomaturas, licenciaturas e ingenierías, grados y másteres</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>Categoría</th>
@@ -1690,10 +1595,6 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                 <tr>
                     <th>Sección</th>
                     <td>Diplomaturas, licenciaturas e ingenierías, grados y másteres</td>
-                </tr>
-                <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/learning.xml</td>
                 </tr>
                 <tr>
                     <th>Web Service</th>
@@ -1732,7 +1633,16 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                     <td>f_expedicion</td>
                 </tr>
             </table>
-            <h4>Doctorados</h4>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">Doctorados</li>
+    </ul>
+    <div class="content">
+        <div class="row-fluid">
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>Categoría</th>
@@ -1745,10 +1655,6 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
                 <tr>
                     <th>Sección</th>
                     <td>Doctorados</td>
-                </tr>
-                <tr>
-                    <th>XML</th>
-                    <td>cvn/templates/cvn/xml/learning_phd.xml</td>
                 </tr>
                 <tr>
                     <th>Web Service</th>
