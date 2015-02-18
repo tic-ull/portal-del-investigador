@@ -126,12 +126,44 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
+        <li class="active">Arquitectura</li>
+    </ul>
+    <div class="content">
+        <p>
+            El Portal del Investigador aplica una arquitectura modular en la que cada componente proporciona un conjunto de características.
+        <ul>
+            <li><b>CORE: Módulo de Gestión Centralizada</b>
+                <p>
+                    Conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto
+                </p>
+            </li>
+            <li>
+                <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
+                <p>
+                    Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>
+                </p>
+                <p>
+                    Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
+                    de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
+                    dicha extracción es la característica principal de este módulo
+                </p>
+            </li>
+        </ul>
+        </p>
+        <br>
+        <p align="center">
+            <canvas id="architecture" width="400" height="80"></canvas>
+        </p>
+    </div>
+</div>
+
+<div class="section">
+    <ul class="nav nav-tabs header">
         <li class="active">Funcionalidades</li>
     </ul>
     <div class="content">
-        <h4>CORE: Módulo de Gestión Centralizada</h4>
+        <h4>CORE</h4>
         <p>
-            El módulo <i>core</i> es un conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto.
             <ul>
                 <li>
                     <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
@@ -168,15 +200,8 @@
                 </li>
             </ul>
         <br>
-        <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
+        <h4>CVN</h4>
         <p>
-            El módulo <i>cvn</i> se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
-        </P>
-        <p>
-            Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
-            de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
-            dicha extracción es la funcionalidad principal de este módulo.
-        </p>
             <ul>
                 <li>
                     <h5>Subir un nuevo CVN</h5>
@@ -232,6 +257,41 @@
         </p>
     </div>
 </div>
+
+<script>
+    var canvas = document.getElementById("architecture");
+    var context = canvas.getContext("2d");
+    var width = canvas.width / 2;
+    var height = canvas.height / 2;
+
+    // Second Layer
+    // Rectangle
+    context.fillStyle = "#8499AC";
+    context.fillRect(0, 0, width, 40);
+    // Border
+    context.strokeStyle = "black";
+    context.lineWidth = 1;
+    context.strokeRect(0, 0, width, 40);
+    // Text
+    context.fillStyle = "white";
+    context.font = "18pt sans-serif";
+    context.textAlign = "center";
+    context.fillText("CVN", width / 2, height - 10);
+
+    // First Layer
+    // Rectangle 
+    context.fillStyle = '#BC87BC';
+    context.fillRect(0, 40, canvas.width, 40);
+    // Border
+    context.strokeStyle = "black";
+    context.lineWidth = 1;
+    context.strokeRect(0, 40, canvas.width, 40);
+    // Text
+    context.fillStyle = "white";
+    context.font = "18pt sans-serif";
+    context.textAlign = "center";
+    context.fillText("CORE", width , height + 30);
+</script>
         </div>
     </section>
         </div>
