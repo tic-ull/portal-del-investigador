@@ -21,13 +21,13 @@
 <link rel="canonical" href="/investigacion/cvn.html">
 
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Configuración cvn/settings_local.py cp cvn/settings_local-sample.py cvn/settings_local.py VARIABLE DESCRIPCIÓN TIPO UNIVERSITY Nombre de la universidad string EXPIRY_DATE Todos los CVNs con fecha de generación anterior a su valor se consideran caducados date FECYT_USER Nombre de usuario para acceder a los web services de la FECYT string ..." />
+        <meta name="description" content="Configuración cvn/settings_local.py cp cvn/settings_local-sample.py cvn/settings_local.py VARIABLE DESCRIPCIÓN TIPO UNIVERSITY Nombre de la Universidad string EXPIRY_DATE Todos los CVNs con fecha de generación anterior a su valor se consideran caducados date FECYT_USER Nombre de usuario para acceder a los Web Services de la FECYT string ..." />
 
     <meta property="og:site_name" content="Portal del Investigador" />
     <meta property="og:type" content="article"/>
     <meta property="og:title" content="CVN: Módulo de Gestión del Currículum Vitae Normalizado"/>
     <meta property="og:url" content="/investigacion/cvn.html"/>
-    <meta property="og:description" content="Configuración cvn/settings_local.py cp cvn/settings_local-sample.py cvn/settings_local.py VARIABLE DESCRIPCIÓN TIPO UNIVERSITY Nombre de la universidad string EXPIRY_DATE Todos los CVNs con fecha de generación anterior a su valor se consideran caducados date FECYT_USER Nombre de usuario para acceder a los web services de la FECYT string ..." />
+    <meta property="og:description" content="Configuración cvn/settings_local.py cp cvn/settings_local-sample.py cvn/settings_local.py VARIABLE DESCRIPCIÓN TIPO UNIVERSITY Nombre de la Universidad string EXPIRY_DATE Todos los CVNs con fecha de generación anterior a su valor se consideran caducados date FECYT_USER Nombre de usuario para acceder a los Web Services de la FECYT string ..." />
 
 
     <!-- ULL -->
@@ -114,7 +114,7 @@
             <h2 id="configuracion">Configuración</h2>
 
 <div class="alert alert-info">
-    cvn/settings_local.py
+    <b>cvn/settings_local.py</b>
 </div>
 
 <pre>cp cvn/settings_local-sample.py cvn/settings_local.py</pre>
@@ -127,7 +127,7 @@
     </tr>
     <tr>
         <td>UNIVERSITY</td>
-        <td>Nombre de la universidad</td>
+        <td>Nombre de la Universidad</td>
         <td>string</td>
     </tr>
     <tr>
@@ -137,27 +137,39 @@
     </tr>
     <tr>
         <td>FECYT_USER</td>
-        <td>Nombre de usuario para acceder a los <i>web services</i> de la FECYT</td>
+        <td>Nombre de usuario para acceder a los <i>Web Services</i> de la FECYT</td>
         <td>string</td>
     </tr>
     <tr>
         <td>FECYT_PASSWORD</td>
-        <td>Contraseña para acceder a los <i>web services</i> de la FECYT</td>
+        <td>Contraseña para acceder a los <i>Web Services</i> de la FECYT</td>
         <td>string</td>
     </tr>
     <tr>
         <td>CVN_PDF_AUTHOR_NOAUT</td>
-        <td>Cuando se genera un CVN-PDF a través del <i>web service</i> de la FECYT se escribe en sus metadatos el campo author con el identificador de la universidad que lo genera. 
-            A través de esta variable se puede impedir subir un CVN generado por una universidad concreta.
-            Se recomienda su uso para obligar al usuario a editar su CVN desde el Editor de la FECYT
+        <td>
+            <p>
+                Cuando se genera un CVN-PDF a través del <i>Web Service</i> de la FECYT se escribe 
+                en sus metadatos el campo <i>author</i> con el identificador de la Universidad que lo genera
+            </p>
+            <p>
+                A través de esta variable se puede impedir subir un CVN generado por una Universidad concreta.
+                Se recomienda su uso para obligar al usuario a editar su CVN desde el Editor de la FECYT
+            </p>
         </td>
         <td>string</td>
     </tr>                                       
     <tr>
         <td>HISTORICAL_YEAR</td>
         <td>
-            Se usa para seleccionar la base de datos histórica que se usará para mostrar el Informe de Producción Científica (CVN-PDF del usuario GesInv-ULL). 
-            Los valores permitidos son las claves del diccionario HISTORICAL. Más información en <a href="#bbddh">Base de datos histórica</a>
+            <p>
+                Se emplea para seleccionar la base de datos histórica que se usará para mostrar el 
+                Informe de Producción Científica (CVN-PDF del usuario GesInv-ULL)
+            </p> 
+            <p>
+                Los valores permitidos son las claves del diccionario <i>HISTORICAL</i>. 
+                Más información en <a href="instalacion.html#bbddh">Base de datos histórica</a>
+            </p>
         </td>
         <td>string</td>
     </tr>
@@ -165,7 +177,7 @@
 
 <h2 id="admincommands">Admin Commands</h2>
 
-<h3 class="page-header">CRON</h3>
+<h3>CRON</h3>
 
 <p>
     Los siguientes comandos de administración necesitan ser ejecutados regularmente, por lo que es necesaria su inclusión en el CRON del sistema.
@@ -179,8 +191,8 @@
         <div class="row-fluid">
             <div class="alert alert-info"><b>cvn/management/commands/update_all_status_cvn.py</b></div>
             <p>
-                Actualiza el Estado del CVN de cada usuario (campo status del modelo CVN). 
-                Este estado se calcula a partir de la fecha de expiración (variable EXPIRY_DATE 
+                Actualiza el Estado del CVN de cada usuario (campo <i>status</i> del modelo <i>CVN</i>). 
+                Este estado se calcula a partir de la fecha de expiración (variable <i>EXPIRY_DATE</i> 
                 en el Settings de CVN) y la fecha de creación del CVN-PDF.
             </p>
             <pre>python manage.py update_all_status_cvn</pre>
@@ -208,7 +220,7 @@
     </div>
 </div>
 
-<h3 class="page-header">Tareas Administrativas</h3>
+<h3>Tareas Administrativas</h3>
 
 <div class="section">
     <ul class="nav nav-tabs header">
@@ -232,7 +244,7 @@
                 de elementos inicial.
             </p>
             <pre>python manage.py find_pairs --document="..." --table="..." --diff="0-7" --year="YYYY"</pre>
-            <h5>Parámetros</h5>
+            <h4>Parámetros</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>PARÁMETRO</th>
@@ -281,7 +293,7 @@
                 o área a partir de la información extraída de diferentes Web Services.
             </p>
             <pre>python manage.py dept_report --year="<YYYY>" --id="X" --type="d|a" --format="pdf|csv"</pre>
-            <h5>Parámetros</h5>
+            <h4>Parámetros</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>PARÁMETRO</th>
@@ -320,7 +332,7 @@
                 El formato es el siguiente: nombre de usuario; documento de identidad; ruta del CVN-PDF; nombre; apellidos
             </p>
             <pre>python manage.py generate_csv_migrate_cvn --date="<dd-mm-yyyy>"</pre>
-            <h5>Parámetros</h5>
+            <h4>Parámetros</h4>
             <table class="table table-striped table-condensed">
                 <tr>
                     <th>PARÁMETRO</th>
@@ -407,38 +419,46 @@
 <h2 id="webservices">Web Services</h2>
 
 <div class="alert alert-warning">
-WS_SERVER_URL contiene la dirección URL base de los <i>web services</i>.
-Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servidor.
+    El parámetro WS_SERVER_URL contiene la URL base del Servicio de <i>Web Services</i>.
 </div>
 
-<h3 id="cvngeneration" class="page-header">Generación de CVNs</h3>
+<h3 id="cvngeneration">Generación de CVNs</h3>
 
 <p>
-    Usados para generar un CVN básico para el investigador, con la información que la universidad ya conoce sobre el mismo.
-    De esta manera el investigador no necesita crear su CVN desde cero.
-    Son necesarios para el funcionamiento de la opción "Exportar mi información ULL".
+    Empleados para la generación de un CVN inicial para el investigador con la información que ya posee la Universidad.
+    De esta manera, el investigador no necesita crear su CVN desde cero.
 </p>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_LEARNING</li></ul>
-<div class="content">
+<p>
+    Los siguientes <i>Web Services</i> son necesarios para el correcto funcionamiento de la opción "Exportar mi información ULL".
+</p>
 
-<p>Contiene información sobre la formación académica recibida por el investigador en la universidad.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_ULL_LEARNING</td>
-        <td>WS_SERVER_URL + 'get_formacion_academica?cod_persona=[código de persona]'</td>
-        <td>Formación académica recibida por el investigador</td>
-    </tr>
-</table>
-
-<p>Estructura de salida:</p>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">WS_ULL_LEARNING</li>
+    </ul>
+    <div class="content">
+        <p>
+            Contiene información sobre la titulación académica recibida por el investigador en la Universidad.
+        </p>
+        <p>
+            Formato de las peticiones:
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>VALOR</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>WS_ULL_LEARNING</td>
+                <td>WS_SERVER_URL + 'get_formacion_academica?cod_persona=[código de persona]'</td>
+                <td>Titulación académica recibida por el investigador</td>
+            </tr>
+        </table>
+        <p>
+            Estructura de salida:
+        </p>
 <pre>
 [{"des1_titulacion": ..., 
   "des1_grado_titulacion": ...,
@@ -454,58 +474,63 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 ]
 </pre>
 
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>CLAVE</th>
-        <th>DESCRIPCIÓN</th>
-        <th>VALOR</th>
-    </tr>
-    <tr>
-        <td>des1_titulacion</td>
-        <td>Nombre de la titulación o doctorado</td>
-        <td>Ej: 'Licenciado en Matemáticas'</td>
-    </tr>
-    <tr>
-        <td>organismo</td>
-        <td>Entidad que expide la titulación</td>
-        <td>Ej: 'Universidad de La Laguna'</td>
-    </tr>
-    <tr>
-        <td>des1_grado_titulacion</td>
-        <td>Tipo de titulación obtenida</td>
-        <td>'Doctor', 'Licenciado/Ingeniero Superior' o 'Diplomado/Ingeniero Técnico'</td>
-    </tr>
-    <tr>
-        <td>f_expedicion</td>
-        <td>Fecha en la que se obtuvo la titulación</td>
-        <td>Formato de la fecha: 'DD-MM-YYYY'</td>
-    </tr>
-</table>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>CLAVE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>VALOR</th>
+            </tr>
+            <tr>
+                <td>des1_titulacion</td>
+                <td>Nombre de la titulación o doctorado</td>
+                <td>Ej: 'Licenciado en Matemáticas'</td>
+            </tr>
+            <tr>
+                <td>organismo</td>
+                <td>Entidad que expide la titulación</td>
+                <td>Ej: 'Universidad de La Laguna'</td>
+            </tr>
+            <tr>
+                <td>des1_grado_titulacion</td>
+                <td>Tipo de titulación obtenida</td>
+                <td>'Doctor', 'Licenciado/Ingeniero Superior' o 'Diplomado/Ingeniero Técnico'</td>
+            </tr>
+            <tr>
+                <td>f_expedicion</td>
+                <td>Fecha en la que se obtuvo la titulación</td>
+                <td>Formato de la fecha: 'DD-MM-YYYY'</td>
+            </tr>
+        </table>
+    </div>
 
 </div>
 
-</div>
-
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_ULL_CARGOS</li></ul>
-<div class="content">
-
-<p>Contiene información sobre los cargos que ha ejercido el investigador en la universidad.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_ULL_CARGOS</td>
-        <td>WS_SERVER_URL + 'get_cargos?cod_persona=[código de persona]'</td>
-        <td>Cargos desempeñados por el investigador en la universidad</td>
-    </tr>
-</table>
-
-<p>Estructura de salida:</p>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">WS_ULL_CARGOS</li>
+    </ul>
+    <div class="content">
+        <p>
+            Contiene información sobre los cargos que ha ejercido el investigador en la Universidad.
+        </p>
+        <p>
+            Formato de las peticiones:
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>VALOR</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>WS_ULL_CARGOS</td>
+                <td>WS_SERVER_URL + 'get_cargos?cod_persona=[código de persona]'</td>
+                <td>Cargos desempeñados por el investigador en la universidad</td>
+            </tr>
+        </table>
+        <p>
+            Estructura de salida:
+        </p>
 <pre>
 [{
   "dedicacion": ..., 
@@ -524,103 +549,107 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
  },
  ...
 ]
-
 </pre>
 
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>CLAVE</th>
-        <th>DESCRIPCIÓN</th>
-        <th>VALOR</th>
-    </tr>
-    <tr>
-        <td>dedicacion</td>
-        <td>Tipo de horario</td>
-        <td>'Tiempo Completo' o 'Tiempo parcial'</td>
-    </tr>
-    <tr>
-        <td>des1_cargo</td>
-        <td>Nombre del cargo desempeñado</td>
-        <td>Ej: 'Secretario del Departamento de Análisis Matemático'</td>
-    </tr>
-    <tr>
-        <td>centro</td>
-        <td>Centro (facultad, escuela, instituto, etc.) donde está o estuvo contratado</td>
-        <td>Ej: 'Departamento de Análisis Matemático'</td>
-    </tr>
-    <tr>
-        <td>departamento</td>
-        <td>Nombre del departamento en el que estuvo adscrito en el contrato</td>
-        <td>Ej: 'Análisis Matemático'</td>
-    </tr>
-    <tr>
-        <td>f_toma_posesion</td>
-        <td>Fecha de inicio de la actividad</td>
-        <td>Formato de la fecha: 'DD-MM-YYYY'</td>
-    </tr>
-    <tr>
-        <td>f_hasta</td>
-        <td>Fecha de finalización de la actividad</td>
-        <td>Formato de la fecha: 'DD-MM-YYYY'</td>
-    </tr>
-</table>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>CLAVE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>VALOR</th>
+            </tr>
+            <tr>
+                <td>dedicacion</td>
+                <td>Tipo de horario</td>
+                <td>'Tiempo Completo' o 'Tiempo parcial'</td>
+            </tr>
+            <tr>
+                <td>des1_cargo</td>
+                <td>Nombre del cargo desempeñado</td>
+                <td>Ej: 'Secretario del Departamento de Análisis Matemático'</td>
+            </tr>
+            <tr>
+                <td>centro</td>
+                <td>Centro (facultad, escuela, instituto, etc.) donde está o estuvo contratado</td>
+                <td>Ej: 'Departamento de Análisis Matemático'</td>
+            </tr>
+            <tr>
+                <td>departamento</td>
+                <td>Nombre del departamento en el que estuvo adscrito en el contrato</td>
+                <td>Ej: 'Análisis Matemático'</td>
+            </tr>
+            <tr>
+                <td>f_toma_posesion</td>
+                <td>Fecha de inicio de la actividad</td>
+                <td>Formato de la fecha: 'DD-MM-YYYY'</td>
+            </tr>
+            <tr>
+                <td>f_hasta</td>
+                <td>Fecha de finalización de la actividad</td>
+                <td>Formato de la fecha: 'DD-MM-YYYY'</td>
+            </tr>
+        </table>
+    </div>
 
 </div>
 
-</div>
-
-<h3 class="page-header">Generación de informes de departamentos</h3>
+<h3>Generación de Informes por Departamentos o Áreas de Conocimiento</h3>
 
 <p>
-    Proveen de información sobre los departamentos y las áreas de la universidad.
-    Son usados para la generación de informes sobre departamentos/áreas en el <i>admin command</i> <code>dept_report</code>.
+    Proveen de información sobre los departamentos y las áreas de conocimiento de la Universidad.
+    Son empleados para la generación de informes sobre departamentos/áreas a través del <i>admin command</i> <code>dept_report</code>.
 </p>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_DEPARTMENTS_AND_MEMBERS</li></ul>
-<div class="content">
-
-<p>Contiene información sobre los departamentos de la universidad y sus miembros.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros'</td>
-        <td>Departamentos y sus miembros actuales</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_YEAR</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?year=[año]'</td>
-        <td>Departamentos y sus miembros el año indicado en el parámetro year</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_USER</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
-        <td>Departamentos a los que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
-        <td>Departamentos a los que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]'</td>
-        <td>Información y miembros actuales del departamento identificado por el parámetro codigo</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
-        <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
-        <td>Información y miembros del departamento identificado por codigo en el año indicado en el parámetro year</td>
-    </tr>
-</table>
-
-<p>Estructura de salida:</p>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">WS_DEPARTMENTS_AND_MEMBERS</li>
+    </ul>
+    <div class="content">
+        <p>
+            Contiene información sobre los Departamentos de la Universidad y sus miembros.
+        </p>
+        <p>
+            Formato de las peticiones:
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>VALOR</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros'</td>
+                <td>Departamentos y sus miembros actuales</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_YEAR</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?year=[año]'</td>
+                <td>Departamentos y sus miembros el año indicado en el parámetro year</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_USER</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
+                <td>Departamentos a los que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
+                <td>Departamentos a los que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]'</td>
+                <td>Información y miembros actuales del departamento identificado por el parámetro codigo</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
+                <td>WS_SERVER_URL + 'get_departamentos_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
+                <td>Información y miembros del departamento identificado por codigo en el año indicado en el parámetro year</td>
+            </tr>
+        </table>
+        <p>
+            Estructura de salida:
+        </p>
 <pre>
 [{"miembros": [{"cod_cce": ..., 
                 "cod_cce__descripcion": ..., 
@@ -641,113 +670,119 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 ]
 </pre>
 
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>CLAVE</th>
-        <th>DESCRIPCIÓN</th>
-        <th>VALOR</th>
-    </tr>
-    <tr>
-        <td>cod_cce</td>
-        <td>Código único que identifica la categoría profesional del investigador</td>
-        <td>Ej: '6327'</td>
-    </tr>
-    <tr>
-        <td>cod_cce_descripción</td>
-        <td>Nombre de la categoría profesional del investigador</td>
-        <td>Ej: 'Profesor Titular Universidad'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_apellido1</td>
-        <td>Primer apellido del investigador</td>
-        <td>Ej: 'Rodríguez'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_nombre</td>
-        <td>Nombre del investigador</td>
-        <td>Ej: 'Alberto'</td>
-    </tr>
-    <tr>
-        <td>cod_persona</td>
-        <td>Identificador único del investigador</td>
-        <td>Ej: '17965'</td>
-    </tr>
-    <tr>
-        <td>cod_cce_descripcion_corta</td>
-        <td>Abreviatura de la categoría profesional del investigador</td>
-        <td>Ej: 'T.U.'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_apellido2</td>
-        <td>Segundo apellido del investigador</td>
-        <td>Ej: 'González'</td>
-    </tr>
-    <tr>
-        <td>nombre</td>
-        <td>Nombre del departamento</td>
-        <td>Ej: "Química Orgánica"</td>
-    </tr>
-    <tr>
-        <td>codigo</td>
-        <td>Identificador único del departamento</td>
-        <td>Ej: '48932'</td>
-    </tr>
-    <tr>
-        <td>nombre_corto</td>
-        <td>Abreviatura del nombre del departamento</td>
-        <td>Ej: 'Quim. Organ.'</td>
-    </tr>
-</table>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>CLAVE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>VALOR</th>
+            </tr>
+            <tr>
+                <td>cod_cce</td>
+                <td>Código único que identifica la categoría profesional del investigador</td>
+                <td>Ej: '6327'</td>
+            </tr>
+            <tr>
+                <td>cod_cce_descripción</td>
+                <td>Nombre de la categoría profesional del investigador</td>
+                <td>Ej: 'Profesor Titular Universidad'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_apellido1</td>
+                <td>Primer apellido del investigador</td>
+                <td>Ej: 'Rodríguez'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_nombre</td>
+                <td>Nombre del investigador</td>
+                <td>Ej: 'Alberto'</td>
+            </tr>
+            <tr>
+                <td>cod_persona</td>
+                <td>Identificador único del investigador</td>
+                <td>Ej: '17965'</td>
+            </tr>
+            <tr>
+                <td>cod_cce_descripcion_corta</td>
+                <td>Abreviatura de la categoría profesional del investigador</td>
+                <td>Ej: 'T.U.'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_apellido2</td>
+                <td>Segundo apellido del investigador</td>
+                <td>Ej: 'González'</td>
+            </tr>
+            <tr>
+                <td>nombre</td>
+                <td>Nombre del departamento</td>
+                <td>Ej: "Química Orgánica"</td>
+            </tr>
+            <tr>
+                <td>codigo</td>
+                <td>Identificador único del departamento</td>
+                <td>Ej: '48932'</td>
+            </tr>
+            <tr>
+                <td>nombre_corto</td>
+                <td>Abreviatura del nombre del departamento</td>
+                <td>Ej: 'Quim. Organ.'</td>
+            </tr>
+        </table>
+    </div>
 
 </div>
 
-</div>
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">WS_AREAS_AND_MEMBERS</li>
+    </ul>
+    <div class="content">
+        <p>
+            Contiene información sobre las Áreas de Conocimiento de la Universidad y sus miembros.
+        </p>
+        <p>
+            Formato de las peticiones:
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>VALOR</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>WS_AREAS_AND_MEMBERS</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros'</td>
+                <td>Departamentos y sus miembros actuales</td>
+            </tr>
+            <tr>
+                <td>WS_AREAS_AND_MEMBERS_YEAR</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?year=[año]'</td>
+                <td>Áreas y sus miembros el año indicado en el parámetro year</td>
+            </tr>
+            <tr>
+                <td>WS_AREAS_AND_MEMBERS_USER</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
+                <td>Areas a las que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
+            </tr>
+            <tr>
+                <td>WS_AREAS_AND_MEMBERS_USER_YEAR</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
+                <td>Areas a las que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
+            </tr>
+            <tr>
+                <td>WS_AREAS_AND_MEMBERS_UNIT</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]'</td>
+                <td>Información y miembros actuales del área identificada por el parámetro codigo</td>
+            </tr>
+            <tr>
+                <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
+                <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
+                <td>Información y miembros del área identificada por codigo en el año indicado en el parámetro year</td>
+            </tr>
+        </table>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_AREAS_AND_MEMBERS</li></ul>
-<div class="content">
-
-<p>Contiene información sobre las áreas de la universidad y sus miembros.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_AREAS_AND_MEMBERS</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros'</td>
-        <td>Departamentos y sus miembros actuales</td>
-    </tr>
-    <tr>
-        <td>WS_AREAS_AND_MEMBERS_YEAR</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?year=[año]'</td>
-        <td>Áreas y sus miembros el año indicado en el parámetro year</td>
-    </tr>
-    <tr>
-        <td>WS_AREAS_AND_MEMBERS_USER</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]'</td>
-        <td>Areas a las que pertenece actualmente el usuario identificado por el parámetro cod_persona y sus miembros actuales</td>
-    </tr>
-    <tr>
-        <td>WS_AREAS_AND_MEMBERS_USER_YEAR</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?cod_persona=[código de recursos humanos]&year=[año]'</td>
-        <td>Areas a las que pertenecía el usuario identificado por cod_persona el año indicado por el parámetro year, y sus miembros ese año</td>
-    </tr>
-    <tr>
-        <td>WS_AREAS_AND_MEMBERS_UNIT</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]'</td>
-        <td>Información y miembros actuales del área identificada por el parámetro codigo</td>
-    </tr>
-    <tr>
-        <td>WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR</td>
-        <td>WS_SERVER_URL + 'get_areas_y_ultimos_miembros?codigo=[código departamento]&year=[año]'</td>
-        <td>Información y miembros del área identificada por codigo en el año indicado en el parámetro year</td>
-    </tr>
-</table>
-
-<p>Estructura de salida:</p>
+        <p>
+            Estructura de salida:
+        </p>
 <pre>
 [{"miembros": [{"cod_cce": ..., 
                 "cod_cce__descripcion": ..., 
@@ -770,65 +805,64 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 ]
 </pre>
 
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>CLAVE</th>
-        <th>DESCRIPCIÓN</th>
-        <th>VALOR</th>
-    </tr>
-    <tr>
-        <td>cod_cce</td>
-        <td>Código único que identifica la categoría profesional del investigador</td>
-        <td>Ej: '5610'</td>
-    </tr>
-    <tr>
-        <td>cod_cce_descripción</td>
-        <td>Nombre de la categoría profesional del investigador</td>
-        <td>Ej: 'Personal Invest.en Formación (prácticas)'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_apellido1</td>
-        <td>Primer apellido del investigador</td>
-        <td>Ej: 'Ruiz'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_nombre</td>
-        <td>Nombre del investigador</td>
-        <td>Ej: 'Omar'</td>
-    </tr>
-    <tr>
-        <td>cod_persona</td>
-        <td>Identificador único del investigador</td>
-        <td>Ej: '19944'</td>
-    </tr>
-    <tr>
-        <td>cod_cce_descripcion_corta</td>
-        <td>Abreviatura de la categoría profesional del investigador</td>
-        <td>Ej: 'PIFP'</td>
-    </tr>
-    <tr>
-        <td>cod_persona_apellido2</td>
-        <td>Segundo apellido del investigador</td>
-        <td>Ej: 'López'</td>
-    </tr>
-    <tr>
-        <td>nombre</td>
-        <td>Nombre del área</td>
-        <td>Ej: "Economía Aplicada"</td>
-    </tr>
-    <tr>
-        <td>codigo</td>
-        <td>Identificador único del área</td>
-        <td>Ej: '703387'</td>
-    </tr>
-    <tr>
-        <td>nombre_corto</td>
-        <td>Abreviatura del nombre del área</td>
-        <td>Ej: 'Eco. Aplica.'</td>
-    </tr>
-</table>
-
-</div>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>CLAVE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>VALOR</th>
+            </tr>
+            <tr>
+                <td>cod_cce</td>
+                <td>Código único que identifica la categoría profesional del investigador</td>
+                <td>Ej: '5610'</td>
+            </tr>
+            <tr>
+                <td>cod_cce_descripción</td>
+                <td>Nombre de la categoría profesional del investigador</td>
+                <td>Ej: 'Personal Invest.en Formación (prácticas)'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_apellido1</td>
+                <td>Primer apellido del investigador</td>
+                <td>Ej: 'Ruiz'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_nombre</td>
+                <td>Nombre del investigador</td>
+                <td>Ej: 'Omar'</td>
+            </tr>
+            <tr>
+                <td>cod_persona</td>
+                <td>Identificador único del investigador</td>
+                <td>Ej: '19944'</td>
+            </tr>
+            <tr>
+                <td>cod_cce_descripcion_corta</td>
+                <td>Abreviatura de la categoría profesional del investigador</td>
+                <td>Ej: 'PIFP'</td>
+            </tr>
+            <tr>
+                <td>cod_persona_apellido2</td>
+                <td>Segundo apellido del investigador</td>
+                <td>Ej: 'López'</td>
+            </tr>
+            <tr>
+                <td>nombre</td>
+                <td>Nombre del área</td>
+                <td>Ej: "Economía Aplicada"</td>
+            </tr>
+            <tr>
+                <td>codigo</td>
+                <td>Identificador único del área</td>
+                <td>Ej: '703387'</td>
+            </tr>
+            <tr>
+                <td>nombre_corto</td>
+                <td>Abreviatura del nombre del área</td>
+                <td>Ej: 'Eco. Aplica.'</td>
+            </tr>
+        </table>
+    </div>
 
 </div>
 
@@ -1362,7 +1396,7 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 </div>
 
 <div class="alert alert-warning">
-    * campo de texto con la concatenación de todos los campos que se emplean en la FECYT para definir un autor (Firma, Nombre, Primer Apellido y Segundo Apellido), o en su caso varios autores (separados por ;)
+    * Campo de texto con la concatenación de todos los campos que se emplean en la FECYT para definir un autor (Firma, Nombre, Primer Apellido y Segundo Apellido), o en su caso varios autores (separados por ;)
 </div>
 
 <h2 id="exportacion">Exportación de CVN-PDF</h2>
@@ -1660,7 +1694,8 @@ Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servi
 </div>
 
 <div class="alert alert-warning">
-    ** No existe campo en los <i>web services</i>, ya que son datos referidos a la propia universidad. El valor se extraerá del campo cvn.settings.UNIVERSITY
+    <p>** No existe campo en los <i>web services</i>, ya que son datos referidos a la propia universidad.</p>
+    <p>Su valor se extraerá del campo <i>cvn.settings.UNIVERSITY</i></p>
 </div>
         </div>
     </section>
