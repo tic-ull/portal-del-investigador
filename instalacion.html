@@ -138,8 +138,8 @@
 sudo apt-get install python-pip
 sudo pip install -U distribute
 sudo apt-get install postgresql postgresql-client postgresql-contrib libpq-dev \
-                     libxml2-dev libxslt1-dev python-dev xvfb redis-server
-sudo pip install -r requirements.txt
+                     libxml2-dev libxslt1-dev python-dev xvfb redis-server mercurial
+sudo pip install -r requirements.min.txt
 </pre>
     </div>
 </div>
@@ -381,7 +381,7 @@ HISTORICAL = {
                 <p>Sobreescribir los parámetros de configuración del <i>settings</i> que se encuentran en la Sección <i>AUTHENTICATION CAS - ULL</i>, se recomienda hacer uso del <i>settings_local.py</i>.</p>
             </li>
             <li>
-                <p>En el fichero <i>core/backends.py</i> se encuentra un backend de autenticación que emplea el <i>django-cas</i> instalado, con la función <code>authenticate</code> sobreescrita con las necesidades del Portal del Investigador. Por lo que no es necesario modificar el resto de la configuración para su uso.</p>
+                <p>En el fichero <i>core/backends.py</i> se encuentra un <i>backend</i> de autenticación que emplea el <i>django-cas</i> instalado, con la función <code>authenticate</code> sobreescrita con las necesidades del Portal del Investigador. Por lo que no es necesario modificar el resto de la configuración para su uso.</p>
             </li>
         </ol>
 
