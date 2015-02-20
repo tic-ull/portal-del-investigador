@@ -264,35 +264,37 @@ HISTORICAL = {
     </div>
 </div>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">5. Sistema de Autenticación</li></ul>
-<div class="content">
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">5. Sistema de Autenticación</li>
+    </ul>
+    <div class="content">
+        <p>
+            El Sistema de Autentificación implementado actualmente es CAS, 
+            con un <i>backend</i> basado en <a href="https://bitbucket.org/cpcc/django-cas/overview" target="_blank"><i>django-cas</i></a>.
+        </p>
+        <p>
+            CAS es un sistema de <i>Single Sign-On (SSO)</i>, por lo que el proyecto no incluye formulario de inicio de sesión o registro de usuarios. 
+            Cuando un nuevo usuario accede con sus credenciales a través del SSO se crea automáticamente como usuario del proyecto.
+        </p>
+        <p>
+            Es posible cambiar el sistema de autenticación actual de manera sencilla, este deberá manejar externamente el registro y el inicio de sesión.
+            Para ello, necesitará crear un nuevo <i>backend</i> de autenticación o adaptar uno ya existente sobreescribiendo su función <code>authenticate</code>, 
+            asegurándose de que se cumplen las siguientes condiciones:
+        </p>
 
-    <p>
-        El Sistema de Autentificación implementado actualmente es CAS, 
-        con un <i>backend</i> basado en <a href="https://bitbucket.org/cpcc/django-cas/overview" target="_blank"><i>django-cas</i></a>.
-    </p>
-    <p>
-        CAS es un sistema de <i>Single Sign-On (SSO)</i>, por lo que el proyecto no incluye formulario de inicio de sesión o registro de usuarios. 
-        Cuando un nuevo usuario accede con sus credenciales a través del SSO se crea automáticamente como usuario del proyecto.
-    </p>
-    <p>
-        Es posible cambiar el sistema de autenticación actual de manera sencilla, este deberá manejar externamente el registro y el inicio de sesión.
-        Para ello, necesitará crear un nuevo <i>backend</i> de autenticación o adaptar uno ya existente sobreescribiendo su función <code>authenticate</code>, 
-        asegurándose de que se cumplen las siguientes condiciones:
-    </p>
-
-    <ul>
-        <li>
-            <p>
-                Si las credenciales de un usuario son válidas se debe realizar una llamada a <code>UserProfile.get_or_create_user</code>, 
-                con el <i>username</i> y el documento (NIF/NIE, Pasaporte, etc.) como parámetros.
-            </p>
-        </li>
-        <li>
-            <p>
-                Debe introducir en <code>request.session['attributes']</code> un <i>json</i> 
-                con información del usuario siguiendo la siguiente estructura:
-            </p>
+        <ul>
+            <li>
+                <p>
+                    Si las credenciales de un usuario son válidas se debe realizar una llamada a <code>UserProfile.get_or_create_user</code>, 
+                    con el <i>username</i> y el documento (NIF/NIE, Pasaporte, etc.) como parámetros.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Debe introducir en <code>request.session['attributes']</code> un <i>json</i> 
+                    con información del usuario siguiendo la siguiente estructura:
+                </p>
 <pre>
 {
     'TipoCuenta': 'personal',
@@ -304,99 +306,112 @@ HISTORICAL = {
 }
 </pre>
 
-    <table class="table table-striped table-condensed">
-        <tr>
-            <th>CLAVE</th>
-            <th>DESCRIPCIÓN</th>
-            <th>USO FUERA DEL BACKEND POR DEFECTO</th>
-        </tr>
-        <tr>
-            <td>TipoCuenta</td>
-            <td>
-                <p>Tipo de cuenta de usuario</p>
-                <p>Se bloqueará el acceso a los usuarios con el tipo de cuenta que se establezcan en la lista <i>settings.CAS_TIPO_CUENTA_NOAUT</i></p>
-            </td>
-            <td>No</td>
-        </tr>
-        <tr>
-            <td>username</td>
-            <td>Nombre de usuario para el inicio de sesión</td>
-            <td>Sí</td>
-        </tr>
-        <tr>
-            <td>first_name</td>
-            <td>Nombre del usuario</td>
-            <td>Sí</td>
-        </tr>
-        <tr>
-            <td>last_name</td>
-            <td>Apellidos del usuario</td>
-            <td>Sí</td>
-        </tr>
-        <tr>
-            <td>NumDocumento</td>
-            <td>Número de Documento de Identidar del usuario.</td>
-            <td>No</td>
-        </tr>
-        <tr>
-            <td>email</td>
-            <td>Correo electrónico del usuario</td>
-            <td>Sí</td>
-        </tr>
-    </table>
-        </li>
-    </ul>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>CLAVE</th>
+                <th>DESCRIPCIÓN</th>
+                <th>USO FUERA DEL BACKEND POR DEFECTO</th>
+            </tr>
+            <tr>
+                <td>TipoCuenta</td>
+                <td>
+                    <p>Tipo de cuenta de usuario</p>
+                    <p>Se bloqueará el acceso a los usuarios con el tipo de cuenta que se establezcan en la lista <i>settings.CAS_TIPO_CUENTA_NOAUT</i></p>
+                </td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>username</td>
+                <td>Nombre de usuario para el inicio de sesión</td>
+                <td>Sí</td>
+            </tr>
+            <tr>
+                <td>first_name</td>
+                <td>Nombre del usuario</td>
+                <td>Sí</td>
+            </tr>
+            <tr>
+                <td>last_name</td>
+                <td>Apellidos del usuario</td>
+                <td>Sí</td>
+            </tr>
+            <tr>
+                <td>NumDocumento</td>
+                <td>Número de Documento de Identidar del usuario.</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>Correo electrónico del usuario</td>
+                <td>Sí</td>
+            </tr>
+        </table>
+            </li>
+        </ul>
 
-    <div class="alert alert-warning">
+        <div class="alert alert-warning">
+            <p>
+                Para el uso del sistema de inicio de sesión integrado en el proyecto se requieren mayores cambios que los indicados en esta guía.
+                Aunque no se detallan, debe tener en cuenta que independientemente del método de autentificación, la creación de usuarios debe 
+                realizarse siempre a través de <code>UserProfile.get_or_create_user</code>.
+            </p>
+        </div>
+
+        <br>
+        <h4>Ejemplo de Sistema de Autenticación basado en Django CAS</h4>
+
         <p>
-            Para el uso del sistema de inicio de sesión integrado en el proyecto se requieren mayores cambios que los indicados en esta guía.
-            Aunque no se detallan, debe tener en cuenta que independientemente del método de autentificación, la creación de usuarios debe 
-            realizarse siempre a través de <code>UserProfile.get_or_create_user</code>.
+            Si dispone de un servidor CAS puede integrarlo en el proyecto realizando los siguientes pasos:
         </p>
-    </div>
-    <h4>Ejemplo: Sistema de autenticación basado en django-cas</h4>
-    <p>
-        Si se dispone de un servidor CAS, éste se puede integrar con la aplicación siguiendo los siguientes pasos:
-    </p>
-    <ul>
-        <li>
-            Configuración del servidor CAS para que retorne los atributos indicados arriba como necesarios por la aplicación.
-            Dependiendo del backend de autenticación elegido y la versión de CAS puede ser necesario retornar algún otro atributo, como <code>uid</code> con el username del usuario.
-        </li>
-        <li>
-            Instalación de un <i>backend</i> de autenticación como <a href="https://bitbucket.org/cpcc/django-cas/overview">django-cas</a>.
-        </li>
-        <li>
-            Sobreescribir las variables del settings que se encuentran bajo la sección <i>AUTHENTICATION CAS - ULL</i> según la configuración del servidor CAS.
-        </li>
-        <li>
-            En core/backends.py se encuentra un backend de autenticación que hará uso del django-cas instalado, con la función <code>authenticate</code> sobreescrita con las necesidades del Portal del Investigador.
-            No es necesario modificar el resto de la configuración para que sea usado.
-        </li>
-    </ul>
-    <h4>Ejemplo: Sistema de autenticación basado en ModelBackend</h4>
-    <p>Una manera sencilla de autenticarse en la aplicación en desarrollo si todavía no la ha integrado con su sistema de autenticación es usar el sistema de autenticación de Django.</p>
-    <ul>
-        <li>
-            Sobreescribir la variable <code>settings.AUTHENTICATION_BACKENDS</code> eliminando el backend <code>core.backends.CASBackend</code> y añadiendo el backend <code>django.contrib.auth.backends.ModelBackend</code>.
-        </li>
-        <li>
-            Eliminar las urls a las vistas de login de django_cas de investigacion/urls.py, y añadir las siguientes:
-            <pre>
+        <ol>
+            <li>
+                <p>
+                    Configurar el servidor CAS para que retorne los atributos indicados en esta Sección.
+                </p>
+                <p>
+                    Dependiendo del <i>backend</i> de autenticación elegido y la versión de CAS, 
+                    puede ser necesario retornar algún otro atributo, como el <code>uid</code> 
+                    con el username del usuario.
+                </p>
+            </li>
+            <li>
+                <p>Instalar el <i>backend</i> de autenticación, por ejemplo, <a href="https://bitbucket.org/cpcc/django-cas/overview">django-cas</a>.</p>
+            </li>
+            <li>
+                <p>Sobreescribir los parámetros de configuración del <i>settings</i> que se encuentran en la Sección <i>AUTHENTICATION CAS - ULL</i>, se recomienda hacer uso del <i>settings_local.py</i>.</p>
+            </li>
+            <li>
+                <p>En el fichero <i>core/backends.py</i> se encuentra un backend de autenticación que emplea el <i>django-cas</i> instalado, con la función <code>authenticate</code> sobreescrita con las necesidades del Portal del Investigador. Por lo que no es necesario modificar el resto de la configuración para su uso.</p>
+            </li>
+        </ol>
+
+        <br>
+        <h4>Ejemplo de Sistema de Autenticación basado en ModelBackend</h4>
+
+        <p>Una manera sencilla de autenticarse en la aplicación es hacer uso del Sistema de Autenticación por defecto de Django. Para ello, se deben realizar los siguientes pasos:</p>
+        <ol>
+            <li>
+                <p>Sobreescribir la variable <i>settings.AUTHENTICATION_BACKENDS</i> sustituyendo el <i>backend</i> <code>core.backends.CASBackend</code> por <code>django.contrib.auth.backends.ModelBackend</code>.</p>
+            </li>
+            <li>
+                <p>Reemplazar las urls a las vistas de login de <i>django_cas</i> de <i>investigacion/urls.py</i> por las siguientes:</p>
+<pre>
 urlpatterns += patterns('',
     url(r'^accounts/login/$', 'django.contrib.auth.views.login',
        {'template_name': 'admin/login.html'}, name="login"),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name="logout"),
 )
-            </pre>
-        </li>
-        <li>
-            Puede crear usuarios desde una <i>shell</i> Django, usando <code>UserProfile.get_or_create_user</code>.
-            Después de crear el usuario debe asignarle su contraseña a través de <code>User.set_password</code>.
-        </li>
-    </ul>
-    Ahora todos los usuarios serán redirigidos al formulario de login de Django cuando accedan a una página que requiera autenticación.
-</div>
+</pre>
+            </li>
+            <li>
+                <p>La creación de usuarios puede realizarse desde una <i>shell</i> Django, realizando una llamada a <code>UserProfile.get_or_create_user</code>.</p>
+                <p>Una vez creado el usuario debe asignarle una contraseña a través de <code>User.set_password</code>.</p>
+            </li>
+        </ol>
+        <p>
+            Cuando una página requiera autenticación, el usuario será redirigido al formulario de login de Django.
+        </p>
+    </div>
 
 </div>
 
