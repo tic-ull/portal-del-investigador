@@ -287,7 +287,7 @@ TEMPLATE_LOADERS = (
 
 # ************************* STATIC FILES *************************************
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'core/static'),
     ('js', js.__path__[0] + ''),
 )
 
