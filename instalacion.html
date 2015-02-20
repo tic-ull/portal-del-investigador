@@ -354,6 +354,48 @@ HISTORICAL = {
             realizarse siempre a través de <code>UserProfile.get_or_create_user</code>.
         </p>
     </div>
+    <h4>Ejemplo: Sistema de autenticación basado en django-cas</h4>
+    <p>
+        Si se dispone de un servidor CAS, éste se puede integrar con la aplicación siguiendo los siguientes pasos:
+    </p>
+    <ul>
+        <li>
+            Configuración del servidor CAS para que retorne los atributos indicados arriba como necesarios por la aplicación.
+            Dependiendo del backend de autenticación elegido y la versión de CAS puede ser necesario retornar algún otro atributo, como <code>uid</code> con el username del usuario.
+        </li>
+        <li>
+            Instalación de un <i>backend</i> de autenticación como <a href="https://bitbucket.org/cpcc/django-cas/overview">django-cas</a>.
+        </li>
+        <li>
+            Sobreescribir las variables del settings que se encuentran bajo la sección <i>AUTHENTICATION CAS - ULL</i> según la configuración del servidor CAS.
+        </li>
+        <li>
+            En core/backends.py se encuentra un backend de autenticación que hará uso del django-cas instalado, con la función <code>authenticate</code> sobreescrita con las necesidades del Portal del Investigador.
+            No es necesario modificar el resto de la configuración para que sea usado.
+        </li>
+    </ul>
+    <h4>Ejemplo: Sistema de autenticación basado en ModelBackend</h4>
+    <p>Una manera sencilla de autenticarse en la aplicación en desarrollo si todavía no la ha integrado con su sistema de autenticación es usar el sistema de autenticación de Django.</p>
+    <ul>
+        <li>
+            Sobreescribir la variable <code>settings.AUTHENTICATION_BACKENDS</code> eliminando el backend <code>core.backends.CASBackend</code> y añadiendo el backend <code>django.contrib.auth.backends.ModelBackend</code>.
+        </li>
+        <li>
+            Eliminar las urls a las vistas de login de django_cas de investigacion/urls.py, y añadir las siguientes:
+            <pre>
+urlpatterns += patterns('',
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+       {'template_name': 'admin/login.html'}, name="login"),
+    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', name="logout"),
+)
+            </pre>
+        </li>
+        <li>
+            Puede crear usuarios desde una <i>shell</i> Django, usando <code>UserProfile.get_or_create_user</code>.
+            Después de crear el usuario debe asignarle su contraseña a través de <code>User.set_password</code>.
+        </li>
+    </ul>
+    Ahora todos los usuarios serán redirigidos al formulario de login de Django cuando accedan a una página que requiera autenticación.
 </div>
 
 </div>
