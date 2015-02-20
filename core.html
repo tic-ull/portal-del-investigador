@@ -113,10 +113,11 @@
         <div class="entry-content">
             <h2 id="admincommands">Admin Commands</h2>
 
-<h3 class="page-header">CRON</h3>
+<h3>CRON</h3>
 
 <p>
-    Los siguientes comandos de administración necesitan ser ejecutados regularmente, por lo que es necesaria su inclusión en el CRON del sistema.
+    Los siguientes comandos de administración necesitan ser ejecutados regularmente, 
+    por lo que es necesaria su inclusión en el CRON del sistema.
 </p>
 
 <div class="section">
@@ -127,7 +128,7 @@
         <div class="row-fluid">
             <div class="alert alert-info"><b>core/management/commands/sync_rrhh.py</b></div>
             <p>
-                Actualiza el Código de Recursos Humanos de cada usuario (campo rrhh_code del modelo UserProfile).
+                Actualiza el Código de Recursos Humanos de cada usuario (campo <i>rrhh_code</i> del modelo <i>UserProfile</i>).
                 Este código identifica de manera única a un usuario en la aplicación de Recursos Humanos de la 
                 Universidad de La Laguna, por lo que se emplea como clave para obtener información del usuario 
                 mediante la llamada a distintos Web Services.
@@ -137,7 +138,7 @@
     </div>
 </div>
 
-<h2 id="signals">Signals y receivers</h2>
+<h2 id="signals">Signals y Receivers</h2>
 
 <div class="section">
     <ul class="nav nav-tabs header">
@@ -145,7 +146,7 @@
     </ul>
     <div class="content">
         <p>
-            Los receivers contienen código que es ejecutado en respuesta a un evento ocurrido.
+            Los <i>receivers</i> contienen código que es ejecutado en respuesta a un evento ocurrido.
         </p>
         <table class="table table-striped table-condensed">
             <tr>
@@ -155,7 +156,7 @@
             </tr>
             <tr>
                 <td>update_user</td>
-                <td>Actualiza la información del usuario actual almacenada en el modelo user a partir de un hash denominado attributes que se almacena en la sesión del usuario</td>
+                <td>Actualiza la información del usuario actual almacenada en el modelo <i>User</i> a partir del hash <i>attributes</i> que se almacena en la sesión del usuario</td>
                 <td>User.post_login</td>
             </tr>
         </table>
@@ -165,39 +166,40 @@
 <h2 id="webservices">Web Services</h2>
 
 <div class="alert alert-warning">
-WS_SERVER_URL contiene la dirección URL base de los <i>web services</i>.
-Debe sobreescribirse con la <i>URL</i> donde cada universidad ha puesto su servidor.
+    El parámetro WS_SERVER_URL contiene la URL base del Servicio de <i>Web Services</i>.
 </div>
 
-<h3 class="page-header">Información para el perfil de usuario</h3>
+<h3>Información del Perfil de Usuario</h3>
 
-<div class="section"><ul class="nav nav-tabs header"><li class="active">WS_COD_PERSONA</li></ul>
-<div class="content">
-
-<p>Retorna un código único de tipo entero por cada investigador.
-Este código se guarda en el perfil de usuario, y se usa para identificar al investigador en el resto de <i>web services</i>.</p>
-
-<p>Formato de las peticiones:</p>
-<table class="table table-striped table-condensed">
-    <tr>
-        <th>VARIABLE</th>
-        <th>VALOR</th>
-        <th>DESCRIPCIÓN</th>
-    </tr>
-    <tr>
-        <td>WS_COD_PERSONA</td>
-        <td>WS_SERVER_URL + 'get_codpersona?nif=[número de identificación fiscal]'</td>
-        <td>Retorna un código único que identifica al usuario en el resto de <i>web services</i>.</td>
-    </tr>
-</table>
-
-Ejemplo de salida del Web Service:
-<pre>
-33184
-</pre>
-
-</div>
-
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">WS_COD_PERSONA</li>
+    </ul>
+    <div class="content">
+        <p>
+            Retorna un código único de tipo entero para cada investigador.
+            Este código se almacena en el perfil del usuario y es empleado para identificar al usuario en el resto de <i>Web Services</i>.
+        </p>
+        <p>
+            Formato de las peticiones:
+        </p>
+        <table class="table table-striped table-condensed">
+            <tr>
+                <th>VARIABLE</th>
+                <th>VALOR</th>
+                <th>DESCRIPCIÓN</th>
+            </tr>
+            <tr>
+                <td>WS_COD_PERSONA</td>
+                <td>WS_SERVER_URL + 'get_codpersona?nif=[Número de Documento de identidad]'</td>
+                <td>Retorna un código único que identifica al usuario en el resto de <i>Web Services</i>.</td>
+            </tr>
+        </table>
+        <p>
+            Ejemplo de salida del Web Service:
+        </p>
+<pre>33184</pre>
+    </div>
 </div>
         </div>
     </section>
@@ -213,7 +215,7 @@ Ejemplo de salida del Web Service:
         <div class="panel-body">
             <div class="nav nav-pills nav-stacked">
                     <li><a href="#admincommands">Admin Commands</a></li>
-                    <li><a href="#signals">Signals y receivers</a></li>
+                    <li><a href="#signals">Signals y Receivers</a></li>
                     <li><a href="#webservices">Web Services</a></li>
             </div>
         </div>
