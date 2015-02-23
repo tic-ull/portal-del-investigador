@@ -8,7 +8,6 @@ suds
 lxml
 dateutils
 python-slugify
-gunicorn
 selenium
 joblib
 reportlab
@@ -26,8 +25,6 @@ django-tables2
 redis
 iso3166
 pyvirtualdisplay
-gevent
-greenlet
 django-modeltranslation
 markdown
 mock
