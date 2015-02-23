@@ -55,7 +55,7 @@ class CachedWS:
             ws_json = reply
             if use_redis:
                 cls._set_redis(url, timeout, ws_json)
-        except (IOError, KeyError):
+        except (IOError, KeyError, ValueError):
             if use_redis:
                 ws_json = eval_json(cls._get_redis(url))
                 logger.error(u'No hay respuesta de ODIN para el WS'
