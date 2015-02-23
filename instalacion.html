@@ -129,11 +129,11 @@
         <li class="active">2. Instalar dependencias</li>
     </ul>
     <div class="content">
-        <div class="alert alert-warning">
+        <p>
             Para la instalación de dependencias de módulos Python se emplea <i>pip</i>. 
             Se recomienda el uso de <i>virtualenv</i> junto con esta herramienta,
             en las instrucciones no se entrará a explicar su funcionamiento.
-        </div>
+        </p>
 <pre>
 sudo apt-get install python-pip
 sudo pip install -U distribute
@@ -146,11 +146,11 @@ sudo pip install -r requirements.min.txt
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">3. Configurar el proyecto y sus aplicaciones</li>
+        <li class="active">3. Configurar el proyecto y sus módulos</li>
     </ul>
     <div class="content">
         <p>
-            Los parámetros de configuración del proyecto y sus aplicaciones se establecen en los ficheros <i>settings.py</i>. 
+            Los parámetros de configuración del proyecto y sus módulos se establecen en los ficheros <i>settings.py</i>. 
             Varios de estos parámetros necesitan ser sobreescritos, para ello se emplean los ficheros <i>settings_local.py</i>.
             Se proporcionan los ficheros <i>settings_local-sample.py</i> como ejemplo y punto de partida, 
             por lo que se recomienda su uso.
@@ -222,9 +222,9 @@ sudo pip install -r requirements.min.txt
                 <td>string</td>
             </tr>           
         </table>
-        <h4>Configuración de las aplicaciones</h4>
+        <h4>Configuración específica de cada módulo</h4>
         <ul>
-            <li><a href="cvn.html#configuracion">Configuración de la aplicación CVN</a></li>
+            <li><a href="cvn.html#configuracion">Configuración del módulo CVN</a></li>
         </ul>
     </div>
 
@@ -417,21 +417,35 @@ urlpatterns += patterns('',
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">6. Creación de Web Services</li>
+        <li class="active">6. Creación de Servicios Web</li>
     </ul>
     <div class="content">
         <p>
-            Parte de la funcionalidad del Portal del Investigador requiere la existencia de <i>Web Services</i> que provean información necesaria.
+            Parte de la funcionalidad del Portal del Investigador requiere la existencia de <i>Servicios Web</i> que provean información necesaria.
             Estas funcionalidades no son esenciales, por lo que pueden ser deshabilitadas.
         </p>
         <p>
-            La información necesaria para la creación de los diferentes <i>Web Services</i> 
-            se puede encontrar en las secciones correspondientes de cada aplicación:
+            La información necesaria para la creación de los diferentes <i>Servicios Web</i> 
+            se puede encontrar en las secciones correspondientes de cada módulo:
         </p>
         <ul>
             <li><a href="core.html#webservices">CORE</a></li>
             <li><a href="cvn.html#webservices">CVN</a></li>
         </ul>
+    </div>
+</div>
+
+<div class="section">
+    <ul class="nav nav-tabs header">
+        <li class="active">6. Acceso al portal</li>
+    </ul>
+    <div class="content">
+        <p>
+            El estructura de las urls está diseñada para encajar en un esquema del tipo dominio_universidad/url_investigacion/aplicaciones/, como por ejemplo http://www.universidad.com/investigacion/cvn/
+            Esto puede ser cambiado desde el fichero <i>investigacion/urls.py</i>, pero se debe tener en cuenta que por defecto las urls seguirán este esquema. Por ejemplo, para acceder a la web desde el servidor de Django, suponiendo que se haya ejecutado con el siguiente comando:
+            <code>python manage.py runserver 8081</code>
+            Debería acceder a través de http://localhost:8081/investigacion/cvn/ si quisiera acceder a la aplicación CVN. Por defecto la url http://localhost:8081/investigacion/ queda libre para que se pueda poner una web de la Universidad externa a Django.
+        </p>
     </div>
 </div>
         </div>

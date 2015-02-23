@@ -129,25 +129,32 @@
     </ul>
     <div class="content">
         <p>
-            El Portal del Investigador aplica una arquitectura modular en la que cada componente proporciona un conjunto de características.
-        <ul>
-            <li><b>CORE: Módulo de Gestión Centralizada</b>
-                <p>
-                    Conjunto básico de herramientas disponibles para el resto de módulos (aplicaciones Django) del proyecto.
-                </p>
-            </li>
-            <li>
-                <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
-                <p>
-                    Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
-                </p>
-                <p>
-                    Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
-                    de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
-                    dicha extracción es la característica principal de este módulo.
-                </p>
-            </li>
-        </ul>
+            El Portal del Investigador ha sido diseñado bajo el concepto de descomposición modular permitiendo que cada componente sea utilizado de manera independiente pero a su vez pueda interactuar con otros módulos configurados.
+        </p>
+        <p> 
+            La arquitectura Modelo-Vista-Controlador (MVC) que provee el framework <a href="https://www.djangoproject.com/" target="_blank"> Django </a> apoya la creación de
+            aplicaciones o módulos que agrupen un conjunto de características asociadas al mismo concepto con capacidad de configuración propia.
+        </p>
+        <p>
+            A su vez, cumple con el concepto de dato único evitando redundar información, lo que hace obligatorio el uso de Servicios Web para integrarse con los datos de la Institución.
+            <ul>
+                <li><b>CORE: Módulo de Gestión Centralizada</b>
+                    <p>
+                        Zona común que contiene el conjunto básico de herramientas indispensables para el correcto funcionamiento del resto de módulos o aplicaciones del proyecto.
+                    </p>
+                </li>
+                <li>
+                    <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
+                    <p>
+                        Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
+                    </p>
+                    <p>
+                        Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML inscrustada, 
+                        de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
+                        dicha extracción es la característica principal de este módulo que permite la importación/exportación de datos curriculares.
+                    </p>
+                </li>
+            </ul>
         </p>
         <br>
         <p align="center">
@@ -158,26 +165,32 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Funcionalidades</li>
+        <li class="active">Características y Funcionalidades</li>
     </ul>
     <div class="content">
-        <h4>CORE</h4>
+        <p>
+            El Portal del Investigador es un proyecto ambicioso preparado para ser utilizado por cualquier entidad, organización o institución 
+            que requiera de una gestión curricular certificada. 
+            A continuación se detallan brevemente las principales
+            características que contempla cada módulo.
+        </p>
+        <h4>CORE: Módulo de Gestión Centralizada</h4>
         <p>
             <ul>
                 <li>
                     <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
                     <p>
                         El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
-                        y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
+                        y un código único empleado como clave en las distintas llamadas a Servicios Web de la Institución Académica.
                     </p>
                     <p>
-                        Se función principal es representar el perfil de un investigador.
+                        Su función principal es representar el perfil de un Investigador.
                     </p>
                 </li>
                 <li>
                     <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
                     <p>
-                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.  
+                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.
                     </p>
                 </li>
                 <li>
@@ -199,7 +212,7 @@
                 </li>
             </ul>
         <br>
-        <h4>CVN</h4>
+        <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
         <p>
             <ul>
                 <li>
@@ -209,6 +222,9 @@
                         creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
                         y sin modificaciones o manipulaciones posteriores.
                     </p>
+                    <p>
+                        Del CVN-PDF se extrae toda la información relevante para la Institución y se almacena en base de datos.
+                    </p>
                 </li>
                 <li>
                     <h5>Descargar una copia del CVN</h5>
@@ -217,15 +233,15 @@
                     </p>
                 </li>
                 <li>
-                    <h5>Exportar información de la institución académica a un CVN</h5>
+                    <h5>Exportar información de la Institución Académica a un CVN</h5>
                     <p>
                         Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
-                        se genera un CVN-PDF con la información de interés almacenada en las distintas bases de datos de la institución, 
+                        se genera un CVN-PDF con la información de interés almacenada en las distintas bases de datos de la Institución, 
                         sólo accesibles desde llamadas a Servicios Web.
                     </p>
                     <p>
-                        Cuando un Investigador exporta su información deberá importar el CVN-PDF resultante en el Editor de la FECYT y
-                        posteriormente subirlo al Portal del Investigador.
+                        El CVN-PDF generado contiene exclusivamente datos extraídos de las diferentes bases de datos de la Institución, por lo que 
+                        debe ser añadido (importado) en el Editor de la FECYT posteriormente para ampliar éste.
                     </p>
                 </li>
                 <li>
@@ -236,14 +252,14 @@
                     <p>
                         Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
                         concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
-                        producción científica de la institución.
+                        producción científica de la Institución.
                     </p>
                 </li>
                 <li>
                     <h5>Generación de Informes</h5>
                     <p>
                         Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
-                        área de conocimiento a partir de la información extraída de diferentes Web Services. 
+                        área de conocimiento a partir de la información extraída de diferentes Servicios Web. 
                     </p>
                 </li>
                 <li>
