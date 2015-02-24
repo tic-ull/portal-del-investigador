@@ -159,7 +159,7 @@
         </p>
         <br>
         <p align="center">
-            <canvas id="architecture" width="400" height="80"></canvas>
+            <img src="images/scheme.png"></img>
         </p>
     </div>
 </div>
@@ -273,41 +273,6 @@
         </p>
     </div>
 </div>
-
-<script>
-    var canvas = document.getElementById("architecture");
-    var context = canvas.getContext("2d");
-    var width = canvas.width / 2;
-    var height = canvas.height / 2;
-
-    // Second Layer
-    // Rectangle
-    context.fillStyle = "#8499AC";
-    context.fillRect(0, 0, width, 40);
-    // Border
-    context.strokeStyle = "black";
-    context.lineWidth = 1;
-    context.strokeRect(0, 0, width, 40);
-    // Text
-    context.fillStyle = "white";
-    context.font = "18pt sans-serif";
-    context.textAlign = "center";
-    context.fillText("CVN", width / 2, height - 10);
-
-    // First Layer
-    // Rectangle 
-    context.fillStyle = '#BC87BC';
-    context.fillRect(0, 40, canvas.width, 40);
-    // Border
-    context.strokeStyle = "black";
-    context.lineWidth = 1;
-    context.strokeRect(0, 40, canvas.width, 40);
-    // Text
-    context.fillStyle = "white";
-    context.font = "18pt sans-serif";
-    context.textAlign = "center";
-    context.fillText("CORE", width , height + 30);
-</script>
         </div>
     </section>
         </div>
