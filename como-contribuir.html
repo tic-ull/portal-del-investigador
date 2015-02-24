@@ -159,40 +159,6 @@
 
 <div class="section">
     <ul class="nav nav-tabs header">
-        <li class="active">Clonar un proyecto con Git-Submodules</li>
-    </ul>
-    <div class="content">
-        <p>
-            Cuando Git clona un proyecto con submódulos se crean los directorios asociados a ellos, 
-            pero no se descarga su contenido de forma automática, por tanto, estarán vacíos. 
-        </p>
-        <p>
-            Para obtener el contenido de los submódulos se deben ejecutar los siguientes comandos: 
-        </p>
-<pre>
-git clone &lt;url del repositorio&gt;
-git submodule init
-git submodule update
-</pre>
-        <p>
-            La ejecución de <i>git submodule init</i> sólo debería ser necesaria la primera vez, 
-            es decir, después de clonar el repositorio. Por contra, <i>git submodule update</i> 
-            podrá ser ejecutada en cualquier momento para así obtener los últimos cambios de cada 
-            submódulo. 
-        </p>
-        <p>
-            Una alternativa más simple para obtener el contenido de los submódulos es ejecutar 
-            el comando <i>git clone</i> con el parámetro <i>--recursive</i>. Git inicializará 
-            y actualizará cada submódulo de forma automática.
-        </p>
-<pre>
-git clone --recursive &lt;url del repositorio&gt;
-</pre>
-    </div>
-</div>
-
-<div class="section">
-    <ul class="nav nav-tabs header">
         <li class="active">Contribuidores</li>
     </ul>
     <div class="content">
@@ -201,11 +167,35 @@ git clone --recursive &lt;url del repositorio&gt;
         </p>
         <ol>
             <li>
-                Clonar el repositorio principal:
+                <p>
+                    Clonar el repositorio principal:
+                </p>
+                <p>
+                    Cuando Git clona un proyecto con submódulos se crean los directorios asociados a ellos, 
+                    pero no se descarga su contenido de forma automática, por tanto, estarán vacíos. 
+                </p>
+                <p>
+                    Para obtener el contenido de los submódulos se deben ejecutar los siguientes comandos: 
+                </p>
 <pre>
-git clone --recursive &lt;url del repositorio principal&gt;
+git clone &lt;url del repositorio&gt;
+git submodule init
+git submodule update
 </pre>
-
+            <p>
+                La ejecución de <i>git submodule init</i> sólo debería ser necesaria la primera vez, 
+                es decir, después de clonar el repositorio. Por contra, <i>git submodule update</i> 
+                podrá ser ejecutada en cualquier momento para así obtener los últimos cambios de cada 
+                submódulo. 
+            </p>
+            <p>
+                Una alternativa más simple para obtener el contenido de los submódulos es ejecutar 
+                el comando <i>git clone</i> con el parámetro <i>--recursive</i>. Git inicializará 
+                y actualizará cada submódulo de forma automática.
+            </p>
+<pre>
+git clone --recursive &lt;url del repositorio&gt;
+</pre> 
             </li>
             <li>
                 Crear un <i>Fork</i> del repositorio principal
@@ -268,7 +258,7 @@ git push &lt;nombre_remoto&gt; &lt;funcionalidad_branch&gt;
         <br>
         <h4>Pull Request</h4>
         <p>
-            Cuando una solicitud de Pull Request sea aceptada, se debe actualizar la 
+            Cuando una solicitud de <i>Pull Request</i> sea aceptada, se debe actualizar la 
             referencia del submódulo en el repositorio principal del proyecto:
         </p>
         <ol>
@@ -293,7 +283,6 @@ git push origin master
             </li>
         </ol> 
     </div>
-
 </div>
 
 <div class="section">
