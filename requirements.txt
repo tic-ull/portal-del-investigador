@@ -22,6 +22,7 @@ django-coverage
 enum34
 django-rosetta
 js.tinymce
+js.jquery_datatables
 django-staticfiles
 django-tables2
 redis
