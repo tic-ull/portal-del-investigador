@@ -62,7 +62,8 @@ if 'accounting' in st.INSTALLED_APPS:
 if 'statistics' in st.INSTALLED_APPS:
     urlpatterns += i18n_patterns(
         '',
-        url(r'^investigacion/estadisticas/', include('statistics.urls')),
+        url(r'^investigacion/estadisticas/', include('statistics.urls'),
+            name='statistics'),
     )
 
 if st.DEVEL:
