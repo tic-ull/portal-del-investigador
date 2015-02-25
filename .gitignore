@@ -6,7 +6,7 @@
 build/
 src/
 static/files/
-media
+/media
 settings_local.py
 investigacion/settings_management.py
 virtualenv
