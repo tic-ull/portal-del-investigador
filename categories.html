@@ -1,40 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es"
+>
 <head>
-        <meta charset="utf-8" />
-        <title>A Pelican Blog</title>
-        <link rel="stylesheet" href="/investigacion/theme/css/main.css" />
+    <title>Categories - Portal del Investigador</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!--[if IE]>
-            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="//static.ull.es/v3/dist/img/favicon.ico">
+    <!--[if IE]><link rel="shortcut icon" href="//static.ull.es/v3/dist/img/favicon.ico"><![endif]-->
+    <!-- Touchicon -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="//static.ull.es/v3/dist/img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="//static.ull.es/v3/dist/img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
+
+
+        <meta name="author" content="Universidad de La Laguna" />
+
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Portal del Investigador" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Portal del Investigador"/>
+        <meta property="og:url" content="/investigacion"/>
+        <meta property="og:description" content="Portal del Investigador"/>
+
+
+    <!-- ULL -->
+        <link rel="stylesheet" href="//static.ull.es/v3/dist/css/ull.min.css" type="text/css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.0.3a/ekko-lightbox.min.css"/>
+
+    <link href="/investigacion/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/investigacion/theme/css/style.css" type="text/css"/>
+    <noscript><style> .jsonly { display: none } </style></noscript>
+
+
 </head>
+<body>
 
-<body id="index" class="home">
-        <header id="banner" class="body">
-                <h1><a href="/investigacion/">A Pelican Blog </a></h1>
-                <nav><ul>
-                    <li><a href="/investigacion/pages/contacto.html">Contacto</a></li>
-                    <li><a href="/investigacion/pages/como-contribuir.html">Cómo Contribuir</a></li>
-                    <li><a href="/investigacion/core.html">CORE: Módulo de Gestión Centralizada</a></li>
-                    <li><a href="/investigacion/cvn.html">CVN: Módulo de Gestión del Currículum Vitae Normalizado</a></li>
-                    <li><a href="/investigacion/">Portal del Investigador</a></li>
-                    <li><a href="/investigacion/pages/instalacion.html">Instalación</a></li>
-                    <li><a href="/investigacion/team.html">Equipo de Desarrollo</a></li>
-                </ul></nav>
-        </header><!-- /#banner -->
-<ul>
-</ul>
-        <section id="extras" class="body">
-        </section><!-- /#extras -->
+<div class="navbar navbar-default navbar-ull" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-app-collapse">
+                <span class="sr-only">Desplegar menú de aplicación</span>
+                <span class="fa fa-bars fa-stack"></span>
+            </button>
+<!--
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                <span class="sr-only">Desplegar menú de navegación</span>
+                <span class="fa fa-link fa-stack"></span>
+            </button>
+-->
+            <a class="navbar-brand" href="http://www.ull.es" title="Universidad de La Laguna">Universidad de La Laguna</a>
+        </div>
+<!--
+        <div class="collapse navbar-collapse navbar-main-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contacto <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_blank" href="http://www.ull.es"><i class="fa fa-globe"></i> Página Web ULL</a></li>
+                        <li><a target="_blank" title="Formulario de contacto" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> Formulario de contacto</a></li>
+                        <li><a target="_blank" title="Teléfonos" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> Directorio telefónico</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <ul class="rrss text-muted list-inline">
+                                <li><a target="_blank" href="http://www.facebook.com/universidaddelalaguna"><i class="fa fa-facebook-square"></i></a></li>
+                                <li><a target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                                <li><a target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
+                                <li><a target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+-->
+    </div>
+</div>
+<div class="navbar navbar-default navbar-app" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+                <ol class="breadcrumb">
+                    <li class="active"><a href="/investigacion/">Portal del Investigador</a></li>
+                </ol>
+        </div>
+        <div class="collapse navbar-collapse navbar-app-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/investigacion/">Inicio</a></li>
+                        <li><a href="/investigacion/instalacion.html">Instalación</a></li>
+                        <li><a href="/investigacion/core.html">CORE</a></li>
+                        <li><a href="/investigacion/cvn.html">CVN</a></li>
+                        <li><a href="/investigacion/como-contribuir.html">Cómo Contribuir</a></li>
+                        <li><a href="/investigacion/team.html">Desarrolladores</a></li>
+                        <li><a href="/investigacion/contacto.html">Contacto</a></li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-9" role="main">
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
-                </address><!-- /#about -->
+    <section id="categories">
+        <h1>All Categories for Portal del Investigador</h1>
+        <div class="panel-group" id="accordion">
+        </div>
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
+    </section>
+        </div>
+        <div class="col-md-3 sidebar" id="sidebar">
+    <div class="well" style="text-align:center">
+        <a href="https://github.com/tic-ull/investigacion" target="_blank"><img src="images/forkme.png" border="0" alt="Fork me on GitHub" title="Fork me on GitHub"/></a>
+    </div>
+
+
+
+
+    <div class="panel panel-default panel-ull color-336699">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-external-link-square"></i> Links</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked" id="links">
+                    <a href="http://www.ull.es/" target="_blank"> <img width="100%" title="Universidad de La Laguna" src="images/ull.png"></img></a>
+                    <a href="http://cvn.fecyt.es/" target="_blank"> <img width="100%" title="Fundación Española para la Ciencia y la Tecnología" src="images/fecyt.png"></img></a>
+                    <a href="http://www.mineco.gob.es/" target="_blank"> <img width="100%" title="Ministerio de Economía y Competitividad" src="images/ministerio_economia.png"></img></a>
+                </ul>
+            </div>
+    </div>
+    <div class="panel panel-default panel-ull color-336699">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-copyright"></i> Licencia</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><div class="media"><a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank">GNU Affero General Public License v3.0</a></div></li>
+                    <li><div class="media"><a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank"><img alt="AGPL v3.0" class="media-object" style="display: block; margin-left: auto; margin-right: auto;" src="images/agplv3.png"></a></div></li>
+                </ul>
+            </div>
+    </div>
+    <div class="panel panel-default panel-ull color-336699">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-cogs"></i> Tecnología</h3>
+            </div>
+            <div class="panel-body" style="text-align: center;">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><div class="media"><a href="http://www.djangoproject.com/" target="_blank"><img src="https://www.djangoproject.com/m/img/badges/djangopowered126x54.gif" border="0" alt="Powered by Django." title="Powered by Django."/></a></div></li>
+                    <li><div class="media"><a href="https://www.python.org/" target="_blank"><img src="images/python.png" border="0" alt="Python" title="Python"/></a></div></li>
+                    <li><div class="media"><a href="http://redis.io/" target="_blank"><img src="images/redis.png" border="0" alt="Redis" title="Redis"/></a></div></li>
+                    <li><div class="media"><a href="http://www.reportlab.com/" target="_blank"><img src="images/reportlab.png" border="0" alt="ReportLab" title="ReportLab"/></a></div></li>
+                </ul>
+            </div>
+    </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-xs-12">
+            <ul class="address pull-left">
+                <li><strong>Universidad de La Laguna</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | Teléfono: (+34) 922 31 90 00/01</li>
+            </ul>
+            <ul class="list-inline text-muted pull-right">
+                <li><a title="Facebook" target="_blank" href="http://www.facebook.com/universidaddelalaguna"><span class="fa fa-facebook-square"></span></a></li>
+                <li><a title="Tuenti" target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                <li><a title="Twitter" target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
+                <li><a title="LinkedIn" target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
+                <li><a title="Página web ULL" target="_blank" href="http://www.ull.es"><i class="fa fa-globe"></i></a></li>
+            </ul>
+         </div>
+      </div>
+   </div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="//static.ull.es/v3/dist/js/ull.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.0.3a/ekko-lightbox.js"></script>
 
 </body>
 </html>
