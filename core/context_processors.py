@@ -69,6 +69,8 @@ def extra_info(request):
         'cp_languages': _get_langs_info(st.LANGUAGES, request.path),
         'first_name': first_name,
         'last_name': last_name,
+        'datatables_js_url': st.DATATABLES_JS_URL,
+        'datatables_css_url': st.DATATABLES_CSS_URL,
     }
 
 
