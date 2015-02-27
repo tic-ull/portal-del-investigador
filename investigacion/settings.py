@@ -339,6 +339,10 @@ WS_ULL_LEARNING = WS_SERVER_URL + 'get_formacion_academica?cod_persona=%s'
 
 # CVN Info ULL: profession / old_profession
 WS_ULL_CARGOS = WS_SERVER_URL + 'get_cargos?cod_persona=%s'
+WS_ULL_CONTRATOS = WS_SERVER_URL + 'get_contratos?cod_persona=%s'
+
+# CVN Info ULL: teaching
+WS_ULL_TEACHING = WS_SERVER_URL + 'get_docencia?cod_persona=%s'
 
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
