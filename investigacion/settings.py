@@ -103,6 +103,8 @@ INSTALLED_APPS = (
     'django_coverage',
     'django_tables2',
     'django.contrib.flatpages',
+    'constance',
+    'constance.backends.database',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -275,7 +277,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "core.context_processors.extra_info",
     "cvn.context_processors.extra_info",
-    "core.context_processors.installed_apps"
+    "core.context_processors.installed_apps",
 )
 
 TEMPLATE_LOADERS = (
@@ -315,6 +317,12 @@ EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
 SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
 
 # ************************* EMAIL ********************************************
+
+# ************************* CONSTANCE ****************************************
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
+CONSTANCE_CONFIG = {}
+# ************************* CONSTANCE ****************************************
 
 # ************************* SETTINGS LOCAL ***********************************
 try:
