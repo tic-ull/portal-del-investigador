@@ -35,3 +35,4 @@ markdown
 -e git+git@gitlab.stic.ull.es:gestion/mensajeria#egg=mensajeria
 mock
 pypdf2
+django-constance[database]
