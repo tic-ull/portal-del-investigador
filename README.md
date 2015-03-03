@@ -1,25 +1,24 @@
 # Portal del Investigador
 
-The *Portal del Investigador* is a project promoted by Service of Technologies 
-Information and Communication (STIC) at University of La Laguna (ULL) which 
-aims to centralize the management of activity and scientific production of the 
-researchers assigned to the ULL.
+*Portal del Investigador* is a project promoted by the Service of Information
+Technology and Communications (STIC) at University of La Laguna (ULL) which 
+aims to centralize the management of scientific activities and production of the 
+University researchers.
    
 ## CORE: Centralized Management Module
 
-Common area that contains the basic set of essential tools for the proper 
+Application that contains the basic set of essential tools for the proper
 operation of other modules or applications of the project.
 
-## CVN: Management Module Normalized Curriculum Vitae
+## CVN: Normalized Curriculum Vitae Management Module
 
-It relies on the CVN project of the *Fundación Española para la Ciencia y la 
+This application relies on the CVN project of the *Fundación Española para la Ciencia y la 
 Tecnología* (FECYT) of the Spanish Ministry of Economy and Competitiveness 
 (MINECO).
 
-A Normalized Curriculum Vitae is a PDF file format (CVN-PDF) with embedded 
+A Normalized Curriculum Vitae (CVN-PDF) is a PDF file with embedded 
 CVN-XML technology, so that standardized information can be extracted for 
-further processing, this extraction is the main feature of this module that 
-allows import/export of CVs.
+further processing. This extraction is the main feature of this module, but it also can import/export CVs.
 
 ## Official Documentation
 
