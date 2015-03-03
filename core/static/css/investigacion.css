@@ -4,11 +4,11 @@
 }
 
 th{
-    padding: 5px 18px !important;
+    padding: 5px 18px 5px 5px !important;
 }
 
 td{
-    padding: 5px 0px !important;
+    padding: 5px 5px 5px 5px !important;
 }
 
 .well{
