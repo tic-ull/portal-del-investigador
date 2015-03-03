@@ -104,7 +104,6 @@ INSTALLED_APPS = (
     'cvn',
     'crequest',
     'django_coverage',
-    'django_tables2',
     'django.contrib.flatpages',
     'constance',
     'constance.backends.database',
