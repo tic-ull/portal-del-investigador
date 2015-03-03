@@ -3,8 +3,12 @@
     word-wrap: normal;
 }
 
-th, td {
+th{
     padding: 5px 18px !important;
+}
+
+td{
+    padding: 5px 0px !important;
 }
 
 .well{
