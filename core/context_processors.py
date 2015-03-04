@@ -71,6 +71,7 @@ def extra_info(request):
         'last_name': last_name,
         'datatables_js_url': st.DATATABLES_JS_URL,
         'datatables_css_url': st.DATATABLES_CSS_URL,
+        'datatables_order_plugin': st.DATATABLES_ORDER_PLUGIN,
     }
 
 

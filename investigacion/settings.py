@@ -44,6 +44,7 @@ LOGIN_URL = 'login'  # Login address for login_required decorator
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
 DATATABLES_JS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/js/jquery.dataTables.min.js')
 DATATABLES_CSS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/css/jquery.dataTables.min.css')
+DATATABLES_ORDER_PLUGIN_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/noaccents.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://www.example.com'
 # ******************************* URLS **************************************
