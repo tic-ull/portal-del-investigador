@@ -215,14 +215,14 @@
     };
 
     function getCleanText(text) {
-        var match = regex.exec(text);
-        if (match.length == 2) {
-            var x = match[1];        
+        var rmatch = regex.exec(text);
+        if (rmatch && rmatch.length == 2) {
+            var x = rmatch[1];
         }
         else {
             x = text;
         }
-        x = x.toUpperCase();
+        x = x.trim().toUpperCase();
         for (var key in dictionary) {
             x = x.replace(key, dictionary[key]);
         }
