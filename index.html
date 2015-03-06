@@ -2,7 +2,7 @@
 <html lang="es"
 >
 <head>
-    <title>Portal del Investigador - Portal del Investigador</title>
+    <title>Portal del Investigador</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -18,24 +18,23 @@
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="//static.ull.es/v3/dist/img/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="//static.ull.es/v3/dist/img/apple-touch-icon-57-precomposed.png">
 
-<link rel="canonical" href="/portal-del-investigador/">
-
+<link rel="canonical" href="">
         <meta name="author" content="Universidad de La Laguna" />
-        <meta name="description" content="Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos ..." />
 
-    <meta property="og:site_name" content="Portal del Investigador" />
-    <meta property="og:type" content="article"/>
-    <meta property="og:title" content="Portal del Investigador"/>
-    <meta property="og:url" content="/portal-del-investigador/"/>
-    <meta property="og:description" content="Qué es el Portal del Investigador El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos ..." />
+    <!-- Open Graph tags -->
+        <meta property="og:site_name" content="Portal del Investigador" />
+        <meta property="og:type" content="website"/>
+        <meta property="og:title" content="Portal del Investigador"/>
+        <meta property="og:url" content=""/>
+        <meta property="og:description" content="Portal del Investigador"/>
 
 
     <!-- ULL -->
         <link rel="stylesheet" href="//static.ull.es/v3/dist/css/ull.min.css" type="text/css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/3.0.3a/ekko-lightbox.min.css"/>
 
-    <link href="/portal-del-investigador/theme/css/pygments/native.css" rel="stylesheet">
-    <link rel="stylesheet" href="/portal-del-investigador/theme/css/style.css" type="text/css"/>
+    <link href="/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="/theme/css/style.css" type="text/css"/>
     <noscript><style> .jsonly { display: none } </style></noscript>
 
 
@@ -86,19 +85,19 @@
     <div class="container-fluid">
         <div class="navbar-header">
                 <ol class="breadcrumb">
-                    <li class="active"><a href="/portal-del-investigador/">Portal del Investigador</a></li>
+                    <li class="active"><a href="/">Portal del Investigador</a></li>
                 </ol>
         </div>
         <div class="collapse navbar-collapse navbar-app-collapse">
             <ul class="nav navbar-nav navbar-right">
-                        <li class="active"><a href="/portal-del-investigador/">Inicio</a></li>
-                        <li><a href="/portal-del-investigador/instalacion.html">Instalación</a></li>
-                        <li><a href="/portal-del-investigador/core.html">CORE</a></li>
-                        <li><a href="/portal-del-investigador/cvn.html">CVN</a></li>
-                        <li><a href="/portal-del-investigador/galeria.html">Galería</a></li>
-                        <li><a href="/portal-del-investigador/como-contribuir.html">Cómo Contribuir</a></li>
-                        <li><a href="/portal-del-investigador/team.html">Desarrolladores</a></li>
-                        <li><a href="/portal-del-investigador/contacto.html">Contacto</a></li>
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/instalacion.html">Instalación</a></li>
+                        <li><a href="/core.html">CORE</a></li>
+                        <li><a href="/cvn.html">CVN</a></li>
+                        <li><a href="/galeria.html">Galería</a></li>
+                        <li><a href="/como-contribuir.html">Cómo Contribuir</a></li>
+                        <li><a href="/team.html">Desarrolladores</a></li>
+                        <li><a href="/contacto.html">Contacto</a></li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -108,179 +107,7 @@
     <div class="row">
         <div class="col-md-9" role="main">
 
-    <section id="content" class="body">
-        <h1 class="page-header">Portal del Investigador</h1>
-        
-        <div class="entry-content">
-            <div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Qué es el Portal del Investigador</li>
-    </ul>
-    <div class="content">
-        <p>
-            El Portal del Investigador es un proyecto promovido por el Servicio de Tecnologías de la Información y la Comunicación (STIC) de la Universidad de La Laguna (ULL) 
-            que tiene como finalidad centralizar la gestión de la actividad y producción científica de los investigadores adscritos a la ULL. 
-        </p>
-    </div>
-</div>
 
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Arquitectura</li>
-    </ul>
-    <div class="content">
-        <p>
-            El Portal del Investigador ha sido diseñado bajo el concepto de descomposición modular, permitiendo que cada componente sea utilizado de manera independiente pero a su vez pueda interactuar con otros módulos previamente configurados.
-        </p>
-        <p> 
-            La arquitectura Modelo-Vista-Controlador (MVC) que provee el framework <a href="https://www.djangoproject.com/" target="_blank">Django</a> facilita la creación de
-            aplicaciones o módulos que agrupan un conjunto de características asociadas al mismo concepto con capacidad de configuración propia.
-        </p>
-        <p>
-            Una característica importante del Portal del Investigador es cumplir con la filosofía del Dato Único de la institución académica, evitando así información redundada, 
-            por lo que es necesario el uso de Servicios Web para integrarse con las distintas fuentes de datos de la institución.
-        </p>
-        <ul>
-            <li><b>CORE: Módulo de Gestión Centralizada</b>
-                <p>
-                    Zona común que contiene el conjunto básico de herramientas indispensables para el correcto funcionamiento del resto de módulos o aplicaciones del proyecto.
-                </p>
-            </li>
-            <li>
-                <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
-                <p>
-                    Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
-                </p>
-                <p>
-                    Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML incrustada, 
-                    de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
-                    dicha extracción es la característica principal de este módulo que permite la importación/exportación de datos curriculares.
-                </p>
-            </li>
-        </ul>
-
-        <br>
-        <p style="text-align:center">
-            <img src="images/scheme.png" alt="Arquitectura">
-        </p>
-    </div>
-
-</div>
-
-<div class="section">
-    <ul class="nav nav-tabs header">
-        <li class="active">Características y Funcionalidades</li>
-    </ul>
-    <div class="content">
-        <p>
-            El Portal del Investigador es un proyecto ambicioso, diseñado para ser utilizado por cualquier entidad, organización o institución 
-            que requiera de una gestión curricular certificada por la FECYT.
-        </p> 
-        <p>
-            En la presente Sección se detallan brevemente las principales características que se contemplan en cada módulo.
-        </p>
-        <h4>CORE: Módulo de Gestión Centralizada</h4>
-        <ul>
-            <li>
-                <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
-                <p>
-                    El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
-                    y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
-                </p>
-                <p>
-                    Su función principal es representar el perfil de un Investigador.
-                </p>
-            </li>
-            <li>
-                <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
-                <p>
-                    Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.
-                </p>
-            </li>
-            <li>
-                <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
-                <p>
-                    Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
-                </p>
-            </li>
-            <li>
-                <h5>Template Base</h5>
-                <p>
-                    Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
-                    cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
-                </p>
-                <div class="alert alert-danger">
-                    <b>La Imagen Corporativa y signos distintivos de la Universidad de La Laguna</b> están sujetos a derechos de <b>Propiedad Intelectual</b>, 
-                    por lo que deberán ser reemplazados. 
-                 </div>
-            </li>
-            <li>
-                <h5>Django Constance</h5>
-                <p>
-                    Permite la edición de ajustes de forma dinámica desde la Interfaz de Administración.
-                </p>
-            </li>
-        </ul>
-        <br>
-        <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
-        <ul>
-            <li>
-                <h5>Subir un nuevo CVN</h5>
-                <p>
-                    Un Investigador podrá subir un nuevo CVN siempre que este sea válido, es decir,
-                    creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
-                    y sin modificaciones o manipulaciones posteriores.
-                </p>
-                <p>
-                    Del CVN-PDF se extrae toda la información relevante para la institución y se almacena en base de datos.
-                </p>
-            </li>
-            <li>
-                <h5>Descargar una copia del CVN</h5>
-                <p>
-                    Un Investigador podrá descargarse en cualquier momento una copia de su CVN.
-                </p>
-            </li>
-            <li>
-                <h5>Exportar información de la Institución Académica a un CVN</h5>
-                <p>
-                    Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
-                    se genera un CVN-PDF que contiene exclusivamente información de interés extraída de las distintas bases de datos de la institución, 
-                    sólo accesible desde llamadas a Servicios Web. 
-                </p>
-                <p>
-                    El CVN-PDF generado debe ser añadido (importado) en el Editor de la FECYT posteriormente, para poder así ampliar el CVN inicial.
-                </p>
-            </li>
-            <li>
-                <h5>Visualizar información extraída de un CVN</h5>
-                <p>
-                    Se ofrece a los investigadores la posibilidad de visualizar el contenido extraído de sus CVN.
-                </p>
-                <p>
-                    Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
-                    concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
-                    producción científica de la institución.
-                </p>
-            </li>
-            <li>
-                <h5>Generación de Informes</h5>
-                <p>
-                    Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
-                    área de conocimiento a partir de la información extraída de diferentes Servicios Web. 
-                </p>
-            </li>
-            <li>
-                <h5>Limpieza de registros duplicados</h5>
-                <p>
-                    Busca pares de elementos similares en los CvnItem insertados (posibles duplicados) con el objetivo de unificarlos.
-                </p>
-            </li>
-        </ul>
-    </div>
-</div>
-        </div>
-    </section>
         </div>
         <div class="col-md-3 sidebar" id="sidebar">
     <div class="well" style="text-align:center">
