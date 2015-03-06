@@ -31,3 +31,4 @@ mock
 pypdf2
 -e hg+https://bitbucket.org/cpcc/django-cas#egg=django_cas
 django-constance[database]
+django-logentry-admin

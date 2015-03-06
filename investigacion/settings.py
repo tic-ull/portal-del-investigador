@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'constance',
     'constance.backends.database',
+    'logentry_admin',
 )
 # ******************************* INSTALLED APPS *****************************
 
