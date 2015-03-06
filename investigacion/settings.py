@@ -46,6 +46,7 @@ DATATABLES_JS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/med
 DATATABLES_CSS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/css/jquery.dataTables.min.css')
 DATATABLES_SORT_NORMALIZE_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/noaccents.js')
 DATATABLES_SORT_DATE_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/date.js')
+DATATABLES_SORT_PERCENT_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/percent.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://www.example.com'
 # ******************************* URLS **************************************

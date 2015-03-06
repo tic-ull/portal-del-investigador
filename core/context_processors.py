@@ -73,6 +73,7 @@ def extra_info(request):
         'datatables_css_url': st.DATATABLES_CSS_URL,
         'datatables_sort_normalize': st.DATATABLES_SORT_NORMALIZE_URL,
         'datatables_sort_date': st.DATATABLES_SORT_DATE_URL,
+        'datatables_sort_percent': st.DATATABLES_SORT_PERCENT_URL,
     }
 
 
