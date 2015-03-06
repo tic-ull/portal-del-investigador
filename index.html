@@ -138,30 +138,32 @@
         <p>
             Una característica importante del Portal del Investigador es cumplir con la filosofía del Dato Único de la institución académica, evitando así información redundada, 
             por lo que es necesario el uso de Servicios Web para integrarse con las distintas fuentes de datos de la institución.
-            <ul>
-                <li><b>CORE: Módulo de Gestión Centralizada</b>
-                    <p>
-                        Zona común que contiene el conjunto básico de herramientas indispensables para el correcto funcionamiento del resto de módulos o aplicaciones del proyecto.
-                    </p>
-                </li>
-                <li>
-                    <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
-                    <p>
-                        Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
-                    </p>
-                    <p>
-                        Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML incrustada, 
-                        de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
-                        dicha extracción es la característica principal de este módulo que permite la importación/exportación de datos curriculares.
-                    </p>
-                </li>
-            </ul>
         </p>
+        <ul>
+            <li><b>CORE: Módulo de Gestión Centralizada</b>
+                <p>
+                    Zona común que contiene el conjunto básico de herramientas indispensables para el correcto funcionamiento del resto de módulos o aplicaciones del proyecto.
+                </p>
+            </li>
+            <li>
+                <b>CVN: Módulo de Gestión del Currículum Vitae Normalizado</b>
+                <p>
+                    Se apoya en el <a href="http://cvn.fecyt.es/" target="_blank">Proyecto CVN de la Federación Española para la Ciencia y la Tecnología (FECYT)</a>.
+                </p>
+                <p>
+                    Un Currículum Vitae Normalizado es un fichero en formato PDF (CVN-PDF) con tecnología CVN-XML incrustada, 
+                    de tal manera que la información normalizada en él puede ser extraída para su posterior tratamiento, 
+                    dicha extracción es la característica principal de este módulo que permite la importación/exportación de datos curriculares.
+                </p>
+            </li>
+        </ul>
+
         <br>
-        <p align="center">
-            <img src="images/scheme.png"></img>
+        <p style="text-align:center">
+            <img src="images/scheme.png" alt="Arquitectura">
         </p>
     </div>
+
 </div>
 
 <div class="section">
@@ -172,111 +174,107 @@
         <p>
             El Portal del Investigador es un proyecto ambicioso, diseñado para ser utilizado por cualquier entidad, organización o institución 
             que requiera de una gestión curricular certificada por la FECYT.
-        </p>
         </p> 
             En la presente Sección se detallan brevemente las principales características que se contemplan en cada módulo.
         </p>
         <h4>CORE: Módulo de Gestión Centralizada</h4>
-        <p>
-            <ul>
-                <li>
-                    <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
-                    <p>
-                        El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
-                        y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
-                    </p>
-                    <p>
-                        Su función principal es representar el perfil de un Investigador.
-                    </p>
-                </li>
-                <li>
-                    <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
-                    <p>
-                        Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.
-                    </p>
-                </li>
-                <li>
-                    <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
-                    <p>
-                        Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
-                    </p>
-                </li>
-                <li>
-                    <h5>Template Base</h5>
-                    <p>
-                        Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
-                        cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
-                    </p>
-                    <div class="alert alert-danger">
-                        <b>La Imagen Corporativa y signos distintivos de la Universidad de La Laguna</b> están sujetos a derechos de <b>Propiedad Intelectual</b>, 
-                        por lo que deberán ser reemplazados. 
-                     </div>
-                </li>
-                <li>
-                    <h5>Django Constance</h5>
-                    <p>
-                        Permite la edición de ajustes de forma dinámica desde la Interfaz de Administración.
-                    </p>
-                </li>
-            </ul>
+        <ul>
+            <li>
+                <h5>Perfil de Usuario (modelo <i>UserProfile</i>)</h5>
+                <p>
+                    El perfil de un usuario, relacionado con el modelo <i>User</i> de Django, almacena el número de documento de identidad del usuario 
+                    y un código único empleado como clave en las distintas llamadas a Servicios Web de la institución académica.
+                </p>
+                <p>
+                    Su función principal es representar el perfil de un Investigador.
+                </p>
+            </li>
+            <li>
+                <h5>Registro de Eventos (modelo <i>Log</i>)</h5>
+                <p>
+                    Su funcionalidad principal es registrar y tipificar la actividad de un usuario en una aplicación en un momento dado.
+                </p>
+            </li>
+            <li>
+                <h5>Preguntas Frecuentes (<i>FlatPages</i>)</h5>
+                <p>
+                    Permite la creación de una FAQ del proyecto multiidioma a través de la Interfaz de Administración de Django. 
+                </p>
+            </li>
+            <li>
+                <h5>Template Base</h5>
+                <p>
+                    Se proporciona una plantilla base (<i>core/templates/core/base.html</i>) con todos los elementos comunes del proyecto, 
+                    cuyos bloques pueden ser sobreescritos desde las aplicaciones gracias al sistema de herencia de plantillas de Django.
+                </p>
+                <div class="alert alert-danger">
+                    <b>La Imagen Corporativa y signos distintivos de la Universidad de La Laguna</b> están sujetos a derechos de <b>Propiedad Intelectual</b>, 
+                    por lo que deberán ser reemplazados. 
+                 </div>
+            </li>
+            <li>
+                <h5>Django Constance</h5>
+                <p>
+                    Permite la edición de ajustes de forma dinámica desde la Interfaz de Administración.
+                </p>
+            </li>
+        </ul>
         <br>
         <h4>CVN: Módulo de Gestión del Currículum Vitae Normalizado</h4>
-        <p>
-            <ul>
-                <li>
-                    <h5>Subir un nuevo CVN</h5>
-                    <p>
-                        Un Investigador podrá subir un nuevo CVN siempre que este sea válido, es decir,
-                        creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
-                        y sin modificaciones o manipulaciones posteriores.
-                    </p>
-                    <p>
-                        Del CVN-PDF se extrae toda la información relevante para la institución y se almacena en base de datos.
-                    </p>
-                </li>
-                <li>
-                    <h5>Descargar una copia del CVN</h5>
-                    <p>
-                        Un Investigador podrá descargarse en cualquier momento una copia de su CVN.
-                    </p>
-                </li>
-                <li>
-                    <h5>Exportar información de la Institución Académica a un CVN</h5>
-                    <p>
-                        Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
-                        se genera un CVN-PDF que contiene exclusivamente información de interés extraída de las distintas bases de datos de la institución, 
-                        sólo accesible desde llamadas a Servicios Web. 
-                    </p>
-                    <p>
-                        El CVN-PDF generado debe ser añadido (importado) en el Editor de la FECYT posteriormente, para poder así ampliar el CVN inicial.
-                    </p>
-                </li>
-                <li>
-                    <h5>Visualizar información extraída de un CVN</h5>
-                    <p>
-                        Se ofrece a los investigadores la posibilidad de visualizar el contenido extraído de sus CVN.
-                    </p>
-                    <p>
-                        Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
-                        concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
-                        producción científica de la institución.
-                    </p>
-                </li>
-                <li>
-                    <h5>Generación de Informes</h5>
-                    <p>
-                        Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
-                        área de conocimiento a partir de la información extraída de diferentes Servicios Web. 
-                    </p>
-                </li>
-                <li>
-                    <h5>Limpieza de registros duplicados</h5>
-                    <p>
-                        Busca pares de elementos similares en los CvnItem insertados (posibles duplicados) con el objetivo de unificarlos.
-                    </p>
-                </li>
-            </ul>
-        </p>
+        <ul>
+            <li>
+                <h5>Subir un nuevo CVN</h5>
+                <p>
+                    Un Investigador podrá subir un nuevo CVN siempre que este sea válido, es decir,
+                    creado desde el <a href="https://cvn.fecyt.es/editor/" target="_blank">Editor de CVN de la FECYT</a> 
+                    y sin modificaciones o manipulaciones posteriores.
+                </p>
+                <p>
+                    Del CVN-PDF se extrae toda la información relevante para la institución y se almacena en base de datos.
+                </p>
+            </li>
+            <li>
+                <h5>Descargar una copia del CVN</h5>
+                <p>
+                    Un Investigador podrá descargarse en cualquier momento una copia de su CVN.
+                </p>
+            </li>
+            <li>
+                <h5>Exportar información de la Institución Académica a un CVN</h5>
+                <p>
+                    Con el objetivo de facilitar la creación de un CVN inicial a los investigadores, 
+                    se genera un CVN-PDF que contiene exclusivamente información de interés extraída de las distintas bases de datos de la institución, 
+                    sólo accesible desde llamadas a Servicios Web. 
+                </p>
+                <p>
+                    El CVN-PDF generado debe ser añadido (importado) en el Editor de la FECYT posteriormente, para poder así ampliar el CVN inicial.
+                </p>
+            </li>
+            <li>
+                <h5>Visualizar información extraída de un CVN</h5>
+                <p>
+                    Se ofrece a los investigadores la posibilidad de visualizar el contenido extraído de sus CVN.
+                </p>
+                <p>
+                    Por otro lado, la opción "Informe ULL", se emplea para visualizar la información de un CVN determinado,
+                    concretamente el del usuario "GesInv-ULL". Esta funcionalidad está diseñada para mostrar toda la 
+                    producción científica de la institución.
+                </p>
+            </li>
+            <li>
+                <h5>Generación de Informes</h5>
+                <p>
+                    Genera un Informe en PDF o CSV con los datos de producción científica de cada departamento o 
+                    área de conocimiento a partir de la información extraída de diferentes Servicios Web. 
+                </p>
+            </li>
+            <li>
+                <h5>Limpieza de registros duplicados</h5>
+                <p>
+                    Busca pares de elementos similares en los CvnItem insertados (posibles duplicados) con el objetivo de unificarlos.
+                </p>
+            </li>
+        </ul>
     </div>
 </div>
         </div>
@@ -284,7 +282,7 @@
         </div>
         <div class="col-md-3 sidebar" id="sidebar">
     <div class="well" style="text-align:center">
-        <a href="https://github.com/tic-ull/portal-del-investigador" target="_blank"><img src="images/forkme.png" border="0" alt="Fork me on GitHub" title="Fork me on GitHub"/></a>
+        <a href="https://github.com/tic-ull/portal-del-investigador" target="_blank"><img src="images/forkme.png" style={border:0;} alt="Fork me on GitHub" title="Fork me on GitHub"/></a>
     </div>
 
 
@@ -296,9 +294,9 @@
                 <h3 class="panel-title"><i class="fa fa-external-link-square"></i> Links</h3>
             </div>
             <div class="panel-body">
-                    <a href="http://www.ull.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%; margin-bottom: 5%;" title="Universidad de La Laguna" src="images/ull.png"></img></a>
-                    <a href="http://cvn.fecyt.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%; margin-bottom: 5%;" title="Fundación Española para la Ciencia y la Tecnología" src="images/fecyt.png"></img></a>
-                    <a href="http://www.mineco.gob.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%;" title="Ministerio de Economía y Competitividad" src="images/ministerio_economia.png"></a>
+                    <a href="http://www.ull.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%; margin-bottom: 5%;" title="Universidad de La Laguna" alt="Universidad de La Laguna" src="images/ull.png"></a>
+                    <a href="http://cvn.fecyt.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%; margin-bottom: 5%;" alt="Fundación Española para la Ciencia y la Tecnología" title="Fundación Española para la Ciencia y la Tecnología" src="images/fecyt.png"></a>
+                    <a href="http://www.mineco.gob.es/" target="_blank"><img width="80%" style="margin-left: 10%; margin-right: 10%;" alt="Ministerio de Economía y Competitividad" title="Ministerio de Economía y Competitividad" src="images/ministerio_economia.png"></a>
             </div>
     </div>
     <div class="panel panel-default panel-ull color-336699">
@@ -318,10 +316,10 @@
             </div>
             <div class="panel-body" style="text-align: center;">
                 <ul class="nav nav-pills nav-stacked">
-                    <li><div class="media"><a href="http://www.djangoproject.com/" target="_blank"><img src="https://www.djangoproject.com/m/img/badges/djangopowered126x54.gif" border="0" alt="Powered by Django." title="Powered by Django."/></a></div></li>
-                    <li><div class="media"><a href="https://www.python.org/" target="_blank"><img src="images/python.png" border="0" alt="Python" title="Python"/></a></div></li>
-                    <li><div class="media"><a href="http://redis.io/" target="_blank"><img src="images/redis.png" border="0" alt="Redis" title="Redis"/></a></div></li>
-                    <li><div class="media"><a href="http://www.reportlab.com/" target="_blank"><img src="images/reportlab.png" border="0" alt="ReportLab" title="ReportLab"/></a></div></li>
+                    <li><div class="media"><a href="http://www.djangoproject.com/" target="_blank"><img src="https://www.djangoproject.com/m/img/badges/djangopowered126x54.gif" style={border:0;} alt="Powered by Django." title="Powered by Django."/></a></div></li>
+                    <li><div class="media"><a href="https://www.python.org/" target="_blank"><img src="images/python.png" style={border:0;} alt="Python" title="Python"/></a></div></li>
+                    <li><div class="media"><a href="http://redis.io/" target="_blank"><img src="images/redis.png" style={border:0;} alt="Redis" title="Redis"/></a></div></li>
+                    <li><div class="media"><a href="http://www.reportlab.com/" target="_blank"><img src="images/reportlab.png" style={border:0;} alt="ReportLab" title="ReportLab"/></a></div></li>
                 </ul>
             </div>
     </div>
