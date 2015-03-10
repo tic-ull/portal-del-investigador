@@ -24,14 +24,16 @@
 
 from .forms import PageForm
 from .models import UserProfile, Log
+from django import forms
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.models import User, Group
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from modeltranslation.translator import translator, TranslationOptions
 
 
@@ -122,6 +124,42 @@ class LogAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         return tuple(Log._meta.get_all_field_names())
 
+
+class GroupAdminForm(forms.ModelForm):
+
+    users = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        required=False,
+        widget=FilteredSelectMultiple(
+            verbose_name=_('Users'),
+            is_stacked=False
+        )
+    )
+
+    class Meta:
+        model = Group
+
+    def __init__(self, *args, **kwargs):
+        super(GroupAdminForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['users'].initial = self.instance.user_set.all()
+
+    def save(self, commit=True):
+        group = super(GroupAdminForm, self).save(commit=False)
+        if commit:
+            group.save()
+        if group.pk:
+            group.user_set = self.cleaned_data['users']
+            self.save_m2m()
+        return group
+
+
+class CustomGroupAdmin(GroupAdmin):
+    form = GroupAdminForm
+
+
+admin.site.unregister(Group)
+admin.site.register(Group, CustomGroupAdmin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Log, LogAdmin)
