@@ -84,7 +84,10 @@ class CustomUserAdmin(UserAdmin):
     inlines = [
         UserProfileInline,
     ]
+
     fieldsets = remove_fieldsets(UserAdmin, 'user_permissions')
+
+    list_filter = UserAdmin.list_filter + ('groups__name', )
 
 
 class LogAdmin(admin.ModelAdmin):
