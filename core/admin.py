@@ -26,6 +26,7 @@ from .forms import PageForm
 from .models import UserProfile, Log
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Group
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
@@ -33,7 +34,6 @@ from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from modeltranslation.translator import translator, TranslationOptions
 
 
@@ -128,11 +128,12 @@ class LogAdmin(admin.ModelAdmin):
 class GroupAdminForm(forms.ModelForm):
 
     users = forms.ModelMultipleChoiceField(
+        label=_(u'Usuarios'),
         queryset=User.objects.all(),
         required=False,
         widget=FilteredSelectMultiple(
-            verbose_name=_('Users'),
-            is_stacked=False
+            verbose_name=_(u'Usuarios'),
+            is_stacked=False,
         )
     )
 
