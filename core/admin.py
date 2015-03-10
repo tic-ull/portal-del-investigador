@@ -61,17 +61,26 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('rrhh_code', )
 
 
-UserAdmin.list_display = (
-    'username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff'
-)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'email',
+                    'is_active', 'is_staff')
 
-UserAdmin.readonly_fields = ('first_name', 'last_name', 'email')
+    readonly_fields = ('first_name', 'last_name', 'email')
 
-UserAdmin.search_fields += ('profile__documento', 'profile__rrhh_code', )
+    search_fields = UserAdmin.search_fields + (
+        'profile__documento', 'profile__rrhh_code', )
 
-UserAdmin.inlines = [
-    UserProfileInline,
-]
+    inlines = [
+        UserProfileInline,
+    ]
+
+    lst = list(UserAdmin.fieldsets)
+    for sets in lst:
+        if 'user_permissions' in sets[1]['fields']:
+            field = list(sets[1]['fields'])
+            field.remove('user_permissions')
+            sets[1]['fields'] = tuple(field)
+    fieldsets = tuple(lst)
 
 
 class LogAdmin(admin.ModelAdmin):
@@ -101,7 +110,7 @@ class LogAdmin(admin.ModelAdmin):
         return tuple(Log._meta.get_all_field_names())
 
 admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(User, CustomUserAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, CustomFlatPageAdmin)
