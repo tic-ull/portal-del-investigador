@@ -60,8 +60,10 @@ class UserProfileInline(admin.StackedInline):
     extra = 0
     readonly_fields = ('rrhh_code', )
 
+removal_message = _(u"Se ha deshabilitado la configuración de permisos" \
+                    u" por usuario. Configure los permisos por grupos.")
 
-def remove_fieldsets(cls, field_name):
+def remove_fieldsets(cls, field_name, removal_message):
     """Remove a field from the fieldset of an Admin class"""
     lst = list(cls.fieldsets)
     for sets in lst:
@@ -69,6 +71,7 @@ def remove_fieldsets(cls, field_name):
             field = list(sets[1]['fields'])
             field.remove(field_name)
             sets[1]['fields'] = tuple(field)
+            sets[1]['description'] = removal_message
     return tuple(lst)
 
 
@@ -84,7 +87,7 @@ class CustomUserAdmin(UserAdmin):
     inlines = [
         UserProfileInline,
     ]
-    fieldsets = remove_fieldsets(UserAdmin, 'user_permissions')
+    fieldsets = remove_fieldsets(UserAdmin, 'user_permissions', removal_message)
 
 
 class LogAdmin(admin.ModelAdmin):
