@@ -61,6 +61,17 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('rrhh_code', )
 
 
+def remove_fieldsets(cls, field_name):
+    """Remove a field from the fieldset of an Admin class"""
+    lst = list(cls.fieldsets)
+    for sets in lst:
+        if field_name in sets[1]['fields']:
+            field = list(sets[1]['fields'])
+            field.remove(field_name)
+            sets[1]['fields'] = tuple(field)
+    return tuple(lst)
+
+
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'is_active', 'is_staff')
@@ -73,14 +84,7 @@ class CustomUserAdmin(UserAdmin):
     inlines = [
         UserProfileInline,
     ]
-
-    lst = list(UserAdmin.fieldsets)
-    for sets in lst:
-        if 'user_permissions' in sets[1]['fields']:
-            field = list(sets[1]['fields'])
-            field.remove('user_permissions')
-            sets[1]['fields'] = tuple(field)
-    fieldsets = tuple(lst)
+    fieldsets = remove_fieldsets(UserAdmin, 'user_permissions')
 
 
 class LogAdmin(admin.ModelAdmin):
