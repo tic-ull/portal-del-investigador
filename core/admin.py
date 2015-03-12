@@ -29,6 +29,7 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Group
+from django.template import Context, loader
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
@@ -63,11 +64,14 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('rrhh_code', )
 
 
-removal_message = _(u"Se ha deshabilitado la configuración de permisos" \
-                    u" por usuario. Configure los permisos por grupos.")
+removal_text = _(u'Se ha deshabilitado la configuración de permisos por'
+                 u' usuario, ya que deben configurarse por grupos.')
+
+removal_message = loader.get_template('core/partials/message_box.html').render(
+    Context({'message_content': removal_text}))
 
 
-def remove_fieldsets(cls, field_name, removal_message):
+def remove_fieldsets(cls, field_name, message):
     """Remove a field from the fieldset of an Admin class"""
     lst = list(cls.fieldsets)
     for sets in lst:
@@ -75,7 +79,7 @@ def remove_fieldsets(cls, field_name, removal_message):
             field = list(sets[1]['fields'])
             field.remove(field_name)
             sets[1]['fields'] = tuple(field)
-            sets[1]['description'] = removal_message
+            sets[1]['description'] = message
     return tuple(lst)
 
 
