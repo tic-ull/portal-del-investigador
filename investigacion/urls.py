@@ -28,7 +28,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView, RedirectView
-
+from core.admin import readonly_admin_site
 import debug_toolbar
 
 admin.autodiscover()
@@ -36,6 +36,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^investigacion/admin/', include(admin.site.urls)),
+    url(r'^investigacion/adm/', include(readonly_admin_site.urls)),
     url(r'^investigacion/accounts/login/$',
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',

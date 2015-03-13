@@ -26,6 +26,7 @@ from .forms import PageForm
 from .models import UserProfile, Log
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.sites import AdminSite
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import User, Group
@@ -36,6 +37,13 @@ from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
+
+
+class ReadonlyAdminSite(AdminSite):
+    site_header = 'Readonly administration'
+
+
+readonly_admin_site = ReadonlyAdminSite(name='readonlyadmin')
 
 
 # Options for the flatpages (faq)
