@@ -4,20 +4,18 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 
 
-def add_view_permission_to_userprofile(apps, schema_editor):
+def add_readonly_staff_permission(apps, schema_editor):
     ContentType = apps.get_model('contenttypes.ContentType')
     Permission = apps.get_model('auth.Permission')
-    model_name = 'userprofile'
-    content_type = ContentType.objects.get(model=model_name)
-
+    content_type = ContentType.objects.get(app_label='auth', model='user')
     Permission.objects.create(content_type=content_type,
-                              codename='view_' + model_name,
-                              name='Can view ' + model_name)
+                              codename='readonly_staff',
+                              name='Can acces readonly admin panel')
 
 
-def delete_view_permission_from_userprofile(apps, schema_editor):
+def delete_readonly_staff_permission(apps, schema_editor):
     apps.get_model('auth.Permission').objects.get(
-        codename='view_userprofile').delete()
+        codename='readonly_staff').delete()
 
 
 class Migration(migrations.Migration):
@@ -27,6 +25,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_view_permission_to_userprofile,
-                             delete_view_permission_from_userprofile),
+        migrations.RunPython(add_readonly_staff_permission,
+                             delete_readonly_staff_permission),
     ]
