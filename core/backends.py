@@ -22,13 +22,14 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
+from core.models import UserProfile
 from django.conf import settings as st
+from django.contrib.auth.backends import ModelBackend
 from django_cas.backends import _verify
 import django_cas
-from core.models import UserProfile
 
 
-class CASBackend(django_cas.backends.CASBackend):
+class CASBackend(django_cas.backends.CASBackend, ModelBackend):
 
     def authenticate(self, ticket, service, request):
         """Verifies CAS ticket and gets or creates User object"""
