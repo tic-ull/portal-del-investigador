@@ -24,9 +24,7 @@
 
 from .forms import PageForm
 from .models import UserProfile, Log
-from django import forms
 from django.contrib import admin
-from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
@@ -37,6 +35,7 @@ from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
+from .forms import GroupAdminForm, CustomUserForm
 
 import admin_basic  # Don't delete
 
@@ -74,19 +73,25 @@ removal_message = loader.get_template('core/partials/message_box.html').render(
     Context({'message_content': removal_text}))
 
 
-def remove_fieldsets(cls, field_name, message):
+def remove_fieldsets(cls, field_name, message=None, new_field=None):
     """Remove a field from the fieldset of an Admin class"""
     lst = list(cls.fieldsets)
     for sets in lst:
         if field_name in sets[1]['fields']:
             field = list(sets[1]['fields'])
             field.remove(field_name)
+            if new_field is not None:
+                field.append(new_field)
             sets[1]['fields'] = tuple(field)
-            sets[1]['description'] = message
+            if message is not None:
+                sets[1]['description'] = message
     return tuple(lst)
 
 
 class CustomUserAdmin(UserAdmin):
+
+    form = CustomUserForm
+
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'is_active', 'is_staff')
 
@@ -100,7 +105,7 @@ class CustomUserAdmin(UserAdmin):
     ]
 
     fieldsets = remove_fieldsets(
-        UserAdmin, 'user_permissions', removal_message)
+        UserAdmin, 'user_permissions', removal_message, 'permissions')
 
     list_filter = UserAdmin.list_filter + ('groups__name', )
 
@@ -132,45 +137,14 @@ class LogAdmin(admin.ModelAdmin):
         return tuple(Log._meta.get_all_field_names())
 
 
-class GroupAdminForm(forms.ModelForm):
-
-    users = forms.ModelMultipleChoiceField(
-        label=_(u'Usuarios'),
-        queryset=User.objects.all(),
-        required=False,
-        widget=FilteredSelectMultiple(
-            verbose_name=_(u'Usuarios'),
-            is_stacked=False,
-        )
-    )
-
-    class Meta:
-        model = Group
-
-    def __init__(self, *args, **kwargs):
-        super(GroupAdminForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            self.fields['users'].initial = self.instance.user_set.all()
-
-    def save(self, commit=True):
-        group = super(GroupAdminForm, self).save(commit=False)
-        if commit:
-            group.save()
-        if group.pk:
-            group.user_set = self.cleaned_data['users']
-            self.save_m2m()
-        return group
-
-
 class CustomGroupAdmin(GroupAdmin):
     form = GroupAdminForm
 
-
 admin.site.login = login_required(admin.site.login)
-admin.site.unregister(Group)
-admin.site.register(Group, CustomGroupAdmin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+admin.site.unregister(Group)
+admin.site.register(Group, CustomGroupAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, CustomFlatPageAdmin)
