@@ -28,11 +28,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User, Group
-from django.template import Context, loader
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
+from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
@@ -71,19 +72,40 @@ removal_message = loader.get_template('core/partials/message_box.html').render(
     Context({'message_content': removal_text}))
 
 
-def remove_fieldsets(cls, field_name, message):
+def remove_fieldsets(cls, field_name, message, new_field=None):
     """Remove a field from the fieldset of an Admin class"""
     lst = list(cls.fieldsets)
     for sets in lst:
         if field_name in sets[1]['fields']:
             field = list(sets[1]['fields'])
             field.remove(field_name)
+            if new_field is not None:
+                field.append(new_field)
             sets[1]['fields'] = tuple(field)
             sets[1]['description'] = message
     return tuple(lst)
 
 
+class CustomUserForm(UserChangeForm):
+
+    permissions = forms.MultipleChoiceField(
+        label=_(u'Permisos'), required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserForm, self).__init__(*args, **kwargs)
+        lst = list()
+        for perm in self.instance.get_all_permissions():
+            p = (perm, perm)
+            lst.append(p)
+        self.fields['permissions'].choices = lst
+        self.fields['permissions'].initial = lst
+
+
 class CustomUserAdmin(UserAdmin):
+
+    form = CustomUserForm
+
     list_display = ('username', 'first_name', 'last_name', 'email',
                     'is_active', 'is_staff')
 
@@ -97,7 +119,7 @@ class CustomUserAdmin(UserAdmin):
     ]
 
     fieldsets = remove_fieldsets(
-        UserAdmin, 'user_permissions', removal_message)
+        UserAdmin, 'user_permissions', removal_message, 'permissions')
 
     list_filter = UserAdmin.list_filter + ('groups__name', )
 
@@ -162,11 +184,10 @@ class GroupAdminForm(forms.ModelForm):
 class CustomGroupAdmin(GroupAdmin):
     form = GroupAdminForm
 
-
-admin.site.unregister(Group)
-admin.site.register(Group, CustomGroupAdmin)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
+admin.site.unregister(Group)
+admin.site.register(Group, CustomGroupAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, CustomFlatPageAdmin)
