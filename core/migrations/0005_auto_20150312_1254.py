@@ -4,18 +4,18 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 
 
-def add_readonly_staff_permission(apps, schema_editor):
+def add_basic_staff_permission(apps, schema_editor):
     ContentType = apps.get_model('contenttypes.ContentType')
     Permission = apps.get_model('auth.Permission')
     content_type = ContentType.objects.get(app_label='auth', model='user')
     Permission.objects.create(content_type=content_type,
-                              codename='readonly_staff',
-                              name='Can acces readonly admin panel')
+                              codename='basic_staff',
+                              name='Can access Basic Admin Site')
 
 
-def delete_readonly_staff_permission(apps, schema_editor):
+def delete_basic_staff_permission(apps, schema_editor):
     apps.get_model('auth.Permission').objects.get(
-        codename='readonly_staff').delete()
+        codename='basic_staff').delete()
 
 
 class Migration(migrations.Migration):
@@ -25,6 +25,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_readonly_staff_permission,
-                             delete_readonly_staff_permission),
+        migrations.RunPython(add_basic_staff_permission,
+                             delete_basic_staff_permission),
     ]

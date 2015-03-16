@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 #
-#    Copyright 2014-2015
+#    Copyright 2015
 #
 #      STIC-Investigación - Universidad de La Laguna (ULL) <gesinv@ull.edu.es>
 #
@@ -23,13 +23,15 @@
 #
 
 from django.contrib.admin.sites import AdminSite
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
 
 
-class ReadonlyAdminSite(AdminSite):
-    site_header = 'Readonly administration'
+class BasicAdminSite(AdminSite):
+    site_header = _(u'Basic Administration')
 
     def has_permission(self, request):
-        return request.user.has_perm('auth.readonly_staff')
+        return request.user.has_perm('auth.basic_staff')
 
-
-readonly_admin_site = ReadonlyAdminSite(name='readonlyadmin')
+basic_admin_site = BasicAdminSite(name='basicadmin')
+basic_admin_site.login = login_required(basic_admin_site.login)

@@ -28,15 +28,17 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
-from django.template import Context, loader
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
+from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
-import admin_readonly  # Don't delete
+
+import admin_basic  # Don't delete
 
 
 # Options for the flatpages (faq)
@@ -164,6 +166,7 @@ class CustomGroupAdmin(GroupAdmin):
     form = GroupAdminForm
 
 
+admin.site.login = login_required(admin.site.login)
 admin.site.unregister(Group)
 admin.site.register(Group, CustomGroupAdmin)
 admin.site.unregister(User)
