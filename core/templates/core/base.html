@@ -497,14 +497,20 @@
                         </div>
                         {% endblock submenu %}
 
-                        {% if user.is_staff %}
+                        {% if user.is_staff or 'auth.basic_staff' in perms %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administración" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    <li><a href="
+                                        {% if user.is_staff %}
+                                            {% url 'admin:index' %}
+                                        {% else %}
+                                            {% url 'basic_admin:index' %}
+                                        {% endif %}
+                                        "><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
                                     {% if is_statistics_installed %}
                                         <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
                                         <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
