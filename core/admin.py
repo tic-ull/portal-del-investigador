@@ -26,7 +26,6 @@ from .forms import PageForm
 from .models import UserProfile, Log
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.models import User, Group
 from django.contrib.flatpages.admin import FlatPageAdmin  # Don't delete
 from django.contrib.flatpages.models import FlatPage
@@ -35,7 +34,7 @@ from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
-from .forms import GroupAdminForm
+from .forms import GroupAdminForm, CustomUserForm
 
 
 # Options for the flatpages (faq)
@@ -71,7 +70,7 @@ removal_message = loader.get_template('core/partials/message_box.html').render(
     Context({'message_content': removal_text}))
 
 
-def remove_fieldsets(cls, field_name, message, new_field=None):
+def remove_fieldsets(cls, field_name, message=None, new_field=None):
     """Remove a field from the fieldset of an Admin class"""
     lst = list(cls.fieldsets)
     for sets in lst:
@@ -81,24 +80,9 @@ def remove_fieldsets(cls, field_name, message, new_field=None):
             if new_field is not None:
                 field.append(new_field)
             sets[1]['fields'] = tuple(field)
-            sets[1]['description'] = message
+            if message is not None:
+                sets[1]['description'] = message
     return tuple(lst)
-
-
-class CustomUserForm(UserChangeForm):
-
-    permissions = forms.MultipleChoiceField(
-        label=_(u'Permisos'), required=False,
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(CustomUserForm, self).__init__(*args, **kwargs)
-        lst = list()
-        for perm in self.instance.get_all_permissions():
-            p = (perm, perm)
-            lst.append(p)
-        self.fields['permissions'].choices = lst
-        self.fields['permissions'].initial = lst
 
 
 class CustomUserAdmin(UserAdmin):

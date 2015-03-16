@@ -30,6 +30,7 @@ from django.forms.widgets import HiddenInput, MultipleHiddenInput
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.forms import UserChangeForm
 
 
 class PageForm(FlatpageForm):
@@ -98,3 +99,19 @@ class GroupAdminForm(forms.ModelForm):
             group.user_set = self.cleaned_data['users']
             self.save_m2m()
         return group
+
+
+class CustomUserForm(UserChangeForm):
+
+    permissions = forms.MultipleChoiceField(
+        label=_(u'Permisos'), required=False,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserForm, self).__init__(*args, **kwargs)
+        lst = list()
+        for perm in self.instance.get_all_permissions():
+            p = (perm, perm)
+            lst.append(p)
+        self.fields['permissions'].choices = lst
+        self.fields['permissions'].initial = lst
