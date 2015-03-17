@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-17 12:39+0000\n"
-"PO-Revision-Date: 2015-03-17 12:40-0102\n"
+"POT-Creation-Date: 2015-03-17 12:47+0000\n"
+"PO-Revision-Date: 2015-03-17 12:47-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,6 @@ msgid ""
 msgstr "Setting user permissions are disabled, must be configured by groups"
 
 #: admin_basic.py:31
-#| msgid "Basic Administration"
 msgid "Administración Básica"
 msgstr "Basic Administration"
 
@@ -45,19 +44,24 @@ msgstr "Document"
 msgid "Código persona"
 msgstr "Person code"
 
-#: models.py:81
+#: models.py:76
+#| msgid "Perfil de usuario"
+msgid "Perfiles de Usuario"
+msgstr "User profiles"
+
+#: models.py:82
 msgid "Aplicación"
 msgstr "Application"
 
-#: models.py:83
+#: models.py:84
 msgid "Tipo"
 msgstr "Type"
 
-#: models.py:85
+#: models.py:86
 msgid "Fecha"
 msgstr "Date"
 
-#: models.py:87
+#: models.py:88
 msgid "Mensaje"
 msgstr "Message"
 

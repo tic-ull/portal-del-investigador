@@ -73,6 +73,7 @@ class UserProfile(models.Model):
 
     class Meta:
         ordering = ['user__username']
+        verbose_name_plural = _(u'Perfiles de Usuario')
 
 
 class Log(models.Model):
