@@ -28,7 +28,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class BasicAdminSite(AdminSite):
-    site_header = _(u'Basic Administration')
+    site_header = _(u'Administración Básica')
 
     def has_permission(self, request):
         return request.user.has_perm('auth.basic_staff')

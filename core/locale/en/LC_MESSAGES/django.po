@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-17 09:55+0000\n"
-"PO-Revision-Date: 2015-03-17 10:09-0102\n"
+"POT-Creation-Date: 2015-03-17 12:39+0000\n"
+"PO-Revision-Date: 2015-03-17 12:40-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -25,8 +25,8 @@ msgid ""
 msgstr "Setting user permissions are disabled, must be configured by groups"
 
 #: admin_basic.py:31
-#| msgid "Administración"
-msgid "Basic Administration"
+#| msgid "Basic Administration"
+msgid "Administración Básica"
 msgstr "Basic Administration"
 
 #: forms.py:77 forms.py:81
@@ -65,7 +65,7 @@ msgstr "Message"
 msgid "Universidad de La Laguna - Portal del Investigador"
 msgstr "University of La Laguna - Researcher Portal"
 
-#: templates/core/base.html:37 templates/core/base.html.py:535
+#: templates/core/base.html:37 templates/core/base.html.py:537
 msgid "Universidad de La Laguna"
 msgstr "University of La Laguna"
 
@@ -185,11 +185,11 @@ msgstr "Statistics by Department"
 msgid "Estadísticas por Grupos"
 msgstr "Statistics by Group"
 
-#: templates/core/base.html:520
+#: templates/core/base.html:521
 msgid "Informe ULL"
 msgstr "Report ULL"
 
-#: templates/core/base.html:535
+#: templates/core/base.html:537
 msgid "Teléfono"
 msgstr "Phone number"
 
