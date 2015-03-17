@@ -510,7 +510,7 @@
                                         {% else %}
                                             {% url 'basic_admin:index' %}
                                         {% endif %}
-                                        "><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                        " target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
                                     {% if is_statistics_installed and 'statistics.view_cvn_stats' in perms %}
                                         <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
                                         <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
