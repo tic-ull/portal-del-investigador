@@ -122,6 +122,25 @@ figure.floatcenter, .align-center {
 
 .masonry .item {
     display: inline-block;
-    padding: 1px;
-    width: 100%; 
+    padding: 8px;
+    width: 100%;
+}
+
+.masonry .item figure {
+    border: 5px solid lightgray;
+    position: relative;
+    border-radius: 3px;
+}
+
+.masonry .item figcaption {
+    background-color: lightgray;
+    bottom: -50px;
+    line-height: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.masonry .item a {
+    color: inherit;
+    text-decoration: none;
 }
