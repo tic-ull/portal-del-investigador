@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.contrib.contenttypes.management import update_all_contenttypes
 
 
 def add_basic_staff_permission(apps, schema_editor):
+    update_all_contenttypes()
     ContentType = apps.get_model('contenttypes.ContentType')
     Permission = apps.get_model('auth.Permission')
     content_type = ContentType.objects.get(app_label='auth', model='user')

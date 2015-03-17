@@ -33,5 +33,5 @@ class BasicAdminSite(AdminSite):
     def has_permission(self, request):
         return request.user.has_perm('auth.basic_staff')
 
-basic_admin_site = BasicAdminSite(name='basicadmin')
+basic_admin_site = BasicAdminSite(name='basic_admin')
 basic_admin_site.login = login_required(basic_admin_site.login)
