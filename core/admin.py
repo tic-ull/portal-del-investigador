@@ -21,6 +21,7 @@
 #    along with Portal del Investigador.  If not, see
 #    <http://www.gnu.org/licenses/>.
 #
+
 from django.contrib.admin.templatetags.admin_modify import register
 from django.contrib.admin.templatetags.admin_modify import submit_row as osr
 
