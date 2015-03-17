@@ -516,7 +516,9 @@
                                         <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
                                         <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Grupos" %}</a></li>
                                     {% endif %}
-                                    <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
+                                    {% if 'cvn.view_university_report' in perms %}
+                                        <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
