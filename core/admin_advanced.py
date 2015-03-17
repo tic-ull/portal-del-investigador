@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 #
-#    Copyright 2015
+#    Copyright 2014-2015
 #
 #      STIC-Investigación - Universidad de La Laguna (ULL) <gesinv@ull.edu.es>
 #
@@ -22,6 +22,7 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
+from .forms import GroupAdminForm, CustomUserForm
 from .forms import PageForm
 from .models import UserProfile, Log
 from django.contrib import admin
@@ -35,7 +36,6 @@ from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
-from .forms import GroupAdminForm, CustomUserForm
 
 
 # Options for the flatpages (faq)
