@@ -497,20 +497,18 @@
                         </div>
                         {% endblock submenu %}
 
-                        {% if user.is_staff or 'auth.basic_staff' in perms %}
+                        {% if 'auth.view_admin_menu' in perms %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administración" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="
-                                        {% if user.is_staff %}
-                                            {% url 'admin:index' %}
-                                        {% else %}
-                                            {% url 'basic_admin:index' %}
-                                        {% endif %}
-                                        " target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% elif 'auth.basic_staff' in perms %}
+                                        <li><a href="{% url 'basic_admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% endif %}
                                     {% if is_statistics_installed and 'statistics.view_cvn_stats' in perms %}
                                         <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
                                         <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
