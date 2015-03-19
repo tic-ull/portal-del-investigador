@@ -11,13 +11,13 @@ def add_staff_menu_permission(apps, schema_editor):
     Permission = apps.get_model('auth.Permission')
     content_type = ContentType.objects.get(app_label='auth', model='user')
     Permission.objects.create(content_type=content_type,
-                              codename='view_admin_menu',
-                              name='Can view Admin Menu')
+                              codename='read_admin_menu',
+                              name='Can read Admin Menu')
 
 
 def delete_staff_menu_permission(apps, schema_editor):
     apps.get_model('auth.Permission').objects.get(
-        codename='view_admin_menu').delete()
+        codename='read_admin_menu').delete()
 
 
 class Migration(migrations.Migration):
