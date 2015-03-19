@@ -23,7 +23,6 @@
 #
 
 from django.conf import settings as st
-from crequest.middleware import CrequestMiddleware
 
 
 def _get_langs_info(languages, current_url):
@@ -45,7 +44,6 @@ def _get_langs_info(languages, current_url):
 
 
 def extra_info(request):
-    request = CrequestMiddleware.get_request()
     cas_info = None
     if request and 'attributes' in request.session:
         cas_info = request.session['attributes']
