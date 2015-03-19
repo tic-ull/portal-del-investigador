@@ -138,6 +138,13 @@ class LogAdmin(admin.ModelAdmin):
 class CustomGroupAdmin(GroupAdmin):
     form = GroupAdminForm
 
+    def membership(self):
+        return self.user_set.count()
+    membership.short_description = _(u"Número de miembros")
+    membership.allow_tags = True
+
+    list_display = ('name', membership, )
+
 admin.site.login = login_required(admin.site.login)
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
