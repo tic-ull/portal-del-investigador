@@ -327,6 +327,7 @@ SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
 CONSTANCE_CONFIG = {}
+CONSTANCE_SUPERUSER_ONLY = False
 # ************************* CONSTANCE ****************************************
 
 # ************************* SETTINGS LOCAL ***********************************
