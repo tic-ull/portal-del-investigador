@@ -10,3 +10,6 @@
 [submodule "cvn"]
 	path = cvn
 	url = git@gitlab.stic.ull.es:investigacion/cvn.git
+[submodule "graphite"]
+	path = graphite
+	url = git@gitlab.stic.ull.es:investigacion/pi-graphite.git
