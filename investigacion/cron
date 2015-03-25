@@ -28,5 +28,7 @@
 10 02 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py calc_stats
 # Actualiza el listado de Proyectos y Convenios desde SIGIDI
 10 03 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_projects_and_agreements
+# Actualizacion de estadisticas para graphite
+10 04 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py graphite_metrics_update
 # Insercion tardia de nuevos CVNs
 */10 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
