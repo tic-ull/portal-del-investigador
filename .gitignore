@@ -16,3 +16,4 @@ backups
 .coverage
 htmlcov/
 .idea/
+investigacion/graphite/
