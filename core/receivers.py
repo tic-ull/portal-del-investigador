@@ -22,12 +22,10 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
-from crequest.middleware import CrequestMiddleware
 from django.contrib.auth.signals import user_logged_in
 
 
-def update_user(user, **kwargs):
-    request = CrequestMiddleware.get_request()
+def update_user(user, request, **kwargs):
     if request and 'attributes' in request.session:
         cas_info = request.session['attributes']
         if 'first_name' in cas_info:
