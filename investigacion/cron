@@ -32,3 +32,7 @@
 10 04 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py graphite_metrics_update
 # Insercion tardia de nuevos CVNs
 */10 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
+# Actualiza los datos de estadisticas totales de graphite
+00 00,12 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py graphite_metrics_update
+# Envia los datos a graphite
+10 * * * * python /opt/proyectos/investigacion/graphite/carbonagent.py /opt/proyectos/investigacion/investigacion/graphite/ --rm
