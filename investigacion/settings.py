@@ -33,6 +33,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
+LOG_ROOT = PROJECT_ROOT
 # ******************************* PATHS *************************************
 
 # ******************************* URLS **************************************
@@ -187,8 +188,79 @@ COVERAGE_MODULE_EXCLUDES = (
     'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
     'management$')
 
+
+# ************************* TEMPLATES ****************************************
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "core.context_processors.extra_info",
+    "cvn.context_processors.extra_info",
+    "core.context_processors.installed_apps",
+)
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
+# ************************* TEMPLATES ****************************************
+
+# ************************* STATIC FILES *************************************
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'core/static'),
+    ('js', js.__path__[0] + ''),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+# ************************* STATIC FILES *************************************
+
+# ************************* WEB SERVICES *************************************
+WS_SERVER_URL = 'http://www.example.com/'
+# ************************* WEB SERVICES *************************************
+
+# ************************* REDIS ********************************************
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_PASSWORD = None
+REDIS_TIMEOUT = 86400  # One Day (Seconds)
+# ************************* REDIS ********************************************
+
+# ************************* EMAIL ********************************************
+import socket
+EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
+SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
+
+# ************************* EMAIL ********************************************
+
+# ************************* CONSTANCE ****************************************
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
+CONSTANCE_CONFIG = {}
+CONSTANCE_SUPERUSER_ONLY = False
+# ************************* CONSTANCE ****************************************
+
+# ************************* SETTINGS LOCAL ***********************************
+try:
+    SETTINGS_LOCAL
+except NameError:
+    try:
+        from .settings_local import *
+    except ImportError:
+        pass
+# ************************* SETTINGS LOCAL ***********************************
+
 # ******************************* LOGGING ************************************
-LOG_FILENAME = os.path.join(PROJECT_ROOT, 'investigacion.log')
+LOG_FILENAME = os.path.join(LOG_ROOT, 'investigacion.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -269,77 +341,6 @@ LOGGING = {
     }
 }
 # ******************************* LOGGING ************************************
-
-# ************************* TEMPLATES ****************************************
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "core.context_processors.extra_info",
-    "cvn.context_processors.extra_info",
-    "core.context_processors.installed_apps",
-)
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-
-# ************************* TEMPLATES ****************************************
-
-# ************************* STATIC FILES *************************************
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'core/static'),
-    ('js', js.__path__[0] + ''),
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-# ************************* STATIC FILES *************************************
-
-# ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'http://www.example.com/'
-# ************************* WEB SERVICES *************************************
-
-# ************************* REDIS ********************************************
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_PASSWORD = None
-REDIS_TIMEOUT = 86400  # One Day (Seconds)
-# ************************* REDIS ********************************************
-
-# ************************* EMAIL ********************************************
-import socket
-EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
-SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
-
-# ************************* EMAIL ********************************************
-
-# ************************* CONSTANCE ****************************************
-CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
-CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
-CONSTANCE_CONFIG = {}
-CONSTANCE_SUPERUSER_ONLY = False
-# ************************* CONSTANCE ****************************************
-
-# ************************* SETTINGS LOCAL ***********************************
-try:
-    SETTINGS_LOCAL
-except NameError:
-    try:
-        from .settings_local import *
-    except ImportError:
-        pass
-# ************************* SETTINGS LOCAL ***********************************
-
 # ************************* WEB SERVICES *************************************
 # All categories. This is used only on the statistics app.
 # There is no need to provide this WS if the statistics app is not being used.
