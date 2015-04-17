@@ -34,6 +34,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.contrib.sites.models import Site
 from django.template import Context, loader
 from django.utils.translation import ugettext_lazy as _
+from django_cas.views import logout
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
 
@@ -146,6 +147,7 @@ class CustomGroupAdmin(GroupAdmin):
     list_display = ('name', membership, )
 
 admin.site.login = login_required(admin.site.login)
+admin.site.logout = logout
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(Group)

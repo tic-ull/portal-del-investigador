@@ -22,10 +22,11 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
+from constance.admin import Config, ConstanceAdmin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext_lazy as _
-from constance.admin import Config, ConstanceAdmin
+from django_cas.views import logout
 
 
 class BasicAdminSite(AdminSite):
@@ -36,4 +37,5 @@ class BasicAdminSite(AdminSite):
 
 basic_admin_site = BasicAdminSite(name='basic_admin')
 basic_admin_site.login = login_required(basic_admin_site.login)
+basic_admin_site.logout = logout
 basic_admin_site.register([Config], ConstanceAdmin)

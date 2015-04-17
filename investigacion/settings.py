@@ -41,7 +41,6 @@ BASE_URL = 'http://www.example.com'
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
-LOGIN_URL = 'login'  # Login address for login_required decorator
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
 DATATABLES_JS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/js/jquery.dataTables.min.js')
 DATATABLES_CSS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/css/jquery.dataTables.min.css')
@@ -142,6 +141,8 @@ CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_TIPO_CUENTA_NOAUT = ['colectivo', ]
+LOGIN_URL = 'login'  # Login address for login_required decorator
+LOGOUT_URL = 'logout'
 # ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
@@ -341,6 +342,7 @@ LOGGING = {
     }
 }
 # ******************************* LOGGING ************************************
+
 # ************************* WEB SERVICES *************************************
 # All categories. This is used only on the statistics app.
 # There is no need to provide this WS if the statistics app is not being used.
