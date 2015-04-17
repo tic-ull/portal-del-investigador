@@ -23,7 +23,6 @@
 #
 
 from django.conf import settings as st
-from crequest.middleware import CrequestMiddleware
 
 
 def _get_langs_info(languages, current_url):
@@ -45,7 +44,6 @@ def _get_langs_info(languages, current_url):
 
 
 def extra_info(request):
-    request = CrequestMiddleware.get_request()
     cas_info = None
     if request and 'attributes' in request.session:
         cas_info = request.session['attributes']
@@ -69,6 +67,11 @@ def extra_info(request):
         'cp_languages': _get_langs_info(st.LANGUAGES, request.path),
         'first_name': first_name,
         'last_name': last_name,
+        'datatables_js_url': st.DATATABLES_JS_URL,
+        'datatables_css_url': st.DATATABLES_CSS_URL,
+        'datatables_sort_normalize': st.DATATABLES_SORT_NORMALIZE_URL,
+        'datatables_sort_date': st.DATATABLES_SORT_DATE_URL,
+        'datatables_sort_percent': st.DATATABLES_SORT_PERCENT_URL,
     }
 
 

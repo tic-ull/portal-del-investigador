@@ -25,6 +25,9 @@
 SETTINGS_LOCAL = True
 from .settings import *
 
+# PATHS
+LOG_ROOT = '/tmp/'
+
 # URLS
 BASE_URL = 'http://example.com'
 OLD_PORTAL_URL = 'http://example.com'

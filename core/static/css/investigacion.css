@@ -1,7 +1,14 @@
 .table{
     margin-bottom:0px;
-    table-layout: fixed;
-    word-wrap: break-word;
+    word-wrap: normal;
+}
+
+th{
+    padding: 5px 18px 5px 5px !important;
+}
+
+td{
+    padding: 5px 5px 5px 5px !important;
 }
 
 .well{

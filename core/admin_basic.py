@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 #
-#    Copyright 2014-2015
+#    Copyright 2015
 #
 #      STIC-Investigación - Universidad de La Laguna (ULL) <gesinv@ull.edu.es>
 #
@@ -22,18 +22,20 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
-import django_tables2 as tables
+from constance.admin import Config, ConstanceAdmin
+from django.contrib.admin.sites import AdminSite
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
+from django_cas.views import logout
 
 
-class Table(tables.Table):
+class BasicAdminSite(AdminSite):
+    site_header = _(u'Administración Básica')
 
-    def __init__(self, *args, **kwargs):
-        columns = kwargs.pop('columns', None)
-        super(Table, self).__init__(*args, **kwargs)
-        if columns is None:
-            return
-        for i in range(0, len(self.columns.all())):
-            try:
-                self.columns[i].column.attrs = columns[i]
-            except KeyError:
-                self.columns[i].column.visible = False
+    def has_permission(self, request):
+        return request.user.has_perm('auth.basic_staff')
+
+basic_admin_site = BasicAdminSite(name='basic_admin')
+basic_admin_site.login = login_required(basic_admin_site.login)
+basic_admin_site.logout = logout
+basic_admin_site.register([Config], ConstanceAdmin)

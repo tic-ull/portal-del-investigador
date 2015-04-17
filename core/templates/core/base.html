@@ -63,7 +63,7 @@
                                 <li>
                                     <ul class="rrss text-muted list-inline">
                                         <li><a target="_blank" href="http://www.facebook.com/universidaddelalaguna"><i class="fa fa-facebook-square"></i></a></li>
-                                        <li><a target="_blank" href="http://www.tuenti.com/#m=Page&func=index&page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                                        <li><a target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
                                         <li><a target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
                                         <li><a target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
                                     </ul>
@@ -108,7 +108,7 @@
                                 <li class="divider"></li>
                                 <li><a target="_blank" title="{% trans "Correo electrónico" %} sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
                                 <li><p><i class="fa fa-phone"></i> (+34) 922 31 9558</p></li>
-                                <li><p><i class="fa fa-map-marker"></i> Pabellón de Gobierno <br/>C/ Molinos de Agua, s/n. 38207 <br/>San Cristóbal de La Laguna</p></li>
+                                <li><p><i class="fa fa-map-marker"></i> Edificio Central <br/>C/ Delgado Barreto, s/n. 38071 <br/>San Cristóbal de La Laguna</p></li>
                                 <!--
                                 <li class="divider"></li>
                                 <li><p>Texto específico que puede incluir <a href="#">enlaces</a>, texto en <strong>negrita</strong>, <i>cursiva</i> y otros elementos html.</p></li>
@@ -497,20 +497,26 @@
                         </div>
                         {% endblock submenu %}
 
-                        {% if user.is_staff %}
+                        {% if 'auth.read_admin_menu' in perms %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administración" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="{% url 'admin:index' %}"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
-                                    {% if is_statistics_installed %}
+                                    {% if user.is_staff %}
+                                        <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% elif 'auth.basic_staff' in perms %}
+                                        <li><a href="{% url 'basic_admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                    {% endif %}
+                                    {% if is_statistics_installed and 'statistics.view_cvn_stats' in perms %}
                                         <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
                                         <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
                                         <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Grupos" %}</a></li>
                                     {% endif %}
-                                    <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
+                                    {% if 'cvn.view_university_report' in perms %}
+                                        <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
@@ -531,7 +537,7 @@
                         </ul>
                         <ul class="list-inline text-muted pull-right">
                             <li><a title="Facebook" target="_blank" href="http://www.facebook.com/universidaddelalaguna"><span class="fa fa-facebook-square"></span></a></li>
-                            <li><a title="Tuenti" target="_blank" href="http://www.tuenti.com/#m=Page&func=index&page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
+                            <li><a title="Tuenti" target="_blank" href="http://www.tuenti.com/#m=Page&amp;func=index&amp;page_key=1_160_68944913"><i class="fa fa-tumblr-square"></i></a></li>
                             <li><a title="Twitter" target="_blank" href="http://twitter.com/CanalULL"><i class="fa fa-twitter-square"></i></a></li>
                             <li><a title="LinkedIn" target="_blank" href="http://www.linkedin.com/groups/Universidad-Laguna-2656178"><i class="fa fa-linkedin-square"></i></a></li>
                             <li><a title="Página web ULL" target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i></a></li>

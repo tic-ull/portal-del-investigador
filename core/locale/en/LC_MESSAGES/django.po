@@ -3,42 +3,68 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-19 09:49+0000\n"
-"PO-Revision-Date: 2015-01-19 10:01-0102\n"
+"POT-Creation-Date: 2015-03-19 12:55+0000\n"
+"PO-Revision-Date: 2015-03-19 12:55-0102\n"
 "Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
-"X-Translated-Using: django-rosetta 0.7.4\n"
+"X-Translated-Using: django-rosetta 0.7.5\n"
 
-#: admin.py:32 admin.py:33 templates/core/base.html:107
+#: admin_advanced.py:57 admin_advanced.py:58 templates/core/base.html:107
 #: templates/core/faq/faq.html:9
 msgid "Preguntas Frecuentes"
 msgstr "Frequently Asked Questions"
 
-#: models.py:15
+#: admin_advanced.py:67
+msgid ""
+"Se ha deshabilitado la configuración de permisos por usuario, ya que deben "
+"configurarse por grupos."
+msgstr "Setting user permissions are disabled, must be configured by groups"
+
+#: admin_advanced.py:143
+msgid "Número de miembros"
+msgstr "Number of members"
+
+#: admin_basic.py:31
+msgid "Administración Básica"
+msgstr "Basic Administration"
+
+#: forms.py:77 forms.py:81
+msgid "Usuarios"
+msgstr "Users"
+
+#: forms.py:107
+msgid "Permisos"
+msgstr "Permissions"
+
+#: models.py:37
 msgid "Documento"
 msgstr "Document"
 
-#: models.py:17
+#: models.py:39
 msgid "Código persona"
 msgstr "Person code"
 
-#: models.py:59
+#: models.py:76
+msgid "Perfiles de Usuario"
+msgstr "User profiles"
+
+#: models.py:82
 msgid "Aplicación"
 msgstr "Application"
 
-#: models.py:61
+#: models.py:84
 msgid "Tipo"
 msgstr "Type"
 
-#: models.py:63
+#: models.py:86
 msgid "Fecha"
 msgstr "Date"
 
-#: models.py:65
+#: models.py:88
 msgid "Mensaje"
 msgstr "Message"
 
@@ -46,7 +72,7 @@ msgstr "Message"
 msgid "Universidad de La Laguna - Portal del Investigador"
 msgstr "University of La Laguna - Researcher Portal"
 
-#: templates/core/base.html:37 templates/core/base.html.py:529
+#: templates/core/base.html:37 templates/core/base.html.py:535
 msgid "Universidad de La Laguna"
 msgstr "University of La Laguna"
 
@@ -150,27 +176,27 @@ msgstr "Exit"
 msgid "Administración"
 msgstr "Administration"
 
-#: templates/core/base.html:508
+#: templates/core/base.html:509 templates/core/base.html.py:511
 msgid "Panel de administración"
 msgstr "Admin Panel"
 
-#: templates/core/base.html:510
+#: templates/core/base.html:514
 msgid "Estadísticas por Áreas"
 msgstr "Statistics by Area"
 
-#: templates/core/base.html:511
+#: templates/core/base.html:515
 msgid "Estadísticas por Departamentos"
 msgstr "Statistics by Department"
 
-#: templates/core/base.html:512
+#: templates/core/base.html:516
 msgid "Estadísticas por Grupos"
 msgstr "Statistics by Group"
 
-#: templates/core/base.html:514
+#: templates/core/base.html:519
 msgid "Informe ULL"
 msgstr "Report ULL"
 
-#: templates/core/base.html:529
+#: templates/core/base.html:535
 msgid "Teléfono"
 msgstr "Phone number"
 

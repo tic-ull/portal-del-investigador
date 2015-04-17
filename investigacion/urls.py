@@ -22,6 +22,7 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
+from core.admin_basic import basic_admin_site
 from django.conf import settings as st
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
@@ -36,6 +37,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^investigacion/admin/', include(admin.site.urls)),
+    url(r'^investigacion/adm/', include(basic_admin_site.urls)),
     url(r'^investigacion/accounts/login/$',
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',

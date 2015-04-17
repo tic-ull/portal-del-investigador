@@ -33,6 +33,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_TEST_ROOT = os.path.join(BASE_DIR, 'media_tests')
 BACKUP_DIR = os.path.join(BASE_DIR, 'backups')
+LOG_ROOT = PROJECT_ROOT
 # ******************************* PATHS *************************************
 
 # ******************************* URLS **************************************
@@ -40,8 +41,12 @@ BASE_URL = 'http://www.example.com'
 STATIC_URL = '/investigacion/static/'
 MEDIA_URL = '/investigacion/media/'
 MEDIA_TEST_URL = '/media_tests/'
-LOGIN_URL = 'login'  # Login address for login_required decorator
 TINYMCE_JS_URL = os.path.join(STATIC_URL, 'js/tinymce/resources/tinymce.min.js')
+DATATABLES_JS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/js/jquery.dataTables.min.js')
+DATATABLES_CSS_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/media/css/jquery.dataTables.min.css')
+DATATABLES_SORT_NORMALIZE_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/noaccents.js')
+DATATABLES_SORT_DATE_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/date.js')
+DATATABLES_SORT_PERCENT_URL = os.path.join(STATIC_URL, 'js/jquery_datatables/resources/percent.js')
 TINYMCE_JS_TEXTAREA = os.path.join(STATIC_URL, 'js/tinymce/conf/textarea.js')
 OLD_PORTAL_URL = 'http://www.example.com'
 # ******************************* URLS **************************************
@@ -101,10 +106,10 @@ INSTALLED_APPS = (
     'cvn',
     'crequest',
     'django_coverage',
-    'django_tables2',
     'django.contrib.flatpages',
     'constance',
     'constance.backends.database',
+    'logentry_admin',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -136,6 +141,8 @@ CAS_REDIRECT_URL = '/investigacion/'  # Redirect here when no referrer
 CAS_RETRY_LOGIN = True
 CAS_VERSION = 'CAS_2_SAML_1_0'
 CAS_TIPO_CUENTA_NOAUT = ['colectivo', ]
+LOGIN_URL = 'login'  # Login address for login_required decorator
+LOGOUT_URL = 'logout'
 # ************************* AUTHENTICATION CAS - ULL *************************
 
 ROOT_URLCONF = 'investigacion.urls'
@@ -182,8 +189,79 @@ COVERAGE_MODULE_EXCLUDES = (
     'django', 'migrations', 'south$', 'debug_toolbar$', 'crequest$', 'admin$',
     'management$')
 
+
+# ************************* TEMPLATES ****************************************
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+    "django.core.context_processors.static",
+    "django.core.context_processors.tz",
+    "django.contrib.messages.context_processors.messages",
+    "core.context_processors.extra_info",
+    "cvn.context_processors.extra_info",
+    "core.context_processors.installed_apps",
+)
+
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+)
+
+# ************************* TEMPLATES ****************************************
+
+# ************************* STATIC FILES *************************************
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'core/static'),
+    ('js', js.__path__[0] + ''),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+# ************************* STATIC FILES *************************************
+
+# ************************* WEB SERVICES *************************************
+WS_SERVER_URL = 'http://www.example.com/'
+# ************************* WEB SERVICES *************************************
+
+# ************************* REDIS ********************************************
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+REDIS_PASSWORD = None
+REDIS_TIMEOUT = 86400  # One Day (Seconds)
+# ************************* REDIS ********************************************
+
+# ************************* EMAIL ********************************************
+import socket
+EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
+SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
+
+# ************************* EMAIL ********************************************
+
+# ************************* CONSTANCE ****************************************
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
+CONSTANCE_CONFIG = {}
+CONSTANCE_SUPERUSER_ONLY = False
+# ************************* CONSTANCE ****************************************
+
+# ************************* SETTINGS LOCAL ***********************************
+try:
+    SETTINGS_LOCAL
+except NameError:
+    try:
+        from .settings_local import *
+    except ImportError:
+        pass
+# ************************* SETTINGS LOCAL ***********************************
+
 # ******************************* LOGGING ************************************
-LOG_FILENAME = os.path.join(PROJECT_ROOT, 'investigacion.log')
+LOG_FILENAME = os.path.join(LOG_ROOT, 'investigacion.log')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
@@ -264,75 +342,6 @@ LOGGING = {
     }
 }
 # ******************************* LOGGING ************************************
-
-# ************************* TEMPLATES ****************************************
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.contrib.messages.context_processors.messages",
-    "core.context_processors.extra_info",
-    "cvn.context_processors.extra_info",
-    "core.context_processors.installed_apps",
-)
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-
-# ************************* TEMPLATES ****************************************
-
-# ************************* STATIC FILES *************************************
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'core/static'),
-    ('js', js.__path__[0] + ''),
-)
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-)
-# ************************* STATIC FILES *************************************
-
-# ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'http://www.example.com/'
-# ************************* WEB SERVICES *************************************
-
-# ************************* REDIS ********************************************
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_PASSWORD = None
-REDIS_TIMEOUT = 86400  # One Day (Seconds)
-# ************************* REDIS ********************************************
-
-# ************************* EMAIL ********************************************
-import socket
-EMAIL_SUBJECT_PREFIX = "investigacion@" + socket.gethostname() + ": "
-SERVER_EMAIL = "investigacion@" + socket.getfqdn(socket.gethostname())
-
-# ************************* EMAIL ********************************************
-
-# ************************* CONSTANCE ****************************************
-CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
-CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
-CONSTANCE_CONFIG = {}
-# ************************* CONSTANCE ****************************************
-
-# ************************* SETTINGS LOCAL ***********************************
-try:
-    SETTINGS_LOCAL
-except NameError:
-    try:
-        from .settings_local import *
-    except ImportError:
-        pass
-# ************************* SETTINGS LOCAL ***********************************
 
 # ************************* WEB SERVICES *************************************
 # All categories. This is used only on the statistics app.
