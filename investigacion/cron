@@ -20,19 +20,17 @@
 #    <http://www.gnu.org/licenses/>.                                             
 #
 
-# Actualiza los codigos de RRHH de los usuarios
-10 00 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py sync_rrhh
-# Actualiza los estados del CVN
-10 01 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_all_status_cvn
-# Calcula las estadisticas del CVN e incluye las categorias profesionales
-10 02 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py calc_stats
-# Actualiza el listado de Proyectos y Convenios desde SIGIDI
-10 03 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_projects_and_agreements
-# Actualizacion de estadisticas para graphite
-10 04 * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py graphite_metrics_update
-# Insercion tardia de nuevos CVNs
-*/10 * * * * adminges cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
-# Actualiza los datos de estadisticas totales de graphite
+# Actualizacion de datos para las estadisticas totales de graphite
 00 00,12 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py graphite_metrics_update
-# Envia los datos a graphite
-10 * * * * python /opt/proyectos/investigacion/graphite/carbonagent.py /opt/proyectos/investigacion/investigacion/graphite/ --rm
+# Envio de datos a graphite
+10 * * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python graphite/carbonagent.py -H graphite.stic.ull.es -p 2003 --tcp -d investigacion/graphite/ --rm
+# Actualiza los codigos de RRHH de los usuarios
+10 00 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py sync_rrhh
+# Actualiza los estados del CVN
+10 01 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_all_status_cvn
+# Calcula las estadisticas del CVN e incluye las categorias profesionales
+10 02 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py calc_stats
+# Actualiza el listado de Proyectos y Convenios desde SIGIDI
+10 03 * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py update_projects_and_agreements
+# Insercion tardia de nuevos CVNs
+*/10 * * * * django cd /opt/proyectos/investigacion && ./virtualenv/bin/python manage.py insert_all_cvn
