@@ -24,6 +24,7 @@
 
 import js
 import os
+from enum import Enum
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -225,7 +226,8 @@ STATICFILES_FINDERS = (
 # ************************* STATIC FILES *************************************
 
 # ************************* WEB SERVICES *************************************
-WS_SERVER_URL = 'http://www.example.com/'
+WS_SERVER_URL_v1 = 'http://www.example.com/'
+WS_SERVER_URL_v2 = 'http://www.example.com/'
 # ************************* WEB SERVICES *************************************
 
 # ************************* REDIS ********************************************
@@ -344,87 +346,93 @@ LOGGING = {
 # ******************************* LOGGING ************************************
 
 # ************************* WEB SERVICES *************************************
+
+
+class WS_RESULT_CODE(Enum):
+    OK = u"OK"
+    ERROR = u"ERROR"
+
 # All categories. This is used only on the statistics app.
 # There is no need to provide this WS if the statistics app is not being used.
-WS_CCE = WS_SERVER_URL + 'get_cce?past_days=%s'
+WS_CCE = WS_SERVER_URL_v1 + 'get_cce?past_days=%s'
 
 # RRHH code
-WS_COD_PERSONA = WS_SERVER_URL + 'get_codpersona?nif=%s'
+WS_COD_PERSONA = WS_SERVER_URL_v1 + 'get_codpersona?nif=%s'
 
 # CVN Info ULL: learning_degree / learning_phd
-WS_ULL_LEARNING = WS_SERVER_URL + 'get_formacion_academica?cod_persona=%s'
+WS_ULL_LEARNING = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/titulacion/'
 
 # CVN Info ULL: profession / old_profession
-WS_ULL_CARGOS = WS_SERVER_URL + 'get_cargos?cod_persona=%s'
-WS_ULL_CONTRATOS = WS_SERVER_URL + 'get_contratos?cod_persona=%s'
+WS_ULL_CARGOS = WS_SERVER_URL_v1 + 'get_cargos?cod_persona=%s'
+WS_ULL_CONTRATOS = WS_SERVER_URL_v1 + 'get_contratos?cod_persona=%s'
 
 # CVN Info ULL: teaching
-WS_ULL_TEACHING = WS_SERVER_URL + 'get_docencia?cod_persona=%s'
+WS_ULL_TEACHING = WS_SERVER_URL_v1 + 'get_docencia?cod_persona=%s'
 
 # All current departments and members
 WS_DEPARTMENTS_AND_MEMBERS = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros')
 
 # All departments and members by years
 WS_DEPARTMENTS_AND_MEMBERS_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros?year=%s')
 
 # Current department and members of an user
 WS_DEPARTMENTS_AND_MEMBERS_USER = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros?cod_persona=%s')
 
 # Department and members of an user by years
 WS_DEPARTMENTS_AND_MEMBERS_USER_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros?cod_persona=%s&year=%s')
 
 # Info and members of a department
 WS_DEPARTMENTS_AND_MEMBERS_UNIT = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros?codigo=%s')
 
 # Info and members of a department by years
 WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros')
 
 # All areas and members by years
 WS_AREAS_AND_MEMBERS_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros?year=%s')
 
 # Current area and members of an user
 WS_AREAS_AND_MEMBERS_USER = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros?cod_persona=%s')
 
 # Area and members of an user by years
 WS_AREAS_AND_MEMBERS_USER_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros?cod_persona=%s&year=%s')
 
 # Info and members of an area
 WS_AREAS_AND_MEMBERS_UNIT = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros?codigo=%s')
 
 # Info and members of an area by years
 WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
-    WS_SERVER_URL +
+    WS_SERVER_URL_v1 +
     'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
 # This is used only on the accounting app.
 # There is no need to provide this WS if the statistics app is not being used.
-WS_DETALLES = WS_SERVER_URL + 'get_detalles?cod_organica=%s'
-WS_DESGLOSE_YEAR = WS_SERVER_URL + 'get_desglose_anyos?cod_organica=%s'
-WS_RESUMEN_CONCEPTO = WS_SERVER_URL + 'get_resumen_concepto?cod_organica=%s'
-WS_RESUMEN_YEAR = WS_SERVER_URL + 'get_resumen_anyos?cod_organica=%s'
+WS_DETALLES = WS_SERVER_URL_v1 + 'get_detalles?cod_organica=%s'
+WS_DESGLOSE_YEAR = WS_SERVER_URL_v1 + 'get_desglose_anyos?cod_organica=%s'
+WS_RESUMEN_CONCEPTO = WS_SERVER_URL_v1 + 'get_resumen_concepto?cod_organica=%s'
+WS_RESUMEN_YEAR = WS_SERVER_URL_v1 + 'get_resumen_anyos?cod_organica=%s'
 # ****************************** WEB SERVICES ******************************

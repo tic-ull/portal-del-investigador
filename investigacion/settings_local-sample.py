@@ -73,7 +73,8 @@ DEBUG_TOOLBAR_CONFIG = {'INTERCEPT_REDIRECTS': False, }
 CAS_SERVER_URL = 'http://www.example.com/cas-1/'
 
 # WEB SERVICES
-WS_SERVER_URL = 'http://www.example.com/'
+WS_SERVER_URL_v1 = 'http://www.example.com/'
+WS_SERVER_URL_v2 = 'http://www.example.com/'
 
 # Proprietary applications
 # INSTALLED_APPS = INSTALLED_APPS + ('statistics', 'accounting', 'mailing')
