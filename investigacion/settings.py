@@ -238,7 +238,8 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 # ************************* REDIS ********************************************
 
 # ************************* CSV **********************************************
-csv.register_dialect('investigacion', delimiter='|')
+CSV_DIALECT = 'investigacion'
+csv.register_dialect(unicode(CSV_DIALECT), delimiter='|')
 # ************************* CSV **********************************************
 
 # ************************* EMAIL ********************************************
