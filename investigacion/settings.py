@@ -239,7 +239,9 @@ REDIS_TIMEOUT = 86400  # One Day (Seconds)
 
 # ************************* CSV **********************************************
 CSV_DIALECT = 'investigacion'
+CSV_DIALECT_GRAPHITE = 'graphite'
 csv.register_dialect(unicode(CSV_DIALECT), delimiter='|')
+csv.register_dialect(unicode(CSV_DIALECT_GRAPHITE), delimiter=' ')
 # ************************* CSV **********************************************
 
 # ************************* EMAIL ********************************************
