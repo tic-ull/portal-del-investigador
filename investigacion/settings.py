@@ -363,8 +363,8 @@ WS_COD_PERSONA = WS_SERVER_URL_v1 + 'get_codpersona?nif=%s'
 WS_ULL_LEARNING = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/titulacion/'
 
 # CVN Info ULL: profession / old_profession
-WS_ULL_CARGOS = WS_SERVER_URL_v1 + 'get_cargos?cod_persona=%s'
-WS_ULL_CONTRATOS = WS_SERVER_URL_v1 + 'get_contratos?cod_persona=%s'
+WS_ULL_CARGOS = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/cargo/'
+WS_ULL_CONTRATOS = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/contrato/'
 
 # CVN Info ULL: teaching
 WS_ULL_TEACHING = WS_SERVER_URL_v1 + 'get_docencia?cod_persona=%s'
