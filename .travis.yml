@@ -2,6 +2,10 @@ language: python
 python:
   - "2.7"
 #command to install dependencies
+before_install:
+    - sudo apt-get update -qq
+    - sudo pip install -U distribute
+    - sudo apt-get install postgresql postgresql-client postgresql-contrib libpq-dev libxml2-dev libxslt1-dev python-dev xvfb redis-server mercurial
 install:
     - "pip install -r requirements.min.txt"
 #command to run tests
