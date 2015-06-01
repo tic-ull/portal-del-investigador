@@ -1,3 +1,3 @@
 [submodule "cvn"]
 	path = cvn
-	url = git@github.com:tic-ull/portal-del-investigador-cvn.git
+	url = https://github.com/tic-ull/portal-del-investigador-cvn.git
