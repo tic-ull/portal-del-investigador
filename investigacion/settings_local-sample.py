@@ -80,7 +80,7 @@ WS_SERVER_URL = 'http://www.example.com/'
 
 # DATABASES
 DATABASES['default']['NAME'] = 'name'
-DATABASES['default']['USER'] = 'user'
+DATABASES['default']['USER'] = 'username'
 DATABASES['default']['PASSWORD'] = 'password'
 DATABASES['default']['HOST'] = 'localhost'
 
