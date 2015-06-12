@@ -22,7 +22,11 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
+from django.conf import settings as st
 from enum import IntEnum
+
+# Enable translations in this file
+_ = lambda s: s
 
 
 class LogType(IntEnum):
@@ -42,3 +46,5 @@ LOG_TYPE = (
     (LogType.EMAIL_SENT.value, 'EMAIL_SENT'),
     (LogType.CVN_UPDATED.value, 'CVN_UPDATED'),
 )
+
+st.CONSTANCE_CONFIG['SITEWIDE_WARNING'] = ('', _('Warning Message to show on every page (leave empty to disable)'))

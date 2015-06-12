@@ -125,12 +125,14 @@
             </div>
         </div>
         <div class="container-fluid">
-            <div style="text-align: center;">
-                <div class="alert alert-danger" style="margin-bottom: 15px; display: inline-block;">
-                    <i class="fa fa-exclamation-circle"></i>
-                    Durante el día jueves 11 de junio se han programado operaciones de mantenimiento en la FECYT. Es posible que algunas de las funcionalidades del Portal del Investigador no estén operativas.
+            {% if config.SITEWIDE_WARNING %}
+                <div style="text-align: center;">
+                    <div class="alert alert-danger" style="margin-bottom: 15px; display: inline-block;">
+                        <i class="fa fa-exclamation-circle"></i>
+                        {{ config.SITEWIDE_WARNING }}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="row">
                 <div class="col-md-9 col-md-push-3" role="main">
                     {% block main %}
