@@ -1,34 +1,34 @@
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-19 12:55+0000\n"
-"PO-Revision-Date: 2015-03-19 12:55-0102\n"
-"Last-Translator: RAYCO ADAL ABAD MARTIN <rabadmar@ull.edu.es>\n"
+"POT-Creation-Date: 2015-06-18 09:52+0100\n"
+"PO-Revision-Date: 2015-06-18 09:43-0102\n"
+"Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
-"X-Translated-Using: django-rosetta 0.7.5\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
 
-#: admin_advanced.py:57 admin_advanced.py:58 templates/core/base.html:107
+#: admin_advanced.py:58 admin_advanced.py:59 templates/core/base.html:107
 #: templates/core/faq/faq.html:9
 msgid "Preguntas Frecuentes"
 msgstr "Frequently Asked Questions"
 
-#: admin_advanced.py:67
+#: admin_advanced.py:68
 msgid ""
 "Se ha deshabilitado la configuración de permisos por usuario, ya que deben "
 "configurarse por grupos."
 msgstr "Setting user permissions are disabled, must be configured by groups"
 
-#: admin_advanced.py:143
+#: admin_advanced.py:144
 msgid "Número de miembros"
 msgstr "Number of members"
 
-#: admin_basic.py:31
+#: admin_basic.py:33
 msgid "Administración Básica"
 msgstr "Basic Administration"
 
@@ -68,11 +68,17 @@ msgstr "Date"
 msgid "Mensaje"
 msgstr "Message"
 
+#: settings.py:50
+msgid "Warning Message to show on every page (leave empty to disable)"
+msgstr ""
+"Mensaje de advertencia para mostrar en cada página (dejar vacío para "
+"deshabilitar)"
+
 #: templates/core/base.html:12
 msgid "Universidad de La Laguna - Portal del Investigador"
 msgstr "University of La Laguna - Researcher Portal"
 
-#: templates/core/base.html:37 templates/core/base.html.py:535
+#: templates/core/base.html:37 templates/core/base.html.py:543
 msgid "Universidad de La Laguna"
 msgstr "University of La Laguna"
 
@@ -148,55 +154,55 @@ msgstr "FAQ"
 msgid "Cerrar sesión"
 msgstr "Logout"
 
-#: templates/core/base.html:121 templates/core/base.html.py:448
+#: templates/core/base.html:121 templates/core/base.html.py:456
 msgid "Iniciar sesión"
 msgstr "Login"
 
-#: templates/core/base.html:426
+#: templates/core/base.html:434
 msgid "Perfil de usuario"
 msgstr "User Profile"
 
-#: templates/core/base.html:441
+#: templates/core/base.html:449
 msgid "Inicio"
 msgstr "Home"
 
-#: templates/core/base.html:442
+#: templates/core/base.html:450
 msgid "Gestionar CVN"
 msgstr "Manage CVN"
 
-#: templates/core/base.html:444
+#: templates/core/base.html:452
 msgid "Contabilidad"
 msgstr "Accounting"
 
-#: templates/core/base.html:446
+#: templates/core/base.html:454
 msgid "Salir"
 msgstr "Exit"
 
-#: templates/core/base.html:504
+#: templates/core/base.html:512
 msgid "Administración"
 msgstr "Administration"
 
-#: templates/core/base.html:509 templates/core/base.html.py:511
+#: templates/core/base.html:517 templates/core/base.html.py:519
 msgid "Panel de administración"
 msgstr "Admin Panel"
 
-#: templates/core/base.html:514
+#: templates/core/base.html:522
 msgid "Estadísticas por Áreas"
 msgstr "Statistics by Area"
 
-#: templates/core/base.html:515
+#: templates/core/base.html:523
 msgid "Estadísticas por Departamentos"
 msgstr "Statistics by Department"
 
-#: templates/core/base.html:516
+#: templates/core/base.html:524
 msgid "Estadísticas por Grupos"
 msgstr "Statistics by Group"
 
-#: templates/core/base.html:519
+#: templates/core/base.html:527
 msgid "Informe ULL"
 msgstr "Report ULL"
 
-#: templates/core/base.html:535
+#: templates/core/base.html:543
 msgid "Teléfono"
 msgstr "Phone number"
 

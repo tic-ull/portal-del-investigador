@@ -200,6 +200,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
+    "constance.context_processors.config",
     "core.context_processors.extra_info",
     "cvn.context_processors.extra_info",
     "core.context_processors.installed_apps",
