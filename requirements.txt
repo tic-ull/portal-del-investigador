@@ -37,3 +37,4 @@ mock
 pypdf2
 django-constance[database]
 django-logentry-admin
+unicodecsv
