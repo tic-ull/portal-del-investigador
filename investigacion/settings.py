@@ -346,6 +346,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'cvn.reports.reports': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        }
     }
 }
 # ******************************* LOGGING ************************************
