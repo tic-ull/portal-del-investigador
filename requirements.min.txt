@@ -33,3 +33,4 @@ pypdf2
 django-constance[database]
 django-logentry-admin
 python-dateutil
+unicodecsv
