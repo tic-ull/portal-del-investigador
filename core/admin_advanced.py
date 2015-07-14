@@ -37,6 +37,12 @@ from django.utils.translation import ugettext_lazy as _
 from django_cas.views import logout
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
+from django.core.files import File
+from django.core.exceptions import ObjectDoesNotExist
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 
 # Options for the flatpages (faq)
@@ -145,6 +151,30 @@ class CustomGroupAdmin(GroupAdmin):
     membership.allow_tags = True
 
     list_display = ('name', membership, )
+
+
+def change_dni(user_profile, new_dni):
+    user_profile.documento = new_dni
+    user_profile.save()
+    try:
+        #Latest CVNs
+        cvn = user_profile.cvn
+        f_pdf = File(open(cvn.cvn_file.path))
+        cvn.cvn_file.save(u'fake.pdf',f_pdf)
+        f_xml = File(open(cvn.xml_file.path))
+        cvn.xml_file.save(u'fake.xml',f_xml)
+        cvn.save()
+    except ObjectDoesNotExist:
+        pass
+    try:
+        #Old CVNs
+        for oldcvn in user_profile.oldcvnpdf_set.all():
+            f_pdf = File(open(oldcvn.cvn_file.path))
+
+            filename = 'CVN-%s-%s.pdf'%(user_profile.documento, oldcvn.uploaded_at.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
+            oldcvn.cvn_file.save(filename, f_pdf)
+    except ObjectDoesNotExist:
+        pass
 
 admin.site.login = login_required(admin.site.login)
 admin.site.logout = logout

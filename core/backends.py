@@ -27,7 +27,7 @@ from django.conf import settings as st
 from django.contrib.auth.backends import ModelBackend
 from django_cas.backends import _verify
 import django_cas
-
+from .admin_advanced  import change_dni
 
 class CASBackend(django_cas.backends.CASBackend, ModelBackend):
 
@@ -45,6 +45,13 @@ class CASBackend(django_cas.backends.CASBackend, ModelBackend):
                 and attributes['TipoCuenta'] in st.CAS_TIPO_CUENTA_NOAUT):
             st.CAS_RETRY_LOGIN = False
             return None
+
+        user = UserProfile.objects.get(user__username=username)
+        if attributes['NumDocumento'] != user.documento:
+            rrhh_code1 = ws.get(url=(st.WS_COD_PERSONA % attributes['NumDocumento']), use_redis=False)
+            rrhh_code2 = ws.get(url=(st.WS_COD_PERSONA % user.documento), use_redis=False)
+            if rrhh_code1 == rrhh_code2:
+                change_dni(user, attributes['NumDocumento'])
         request.session['attributes'] = attributes
         documento = attributes['NumDocumento']
         return UserProfile.get_or_create_user(username, documento)[0]
