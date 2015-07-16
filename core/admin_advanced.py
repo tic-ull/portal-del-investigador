@@ -160,9 +160,15 @@ class CustomGroupAdmin(GroupAdmin):
 
 
 def change_dni(user_profile, new_dni):
-    cvn = user_profile.cvn
+
     user_profile.documento = new_dni
     user_profile.save()
+    change_dni_cvn(user_profile)
+    change_dni_cvn_old(user_profile)
+
+
+def change_dni_cvn(user_profile):
+    cvn = user_profile.cvn
     try:
         #Latest CVN
         pdf_path = get_cvn_path(cvn, u'fake.pdf')
@@ -181,6 +187,8 @@ def change_dni(user_profile, new_dni):
         cvn.save()
     except ObjectDoesNotExist:
         pass
+
+def change_dni_cvn_old(user_profile):
     try:
         #Old CVNs
         for old_cvn in user_profile.oldcvnpdf_set.all():
