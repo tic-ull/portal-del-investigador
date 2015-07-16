@@ -189,6 +189,7 @@ def change_dni_cvn(user_profile):
         pass
 
 def change_dni_cvn_old(user_profile):
+    cvn = user_profile.cvn
     try:
         #Old CVNs
         for old_cvn in user_profile.oldcvnpdf_set.all():
