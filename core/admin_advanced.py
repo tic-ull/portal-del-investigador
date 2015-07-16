@@ -39,6 +39,12 @@ from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
 from django.core.files import File
 from django.core.exceptions import ObjectDoesNotExist
+from os import makedirs
+from django.core.files.move import file_move_safe
+from os.path import join as os_path_join
+from os.path import isdir as os_path_isdir
+from cvn.helpers import get_cvn_path, get_old_cvn_path
+from django.conf import settings as st
 import logging
 
 logger = logging.getLogger(__name__)
@@ -154,25 +160,40 @@ class CustomGroupAdmin(GroupAdmin):
 
 
 def change_dni(user_profile, new_dni):
+    cvn = user_profile.cvn
     user_profile.documento = new_dni
     user_profile.save()
     try:
-        #Latest CVNs
-        cvn = user_profile.cvn
-        f_pdf = File(open(cvn.cvn_file.path))
-        cvn.cvn_file.save(u'fake.pdf',f_pdf)
-        f_xml = File(open(cvn.xml_file.path))
-        cvn.xml_file.save(u'fake.xml',f_xml)
+        #Latest CVN
+        pdf_path = get_cvn_path(cvn, u'fake.pdf')
+        new_pdf_path = os_path_join(st.MEDIA_ROOT, pdf_path)
+        xml_path = get_cvn_path(cvn, u'fake.xml')
+        new_xml_path = os_path_join(st.MEDIA_ROOT, xml_path)
+        root_path = '/'.join(new_pdf_path.split('/')[:-1])
+        if not os_path_isdir(root_path):
+            makedirs(root_path)
+        if cvn.cvn_file.path != new_pdf_path:
+            file_move_safe(cvn.cvn_file.path, new_pdf_path, allow_overwrite=True)
+            cvn.cvn_file.name = pdf_path
+        if cvn.xml_file.path != new_xml_path:
+            file_move_safe(cvn.xml_file.path, new_xml_path, allow_overwrite=True)
+            cvn.xml_file.name = xml_path
         cvn.save()
     except ObjectDoesNotExist:
         pass
     try:
         #Old CVNs
-        for oldcvn in user_profile.oldcvnpdf_set.all():
-            f_pdf = File(open(oldcvn.cvn_file.path))
-
-            filename = 'CVN-%s-%s.pdf'%(user_profile.documento, oldcvn.uploaded_at.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
-            oldcvn.cvn_file.save(filename, f_pdf)
+        for old_cvn in user_profile.oldcvnpdf_set.all():
+            filename = 'CVN-%s-%s.pdf'%(user_profile.documento, old_cvn.uploaded_at.strftime('%Y-%m-%d-%Hh%Mm%Ss'))
+            pdf_path = get_old_cvn_path(cvn, filename)
+            path = os_path_join(st.MEDIA_ROOT, pdf_path)
+            if old_cvn.cvn_file.path != path:
+                root_path = '/'.join(path.split('/')[:-1])
+                if not os_path_isdir(root_path):
+                    makedirs(root_path)
+                file_move_safe(old_cvn.cvn_file.path, path)
+                old_cvn.cvn_file.name = pdf_path
+                old_cvn.save()
     except ObjectDoesNotExist:
         pass
 
