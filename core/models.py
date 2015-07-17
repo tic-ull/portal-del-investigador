@@ -68,6 +68,14 @@ class UserProfile(models.Model):
             self.rrhh_code = rrhh_code
             self.save()
 
+    def change_dni(self, new_dni):
+
+        self.documento = new_dni
+        self.save()
+        self.cvn.change_dni_cvn()
+        for old_cvn_pdf in self.oldcvnpdf_set.all():
+            old_cvn_pdf.change_dni_cvn_old()
+        self.save()
     def __unicode__(self):
         return self.user.username
 

@@ -23,6 +23,8 @@
 #
 
 from django.contrib.auth.signals import user_logged_in
+from ws_utils import CachedWS as ws
+from django.conf import settings as st
 
 
 def update_user(user, request, **kwargs):
@@ -38,4 +40,18 @@ def update_user(user, request, **kwargs):
             user.username = cas_info['username']
         user.save()
 
+
+def update_dni(user, request, **kwargs):
+    attributes = request.session['attributes']
+
+    if attributes['NumDocumento'] != user.profile.documento:
+        rrhh_code1 = ws.get(url=(st.WS_COD_PERSONA %
+                                 attributes['NumDocumento']), use_redis=False)
+        rrhh_code2 = ws.get(url=(st.WS_COD_PERSONA %
+                                 user.profile.documento), use_redis=False)
+        if rrhh_code1 == rrhh_code2:
+            user.profile.change_dni(attributes['NumDocumento'])
+            user.save()
+
 user_logged_in.connect(update_user, dispatch_uid='update-profile')
+user_logged_in.connect(update_dni, dispatch_uid='update-dni')
