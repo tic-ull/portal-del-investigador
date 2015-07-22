@@ -28,6 +28,7 @@ from django.contrib.auth.backends import ModelBackend
 from django_cas.backends import _verify
 import django_cas
 
+
 class CASBackend(django_cas.backends.CASBackend, ModelBackend):
 
     def authenticate(self, ticket, service, request):
