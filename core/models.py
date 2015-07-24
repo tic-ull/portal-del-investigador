@@ -72,10 +72,10 @@ class UserProfile(models.Model):
 
         self.documento = new_dni
         self.save()
-        self.cvn.change_dni_cvn()
+        self.cvn.update_document_in_path()
         for old_cvn_pdf in self.oldcvnpdf_set.all():
-            old_cvn_pdf.change_dni_cvn_old()
-        self.save()
+            old_cvn_pdf.update_document_in_path()
+
     def __unicode__(self):
         return self.user.username
 

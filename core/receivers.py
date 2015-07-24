@@ -45,13 +45,11 @@ def update_dni(user, request, **kwargs):
     attributes = request.session['attributes']
 
     if attributes['NumDocumento'] != user.profile.documento:
-        rrhh_code1 = ws.get(url=(st.WS_COD_PERSONA %
-                                 attributes['NumDocumento']), use_redis=False)
-        rrhh_code2 = ws.get(url=(st.WS_COD_PERSONA %
-                                 user.profile.documento), use_redis=False)
-        if rrhh_code1 == rrhh_code2:
+        rrhh_code = ws.get(url=(st.WS_COD_PERSONA %
+                                attributes['NumDocumento']), use_redis=False)
+        if rrhh_code == user.profile.rrhh_code:
             user.profile.change_dni(attributes['NumDocumento'])
-            user.save()
+
 
 user_logged_in.connect(update_user, dispatch_uid='update-profile')
 user_logged_in.connect(update_dni, dispatch_uid='update-dni')

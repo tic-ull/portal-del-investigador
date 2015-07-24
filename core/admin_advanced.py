@@ -38,11 +38,6 @@ from django_cas.views import logout
 from modeltranslation.admin import TranslationAdmin
 from modeltranslation.translator import translator, TranslationOptions
 
-import logging
-
-logger = logging.getLogger(__name__)
-
-
 
 # Options for the flatpages (faq)
 class FlatPageTranslationOptions(TranslationOptions):
