@@ -126,11 +126,11 @@
         </div>
 
         <div class="container-fluid">
-            {% if config.SITEWIDE_WARNING %}
+            {% if sitewide_warning %}
                 <div style="text-align: center;">
                     <div class="alert alert-danger" style="margin-bottom: 15px; display: inline-block;">
                         <i class="fa fa-exclamation-circle"></i>
-                        {{ config.SITEWIDE_WARNING }}
+                        {{ sitewide_warning }}
                     </div>
                 </div>
             {% endif %}
