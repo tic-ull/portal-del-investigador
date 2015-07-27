@@ -34,9 +34,9 @@ import datetime
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
 
-    documento = models.CharField(_('Documento'), max_length=20, unique=True)
+    documento = models.CharField(_("Document"), max_length=20, unique=True)
 
-    rrhh_code = models.CharField(_(u'Código persona'), max_length=20,
+    rrhh_code = models.CharField(_("Person code"), max_length=20,
                                  blank=True, null=True, unique=True)
 
     @classmethod
@@ -68,24 +68,32 @@ class UserProfile(models.Model):
             self.rrhh_code = rrhh_code
             self.save()
 
+    def change_dni(self, new_dni):
+
+        self.documento = new_dni
+        self.save()
+        self.cvn.update_document_in_path()
+        for old_cvn_pdf in self.oldcvnpdf_set.all():
+            old_cvn_pdf.update_document_in_path()
+
     def __unicode__(self):
         return self.user.username
 
     class Meta:
         ordering = ['user__username']
-        verbose_name_plural = _(u'Perfiles de Usuario')
+        verbose_name_plural = _("User profiles")
 
 
 class Log(models.Model):
     user_profile = models.ForeignKey(UserProfile, blank=True, null=True)
 
-    application = models.CharField(_(u'Aplicación'), max_length=20)
+    application = models.CharField(_("Application"), max_length=20)
 
-    entry_type = models.IntegerField(_('Tipo'), choices=st_core.LOG_TYPE)
+    entry_type = models.IntegerField(_("Type"), choices=st_core.LOG_TYPE)
 
-    date = models.DateTimeField(_('Fecha'))
+    date = models.DateTimeField(_("Date"))
 
-    message = models.TextField(_('Mensaje'))
+    message = models.TextField(_("Message"))
 
     def __unicode__(self):
         return u'%s - %s' % (self.application,

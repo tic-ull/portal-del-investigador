@@ -30,7 +30,7 @@ from django_cas.views import logout
 
 
 class BasicAdminSite(AdminSite):
-    site_header = _(u'Administración Básica')
+    site_header = _("Basic Administration")
 
     def has_permission(self, request):
         return request.user.has_perm('auth.basic_staff')
