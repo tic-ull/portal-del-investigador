@@ -55,8 +55,8 @@ class CustomFlatPageAdmin(TranslationAdmin):
         (None, {'fields': ('title', 'content')}),
     )
 
-FlatPage._meta.verbose_name = _("Preguntas Frecuentes")
-FlatPage._meta.verbose_name_plural = _("Preguntas Frecuentes")
+FlatPage._meta.verbose_name = _("Frequently Asked Questions")
+FlatPage._meta.verbose_name_plural = _("Frequently Asked Questions")
 
 
 class UserProfileInline(admin.StackedInline):
@@ -65,8 +65,7 @@ class UserProfileInline(admin.StackedInline):
     readonly_fields = ('rrhh_code', )
 
 
-removal_text = _(u'Se ha deshabilitado la configuración de permisos por'
-                 u' usuario, ya que deben configurarse por grupos.')
+removal_text = _(u'Setting user permissions are disabled, must be configured by groups')
 
 removal_message = loader.get_template('core/partials/message_box.html').render(
     Context({'message_content': removal_text}))
@@ -141,7 +140,7 @@ class CustomGroupAdmin(GroupAdmin):
 
     def membership(self):
         return self.user_set.count()
-    membership.short_description = _(u"Número de miembros")
+    membership.short_description = _("Number of members")
     membership.allow_tags = True
 
     list_display = ('name', membership, )

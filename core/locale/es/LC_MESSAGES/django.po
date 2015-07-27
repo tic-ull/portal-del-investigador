@@ -1,0 +1,248 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-24 10:53+0100\n"
+"PO-Revision-Date: 2015-07-24 10:58-0102\n"
+"Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Translated-Using: django-rosetta 0.7.6\n"
+
+#: admin_advanced.py:58 admin_advanced.py:59 templates/core/base.html:107
+#: templates/core/faq/faq.html:9
+msgid "Frequently Asked Questions"
+msgstr "Preguntas Frecuentes"
+
+#: admin_advanced.py:68
+msgid "Setting user permissions are disabled, must be configured by groups"
+msgstr ""
+"Se ha deshabilitado la configuración de permisos por usuario, ya que deben "
+"configurarse por grupos."
+
+#: admin_advanced.py:143
+msgid "Number of members"
+msgstr "Número de miembros"
+
+#: admin_basic.py:33
+msgid "Basic Administration"
+msgstr "Administración Básica"
+
+#: forms.py:77 forms.py:81
+msgid "Users"
+msgstr "Usuarios"
+
+#: forms.py:107
+msgid "Permissions"
+msgstr "Permisos"
+
+#: models.py:37
+msgid "Document"
+msgstr "Documento"
+
+#: models.py:39
+msgid "Person code"
+msgstr "Código persona"
+
+#: models.py:76
+msgid "User profiles"
+msgstr "Perfiles de Usuario"
+
+#: models.py:82
+msgid "Application"
+msgstr "Aplicación"
+
+#: models.py:84
+msgid "Type"
+msgstr "Tipo"
+
+#: models.py:86
+msgid "Date"
+msgstr "Fecha"
+
+#: models.py:88
+msgid "Message"
+msgstr "Mensaje"
+
+#: settings.py:50
+#| msgid ""
+#| "Warning Message to show on every page (leave empty to disable)"
+msgid ""
+"Warning Message to show on every page when the language is Spanish (leave "
+"empty to disable)"
+msgstr ""
+"Mensaje de advertencia para mostrar en cada página cuando el idioma es "
+"español (dejar vacío para deshabilitar)"
+
+#: settings.py:51
+#| msgid ""
+#| "Warning Message to show on every page (leave empty to disable)"
+msgid ""
+"Warning Message to show on every page when the language is English (leave "
+"empty to disable)"
+msgstr ""
+"Mensaje de advertencia para mostrar en cada página cuando el idioma es "
+"inglés (dejar vacío para deshabilitar)"
+
+#: templates/core/base.html:12
+msgid "University of La Laguna - Researcher Portal"
+msgstr "Universidad de La Laguna - Portal del Investigador"
+
+#: templates/core/base.html:37 templates/core/base.html.py:515
+msgid "University of La Laguna"
+msgstr "Universidad de La Laguna"
+
+#: templates/core/base.html:43
+msgid "Remote services"
+msgstr "Servicios telemáticos"
+
+#: templates/core/base.html:45
+msgid "User Profile Management"
+msgstr "Gestión de perfil de usuario"
+
+#: templates/core/base.html:46
+msgid "Portal"
+msgstr "Portal"
+
+#: templates/core/base.html:47
+msgid "Electronic office"
+msgstr "Sede electrónica"
+
+#: templates/core/base.html:48
+msgid "Virtual Campus"
+msgstr "Campus Virtual"
+
+#: templates/core/base.html:49 templates/core/base.html.py:109
+msgid "e-mail"
+msgstr "Correo electrónico"
+
+#: templates/core/base.html:50
+msgid "Virtual Hard Drive"
+msgstr "Disco duro virtual"
+
+#: templates/core/base.html:51
+msgid "Digital library"
+msgstr "Biblioteca digital"
+
+#: templates/core/base.html:52
+msgid "Events"
+msgstr "Eventos"
+
+#: templates/core/base.html:57
+msgid "Contact"
+msgstr "Contacto"
+
+#: templates/core/base.html:59
+msgid "ULL website"
+msgstr "Página Web ULL"
+
+#: templates/core/base.html:60
+msgid "Contact form"
+msgstr "Formulario de contacto"
+
+#: templates/core/base.html:61
+msgid "Telephone directory"
+msgstr "Directorio telefónico"
+
+#: templates/core/base.html:82
+msgid "Researcher Portal"
+msgstr "Portal del Investigador"
+
+#: templates/core/base.html:94
+msgid "Select language"
+msgstr "Cambiar Idioma"
+
+#: templates/core/base.html:102
+msgid "Help and support"
+msgstr "Ayuda y soporte"
+
+#: templates/core/base.html:107 templates/core/faq/base_faq.html:6
+msgid "FAQ"
+msgstr "FAQ"
+
+#: templates/core/base.html:119
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/core/base.html:121 templates/core/base.html.py:456
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/core/base.html:434
+msgid "User Profile"
+msgstr "Perfil de usuario"
+
+#: templates/core/base.html:449
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/core/base.html:450
+msgid "Manage CVN"
+msgstr "Gestionar CVN"
+
+#: templates/core/base.html:452
+msgid "Accounting"
+msgstr "Contabilidad"
+
+#: templates/core/base.html:454
+msgid "Exit"
+msgstr "Salir"
+
+#: templates/core/base.html:484
+msgid "Administration"
+msgstr "Administración"
+
+#: templates/core/base.html:489 templates/core/base.html.py:491
+msgid "Admin Panel"
+msgstr "Panel de administración"
+
+#: templates/core/base.html:494
+msgid "Statistics by Area"
+msgstr "Estadísticas por Áreas"
+
+#: templates/core/base.html:495
+msgid "Statistics by Department"
+msgstr "Estadísticas por Departamentos"
+
+#: templates/core/base.html:496
+msgid "Statistics by Group"
+msgstr "Estadísticas por Grupos"
+
+#: templates/core/base.html:499
+msgid "Report ULL"
+msgstr "Informe ULL"
+
+#: templates/core/base.html:515
+msgid "Phone number"
+msgstr "Teléfono"
+
+#: templates/core/error.html:8
+msgid "Sorry for the inconvenience"
+msgstr "Rogamos disculpe las molestias"
+
+#: templates/core/error.html:10
+msgid "Back to Researcher Portal"
+msgstr "Volver al Portal del Investigador"
+
+#: templates/core/error.html:17
+msgid "Actions available"
+msgstr "Acciones disponibles"
+
+#: templates/core/error.html:20
+msgid "Back to previous page and try again"
+msgstr "Volver a la página anterior e intentarlo de nuevo"
+
+#: templates/core/error.html:21
+msgid "Go to the home page of the University of La Laguna"
+msgstr "Ir a la página de inicio de la Universidad de La Laguna"
+
+#: templates/core/error.html:22
+msgid "Incidence report"
+msgstr "Notificar incidencia"
+
+#~ msgid "Campus Virtual"
+#~ msgstr "Campus virtual"
