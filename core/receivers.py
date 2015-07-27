@@ -47,7 +47,7 @@ def update_dni(user, request, **kwargs):
     if attributes['NumDocumento'] != user.profile.documento:
         rrhh_code = ws.get(url=(st.WS_COD_PERSONA %
                                 attributes['NumDocumento']), use_redis=False)
-        if rrhh_code == user.profile.rrhh_code:
+        if str(rrhh_code) == user.profile.rrhh_code:
             user.profile.change_dni(attributes['NumDocumento'])
 
 
