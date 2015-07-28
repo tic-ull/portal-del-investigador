@@ -25,7 +25,7 @@
 from core.tests.helpers import init, clean
 from django import test
 from django.conf import settings as st
-
+import unittest
 from core.models import UserProfile
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -85,6 +85,8 @@ class LoginCAS(test.LiveServerTestCase):
         except NoSuchElementException:
             result = ''
         self.assertTrue((u'Successfully changed dni.' in result))
+        self.assertEqual("08030254B", UserProfile.objects.get(
+            user__username='invipas').documento)
 
     def test_selenium_cambio_incorrecto_dni(self):
         user = UserProfile.get_or_create_user('invipas', '72693103Q')[0]
@@ -121,6 +123,8 @@ class LoginCAS(test.LiveServerTestCase):
         except NoSuchElementException:
             result = ''
         self.assertFalse(u'Successfully changed dni.' in result)
+        self.assertEqual("72693103Q", UserProfile.objects.get(
+            user__username='invipas').documento)
 
     def tearDown(self):
         self.driver.quit()
@@ -130,3 +134,6 @@ class LoginCAS(test.LiveServerTestCase):
     @classmethod
     def tearDownClass(cls):
         clean()
+
+if __name__ == "__main__":
+    unittest.main()
