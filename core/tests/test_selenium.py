@@ -1,7 +1,7 @@
 # -*- encoding: UTF-8 -*-
 
 #
-#    Copyright 2014-2015
+#    Copyright 2015
 #
 #      STIC-Investigación - Universidad de La Laguna (ULL) <gesinv@ull.edu.es>
 #
@@ -28,7 +28,7 @@ from django.conf import settings as st
 
 from core.models import UserProfile
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from pyvirtualdisplay import Display
 
@@ -40,9 +40,9 @@ class LoginCAS(test.LiveServerTestCase):
         init()
 
     def setUp(self):
-        #display = Display(visible=0, size=(1280, 1024))
-        #display.start()
-        #self.display = display
+        display = Display(visible=0, size=(1280, 1024))
+        display.start()
+        self.display = display
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(8)
         self.driver.set_page_load_timeout(30)
@@ -124,7 +124,7 @@ class LoginCAS(test.LiveServerTestCase):
 
     def tearDown(self):
         self.driver.quit()
-        #self.display.stop()
+        self.display.stop()
         self.assertEqual([], self.verificationErrors)
 
     @classmethod
