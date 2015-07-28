@@ -23,21 +23,15 @@
 #
 
 from core.tests.helpers import init, clean
-from cvn import settings as st_cvn
 from django import test
 from django.conf import settings as st
-from django.contrib.auth.models import User
-from selenium import webdriver
-from selenium.common.exceptions import (NoSuchElementException,
-                                        NoAlertPresentException)
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait, Select
 
+from core.models import UserProfile
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.common.exceptions import NoSuchElementException
 from pyvirtualdisplay import Display
 
-import time
-from core.tests.factories import UserFactory
 
 class LoginCAS(test.LiveServerTestCase):
 
@@ -46,9 +40,9 @@ class LoginCAS(test.LiveServerTestCase):
         init()
 
     def setUp(self):
-        display = Display(visible=0, size=(1280, 1024))
-        display.start()
-        self.display = display
+        #display = Display(visible=0, size=(1280, 1024))
+        #display.start()
+        #self.display = display
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(8)
         self.driver.set_page_load_timeout(30)
@@ -56,26 +50,83 @@ class LoginCAS(test.LiveServerTestCase):
         self.verificationErrors = []
         self.accept_next_alert = True
 
-def test_selenium_cambio_correcto_dni(self):
-        import ipdb; ipdb.set_trace()
-        user = UserFactory.create()
+    def test_selenium_cambio_correcto_dni(self):
+        user = UserProfile.get_or_create_user('invipas', '72693103Q')[0]
+        user.set_password("pruebasINV1")
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
         driver = self.driver
-        driver.get(self.base_url + "/cas-1/login?service=http%3A%2F%2Flocalhost%3A8081%2Finvestigacion%2Faccounts%2Flogin%2F%3Fnext%3D%252Finvestigacion%252Fadmin%252Flogin%252F%253Fnext%253D%252Finvestigacion%252Fadmin%252F")
+        driver.get(self.base_url + "/cas-1/login?service=http%3A%2F%2Flocalhost"
+                                   "%3A8081%2Finvestigacion%2Faccounts%2Flogin"
+                                   "%2F%3Fnext%3D%252Finvestigacion%252Fadmin"
+                                   "%252Flogin%252F%253Fnext%253D%252F"
+                                   "investigacion%252Fadmin%252F")
         driver.find_element_by_id("username").clear()
         driver.find_element_by_id("username").send_keys("invipas")
         driver.find_element_by_id("password").clear()
         driver.find_element_by_id("password").send_keys("pruebasINV1")
         driver.find_element_by_name("submit").click()
-        driver.find_element_by_link_text("Perfiles de Usuario").click()
+        driver.find_element_by_link_text("User profiles").click()
         driver.find_element_by_id("searchbar").clear()
         driver.find_element_by_id("searchbar").send_keys(user.username)
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
-        driver.find_element_by_css_selector("tr.row1 > td.action-checkbox > input[name=\"_selected_action\"]").click()
-        Select(driver.find_element_by_name("action")).select_by_visible_text("Change user's DNI")
+        driver.find_element_by_css_selector("tr.row1 > td.action-checkbox > "
+                                            "input[name=\"_selected_action\"]"
+                                            ).click()
+        Select(driver.find_element_by_name("action")
+               ).select_by_visible_text("Change user's DNI")
         driver.find_element_by_name("index").click()
         driver.find_element_by_id("id_new_dni").clear()
         driver.find_element_by_id("id_new_dni").send_keys("08030254B")
         driver.find_element_by_name("apply").click()
-        time.sleep(5)
-        self.assertTrue(self.is_element_present(By.CLASS_NAME,
-                                                "alert-success"))
+        try:
+            result = driver.find_element_by_class_name("info").text
+        except NoSuchElementException:
+            result = ''
+        self.assertTrue((u'Successfully changed dni.' in result))
+
+    def test_selenium_cambio_incorrecto_dni(self):
+        user = UserProfile.get_or_create_user('invipas', '72693103Q')[0]
+        user.set_password("pruebasINV1")
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        driver = self.driver
+        driver.get(self.base_url + "/cas-1/login?service=http%3A%2F%2Flocalhost"
+                                   "%3A8081%2Finvestigacion%2Faccounts%2Flogin"
+                                   "%2F%3Fnext%3D%252Finvestigacion%252Fadmin"
+                                   "%252Flogin%252F%253Fnext%253D%252F"
+                                   "investigacion%252Fadmin%252F")
+        driver.find_element_by_id("username").clear()
+        driver.find_element_by_id("username").send_keys("invipas")
+        driver.find_element_by_id("password").clear()
+        driver.find_element_by_id("password").send_keys("pruebasINV1")
+        driver.find_element_by_name("submit").click()
+        driver.find_element_by_link_text("User profiles").click()
+        driver.find_element_by_id("searchbar").clear()
+        driver.find_element_by_id("searchbar").send_keys(user.username)
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        driver.find_element_by_css_selector("tr.row1 > td.action-checkbox > "
+                                            "input[name=\"_selected_action\"]"
+                                            ).click()
+        Select(driver.find_element_by_name("action")
+               ).select_by_visible_text("Change user's DNI")
+        driver.find_element_by_name("index").click()
+        driver.find_element_by_id("id_new_dni").clear()
+        driver.find_element_by_id("id_new_dni").send_keys("88888888B")
+        driver.find_element_by_name("apply").click()
+        try:
+            result = driver.find_element_by_class_name("info").text
+        except NoSuchElementException:
+            result = ''
+        self.assertFalse(u'Successfully changed dni.' in result)
+
+    def tearDown(self):
+        self.driver.quit()
+        #self.display.stop()
+        self.assertEqual([], self.verificationErrors)
+
+    @classmethod
+    def tearDownClass(cls):
+        clean()
