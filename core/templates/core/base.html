@@ -23,6 +23,13 @@
     </head>
 
     <body>
+    {%  if devel %}
+        <div class="navbar navbar-default navbar-pre" style="padding-top: 3px;" role="navigation">
+            <i class="fa fa-warning"></i>
+            <span>Servidor en preproducción</span>
+            <a href="mailto:{{ email }} ">Mas información</a>
+        </div>
+    {%  endif %}
         <div class="navbar navbar-default navbar-ull" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -88,7 +95,7 @@
                 <div class="collapse navbar-collapse navbar-app-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% block navbar_links %}
-                        
+
                         {% endblock navbar_links %}
                         <li class="dropdown">
                             <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">{% trans "Select language" %} <b class="caret"></b></a>
