@@ -72,7 +72,8 @@ class UserProfile(models.Model):
 
         self.documento = new_dni
         self.save()
-        self.cvn.update_document_in_path()
+        if hasattr(self,'cvn'):
+            self.cvn.update_document_in_path()
         for old_cvn_pdf in self.oldcvnpdf_set.all():
             old_cvn_pdf.update_document_in_path()
 
