@@ -39,6 +39,10 @@ class UserProfile(models.Model):
     rrhh_code = models.CharField(_("Person code"), max_length=20,
                                  blank=True, null=True, unique=True)
 
+    @property
+    def id_without_control_digit(self):
+        return self.documento[:-1]
+
     @classmethod
     def get_or_create_user(cls, username, documento):
         created = False
