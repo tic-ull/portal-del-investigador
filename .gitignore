@@ -2,6 +2,7 @@
 *.log
 *.swp
 *.bak
+*.pid
 *.*~
 build/
 src/
