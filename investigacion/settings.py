@@ -83,8 +83,8 @@ EMAIL_SUPPORT = 'email@example.com'
 _ = lambda s: s
 
 LANGUAGES = (
-    ('es', 'Español'),
-    ('en', 'English'),
+    ('es', u'Español'),
+    ('en', u'English'),
 )
 USE_I18N = True
 USE_L10N = True
@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'constance',
     'constance.backends.database',
     'logentry_admin',
+    'localflavor',
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -348,6 +349,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': False,
         },
+        'cvn.reports.reports': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        }
     }
 }
 # ******************************* LOGGING ************************************

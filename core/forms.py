@@ -74,11 +74,11 @@ class PageForm(FlatpageForm):
 class GroupAdminForm(forms.ModelForm):
 
     users = forms.ModelMultipleChoiceField(
-        label=_(u'Usuarios'),
+        label=_("Users"),
         queryset=User.objects.all(),
         required=False,
         widget=FilteredSelectMultiple(
-            verbose_name=_(u'Usuarios'),
+            verbose_name=_("Users"),
             is_stacked=False,
         )
     )
@@ -104,7 +104,7 @@ class GroupAdminForm(forms.ModelForm):
 class CustomUserForm(UserChangeForm):
 
     permissions = forms.MultipleChoiceField(
-        label=_(u'Permisos'), required=False,
+        label=_("Permissions"), required=False,
     )
 
     def __init__(self, *args, **kwargs):
