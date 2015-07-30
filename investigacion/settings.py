@@ -111,6 +111,7 @@ INSTALLED_APPS = (
     'constance',
     'constance.backends.database',
     'logentry_admin',
+    'localflavor',
 )
 # ******************************* INSTALLED APPS *****************************
 
