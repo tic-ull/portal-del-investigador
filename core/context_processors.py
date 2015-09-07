@@ -23,6 +23,7 @@
 #
 
 from django.conf import settings as st
+from constance import config
 
 
 def _get_langs_info(languages, current_url):
@@ -72,6 +73,10 @@ def extra_info(request):
         'datatables_sort_normalize': st.DATATABLES_SORT_NORMALIZE_URL,
         'datatables_sort_date': st.DATATABLES_SORT_DATE_URL,
         'datatables_sort_percent': st.DATATABLES_SORT_PERCENT_URL,
+        'sitewide_warning': getattr(config, 'SITEWIDE_WARNING_' +
+                                            request.LANGUAGE_CODE.upper()),
+        'devel': st.DEVEL,
+        'email': st.ADMINS[0][1]
     }
 
 
