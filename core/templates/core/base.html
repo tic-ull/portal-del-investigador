@@ -505,6 +505,9 @@
                                     {% if 'cvn.view_university_report' in perms %}
                                         <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Report ULL" %}</a></li>
                                     {% endif %}
+                                    {% if perms.cvn.read_cvn_reports %}
+                                        <li><a href='{% url 'reports' %}'><i class="fa fa-files-o"></i> {% trans "Reports" %}</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
