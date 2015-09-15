@@ -413,7 +413,8 @@ WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
 # List of departments that ever existed
-WS_DEPARTMENTS_ALL = (WS_SERVER_URL_v1 + 'get_departamentos')
+WS_DEPARTMENTS_ALL = WS_SERVER_URL_v1 + 'get_departamentos'
+WS_DEPARTMENTS_BY_YEAR = WS_SERVER_URL_v1 + 'get_departamentos?year=%s'
 
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
@@ -446,7 +447,8 @@ WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
     'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
 # List of all areas that ever existed
-WS_AREAS_ALL = (WS_SERVER_URL_v1 + 'get_areas')
+WS_AREAS_ALL = WS_SERVER_URL_v1 + 'get_areas'
+WS_AREAS_BY_YEAR = WS_SERVER_URL_v1 + 'get_areas?year=%s'
 
 # This is used only on the accounting app.
 # There is no need to provide this WS if the statistics app is not being used.
