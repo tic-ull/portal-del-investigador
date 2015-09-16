@@ -371,6 +371,9 @@ WS_CCE = WS_SERVER_URL_v1 + 'get_cce?past_days=%s'
 
 # RRHH code
 WS_COD_PERSONA = WS_SERVER_URL_v1 + 'get_codpersona?nif=%s'
+# Document
+WS_DOCUMENT = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/numero_documento/'
+
 
 # CVN Info ULL: learning_degree / learning_phd
 WS_ULL_LEARNING = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/titulacion/'
