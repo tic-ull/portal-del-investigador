@@ -34,3 +34,4 @@ django-constance[database]
 django-logentry-admin
 unicodecsv
 django-localflavor
+beautifulsoup4
