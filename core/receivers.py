@@ -25,6 +25,8 @@
 from django.contrib.auth.signals import user_logged_in
 from ws_utils import CachedWS as ws
 from django.conf import settings as st
+import logging
+logger = logging.getLogger('default')
 
 
 def update_user(user, request, **kwargs):
@@ -46,10 +48,18 @@ def update_dni(user, request, **kwargs):
         attributes = request.session['attributes']
 
         if attributes['NumDocumento'] != user.profile.documento:
-            rrhh_code = ws.get(url=(st.WS_COD_PERSONA % attributes[
-                'NumDocumento']), use_redis=False)
-            if str(rrhh_code) == user.profile.rrhh_code:
+            rrhh_code = str(ws.get(url=(st.WS_COD_PERSONA % attributes[
+                'NumDocumento']), use_redis=False))
+            if rrhh_code == user.profile.rrhh_code:
                 user.profile.change_dni(attributes['NumDocumento'])
+            else:
+                logger.error(u'Usuario detectado con número de documento y código de RRHH diferentes\n' +
+                             u'User: %s\n OLD Documento: %s  - NEW Documento: %s \n' % (attributes['username'],
+                                                                                        user.profile.documento,
+                                                                                        attributes['NumDocumento']) +
+                             u'OLD RRHH: %s - NEW RRHH: %s\n' % (user.profile.rrhh_code, rrhh_code) +
+                             u'Es necesario verificar si es la misma persona y unificarlas de forma manual desde la '
+                             u'interfaz de administración.')
 
 
 user_logged_in.connect(update_user, dispatch_uid='update-profile')
