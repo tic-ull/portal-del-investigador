@@ -372,6 +372,9 @@ WS_CCE = WS_SERVER_URL_v1 + 'get_cce?past_days=%s'
 
 # RRHH code
 WS_COD_PERSONA = WS_SERVER_URL_v1 + 'get_codpersona?nif=%s'
+# Document
+WS_DOCUMENT = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/numero_documento/'
+
 
 # CVN Info ULL: learning_degree / learning_phd
 WS_ULL_LEARNING = WS_SERVER_URL_v2 + 'uxxirh/persona/%s/titulacion/'
@@ -414,7 +417,8 @@ WS_DEPARTMENTS_AND_MEMBERS_UNIT_YEAR = (
     'get_departamentos_y_ultimos_miembros?codigo=%s&year=%s')
 
 # List of departments that ever existed
-WS_DEPARTMENTS_ALL = (WS_SERVER_URL + 'get_departamentos')
+WS_DEPARTMENTS_ALL = WS_SERVER_URL_v1 + 'get_departamentos'
+WS_DEPARTMENTS_BY_YEAR = WS_SERVER_URL_v1 + 'get_departamentos?year=%s'
 
 # All current areas and members
 WS_AREAS_AND_MEMBERS = (
@@ -447,7 +451,8 @@ WS_AREAS_AND_MEMBERS_UNIT_YEAR = (
     'get_areas_y_ultimos_miembros?codigo=%s&year=%s')
 
 # List of all areas that ever existed
-WS_AREAS_ALL = (WS_SERVER_URL + 'get_areas')
+WS_AREAS_ALL = WS_SERVER_URL_v1 + 'get_areas'
+WS_AREAS_BY_YEAR = WS_SERVER_URL_v1 + 'get_areas?year=%s'
 
 # This is used only on the accounting app.
 # There is no need to provide this WS if the statistics app is not being used.

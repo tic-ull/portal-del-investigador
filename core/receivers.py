@@ -42,13 +42,14 @@ def update_user(user, request, **kwargs):
 
 
 def update_dni(user, request, **kwargs):
-    attributes = request.session['attributes']
+    if 'attributes' in request.session:
+        attributes = request.session['attributes']
 
-    if attributes['NumDocumento'] != user.profile.documento:
-        rrhh_code = ws.get(url=(st.WS_COD_PERSONA %
-                                attributes['NumDocumento']), use_redis=False)
-        if str(rrhh_code) == user.profile.rrhh_code:
-            user.profile.change_dni(attributes['NumDocumento'])
+        if attributes['NumDocumento'] != user.profile.documento:
+            rrhh_code = ws.get(url=(st.WS_COD_PERSONA % attributes[
+                'NumDocumento']), use_redis=False)
+            if str(rrhh_code) == user.profile.rrhh_code:
+                user.profile.change_dni(attributes['NumDocumento'])
 
 
 user_logged_in.connect(update_user, dispatch_uid='update-profile')
