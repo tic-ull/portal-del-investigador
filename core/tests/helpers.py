@@ -25,9 +25,11 @@
 from django.conf import settings as st
 import os
 import shutil
+import logging
 
 
 def init():
+    logging.disable(logging.ERROR)
     st.MEDIA_ROOT = st.MEDIA_TEST_ROOT
     try:
         os.makedirs(st.MEDIA_TEST_ROOT)
