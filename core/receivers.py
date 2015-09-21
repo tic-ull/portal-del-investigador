@@ -53,13 +53,18 @@ def update_dni(user, request, **kwargs):
             if rrhh_code == user.profile.rrhh_code:
                 user.profile.change_dni(attributes['NumDocumento'])
             else:
-                logger.error(u'Usuario detectado con número de documento y código de RRHH diferentes\n' +
-                             u'User: %s\n OLD Documento: %s  - NEW Documento: %s \n' % (attributes['username'],
-                                                                                        user.profile.documento,
-                                                                                        attributes['NumDocumento']) +
-                             u'OLD RRHH: %s - NEW RRHH: %s\n' % (user.profile.rrhh_code, rrhh_code) +
-                             u'Es necesario verificar si es la misma persona y unificarlas de forma manual desde la '
-                             u'interfaz de administración.')
+                logger.error(
+                    u'Usuario detectado con número de documento y código de '
+                    u'RRHH diferentes\nUser: %s\nOLD Documento: %s - NEW '
+                    u'Documento: %s \n' % (attributes['username'],
+                                           user.profile.documento,
+                                           attributes['NumDocumento']) +
+                    u'OLD RRHH: %s - NEW RRHH: %s\n' % (user.profile.rrhh_code,
+                                                        rrhh_code) +
+                    u'Es necesario verificar si es la misma persona y '
+                    u'unificarlas de forma manual desde la interfaz de '
+                    u'administración.'
+                )
 
 
 user_logged_in.connect(update_user, dispatch_uid='update-profile')
