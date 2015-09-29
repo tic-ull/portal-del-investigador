@@ -180,6 +180,8 @@ HISTORICAL = {
     'year': 'historica',
 }
 
+DATABASE_ROUTERS = ['core.routers.DynamicDbRouter']
+
 # ******************************* DATABASES *********************************
 
 SOUTH_TESTS_MIGRATE = False
