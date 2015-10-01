@@ -46,8 +46,6 @@ class UserFactory(factory.django.DjangoModelFactory):
     @classmethod
     def create_and_login(cls, client):
         user = cls.create()
-        st.AUTHENTICATION_BACKENDS = (
-            'django.contrib.auth.backends.ModelBackend',)
         password = '123456'
         user.set_password(password)
         user.save()
