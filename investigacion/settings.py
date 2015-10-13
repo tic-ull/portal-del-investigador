@@ -67,6 +67,7 @@ ALLOWED_HOSTS = ['*']
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
 
+
 # ******************************* ADMINS *************************************
 ADMINS = (
     ('STIC-Investigacion', 'email@example.com'),
@@ -113,6 +114,7 @@ INSTALLED_APPS = (
     'constance.backends.database',
     'logentry_admin',
     'localflavor',
+    'impersonate'
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -127,6 +129,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware'
 )
 # ******************************* MIDDLEWARES ********************************
 
@@ -262,6 +265,10 @@ CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
 CONSTANCE_CONFIG = {}
 CONSTANCE_SUPERUSER_ONLY = False
 # ************************* CONSTANCE ****************************************
+
+# ************************ IMPERSONATE ***************************************
+IMPERSONATE_REQUIRE_SUPERUSER = True
+# ************************ IMPERSONATE ***************************************
 
 # ************************* SETTINGS LOCAL ***********************************
 try:

@@ -55,6 +55,12 @@ urlpatterns += i18n_patterns(
         'django.contrib.flatpages.urls')),
 )
 
+if 'impersonate' in st.INSTALLED_APPS:
+    urlpatterns += i18n_patterns(
+        '',
+        url(r'^impersonate/', include('impersonate.urls')),
+    )
+
 if 'accounting' in st.INSTALLED_APPS:
     urlpatterns += i18n_patterns(
         '',
