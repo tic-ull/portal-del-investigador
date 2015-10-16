@@ -42,6 +42,7 @@ urlpatterns = patterns(
         'django_cas.views.login', name='login'),
     url(r'^investigacion/accounts/logout/$',
         'django_cas.views.logout', name='logout'),
+    url(r'^investigacion/impersonate/', include('impersonate.urls')),
 )
 
 urlpatterns += i18n_patterns(
@@ -54,12 +55,6 @@ urlpatterns += i18n_patterns(
     (r'^investigacion/faq/*', include(
         'django.contrib.flatpages.urls')),
 )
-
-if 'impersonate' in st.INSTALLED_APPS:
-    urlpatterns += i18n_patterns(
-        '',
-        url(r'^impersonate/', include('impersonate.urls')),
-    )
 
 if 'accounting' in st.INSTALLED_APPS:
     urlpatterns += i18n_patterns(

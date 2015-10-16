@@ -26,6 +26,7 @@ import js
 import os
 from enum import Enum
 import csv
+from django.core.urlresolvers import reverse_lazy
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -268,6 +269,7 @@ CONSTANCE_SUPERUSER_ONLY = False
 
 # ************************ IMPERSONATE ***************************************
 IMPERSONATE_REQUIRE_SUPERUSER = True
+IMPERSONATE_REDIRECT_URL = reverse_lazy('cvn')
 # ************************ IMPERSONATE ***************************************
 
 # ************************* SETTINGS LOCAL ***********************************
