@@ -176,10 +176,6 @@ DATABASES = {
     }
 }
 
-HISTORICAL = {
-    'year': 'historica',
-}
-
 DATABASE_ROUTERS = ['core.routers.DynamicDbRouter']
 
 # ******************************* DATABASES *********************************
@@ -272,7 +268,7 @@ except NameError:
     except ImportError:
         pass
 # ************************* SETTINGS LOCAL ***********************************
-
+HISTORICAL = [d for d in DATABASES if d != 'default']
 # ******************************* LOGGING ************************************
 LOG_FILENAME = os.path.join(LOG_ROOT, 'investigacion.log')
 LOGGING = {
