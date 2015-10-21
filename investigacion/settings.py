@@ -26,6 +26,7 @@ import js
 import os
 from enum import Enum
 import csv
+from django.core.urlresolvers import reverse_lazy
 
 # ******************************* PATHS *************************************
 # Build paths like this: os.path.join(BASE_DIR, ...)
@@ -66,6 +67,7 @@ ALLOWED_HOSTS = ['*']
 
 # REQUIRED FOR 'django.contrib.flatpages'
 SITE_ID = 1
+
 
 # ******************************* ADMINS *************************************
 ADMINS = (
@@ -113,6 +115,7 @@ INSTALLED_APPS = (
     'constance.backends.database',
     'logentry_admin',
     'localflavor',
+    'impersonate'
 )
 # ******************************* INSTALLED APPS *****************************
 
@@ -127,6 +130,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'crequest.middleware.CrequestMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware'
 )
 # ******************************* MIDDLEWARES ********************************
 
@@ -258,6 +262,11 @@ CONSTANCE_DATABASE_PREFIX = 'constance:investigacion:'
 CONSTANCE_CONFIG = {}
 CONSTANCE_SUPERUSER_ONLY = False
 # ************************* CONSTANCE ****************************************
+
+# ************************ IMPERSONATE ***************************************
+IMPERSONATE_REQUIRE_SUPERUSER = True
+IMPERSONATE_REDIRECT_URL = reverse_lazy('cvn')
+# ************************ IMPERSONATE ***************************************
 
 # ************************* SETTINGS LOCAL ***********************************
 try:

@@ -5,8 +5,6 @@ from uuid import uuid4
 from django.db import connections
 
 THREAD_LOCAL = threading.local()
-THREAD_LOCAL.DB_FOR_READ_OVERRIDE = ['default']
-THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE = ['default']
 
 
 class DynamicDbRouter(object):
@@ -15,19 +13,11 @@ class DynamicDbRouter(object):
     """
 
     def db_for_read(self, model, **hints):
-        try:
-            return THREAD_LOCAL.DB_FOR_READ_OVERRIDE[-1]
-        except AttributeError:
-            THREAD_LOCAL.DB_FOR_READ_OVERRIDE = ['default']
-            return THREAD_LOCAL.DB_FOR_READ_OVERRIDE[-1]
+        return getattr(THREAD_LOCAL, 'DB_FOR_READ_OVERRIDE', ['default'])[-1]
 
 
     def db_for_write(self, model, **hints):
-        try:
-            return THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE[-1]
-        except AttributeError:
-            THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE = ['default']
-            return THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE[-1]
+        return getattr(THREAD_LOCAL, 'DB_FOR_WRITE_OVERRIDE', ['default'])[-1]
 
     def allow_relation(self, obj1, obj2, **hints):
         return True
@@ -114,8 +104,10 @@ class in_database(object):
             THREAD_LOCAL.DB_FOR_READ_OVERRIDE = ['default']
         if not hasattr(THREAD_LOCAL, 'DB_FOR_WRITE_OVERRIDE'):
             THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE = ['default']
-        read_db = self.database if self.read else THREAD_LOCAL.DB_FOR_READ_OVERRIDE[-1]
-        write_db = self.database if self.write else THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE[-1]
+        read_db = (self.database if self.read
+                   else THREAD_LOCAL.DB_FOR_READ_OVERRIDE[-1])
+        write_db = (self.database if self.write
+                    else THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE[-1])
         THREAD_LOCAL.DB_FOR_READ_OVERRIDE.append(read_db)
         THREAD_LOCAL.DB_FOR_WRITE_OVERRIDE.append(write_db)
         return self

@@ -80,17 +80,30 @@ WS_SERVER_URL_v2 = 'http://www.example.com/'
 # INSTALLED_APPS = INSTALLED_APPS + ('statistics', 'accounting', 'mailing')
 
 # DATABASES
-DATABASES['default']['NAME'] = 'name'
-DATABASES['default']['USER'] = 'user'
-DATABASES['default']['PASSWORD'] = 'password'
-DATABASES['default']['HOST'] = 'localhost'
-
-DATABASES['historica_2013'] = DATABASES['default'].copy()
-DATABASES['historica_2013']['TEST_MIRROR'] = 'default'
-DATABASES['historica_2013']['OPTIONS'] = {
-    'options': '-c search_path=schema_2013'
-}
-
-HISTORICAL = {
-    '2013': 'historica_2013',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '<default_name>',
+        'USER': '<default_user>',
+        'PASSWORD': '<default_password>',
+        'HOST': '<default_host',
+        'PORT': '<default_port>',
+    },
+    '2013': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '<2013_name>',
+        'USER': '<2013_user>',
+        'PASSWORD': '<2013_password>',
+        'HOST': '<2013_host>',
+        'PORT': '<2013_port>',
+    },
+    '2014': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '<2014_name>',
+        'USER': '<2014_user>',
+        'PASSWORD': '<2014_password>',
+        'HOST': '<2014_host>',
+        'PORT': '<2014_port>',
+    },
+    # You can define more historical databases here.
 }
