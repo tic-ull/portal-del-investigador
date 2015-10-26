@@ -508,6 +508,11 @@
                                     {% if perms.cvn.read_cvn_reports %}
                                         <li><a id="admin_reports_link" href='{% url 'admin_reports' %}'><i class="fa fa-files-o"></i> {% trans "Reports" %}</a></li>
                                     {% endif %}
+                                    {% if user.is_staff %}
+                                        {% if not user.is_impersonate %}
+                                            <li><a href="{% url 'impersonate-search' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Impersonate search" %}</a></li>
+                                        {% endif %}
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>
