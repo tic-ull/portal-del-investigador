@@ -265,6 +265,7 @@ CONSTANCE_SUPERUSER_ONLY = False
 
 # ************************ IMPERSONATE ***************************************
 IMPERSONATE_REQUIRE_SUPERUSER = True
+IMPERSONATE_CUSTOM_ALLOW = 'core.helpers.can_impersonate'
 IMPERSONATE_REDIRECT_URL = reverse_lazy('cvn')
 # ************************ IMPERSONATE ***************************************
 

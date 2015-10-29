@@ -458,6 +458,9 @@
                                         {% if is_accounting_installed %}
                                             <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Accounting" %}</a></li>
                                         {% endif %}
+                                        {%  if user.is_impersonate %}
+                                            <li><a href="{% url 'impersonate-stop' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Stop impersonation" %}</a></li>
+                                        {% endif %}
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Exit" %}</a></li>
                                     {% else %}
                                         <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Login" %}</a></li>
@@ -508,7 +511,7 @@
                                     {% if perms.cvn.read_cvn_reports %}
                                         <li><a id="admin_reports_link" href='{% url 'admin_reports' %}'><i class="fa fa-files-o"></i> {% trans "Reports" %}</a></li>
                                     {% endif %}
-                                    {% if user.is_staff %}
+                                    {% if perms.auth.impersonate %}
                                         {% if not user.is_impersonate %}
                                             <li><a href="{% url 'impersonate-search' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Impersonate search" %}</a></li>
                                         {% endif %}

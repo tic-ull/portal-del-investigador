@@ -26,8 +26,25 @@ from django.contrib.auth.signals import user_logged_in
 from ws_utils import CachedWS as ws
 from django.conf import settings as st
 import logging
+from impersonate.signals import session_begin, session_end
+from django.dispatch import receiver
 
 logger = logging.getLogger('default')
+
+@receiver(session_begin)
+def impersonate_update_session(impersonating, request, **kwargs):
+    if request and 'attributes' in request.session:
+        cas_info = request.session['attributes']
+        cas_info['first_name'] = impersonating.first_name
+        cas_info['last_name'] = impersonating.last_name
+
+
+@receiver(session_end)
+def impersonate_restore_session(impersonator, request, **kwargs):
+    if request and 'attributes' in request.session:
+        cas_info = request.session['attributes']
+        cas_info['first_name'] = impersonator.first_name
+        cas_info['last_name'] = impersonator.last_name
 
 
 def update_user(user, request, **kwargs):
