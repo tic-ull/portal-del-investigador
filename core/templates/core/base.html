@@ -459,7 +459,7 @@
                                             <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Accounting" %}</a></li>
                                         {% endif %}
                                         {%  if user.is_impersonate %}
-                                            <li><a href="{% url 'impersonate-stop' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Stop impersonation" %}</a></li>
+                                            <li><a href="{% url 'impersonate-stop' %}"><i class="fa fa-suitcase"></i> {% trans "Stop impersonation" %}</a></li>
                                         {% endif %}
                                         <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Exit" %}</a></li>
                                     {% else %}
@@ -513,7 +513,7 @@
                                     {% endif %}
                                     {% if perms.auth.impersonate %}
                                         {% if not user.is_impersonate %}
-                                            <li><a href="{% url 'impersonate-search' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Impersonate search" %}</a></li>
+                                            <li><a href="{% url 'impersonate-search' %}"><i class="fa fa-suitcase"></i> {% trans "Impersonate search" %}</a></li>
                                         {% endif %}
                                     {% endif %}
                                 </ul>
