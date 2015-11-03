@@ -30,6 +30,12 @@
             <a href="mailto:{{ email }} ">Mas información</a>
         </div>
     {%  endif %}
+    {% if user.is_impersonate %}
+        <div class="navbar navbar-default navbar-pre" style="padding-top: 3px;" role="navigation">
+            <i class="glyphicon glyphicon-user"></i>
+            <span>Impersonate activado</span>
+        </div>
+    {%  endif %}
         <div class="navbar navbar-default navbar-ull" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
