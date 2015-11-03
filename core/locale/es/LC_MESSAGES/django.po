@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 13:07+0000\n"
-"PO-Revision-Date: 2015-10-30 13:11-0102\n"
+"POT-Creation-Date: 2015-11-03 13:32+0000\n"
+"PO-Revision-Date: 2015-11-03 13:33-0102\n"
 "Last-Translator: DOMINGO YERAY RODRIGUEZ MARTIN <dyeray@ull.edu.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Language: \n"
 "X-Translated-Using: django-rosetta 0.7.6\n"
 
-#: admin_advanced.py:58 admin_advanced.py:59 templates/core/base.html:114
+#: admin_advanced.py:58 admin_advanced.py:59 templates/core/base.html:120
 #: templates/core/faq/faq.html:9
 msgid "Frequently Asked Questions"
 msgstr "Preguntas Frecuentes"
@@ -88,144 +88,147 @@ msgstr ""
 msgid "University of La Laguna - Researcher Portal"
 msgstr "Universidad de La Laguna - Portal del Investigador"
 
-#: templates/core/base.html:44 templates/core/base.html.py:533
-msgid "University of La Laguna"
-msgstr "Universidad de La Laguna"
+#: templates/core/base.html:36
+msgid "You are currently impersonating another user."
+msgstr "Estás suplantando a otro usuario."
 
-#: templates/core/base.html:50
-msgid "Remote services"
-msgstr "Servicios telemáticos"
-
-#: templates/core/base.html:52
-msgid "User Profile Management"
-msgstr "Gestión de perfil de usuario"
-
-#: templates/core/base.html:53
-msgid "Portal"
-msgstr "Portal"
-
-#: templates/core/base.html:54
-msgid "Electronic office"
-msgstr "Sede electrónica"
-
-#: templates/core/base.html:55
-msgid "Virtual Campus"
-msgstr "Campus Virtual"
-
-#: templates/core/base.html:56 templates/core/base.html.py:116
-msgid "e-mail"
-msgstr "Correo electrónico"
-
-#: templates/core/base.html:57
-msgid "Virtual Hard Drive"
-msgstr "Disco duro virtual"
-
-#: templates/core/base.html:58
-msgid "Digital library"
-msgstr "Biblioteca digital"
-
-#: templates/core/base.html:59
-msgid "Events"
-msgstr "Eventos"
-
-#: templates/core/base.html:64
-msgid "Contact"
-msgstr "Contacto"
-
-#: templates/core/base.html:66
-msgid "ULL website"
-msgstr "Página Web ULL"
-
-#: templates/core/base.html:67
-msgid "Contact form"
-msgstr "Formulario de contacto"
-
-#: templates/core/base.html:68
-msgid "Telephone directory"
-msgstr "Directorio telefónico"
-
-#: templates/core/base.html:89
-msgid "Researcher Portal"
-msgstr "Portal del Investigador"
-
-#: templates/core/base.html:101
-msgid "Select language"
-msgstr "Cambiar Idioma"
-
-#: templates/core/base.html:109
-msgid "Help and support"
-msgstr "Ayuda y soporte"
-
-#: templates/core/base.html:114 templates/core/faq/base_faq.html:6
-msgid "FAQ"
-msgstr "FAQ"
-
-#: templates/core/base.html:126
-msgid "Logout"
-msgstr "Cerrar sesión"
-
-#: templates/core/base.html:128 templates/core/base.html.py:466
-msgid "Login"
-msgstr "Iniciar sesión"
-
-#: templates/core/base.html:441
-msgid "User Profile"
-msgstr "Perfil de usuario"
-
-#: templates/core/base.html:456
-msgid "Home"
-msgstr "Inicio"
-
-#: templates/core/base.html:457
-msgid "Manage CVN"
-msgstr "Gestionar CVN"
-
-#: templates/core/base.html:459
-msgid "Accounting"
-msgstr "Contabilidad"
-
-#: templates/core/base.html:462
+#: templates/core/base.html:36 templates/core/base.html.py:468
 msgid "Stop impersonation"
 msgstr "Volver a mi usuario"
 
-#: templates/core/base.html:464
+#: templates/core/base.html:50 templates/core/base.html.py:539
+msgid "University of La Laguna"
+msgstr "Universidad de La Laguna"
+
+#: templates/core/base.html:56
+msgid "Remote services"
+msgstr "Servicios telemáticos"
+
+#: templates/core/base.html:58
+msgid "User Profile Management"
+msgstr "Gestión de perfil de usuario"
+
+#: templates/core/base.html:59
+msgid "Portal"
+msgstr "Portal"
+
+#: templates/core/base.html:60
+msgid "Electronic office"
+msgstr "Sede electrónica"
+
+#: templates/core/base.html:61
+msgid "Virtual Campus"
+msgstr "Campus Virtual"
+
+#: templates/core/base.html:62 templates/core/base.html.py:122
+msgid "e-mail"
+msgstr "Correo electrónico"
+
+#: templates/core/base.html:63
+msgid "Virtual Hard Drive"
+msgstr "Disco duro virtual"
+
+#: templates/core/base.html:64
+msgid "Digital library"
+msgstr "Biblioteca digital"
+
+#: templates/core/base.html:65
+msgid "Events"
+msgstr "Eventos"
+
+#: templates/core/base.html:70
+msgid "Contact"
+msgstr "Contacto"
+
+#: templates/core/base.html:72
+msgid "ULL website"
+msgstr "Página Web ULL"
+
+#: templates/core/base.html:73
+msgid "Contact form"
+msgstr "Formulario de contacto"
+
+#: templates/core/base.html:74
+msgid "Telephone directory"
+msgstr "Directorio telefónico"
+
+#: templates/core/base.html:95
+msgid "Researcher Portal"
+msgstr "Portal del Investigador"
+
+#: templates/core/base.html:107
+msgid "Select language"
+msgstr "Cambiar Idioma"
+
+#: templates/core/base.html:115
+msgid "Help and support"
+msgstr "Ayuda y soporte"
+
+#: templates/core/base.html:120 templates/core/faq/base_faq.html:6
+msgid "FAQ"
+msgstr "FAQ"
+
+#: templates/core/base.html:132
+msgid "Logout"
+msgstr "Cerrar sesión"
+
+#: templates/core/base.html:134 templates/core/base.html.py:472
+msgid "Login"
+msgstr "Iniciar sesión"
+
+#: templates/core/base.html:447
+msgid "User Profile"
+msgstr "Perfil de usuario"
+
+#: templates/core/base.html:462
+msgid "Home"
+msgstr "Inicio"
+
+#: templates/core/base.html:463
+msgid "Manage CVN"
+msgstr "Gestionar CVN"
+
+#: templates/core/base.html:465
+msgid "Accounting"
+msgstr "Contabilidad"
+
+#: templates/core/base.html:470
 msgid "Exit"
 msgstr "Salir"
 
-#: templates/core/base.html:494
+#: templates/core/base.html:500
 msgid "Administration"
 msgstr "Administración"
 
-#: templates/core/base.html:499 templates/core/base.html.py:501
+#: templates/core/base.html:505 templates/core/base.html.py:507
 msgid "Admin Panel"
 msgstr "Panel de administración"
 
-#: templates/core/base.html:504
+#: templates/core/base.html:510
 msgid "Statistics by Area"
 msgstr "Estadísticas por Áreas"
 
-#: templates/core/base.html:505
+#: templates/core/base.html:511
 msgid "Statistics by Department"
 msgstr "Estadísticas por Departamentos"
 
-#: templates/core/base.html:506
+#: templates/core/base.html:512
 msgid "Statistics by Group"
 msgstr "Estadísticas por Grupos"
 
-#: templates/core/base.html:509
+#: templates/core/base.html:515
 msgid "Report ULL"
 msgstr "Informe ULL"
 
-#: templates/core/base.html:512
-#| msgid "Report ULL"
+#: templates/core/base.html:518
 msgid "Reports"
 msgstr "Informes"
 
-#: templates/core/base.html:516
+#: templates/core/base.html:522
 msgid "Impersonate search"
 msgstr "Loguearse como..."
 
-#: templates/core/base.html:533
+#: templates/core/base.html:539
 msgid "Phone number"
 msgstr "Teléfono"
 
