@@ -9,15 +9,19 @@ def add_impersonate_permission(apps, schema_editor):
     update_all_contenttypes()  # Fixes tests
     ContentType = apps.get_model('contenttypes.ContentType')
     Permission = apps.get_model('auth.Permission')
-    content_type = ContentType.objects.get(app_label='auth', model='user')
-    Permission.objects.create(content_type=content_type,
-                              codename='impersonate',
-                              name='Can impersonate other user')
+    content_type = ContentType.objects.using(
+        schema_editor.connection.alias).get(app_label='auth', model='user')
+    Permission.objects.using(schema_editor.connection.alias).create(
+        content_type=content_type,
+        codename='impersonate',
+        name='Can impersonate other user'
+    )
 
 
 def delete_impersonate_permission(apps, schema_editor):
-    apps.get_model('auth.Permission').objects.get(
-        codename='impersonate').delete()
+    perm = apps.get_model('auth.Permission').objects.using(
+        schema_editor.connection.alias).get(codename='impersonate')
+    perm.delete(using=schema_editor.connection.alias)
 
 
 class Migration(migrations.Migration):
