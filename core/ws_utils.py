@@ -52,7 +52,12 @@ class CachedWS:
             reply = json.loads(urllib.urlopen(url).read())
             if type(reply) is dict and 'faultcode' in reply:
                 raise KeyError
-            ws_json = reply
+            if type(reply) is dict and 'response' in reply:
+                if reply['response']['result'] == st.WS_RESULT_CODE.ERROR.value:
+                    raise KeyError
+                ws_json = reply['response']['content']
+            else:
+                ws_json = reply
             if use_redis:
                 cls._set_redis(url, timeout, ws_json)
         except (IOError, KeyError, ValueError):

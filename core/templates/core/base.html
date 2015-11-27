@@ -9,7 +9,7 @@
         <meta name="author" content="Universidad de La Laguna">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-        <title>{% trans 'Universidad de La Laguna - Portal del Investigador' %}</title>
+        <title>{% trans "University of La Laguna - Researcher Portal" %}</title>
 
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://static.ull.es/v3/dist/img/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://static.ull.es/v3/dist/img/apple-touch-icon-114-precomposed.png">
@@ -23,6 +23,19 @@
     </head>
 
     <body>
+    {%  if devel %}
+        <div class="navbar navbar-default navbar-pre" style="padding-top: 3px;" role="navigation">
+            <i class="fa fa-warning"></i>
+            <span>Servidor en preproducción</span>
+            <a href="mailto:{{ email }} ">Mas información</a>
+        </div>
+    {%  endif %}
+    {% if user.is_impersonate %}
+        <div class="navbar navbar-default navbar-pre" style="padding-top: 3px;" role="navigation">
+            <i class="glyphicon glyphicon-user"></i>
+            <span>{% trans "You are currently impersonating another user." %} <a href="{% url 'impersonate-stop' %}"> {% trans "Stop impersonation" %}</a></span>
+        </div>
+    {%  endif %}
         <div class="navbar navbar-default navbar-ull" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -34,31 +47,31 @@
                         <span class="sr-only">Desplegar menú de navegación</span>
                         <span class="fa fa-link fa-stack"></span>
                     </button>
-                    <a class="navbar-brand" href="http://www.ull.es/" title="Universidad de La Laguna">{% trans 'Universidad de La Laguna' %}</a>
+                    <a class="navbar-brand" href="http://www.ull.es/" title="Universidad de La Laguna">{% trans "University of La Laguna" %}</a>
                 </div>
 
                 <div class="collapse navbar-collapse navbar-main-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Servicios telemáticos' %} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Remote services" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a target="_blank" title="Gestión de perfil de usuario" href="http://usuarios.ull.es"><i class="fa fa-user"></i> {% trans 'Gestión de perfil de usuario' %}</a></li>
-                                <li><a target="_blank" title="Portal ULL" href="http://portal.ull.es"><i class="fa fa-folder-open"></i> {% trans 'Portal' %}</a></li>
-                                <li><a target="_blank" title="Sede Electrónica" href="http://sede.ull.es"><i class="fa fa-briefcase"></i> {% trans 'Sede electrónica' %}</a></li>
-                                <li><a target="_blank" title="Campus Virtual" href="http://www.campusvirtual.ull.es"><i class="fa fa-pencil"></i> {% trans 'Campus virtual' %}</a></li>
-                                <li><a target="_blank" title="Correo electrónico" href="http://ull.edu.es"><i class="fa fa-envelope"></i> {% trans 'Correo electrónico' %}</a></li>
-                                <li><a target="_blank" title="Disco Duro Virtual" href="http://ddv.ull.es/"><i class="fa fa-hdd-o"></i> {% trans 'Disco duro virtual' %}</a></li>
-                                <li><a target="_blank" title="Biblioteca Digital" href="http://www.bbtk.ull.es/view/institucional/bbtk/Biblioteca_Digital/es"><i class="fa fa-book"></i> {% trans 'Biblioteca digital' %}</a></li>
-                                <li><a target="_blank" title="Eventos" href="http://eventos.ull.es"><i class="fa fa-calendar"></i> {% trans 'Eventos' %}</a></li> 
+                                <li><a target="_blank" title="{% trans "User Profile Management" %}" href="http://usuarios.ull.es"><i class="fa fa-user"></i> {% trans "User Profile Management" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Portal" %}" href="http://portal.ull.es"><i class="fa fa-folder-open"></i> {% trans 'Portal' %}</a></li>
+                                <li><a target="_blank" title="{% trans "Electronic office" %}" href="http://sede.ull.es"><i class="fa fa-briefcase"></i> {% trans "Electronic office" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Virtual Campus" %}" href="http://www.campusvirtual.ull.es"><i class="fa fa-pencil"></i> {% trans "Virtual Campus" %}</a></li>
+                                <li><a target="_blank" title="{% trans "e-mail" %}" href="http://ull.edu.es"><i class="fa fa-envelope"></i> {% trans "e-mail" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Virtual Hard Drive" %}" href="http://ddv.ull.es/"><i class="fa fa-hdd-o"></i> {% trans "Virtual Hard Drive" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Digital library" %}" href="http://www.bbtk.ull.es/view/institucional/bbtk/Biblioteca_Digital/es"><i class="fa fa-book"></i> {% trans "Digital library" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Events" %}" href="http://eventos.ull.es"><i class="fa fa-calendar"></i> {% trans "Events" %}</a></li>
                             </ul>
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Contacto' %} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Contact" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i> {% trans 'Página Web ULL' %}</a></li>
-                                <li><a target="_blank" title="Formulario de contacto" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> {% trans 'Formulario de contacto' %}</a></li>
-                                <li><a target="_blank" title="Teléfonos" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> {% trans 'Directorio telefónico' %}</a></li>
+                                <li><a target="_blank" href="http://www.ull.es/"><i class="fa fa-globe"></i> {% trans "ULL website" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Contact form" %}" href="http://www.ull.es/view/institucional/ull/Contacto_3/es"><i class="fa fa-list-alt"></i> {% trans "Contact form" %}</a></li>
+                                <li><a target="_blank" title="{% trans "Telephone directory" %}" href="http://www.ull.es/view/institucional/ull/Telefonos/es"><i class="fa fa-phone"></i> {% trans "Telephone directory" %}</a></li>
                                 <li class="divider"></li>
                                 <li>
                                     <ul class="rrss text-muted list-inline">
@@ -79,7 +92,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <ol class="breadcrumb">
-                        <li class="active"><a href="{% url 'index'%}">{% trans "Portal del Investigador" %}</a></li>
+                        <li class="active"><a href="{% url 'index'%}">{% trans "Researcher Portal" %}</a></li>
                         {% block breadcrumb_app %}
 
                         {% endblock breadcrumb_app %}
@@ -88,10 +101,10 @@
                 <div class="collapse navbar-collapse navbar-app-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% block navbar_links %}
-                        
+
                         {% endblock navbar_links %}
                         <li class="dropdown">
-                            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">{% trans "Cambiar Idioma" %} <b class="caret"></b></a>
+                            <a class="btn btn-link dropdown-toggle" data-toggle="dropdown">{% trans "Select language" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {% for language in cp_languages %}
                                 <li><a href="{{language.url}}">{{language.name}} ({{language.code}})</a></li>
@@ -99,14 +112,14 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> {% trans "Ayuda y soporte" %} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-question-circle"></i> {% trans "Help and support" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <!--
                                 <li><a target="_blank" title="Portal de servicio" href="http://www.stic.ull.es/info/servicios/servicios/index.asp"><i class="fa fa-globe"></i> Portal de servicio</a></li>
                                 -->
-                                <li><a title="{% trans "FAQ" %}" href="{% url 'faq' %}"><i class="fa fa-question-circle"></i> {% trans 'Preguntas Frecuentes' %}</a></li>
+                                <li><a title="{% trans "FAQ" %}" href="{% url 'faq' %}"><i class="fa fa-question-circle"></i> {% trans "Frequently Asked Questions" %}</a></li>
                                 <li class="divider"></li>
-                                <li><a target="_blank" title="{% trans "Correo electrónico" %} sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
+                                <li><a target="_blank" title="{% trans "e-mail" %} sopinve@ull.es" href="mailto:sopinve@ull.es"><i class="fa fa-envelope"></i> sopinve@ull.es</a></li>
                                 <li><p><i class="fa fa-phone"></i> (+34) 922 31 9558</p></li>
                                 <li><p><i class="fa fa-map-marker"></i> Edificio Central <br/>C/ Delgado Barreto, s/n. 38071 <br/>San Cristóbal de La Laguna</p></li>
                                 <!--
@@ -116,9 +129,9 @@
                             </ul>
                         </li>
                         {%  if not user.is_anonymous %}
-                            <li class="dropdown"><a href="{% url 'logout' %}" class="btn btn-danger btn-signout"><i class="fa fa-sign-out"></i> {% trans "Cerrar sesión" %}</a></li>
+                            <li class="dropdown"><a href="{% url 'logout' %}" class="btn btn-danger btn-signout"><i class="fa fa-sign-out"></i> {% trans "Logout" %}</a></li>
                         {%  else %}
-                            <li class="dropdown"><a href="{% url 'login' %}" class="btn btn-success btn-signin"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
+                            <li class="dropdown"><a href="{% url 'login' %}" class="btn btn-success btn-signin"><i class="fa fa-sign-in"></i> {% trans "Login" %}</a></li>
                         {%  endif %}
                     </ul>
                 </div>
@@ -126,6 +139,14 @@
         </div>
 
         <div class="container-fluid">
+            {% if sitewide_warning %}
+                <div style="text-align: center;">
+                    <div class="alert alert-danger" style="margin-bottom: 15px; display: inline-block;">
+                        <i class="fa fa-exclamation-circle"></i>
+                        {{ sitewide_warning }}
+                    </div>
+                </div>
+            {% endif %}
             <div class="row">
                 <div class="col-md-9 col-md-push-3" role="main">
                     {% block main %}
@@ -423,7 +444,7 @@
                     <div class="col-md-3 col-md-pull-9 sidebar">
                         <div class="panel panel-default panel-ull color-7A3B7A">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-user"></i> {% trans "Perfil de usuario" %}</h3>
+                                <h3 class="panel-title"><i class="fa fa-user"></i> {% trans "User Profile" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
@@ -438,45 +459,21 @@
                                     </li>
                                     <li class="divider"></li>
                                     {% if not user.is_anonymous %}
-                                        <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> {% trans "Inicio" %}</a></li>
-                                        <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Gestionar CVN" %}</a></li>
+                                        <li><a href="{% url 'index' %}"><i class="fa fa-home"></i> {% trans "Home" %}</a></li>
+                                        <li><a href='{% url 'cvn' %}'><i class="fa fa-book"></i> {% trans "Manage CVN" %}</a></li>
                                         {% if is_accounting_installed %}
-                                            <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Contabilidad" %}</a></li>
+                                            <li><a href='{% url 'accounting' %}'><i class="fa fa-eur"></i> {% trans "Accounting" %}</a></li>
                                         {% endif %}
-                                        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Salir" %}</a></li>
+                                        {%  if user.is_impersonate %}
+                                            <li><a href="{% url 'impersonate-stop' %}"><i class="fa fa-suitcase"></i> {% trans "Stop impersonation" %}</a></li>
+                                        {% endif %}
+                                        <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> {% trans "Exit" %}</a></li>
                                     {% else %}
-                                        <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Iniciar sesión" %}</a></li>
+                                        <li><a href="{% url 'login' %}"><i class="fa fa-sign-in"></i> {% trans "Login" %}</a></li>
                                     {% endif %}
                                 </ul>
                             </div>
                         </div>
-
-                        {% comment %}
-                        {% endblock main_menu %}
-                        <div class="panel panel-default panel-ull color-7A3B7A">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-bars"></i> {% trans "Menú principal" %}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <ul class="nav nav-pills nav-stacked">
-                                    {% block internal_links %}
-                                    <li>
-                                        <dl>
-                                            <dt>Información estática</dt>
-                                            <dd>Contenido</dd>
-                                        </dl>
-                                    </li>
-                                    {% endblock internal_links %}
-                                    <li class="divider"> </li>
-                                    {% block external_links %}
-                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Enlaces del menú principal 1</a></li>
-                                    <li><a href="http://static.ull.es/v3/docs/examples/form/#">Enlaces del menú principal 2</a></li>
-                                    {% endblock external_links %}
-                                </ul>
-                            </div>
-                        </div>
-                        {% endblock main_menu %}
-                        {% endcomment %}
 
                         {% block submenu %}
                         <div class="panel panel-default panel-ull color-336699">
@@ -500,22 +497,30 @@
                         {% if 'auth.read_admin_menu' in perms %}
                         <div class="panel panel-default panel-ull">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administración" %}</h3>
+                                <h3 class="panel-title"><i class="fa fa-lock"></i> {% trans "Administration" %}</h3>
                             </div>
                             <div class="panel-body">
                                 <ul class="nav nav-pills nav-stacked">
                                     {% if user.is_staff %}
-                                        <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                        <li><a href="{% url 'admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Admin Panel" %}</a></li>
                                     {% elif 'auth.basic_staff' in perms %}
-                                        <li><a href="{% url 'basic_admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Panel de administración" %}</a></li>
+                                        <li><a href="{% url 'basic_admin:index' %}" target="_blank"><i class="fa fa-suitcase"></i> {% trans "Admin Panel" %}</a></li>
                                     {% endif %}
                                     {% if is_statistics_installed and 'statistics.view_cvn_stats' in perms %}
-                                        <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Áreas" %}</a></li>
-                                        <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Departamentos" %}</a></li>
-                                        <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Estadísticas por Grupos" %}</a></li>
+                                        <li><a href="{% url 'area_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Statistics by Area" %}</a></li>
+                                        <li><a href="{% url 'dept_stats' %}"><i class="fa fa-bar-chart-o"></i> {% trans "Statistics by Department" %}</a></li>
+                                        <li><a href="{{ old_portal }}/cvnstats/"><i class="fa fa-bar-chart-o"></i> {% trans "Statistics by Group" %}</a></li>
                                     {% endif %}
                                     {% if 'cvn.view_university_report' in perms %}
-                                        <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Informe ULL" %}</a></li>
+                                        <li><a href="{% url 'ull_report' %}"><i class="fa fa-university"></i> {% trans "Report ULL" %}</a></li>
+                                    {% endif %}
+                                    {% if perms.cvn.read_cvn_reports %}
+                                        <li><a id="admin_reports_link" href='{% url 'admin_reports' %}'><i class="fa fa-files-o"></i> {% trans "Reports" %}</a></li>
+                                    {% endif %}
+                                    {% if perms.auth.impersonate %}
+                                        {% if not user.is_impersonate %}
+                                            <li><a href="{% url 'impersonate-search' %}"><i class="fa fa-suitcase"></i> {% trans "Impersonate search" %}</a></li>
+                                        {% endif %}
                                     {% endif %}
                                 </ul>
                             </div>
@@ -531,7 +536,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <ul class="address pull-left">
-                            <li><strong>{% trans 'Universidad de La Laguna' %}</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | {% trans "Teléfono" %}: (+34) 922 31 90 00/01</li>
+                            <li><strong>{% trans "University of La Laguna" %}</strong><br> Pabellón de Gobierno, C/ Molinos de Agua s/n. | San Cristóbal de La Laguna, Santa Cruz de Tenerife - España (38200) | {% trans "Phone number" %}: (+34) 922 31 90 00/01</li>
                             {% block footer_list_extra %}
                             {% endblock footer_list_extra %}
                         </ul>

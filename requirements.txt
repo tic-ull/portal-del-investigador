@@ -1,3 +1,4 @@
+setuptools>=0.7.3
 Django<1.8
 django_extensions
 django-debug-toolbar
@@ -36,3 +37,8 @@ mock
 pypdf2
 django-constance[database]
 django-logentry-admin
+python-dateutil
+unicodecsv
+django-localflavor
+beautifulsoup4
+django-impersonate

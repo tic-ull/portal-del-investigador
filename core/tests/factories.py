@@ -25,6 +25,7 @@
 from core.models import UserProfile
 from django.contrib.auth.models import User
 from random import randint
+from django.conf import settings as st
 
 import factory
 
@@ -41,6 +42,15 @@ class UserFactory(factory.django.DjangoModelFactory):
         dni = randint(10000000, 99999999)
         UserProfile.objects.create(
             user=self, documento=str(dni) + NIF[dni % 23])
+
+    @classmethod
+    def create_and_login(cls, client):
+        user = cls.create()
+        password = '123456'
+        user.set_password(password)
+        user.save()
+        client.login(username=user.username, password=password)
+        return user
 
     class Meta:
         model = User

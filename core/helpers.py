@@ -22,22 +22,7 @@
 #    <http://www.gnu.org/licenses/>.
 #
 
-from django.conf import settings as st
-import os
-import shutil
-import logging
 
-
-def init():
-    logging.disable(logging.ERROR)
-    st.MEDIA_ROOT = st.MEDIA_TEST_ROOT
-    try:
-        os.makedirs(st.MEDIA_TEST_ROOT)
-    except OSError:
-        pass
-    if not st.DEBUG:
-        st.DEBUG = True
-
-
-def clean():
-    shutil.rmtree(st.MEDIA_TEST_ROOT)
+def can_impersonate(request):
+    """Function required by django-impersonate to define custom permissions"""
+    return request.user.has_perm('auth.impersonate')
